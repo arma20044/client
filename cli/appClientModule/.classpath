@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/jvnet/jaxb2/maven2/maven-jaxb2-plugin/0.9.1/maven-jaxb2-plugin-0.9.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/boot/spring-boot/0.5.0.M4/spring-boot-0.5.0.M4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/commons-logging/commons-logging-api/1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/Documents/lauri/org.springframework.xml-sources-1.5.2.a.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-aop/4.0.7.RELEASE/spring-aop-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-beans/4.0.7.RELEASE/spring-beans-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-context/4.0.7.RELEASE/spring-context-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-core/4.0.7.RELEASE/spring-core-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-expression/4.0.7.RELEASE/spring-expression-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/spring-oxm/4.0.7.RELEASE/spring-oxm-4.0.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/org/springframework/ws/spring-ws-core/2.2.0.RELEASE/spring-ws-core-2.2.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/Documents/lauri/spring-xml-2.0.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-9.3-1102.jdbc4.jar"/>
+	<classpathentry kind="lib" path="forms-1.3.0.jar" sourcepath="forms-1.3.0-src.zip"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.joda.time-sources-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.joda.time-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/json-simple.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/.m2/repository/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/laura.gonzalez/Documents/workspace28092014/VotoWS/WebContent/WEB-INF/lib/com.springsource.javax.persistence-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-4.5.1.jar" sourcepath="C:/Users/laura.gonzalez/Documents/fotos/Download (0)/iconos/JasperFillManager.zip"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

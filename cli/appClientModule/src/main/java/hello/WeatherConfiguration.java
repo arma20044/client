@@ -1,0 +1,30 @@
+
+package src.main.java.hello;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+@Configuration
+public class WeatherConfiguration {
+	
+	public final static String URL = "http://0.0.0.0:8080/";
+
+	@Bean
+	public Jaxb2Marshaller marshaller() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setContextPath("hello.wsdl");
+		return marshaller;
+	}
+
+	@Bean
+	public WeatherClient votoClient(Jaxb2Marshaller marshaller) {
+		WeatherClient client = new WeatherClient();
+		client.setDefaultUri(URL + "VotoWS/votoService.wsdl");
+//		client.setDefaultUri("http://localhost:8080/VotoWS/votoService.wsdl");
+		client.setMarshaller(marshaller);
+		client.setUnmarshaller(marshaller);
+		return client;
+	}
+
+}
