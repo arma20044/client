@@ -16,9 +16,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
+import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import javax.swing.ImageIcon;
 
 public class DefinicionesGenerales extends JFrame implements ActionListener{
@@ -199,6 +201,15 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				getContentPane().add(labelTitulo);
 				
 				JButton btnCandidatos = new JButton("Candidatos");
+				btnCandidatos.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarCandidato candidato;
+						candidato = new VentanaBuscarCandidato();
+						candidato.setVisible(true);
+						dispose();
+						
+					}
+				});
 				btnCandidatos.setBounds(308, 248, 146, 23);
 				getContentPane().add(btnCandidatos);
 				

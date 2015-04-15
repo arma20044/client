@@ -1,12 +1,9 @@
 package src.main.java.admin.genero;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
-
-import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
 public class CiudadesJTableModel extends AbstractTableModel {
 

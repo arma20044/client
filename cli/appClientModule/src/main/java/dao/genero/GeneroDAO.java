@@ -45,7 +45,7 @@ public class GeneroDAO {
 //		}
 //	}
 
-	public JSONArray buscarGenero(String codigo, String descripcion) throws ParseException, org.json.simple.parser.ParseException 
+	public JSONArray buscarGenero(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
 		JSONArray filas = new JSONArray();
 		Genero gen = new Genero();
@@ -66,13 +66,14 @@ public class GeneroDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT id_genero, codigo, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS'), to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') , usuario_ins, usuario_upd from ucsaws_genero "
+			query.setQueryGenerico("SELECT id_candidatos, id_persona, id_lista, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS'), to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS')"
+					+ " , usuario_ins, usuario_upd from ucsaws_candidatos "
 					+ "where upper(codigo) like "
-					+ "upper('%" + codigo + "%') and "
+					+ "upper('%" + codigo + "%') or "
 					+ "upper(descripcion) like "
 					+ "upper('%"
-					+ descripcion
-					+ "%') order by descripcion ");
+					+ codigo
+					+ "%') order by id_candidatos ");
 			
 			
 			
@@ -82,7 +83,7 @@ public class GeneroDAO {
 			String res = response.getQueryGenericoResponse();
 	
 				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Genero: "+ descripcion +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "El Candidato: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
 					return filas;
 				}
 				
