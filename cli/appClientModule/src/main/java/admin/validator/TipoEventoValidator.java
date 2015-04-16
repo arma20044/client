@@ -32,10 +32,10 @@ public class TipoEventoValidator {
 
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_candidatos, codigo "
-				+ "from ucsaws_candidatos " + "where  upper(codigo) = "
+		query.setQueryGenerico("SELECT id_tipo_evento, descripcion "
+				+ "from ucsaws_tipo_evento " + "where  upper(descripcion) = "
 
-				+ "upper('" +year+"/"+ codigo + "')");
+				+ "upper('" +codigo + "')");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -57,46 +57,7 @@ public class TipoEventoValidator {
 
 	}
 	
-	public Boolean ValidarPersona(Integer persona) throws ParseException,
-	org.json.simple.parser.ParseException {
 
-
-boolean existe = false;
-
-
-
-ApplicationContext ctx = SpringApplication
-		.run(WeatherConfiguration.class);
-
-WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-QueryGenericoRequest query = new QueryGenericoRequest();
-
-query.setTipoQueryGenerico(2);
-
-query.setQueryGenerico("SELECT id_candidatos, codigo "
-		+ "from ucsaws_candidatos " + "where  id_persona = "
-
-		+  persona + "");
-
-QueryGenericoResponse response = weatherClient
-		.getQueryGenericoResponse(query);
-weatherClient.printQueryGenericoResponse(response);
-
-String res = response.getQueryGenericoResponse();
-
-if (res.compareTo("[]") != 0) {
-
-	return existe = true;
-}
-
-else {
-	existe = false;
-
-	return existe;
-
-}
-
-}
 	
 
 

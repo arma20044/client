@@ -36,7 +36,8 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-
+import src.main.java.admin.validator.TipoEventoValidator;
+import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -54,7 +55,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 	private TipoEventoJTableModel model = new TipoEventoJTableModel();
 	private JScrollPane scrollPane;
 
-	private CandidatoValidator candidatoValidator = new CandidatoValidator();
+	private TipoEventoValidator tipoEventoValidator = new TipoEventoValidator();
 
 	private String codTemporal = "";
 	private JButton btnHome;
@@ -115,7 +116,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE CANDIDATOS");
+		labelTitulo.setText("REGISTRO DE TIPO DE EVENTOS");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -136,7 +137,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 95, 806, 290);
+		scrollPane.setBounds(0, 118, 806, 267);
 		getContentPane().add(scrollPane);
 
 		table = new JTable() {
@@ -250,20 +251,9 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 			try {
 
 				if (!(txtDescripcion.getText().length() == 0)) {
-					if (txtDescripcion.getText().length() > 3) {
-						lblMensaje
-								.setText("El codigo debe ser de maximo 3 caracteres.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
+				  if
 
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					} else if
-
-					(candidatoValidator.ValidarCodigo(txtDescripcion.getText()) == false) {
+					(tipoEventoValidator.ValidarCodigo(txtDescripcion.getText()) == false) {
 
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
@@ -281,12 +271,12 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 						// para registrar se inserta el codigo es 1
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
-						query.setQueryGenerico("INSERT INTO ucsaws_candidatos"
-								+ "( id_candidatos, id_persona, id_tipo_candidato, id_lista, codigo ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+						query.setQueryGenerico("INSERT INTO ucsaws_tipo_evento"
+								+ "( id_tipo_evento, descripcion,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 								+ "VALUES ("
-								+ "nextval('ucsaws_candidatos_seq')" + " , "
+								+ "nextval('ucsaws_tipo_evento_seq')" + " , "
 
-								+ year + "/'" + " || upper('"
+								+ " upper('"
 								+ txtDescripcion.getText() + "'), '"
 								+ Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
@@ -302,7 +292,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 						table.removeColumn(table.getColumnModel().getColumn(0));
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 						lblMensaje
-								.setText("Excelente, se ha guardado el genero.");
+								.setText("Excelente, se ha guardado el Tipo Evento.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -321,8 +311,8 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe el candidato con el codigo "
-										+ txtDescripcion.getText());
+								.setText("Ya existe el tipo evento con el codigo "
+										);
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -360,22 +350,22 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
+						"¿Esta seguro de eliminar el Tipo de Evento?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
+					TipoEventoDAO tipoEventoDAO = new TipoEventoDAO();
 
 					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
+						tipoEventoDAO.eliminarTipoEvento(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					if (candidatoDAO.eliminarCandidato(codTemporal) == true) {
+					if (tipoEventoDAO.eliminarTipoEvento(codTemporal) == true) {
 
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
 						// + txtDesc.getText());
@@ -383,7 +373,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 						// codTemporal.getText());
 						// txtId.setText("");
 						lblMensaje
-								.setText("Excelente, se ha eliminado el Candidato ");
+								.setText("Excelente, se ha eliminado el Tipo Evento ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -406,7 +396,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 					else {
 						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
 						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Candidato que desea eliminar ");
+								.setText("ERROR: Existen registros que apuntan al Tipo de Evento que desea eliminar ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -423,7 +413,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 				// "Por favor seleccione que Genero desea Eliminar",
 				// "Información",JOptionPane.WARNING_MESSAGE);
 				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
+						.setText("Por favor seleccione que Tipo de Evento desea Eliminar");
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -443,13 +433,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		}
 	}
 
-	public VentanaRegistro getVentanaRegistro() {
-		return ventanaRegistro;
-	}
 
-	public void setVentanaRegistro(VentanaRegistro ventanaRegistro) {
-		this.ventanaRegistro = ventanaRegistro;
-	}
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
@@ -468,11 +452,9 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo,nombre, apellido , tc.descripcion, li.nro_lista || ' - ' ||  li.nombre_lista"
-				+ " from ucsaws_candidatos "
-				+ " ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
-				+ " join ucsaws_tipo_candidato tc on (ca.id_tipo_candidato = tc.id_tipo_candidato)"
-				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)" + "");
+		query.setQueryGenerico("SELECT id_tipo_evento, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+				+ "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd "
+				+ " from ucsaws_tipo_evento " + "ORDER BY descripcion");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -521,219 +503,9 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 
 	}
 
-	private Vector recuperarDatosComboBoxPersona() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
 
-		// Statement estatuto = conex.getConnection().createStatement();
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido"
-				+ " from ucsaws_persona " + "order by apellido");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
-	}
-
-	private Vector recuperarDatosComboBoxTipoCandidato() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_tipo_candidato, descripcion"
-				+ " from ucsaws_tipo_candidato " + "order by descripcion");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			tcandidato.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
-	}
-
-	private Vector recuperarDatosComboBoxLista() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_lista, nro_lista || ' - ' || nombre_lista"
-				+ " from ucsaws_listas " + "order by nro_lista");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			listas.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
-	}
 }
