@@ -27,6 +27,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -37,15 +39,10 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.genero.VentanaRegistro;
 import src.main.java.admin.validator.CandidatoValidator;
-import src.main.java.admin.validator.GeneroValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
@@ -59,8 +56,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 	private CandidatoJTableModel model = new CandidatoJTableModel();
 	private JScrollPane scrollPane;
-
-	private GeneroValidator generoValidador = new GeneroValidator();
 
 	private CandidatoValidator candidatoValidator = new CandidatoValidator();
 
@@ -152,16 +147,20 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		scrollPane.setBounds(0, 190, 806, 193);
 		getContentPane().add(scrollPane);
 
-		table = new JTable(){
-		    @Override
-		       public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-		           Component component = super.prepareRenderer(renderer, row, column);
-		           int rendererWidth = component.getPreferredSize().width;
-		           TableColumn tableColumn = getColumnModel().getColumn(column);
-		           tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
-		           return component;
-		        }
-		    };
+		table = new JTable() {
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int row, int column) {
+				Component component = super.prepareRenderer(renderer, row,
+						column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth
+						+ getIntercellSpacing().width,
+						tableColumn.getPreferredWidth()));
+				return component;
+			}
+		};
 		table.setToolTipText("");
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -297,7 +296,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 				Integer personaSelected = item3.getId();
 				if (!(txtCod.getText().length() == 0)) {
 					if (txtCod.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3.");
+						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -379,14 +378,15 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							// "Ya existe el genero " + txtDesc.getText(),
 							// "Información",JOptionPane.WARNING_MESSAGE);
 							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura"
-											);
-							Timer t = new Timer(Login.timer, new ActionListener() {
+									.setText("La Persona no puede tener mas de una candidatura");
+							Timer t = new Timer(Login.timer,
+									new ActionListener() {
 
-								public void actionPerformed(ActionEvent e) {
-									lblMensaje.setText(null);
-								}
-							});
+										public void actionPerformed(
+												ActionEvent e) {
+											lblMensaje.setText(null);
+										}
+									});
 							t.setRepeats(false);
 							t.start();
 						}
@@ -434,8 +434,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar el Candidato?",
+						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
@@ -529,8 +529,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
-		
-
 		boolean existe = false;
 
 		// Statement estatuto = conex.getConnection().createStatement();
@@ -545,7 +543,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo,nombre, apellido , tc.descripcion, li.nro_lista || ' - ' ||  li.nombre_lista"
-				+" from ucsaws_candidatos "
+				+ " from ucsaws_candidatos "
 				+ " ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
 				+ " join ucsaws_tipo_candidato tc on (ca.id_tipo_candidato = tc.id_tipo_candidato)"
 				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)" + "");
@@ -601,8 +599,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
-
-		
 
 		boolean existe = false;
 
@@ -676,8 +672,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
-		
-
 		boolean existe = false;
 
 		// Statement estatuto = conex.getConnection().createStatement();
@@ -749,8 +743,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
-
-		
 
 		boolean existe = false;
 

@@ -384,7 +384,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
+						.setText("Por favor seleccione que Candidato desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
