@@ -1,4 +1,4 @@
-package src.main.java.admin.candidato;
+package src.main.java.admin.tipoEvento;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -18,7 +18,6 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,24 +36,22 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.genero.VentanaRegistro;
-import src.main.java.admin.validator.CandidatoValidator;
-import src.main.java.dao.candidato.CandidatoDAO;
+
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaRegistroCandidato extends JFrame implements ActionListener {
+public class VentanaRegistroTipoEvento extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar, btnEliminar;
-	private VentanaRegistro ventanaRegistro;
+
 	private JTable table;
 
-	private CandidatoJTableModel model = new CandidatoJTableModel();
+	private TipoEventoJTableModel model = new TipoEventoJTableModel();
 	private JScrollPane scrollPane;
 
 	private CandidatoValidator candidatoValidator = new CandidatoValidator();
@@ -67,23 +64,18 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-
-	private JLabel lblTipoCandidato;
-	private JComboBox cmbTipoCandidato, cmbPersona;
-	private JLabel lblLista;
-	private JComboBox cmbLista;
-	private JLabel lblCod;
-	private JTextField txtCod;
+	private JLabel lblDescripcion;
+	private JTextField txtDescripcion;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de registro
 	 */
-	public VentanaRegistroCandidato() {
+	public VentanaRegistroTipoEvento() {
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
-		botonGuardar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
+		botonGuardar.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(339, 52, 32, 32);
 		botonGuardar.setOpaque(false);
@@ -97,7 +89,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		botonCancelar = new JButton();
 		botonCancelar.setBackground(Color.WHITE);
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
+		botonCancelar.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setBounds(774, 383, 32, 32);
 		botonCancelar.setOpaque(false);
@@ -110,7 +102,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		btnEliminar = new JButton();
 		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
+		btnEliminar.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
 		btnEliminar.setBounds(381, 52, 32, 32);
@@ -144,7 +136,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 190, 806, 193);
+		scrollPane.setBounds(0, 95, 806, 290);
 		getContentPane().add(scrollPane);
 
 		table = new JTable() {
@@ -215,7 +207,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaRegistroCandidato.class
+		btnHome.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -224,50 +216,20 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbPersona.setBounds(213, 90, 340, 20);
-		getContentPane().add(cmbPersona);
+		lblDescripcion = new JLabel();
+		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDescripcion.setText("Descripcion:");
+		lblDescripcion.setBounds(130, 52, 61, 25);
+		getContentPane().add(lblDescripcion);
 
-		JLabel lblPersona = new JLabel();
-		lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPersona.setText("Persona:");
-		lblPersona.setBounds(130, 88, 61, 25);
-		getContentPane().add(lblPersona);
-
-		lblTipoCandidato = new JLabel();
-		lblTipoCandidato.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTipoCandidato.setText("Tipo Candidato:");
-		lblTipoCandidato.setBounds(101, 121, 90, 25);
-		getContentPane().add(lblTipoCandidato);
-
-		cmbTipoCandidato = new JComboBox(recuperarDatosComboBoxTipoCandidato());
-		cmbTipoCandidato.setBounds(213, 123, 340, 20);
-		getContentPane().add(cmbTipoCandidato);
-
-		lblLista = new JLabel();
-		lblLista.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblLista.setText("Lista:");
-		lblLista.setBounds(130, 154, 61, 25);
-		getContentPane().add(lblLista);
-
-		cmbLista = new JComboBox(recuperarDatosComboBoxLista());
-		cmbLista.setBounds(213, 156, 340, 20);
-		getContentPane().add(cmbLista);
-
-		lblCod = new JLabel();
-		lblCod.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCod.setText("Codigo:");
-		lblCod.setBounds(130, 52, 61, 25);
-		getContentPane().add(lblCod);
-
-		txtCod = new JTextField();
-		txtCod.setBounds(213, 54, 108, 20);
-		getContentPane().add(txtCod);
-		txtCod.setColumns(10);
+		txtDescripcion = new JTextField();
+		txtDescripcion.setBounds(213, 54, 108, 20);
+		getContentPane().add(txtDescripcion);
+		txtDescripcion.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(413, 176, 363, 14);
+		lblMensaje.setBounds(105, 95, 363, 14);
 		getContentPane().add(lblMensaje);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -286,17 +248,11 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				Item item = (Item) cmbLista.getSelectedItem();
-				Integer listaSelected = item.getId();
 
-				Item item2 = (Item) cmbTipoCandidato.getSelectedItem();
-				Integer tipoCandidatoSelected = item2.getId();
-
-				Item item3 = (Item) cmbPersona.getSelectedItem();
-				Integer personaSelected = item3.getId();
-				if (!(txtCod.getText().length() == 0)) {
-					if (txtCod.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
+				if (!(txtDescripcion.getText().length() == 0)) {
+					if (txtDescripcion.getText().length() > 3) {
+						lblMensaje
+								.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -307,96 +263,66 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(candidatoValidator.ValidarCodigo(txtCod.getText()) == false) {
-						if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-							// Genero genero = new Genero();
-							// genero.setDescripcion(textGenero.getText());
+					(candidatoValidator.ValidarCodigo(txtDescripcion.getText()) == false) {
 
-							Calendar calendar = new GregorianCalendar();
-							int year = calendar.get(Calendar.YEAR);
+						// Genero genero = new Genero();
+						// genero.setDescripcion(textGenero.getText());
 
-							ApplicationContext ctx = SpringApplication
-									.run(WeatherConfiguration.class);
+						Calendar calendar = new GregorianCalendar();
+						int year = calendar.get(Calendar.YEAR);
 
-							WeatherClient weatherClient = ctx
-									.getBean(WeatherClient.class);
-							QueryGenericoRequest query = new QueryGenericoRequest();
+						ApplicationContext ctx = SpringApplication
+								.run(WeatherConfiguration.class);
 
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
-							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_candidatos"
-									+ "( id_candidatos, id_persona, id_tipo_candidato, id_lista, codigo ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_candidatos_seq')"
-									+ " , "
-									+ personaSelected
-									+ " , "
-									+ tipoCandidatoSelected
-									+ " , "
-									+ listaSelected
-									+ ", '"
-									+ year
-									+ "/'"
-									+ " || upper('"
-									+ txtCod.getText()
-									+ "'), '"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
+						WeatherClient weatherClient = ctx
+								.getBean(WeatherClient.class);
+						QueryGenericoRequest query = new QueryGenericoRequest();
 
-							QueryGenericoResponse response = weatherClient
-									.getQueryGenericoResponse(query);
-							weatherClient.printQueryGenericoResponse(response);
+						// para registrar se inserta el codigo es 1
+						query.setTipoQueryGenerico(1);
+						System.out.println(Login.userLogeado);
+						query.setQueryGenerico("INSERT INTO ucsaws_candidatos"
+								+ "( id_candidatos, id_persona, id_tipo_candidato, id_lista, codigo ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "VALUES ("
+								+ "nextval('ucsaws_candidatos_seq')" + " , "
 
-							model = new CandidatoJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado el genero.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
+								+ year + "/'" + " || upper('"
+								+ txtDescripcion.getText() + "'), '"
+								+ Login.userLogeado + "' , now(), '"
+								+ Login.userLogeado + "' , now())");
 
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
+						QueryGenericoResponse response = weatherClient
+								.getQueryGenericoResponse(query);
+						weatherClient.printQueryGenericoResponse(response);
 
-							txtCod.setText("");
+						model = new TipoEventoJTableModel();
+						recuperarDatos();
+						table.setModel(model);
+						model.fireTableDataChanged();
+						table.removeColumn(table.getColumnModel().getColumn(0));
+						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+						lblMensaje
+								.setText("Excelente, se ha guardado el genero.");
+						Timer t = new Timer(Login.timer, new ActionListener() {
 
-							// this.dispose();
-						} else {
-							// JOptionPane.showMessageDialog(null,
-							// "Ya existe el genero " + txtDesc.getText(),
-							// "Información",JOptionPane.WARNING_MESSAGE);
-							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								lblMensaje.setText(null);
+							}
+						});
+						t.setRepeats(false);
+						t.start();
 
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-						}
+						txtDescripcion.setText("");
+
+						// this.dispose();
+
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
 								.setText("Ya existe el candidato con el codigo "
-										+ txtCod.getText());
+										+ txtDescripcion.getText());
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -468,7 +394,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 						t.start();
 						limpiar();
 
-						model = new CandidatoJTableModel();
+						model = new TipoEventoJTableModel();
 
 						recuperarDatos();
 						table.setModel(model);
@@ -510,8 +436,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			VentanaBuscarCandidato candidato = new VentanaBuscarCandidato();
-			candidato.setVisible(true);
+			VentanaBuscarTipoEvento tevento = new VentanaBuscarTipoEvento();
+			tevento.setVisible(true);
 			this.dispose();
 
 		}

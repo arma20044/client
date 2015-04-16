@@ -17,6 +17,8 @@ import org.springframework.context.ApplicationContext;
 
 import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -230,6 +232,14 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				getContentPane().add(btnVotantesHabilitados);
 				
 				JButton btnTipoEvento = new JButton("Tipo Evento");
+				btnTipoEvento.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarTipoEvento tevento;
+						tevento = new VentanaBuscarTipoEvento();
+						tevento.setVisible(true);
+						dispose();
+					}
+				});
 				btnTipoEvento.setBounds(308, 282, 146, 23);
 				getContentPane().add(btnTipoEvento);
 		//lblNombreDescripcion.repaint();
