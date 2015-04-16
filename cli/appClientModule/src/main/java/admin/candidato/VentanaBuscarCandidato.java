@@ -3,7 +3,7 @@ package src.main.java.admin.candidato;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -27,6 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -35,15 +37,13 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.Logica;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.genero.CiudadesJTableModel;
 import src.main.java.admin.genero.VentanaBuscar;
-import src.main.java.dao.genero.GeneroDAO;
-import src.main.java.hello.Genero;
+import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.Color;
 
 public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
@@ -78,7 +78,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		botonCancelar.setIcon(new ImageIcon(VentanaBuscarCandidato.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setBounds(838, 422, 45, 25);
+		botonCancelar.setBounds(589, 422, 45, 25);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -136,20 +136,34 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		getContentPane().add(labelTitulo);
 		limpiar();
 
-		setSize(889, 476);
+		setSize(640, 476);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
 		scrollPane = new JScrollPane();
+		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 175, 883, 248);
+		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
-		table_1 = new JTable();
+		table_1 = new JTable() {
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int row, int column) {
+				Component component = super.prepareRenderer(renderer, row,
+						column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth
+						+ getIntercellSpacing().width,
+						tableColumn.getPreferredWidth()));
+				return component;
+			}
+		};
 		table_1.setToolTipText("Listado de Generos.");
 		table_1.setAutoCreateRowSorter(true);
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
 		// String[] columnNames = {"Picture", "Description"};
 		table_1.addMouseListener(new MouseAdapter() {
@@ -190,12 +204,13 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
 			}
 		});
+		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE CANDIDATOS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblListaDeGeneros.setBounds(229, 135, 325, 30);
+		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
 
 		JButton btnHome = new JButton("");
@@ -238,7 +253,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		getContentPane().add(btnNewButton);
 
 		lblMensaje = new JLabel("");
-		lblMensaje.setBounds(39, 135, 432, 14);
+		lblMensaje.setForeground(Color.RED);
+		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
@@ -280,12 +296,13 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			GeneroDAO generoDAO = new GeneroDAO();
+			CandidatoDAO candidatoDAO = new CandidatoDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = generoDAO.buscarGenero(txtBuscar.getText());
+					miPersona = candidatoDAO.buscarCandidato(txtBuscar
+							.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -340,10 +357,10 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 						"¿Esta seguro de eliminar el Candidato?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					GeneroDAO generoDAO = new GeneroDAO();
+					CandidatoDAO candidatoDAO = new CandidatoDAO();
 
 					try {
-						generoDAO.eliminarGenero(codTemporal);
+						candidatoDAO.eliminarCandidato(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -405,8 +422,6 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
 
-		
-
 		habilita(true, false, false, false, false, true, false, true, true);
 	}
 
@@ -455,8 +470,6 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
-		Genero gen = new Genero();
-
 		boolean existe = false;
 
 		// Statement estatuto = conex.getConnection().createStatement();
@@ -470,13 +483,11 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT ca.id_candidatos, nombre, apellido , tc.descripcion, li.nro_lista || ' ' ||  li.nombre_lista,"
-				+ " to_char(ca.fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-				+ "ca.usuario_ins, to_char(ca.fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,ca.usuario_upd from ucsaws_candidatos "
+		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo, nombre, apellido , tc.descripcion, li.nro_lista || ' - ' ||  li.nombre_lista"
+				+ " from ucsaws_candidatos "
 				+ " ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
 				+ " join ucsaws_tipo_candidato tc on (ca.id_tipo_candidato = tc.id_tipo_candidato)"
-				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)"
-				+ "");
+				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -517,8 +528,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString(),fil.get(7).toString(),fil.get(8).toString() };
+					fil.get(4).toString(), fil.get(5).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
