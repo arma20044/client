@@ -19,6 +19,7 @@ import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
+import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -216,6 +217,13 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				getContentPane().add(btnCandidatos);
 				
 				JButton btnZonas = new JButton("Zonas");
+				btnZonas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarZona zona = new VentanaBuscarZona();
+						zona.setVisible(true);
+						dispose();
+					}
+				});
 				btnZonas.setBounds(480, 142, 176, 23);
 				getContentPane().add(btnZonas);
 				
