@@ -1,4 +1,4 @@
-package src.main.java.admin.zona;
+package src.main.java.admin.local;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -38,13 +38,13 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.genero.VentanaRegistro;
-import src.main.java.admin.validator.ZonaValidator;
-import src.main.java.dao.zona.ZonaDAO;
+import src.main.java.admin.validator.LocalValidator;
+import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaRegistroZona extends JFrame implements ActionListener {
+public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -54,10 +54,10 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 	private VentanaRegistro ventanaRegistro;
 	private JTable table;
 
-	private ZonaJTableModel model = new ZonaJTableModel();
+	private LocalJTableModel model = new LocalJTableModel();
 	private JScrollPane scrollPane;
 
-	private ZonaValidator zonaValidator = new ZonaValidator();
+	private LocalValidator localValidator = new LocalValidator();
 
 	private String codTemporal = "";
 	private JButton btnHome;
@@ -67,7 +67,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbDistrito;
+	private JComboBox cmbZona;
 	private JLabel lblNroZona;
 	private JTextField txtNroZona;
 	private JTextField txtDescripcion;
@@ -76,11 +76,11 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de registro
 	 */
-	public VentanaRegistroZona() {
+	public VentanaRegistroLocal() {
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
-		botonGuardar.setIcon(new ImageIcon(VentanaRegistroZona.class
+		botonGuardar.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(339, 52, 32, 32);
 		botonGuardar.setOpaque(false);
@@ -94,7 +94,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		botonCancelar = new JButton();
 		botonCancelar.setBackground(Color.WHITE);
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroZona.class
+		botonCancelar.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setBounds(774, 383, 32, 32);
 		botonCancelar.setOpaque(false);
@@ -107,7 +107,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 
 		btnEliminar = new JButton();
 		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroZona.class
+		btnEliminar.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
 		btnEliminar.setBounds(381, 52, 32, 32);
@@ -120,7 +120,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE ZONAS");
+		labelTitulo.setText("REGISTRO DE LOCAL");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -212,7 +212,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaRegistroZona.class
+		btnHome.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -221,16 +221,16 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbDistrito = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbDistrito.setToolTipText("Nro. y Descripcion de Distrito");
-		cmbDistrito.setBounds(213, 120, 340, 20);
-		getContentPane().add(cmbDistrito);
+		cmbZona = new JComboBox(recuperarDatosComboBoxZona());
+		cmbZona.setToolTipText("Nro. y Descripcion de Distrito");
+		cmbZona.setBounds(213, 120, 340, 20);
+		getContentPane().add(cmbZona);
 
-		JLabel lblDistrito = new JLabel();
-		lblDistrito.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDistrito.setText("Distrito:");
-		lblDistrito.setBounds(130, 118, 61, 25);
-		getContentPane().add(lblDistrito);
+		JLabel lblZona = new JLabel();
+		lblZona.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblZona.setText("Zona:");
+		lblZona.setBounds(130, 118, 61, 25);
+		getContentPane().add(lblZona);
 
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -277,7 +277,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 			try {
 				
 
-				Item item3 = (Item) cmbDistrito.getSelectedItem();
+				Item item3 = (Item) cmbZona.getSelectedItem();
 				Integer distritoSelected = item3.getId();
 				if (!(txtNroZona.getText().length() == 0)) {
 					if (txtNroZona.getText().length() > 3) {
@@ -292,7 +292,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(zonaValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , distritoSelected) == false) {
+					(localValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , distritoSelected) == false) {
 						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
@@ -310,10 +310,10 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 							// para registrar se inserta el codigo es 1
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_zona"
-									+ "( id_zona, desc_zona, nro_zona, id_distrito ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+							query.setQueryGenerico("INSERT INTO ucsaws_local"
+									+ "( id_local, desc_local, nro_local, id_zona ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
-									+ "nextval('ucsaws_zona_seq') ,"
+									+ "nextval('ucsaws_local_seq') ,"
 									+ " upper('"
 									+ txtDescripcion.getText()
 									+ "'), "
@@ -330,7 +330,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 									.getQueryGenericoResponse(query);
 							weatherClient.printQueryGenericoResponse(response);
 
-							model = new ZonaJTableModel();
+							model = new LocalJTableModel();
 							recuperarDatos();
 							table.setModel(model);
 							model.fireTableDataChanged();
@@ -338,7 +338,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 									.getColumn(0));
 							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 							lblMensaje
-									.setText("Excelente, se ha guardado la Zona.");
+									.setText("Excelente, se ha guardado el Local.");
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -376,7 +376,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe la Zona "
+								.setText("Ya existe el Local "
 										+ txtNroZona.getText());
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -415,22 +415,22 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar la Zona?",
+						"¿Esta seguro de eliminar el Local?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
-					ZonaDAO zonaDAO = new ZonaDAO();
+					LocalDAO localDAO = new LocalDAO();
 
 					try {
-						zonaDAO.eliminarZona(codTemporal);
+						localDAO.eliminarLocal(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					if (zonaDAO.eliminarZona(codTemporal) == true) {
+					if (localDAO.eliminarLocal(codTemporal) == true) {
 
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
 						// + txtDesc.getText());
@@ -438,7 +438,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						// codTemporal.getText());
 						// txtId.setText("");
 						lblMensaje
-								.setText("Excelente, se ha eliminado la Zona ");
+								.setText("Excelente, se ha eliminado el Local ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -450,7 +450,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						limpiar();
 						txtDescripcion.setText("");
 						txtNroZona.setText("");
-						model = new ZonaJTableModel();
+						model = new LocalJTableModel();
 
 						recuperarDatos();
 						table.setModel(model);
@@ -462,7 +462,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 					else {
 						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
 						lblMensaje
-								.setText("ERROR: Existen registros que apuntan a la Zona que desea eliminar ");
+								.setText("ERROR: Existen registros que apuntan al Local que desea eliminar ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -479,7 +479,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 				// "Por favor seleccione que Genero desea Eliminar",
 				// "Información",JOptionPane.WARNING_MESSAGE);
 				lblMensaje
-						.setText("Por favor seleccione que Zona desea Eliminar");
+						.setText("Por favor seleccione que Local desea Eliminar");
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -492,7 +492,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			VentanaBuscarZona candidato = new VentanaBuscarZona();
+			VentanaBuscarLocal candidato = new VentanaBuscarLocal();
 			candidato.setVisible(true);
 			this.dispose();
 
@@ -524,9 +524,9 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_zona, nro_zona,desc_zona,nro_distrito, desc_distrito  "
-				+ " from ucsaws_zona zona join ucsaws_distrito dis on (zona.id_distrito = dis.id_distrito)"
-				+ "order by nro_zona" + "");
+		query.setQueryGenerico("SELECT  id_local, nro_local,desc_local,nro_zona, desc_zona "
+				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
+				+ "order by nro_local" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -575,7 +575,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 
 	}
 
-	private Vector recuperarDatosComboBoxPersona() {
+	private Vector recuperarDatosComboBoxZona() {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -597,8 +597,8 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_distrito, nro_distrito || ' -  ' || desc_distrito"
-				+ " from ucsaws_distrito " + "order by nro_distrito");
+		query.setQueryGenerico("SELECT id_zona, nro_zona || ' -  ' || desc_zona"
+				+ " from ucsaws_zona " + "order by nro_zona");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

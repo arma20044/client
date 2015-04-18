@@ -18,6 +18,7 @@ import org.springframework.context.ApplicationContext;
 import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
@@ -228,6 +229,13 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				getContentPane().add(btnZonas);
 				
 				JButton btnLocal = new JButton("Local");
+				btnLocal.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarLocal local = new VentanaBuscarLocal();
+						local.setVisible(true);
+						dispose();
+					}
+				});
 				btnLocal.setBounds(480, 180, 176, 23);
 				getContentPane().add(btnLocal);
 				

@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
-public class ZonaValidator {
+public class LocalValidator {
 
 	public Boolean ValidarCodigo(String nro, String desc, Integer distrito)
 			throws ParseException, org.json.simple.parser.ParseException {
@@ -31,9 +31,9 @@ public class ZonaValidator {
 
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_zona, nro_zona "
-				+ "from ucsaws_zona " + "where nro_zona ='" + nro
-				+ "' and   id_distrito =" +distrito+ "" );
+		query.setQueryGenerico("SELECT id_local, nro_local "
+				+ "from ucsaws_local " + "where nro_local ='" + nro
+				+ "'  and id_zona =" +distrito+ "" );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
