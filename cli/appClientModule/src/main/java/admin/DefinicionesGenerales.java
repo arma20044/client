@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
+import scr.main.java.admin.distrito.VentanaBuscarDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.local.VentanaBuscarLocal;
@@ -170,14 +170,9 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		JButton btnDistritos = new JButton("Distritos");
 		btnDistritos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaPrincipalDistrito miVentanaPrincipal;
-				miVentanaPrincipal= new VentanaPrincipalDistrito();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
-	            dispose();
+				VentanaBuscarDistrito distrito = new VentanaBuscarDistrito();
+				distrito.setVisible(true);
+				dispose();
 			}
 		});
 		btnDistritos.setBounds(308, 214, 146, 23);
