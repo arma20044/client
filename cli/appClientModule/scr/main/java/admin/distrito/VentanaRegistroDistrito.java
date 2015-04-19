@@ -65,7 +65,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbDistrito;
+	private JComboBox cmbDepartamento;
 	private JLabel lblNroZona;
 	private JTextField txtNroZona;
 	private JTextField txtDescripcion;
@@ -221,16 +221,16 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbDistrito = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbDistrito.setToolTipText("Nro. y Descripcion de Distrito");
-		cmbDistrito.setBounds(213, 120, 340, 20);
-		getContentPane().add(cmbDistrito);
+		cmbDepartamento = new JComboBox(recuperarDatosComboBoxDepartamento());
+		cmbDepartamento.setToolTipText("Nro. y Descripcion de Distrito");
+		cmbDepartamento.setBounds(213, 120, 340, 20);
+		getContentPane().add(cmbDepartamento);
 
-		JLabel lblDistrito = new JLabel();
-		lblDistrito.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDistrito.setText("Distrito:");
-		lblDistrito.setBounds(130, 118, 61, 25);
-		getContentPane().add(lblDistrito);
+		JLabel lblDepartamento = new JLabel();
+		lblDepartamento.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDepartamento.setText("Departamento:");
+		lblDepartamento.setBounds(130, 118, 61, 25);
+		getContentPane().add(lblDepartamento);
 
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -276,7 +276,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		if (e.getSource() == botonGuardar) {
 			try {
 
-				Item item3 = (Item) cmbDistrito.getSelectedItem();
+				Item item3 = (Item) cmbDepartamento.getSelectedItem();
 				Integer distritoSelected = item3.getId();
 				if (!(txtNroZona.getText().length() == 0)) {
 					if (txtNroZona.getText().length() > 3) {
@@ -569,7 +569,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 	}
 
-	private Vector recuperarDatosComboBoxPersona() {
+	private Vector recuperarDatosComboBoxDepartamento() {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -591,8 +591,8 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_distrito, nro_distrito || ' -  ' || desc_distrito"
-				+ " from ucsaws_distrito " + "order by nro_distrito");
+		query.setQueryGenerico("SELECT id_departamento, nro_departamento || ' -  ' || desc_departamento"
+				+ " from ucsaws_departamento " + "order by nro_departamento");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
