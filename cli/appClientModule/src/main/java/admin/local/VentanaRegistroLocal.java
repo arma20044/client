@@ -43,6 +43,8 @@ import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
@@ -239,6 +241,15 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
+		txtNroZona.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (txtNroZona.getText().length() == 1)
+				{
+					txtNroZona.setText(0 + txtNroZona.getText() );
+				}
+			}
+		});
 		txtNroZona.setBounds(213, 54, 75, 20);
 		getContentPane().add(txtNroZona);
 		txtNroZona.setColumns(10);
@@ -316,10 +327,10 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 									+ "nextval('ucsaws_local_seq') ,"
 									+ " upper('"
 									+ txtDescripcion.getText()
-									+ "'), "
+									+ "'), '"
 									
 									+ txtNroZona.getText()
-									+ ",'"
+									+ "' ,'"
 									+ distritoSelected + "','"
 									+ Login.userLogeado
 									+ "' , now(), '"

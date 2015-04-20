@@ -4,21 +4,15 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.google.gson.JsonArray;
-
-import src.main.java.hello.Genero;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -45,10 +39,10 @@ public class DepartamentoDAO {
 //		}
 //	}
 
-	public JSONArray buscarDepartamento(Integer codigo) throws ParseException, org.json.simple.parser.ParseException 
+	public JSONArray buscarDepartamento(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
 		JSONArray filas = new JSONArray();
-		Genero gen = new Genero();
+		
 		Date date = null;
 		
 		boolean existe=false;
@@ -66,9 +60,9 @@ public class DepartamentoDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT id_departamento, desc_departamento, nro_departamento, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-					+ "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento "
-					+ "where nro_departamento = " + codigo + "order by nro_departamento");
+			query.setQueryGenerico("SELECT id_departamento, desc_departamento "
+					+ " from ucsaws_departamento "
+				  + "where upper(desc_departamento) like upper('%"+codigo+"%')  ");
 			
 			
 			
@@ -78,7 +72,7 @@ public class DepartamentoDAO {
 			String res = response.getQueryGenericoResponse();
 	
 				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "El Departamento no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
 					return filas;
 				}
 				
@@ -166,50 +160,12 @@ public class DepartamentoDAO {
 						
 	}
 
-	public void modificarDepartamento(String codigoASetear, String codigoWhere, String nombre) {
-		
-		
-		try{
-			
-		
-		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-		
-		
-		query.setTipoQueryGenerico(3);
-		
-		query.setQueryGenerico("update ucsaws_departamento "
-				+ "set nro_departamento = upper('" +codigoASetear+"') , desc_departamento = upper('" + nombre
-						+ "'), fch_upd = now() , usuario_upd = '" +  Login.userLogeado
-				+ "' where upper(nro_departamento) = "
-				+ "upper('"
-				+ codigoWhere
-				+ "') ");
-		
-		
-		
-		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-	} catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-	}
-	JOptionPane.showMessageDialog(null,"Excelente, se ha modificado el Departamento." + codigoWhere);
-	
 
-//			if(res.compareTo("ERRORRRRRRR")==0){
-//				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-//				return gen;
-//			}
-
-	}
-
-	public void eliminarDepartamento(String codigo)
+	public Boolean eliminarDepartamento(String codigo)
 	{
+		boolean eliminado = false;
+		
 		try{
 			
 			
@@ -222,10 +178,9 @@ public class DepartamentoDAO {
 			query.setTipoQueryGenerico(4);
 			
 			query.setQueryGenerico("DELETE FROM ucsaws_departamento WHERE"
-					+ " nro_departamento = '"
-					
+					+ " id_departamento = "
 					+ codigo 
-					+ "'");
+					 );
 			
 			
 			
@@ -234,9 +189,19 @@ public class DepartamentoDAO {
 			
 			String res = response.getQueryGenericoResponse();
 			
+			if (res.compareTo("ERRORRRRRRR")== 0){
+				
+				
+				eliminado = false;
+			}
+			else{
+				eliminado = true;
+			}
+			
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Departamento.","Error",JOptionPane.ERROR_MESSAGE);
 		}
-		JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el Departamento." + codigo);
+		return eliminado;
+		
 	}
 }

@@ -43,6 +43,8 @@ import src.main.java.dao.distrito.DistritoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
@@ -239,6 +241,15 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
+		txtNroZona.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if (txtNroZona.getText().length() == 1)
+				{
+					txtNroZona.setText(0 + txtNroZona.getText() );
+				}
+			}
+		});
 		txtNroZona.setBounds(213, 54, 75, 20);
 		getContentPane().add(txtNroZona);
 		txtNroZona.setColumns(10);
@@ -317,9 +328,9 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 								+ "( id_distrito, desc_distrito, nro_distrito, id_departamento ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 								+ "VALUES (" + "nextval('ucsaws_distrito_seq') ,"
 								+ " upper('" + txtDescripcion.getText()
-								+ "'), "
+								+ "'), '"
 
-								+ txtNroZona.getText() + ",'"
+								+ txtNroZona.getText() + "' ,'"
 								+ distritoSelected + "','" + Login.userLogeado
 								+ "' , now(), '" + Login.userLogeado
 								+ "' , now())");

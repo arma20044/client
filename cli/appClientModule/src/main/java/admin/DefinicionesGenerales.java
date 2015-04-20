@@ -17,7 +17,9 @@ import org.springframework.context.ApplicationContext;
 
 import scr.main.java.admin.distrito.VentanaBuscarDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
+import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -71,15 +73,9 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		JButton btnGenero = new JButton("Generos");
 		btnGenero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				src.main.java.admin.genero.VentanaPrincipal miVentanaPrincipal;
-				miVentanaPrincipal= new src.main.java.admin.genero.VentanaPrincipal();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
-	            dispose();
+				VentanaBuscarGenero genero = new VentanaBuscarGenero();
+				genero.setVisible(true);
+				dispose();
 			}
 		});
 		btnGenero.setBounds(93, 146, 155, 23);
@@ -154,14 +150,9 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		JButton btnDepartamentos = new JButton("Departamentos");
 		btnDepartamentos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				src.main.java.admin.departamento.VentanaPrincipalDepartamento miVentanaPrincipal;
-				miVentanaPrincipal= new src.main.java.admin.departamento.VentanaPrincipalDepartamento();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
-	            dispose();
+				VentanaBuscarDepartamento departamento = new VentanaBuscarDepartamento();
+				departamento.setVisible(true);
+				dispose();
 			}
 		});
 		btnDepartamentos.setBounds(308, 180, 146, 23);
