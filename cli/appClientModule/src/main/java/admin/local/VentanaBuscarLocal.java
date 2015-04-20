@@ -39,7 +39,6 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.genero.VentanaBuscar;
 import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -54,7 +53,6 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
 	private JButton botonCancelar, botonBuscar, botonEliminar, btnNewButton;
-	private VentanaBuscar ventanaBuscar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -89,7 +87,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 
 		botonBuscar = new JButton();
 		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscar.class
+		botonBuscar.setIcon(new ImageIcon(VentanaBuscarLocal.class
 				.getResource("/imgs/search.png")));
 		botonBuscar.setBounds(415, 52, 32, 32);
 		botonBuscar.setOpaque(false);
@@ -469,13 +467,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		botonEliminar.setEnabled(bEliminar);
 	}
 
-	public VentanaBuscar getVentanaBuscar() {
-		return ventanaBuscar;
-	}
 
-	public void setVentanaBuscar(VentanaBuscar ventanaBuscar) {
-		this.ventanaBuscar = ventanaBuscar;
-	}
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();

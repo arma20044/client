@@ -37,7 +37,6 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.genero.VentanaRegistro;
 import src.main.java.admin.validator.CandidatoValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
@@ -51,7 +50,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar, btnEliminar;
-	private VentanaRegistro ventanaRegistro;
 	private JTable table;
 
 	private CandidatoJTableModel model = new CandidatoJTableModel();
@@ -517,13 +515,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		}
 	}
 
-	public VentanaRegistro getVentanaRegistro() {
-		return ventanaRegistro;
-	}
 
-	public void setVentanaRegistro(VentanaRegistro ventanaRegistro) {
-		this.ventanaRegistro = ventanaRegistro;
-	}
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();

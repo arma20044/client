@@ -37,7 +37,7 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.genero.VentanaRegistro;
+
 import src.main.java.admin.validator.ZonaValidator;
 import src.main.java.dao.zona.ZonaDAO;
 import src.main.java.hello.WeatherClient;
@@ -53,7 +53,6 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar, btnEliminar;
-	private VentanaRegistro ventanaRegistro;
 	private JTable table;
 
 	private ZonaJTableModel model = new ZonaJTableModel();
@@ -244,9 +243,8 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		txtNroZona.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (txtNroZona.getText().length() == 1)
-				{
-					txtNroZona.setText(0 + txtNroZona.getText() );
+				if (txtNroZona.getText().length() == 1) {
+					txtNroZona.setText(0 + txtNroZona.getText());
 				}
 			}
 		});
@@ -258,13 +256,13 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(326, 165, 363, 14);
 		getContentPane().add(lblMensaje);
-		
+
 		JLabel lblDescripcionZona = new JLabel();
 		lblDescripcionZona.setText("Descripcion:");
 		lblDescripcionZona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblDescripcionZona.setBounds(102, 82, 89, 25);
 		getContentPane().add(lblDescripcionZona);
-		
+
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(213, 85, 108, 20);
@@ -286,13 +284,13 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				
 
 				Item item3 = (Item) cmbDistrito.getSelectedItem();
 				Integer distritoSelected = item3.getId();
 				if (!(txtNroZona.getText().length() == 0)) {
 					if (txtNroZona.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
+						lblMensaje
+								.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -303,92 +301,86 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(zonaValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , distritoSelected) == false) {
-						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-							// Genero genero = new Genero();
-							// genero.setDescripcion(textGenero.getText());
+					(zonaValidator.ValidarCodigo(txtNroZona.getText(),
+							txtDescripcion.getText(), distritoSelected) == false) {
+						// if
+						// (candidatoValidator.ValidarPersona(personaSelected)
+						// == false) {
+						// Genero genero = new Genero();
+						// genero.setDescripcion(textGenero.getText());
 
-							Calendar calendar = new GregorianCalendar();
-							int year = calendar.get(Calendar.YEAR);
+						Calendar calendar = new GregorianCalendar();
+						int year = calendar.get(Calendar.YEAR);
 
-							ApplicationContext ctx = SpringApplication
-									.run(WeatherConfiguration.class);
+						ApplicationContext ctx = SpringApplication
+								.run(WeatherConfiguration.class);
 
-							WeatherClient weatherClient = ctx
-									.getBean(WeatherClient.class);
-							QueryGenericoRequest query = new QueryGenericoRequest();
+						WeatherClient weatherClient = ctx
+								.getBean(WeatherClient.class);
+						QueryGenericoRequest query = new QueryGenericoRequest();
 
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
-							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_zona"
-									+ "( id_zona, desc_zona, nro_zona, id_distrito ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_zona_seq') ,"
-									+ " upper('"
-									+ txtDescripcion.getText()
-									+ "'), '"
-									
-									+ txtNroZona.getText()
-									+ "' ,'"
-									+ distritoSelected + "','"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
+						// para registrar se inserta el codigo es 1
+						query.setTipoQueryGenerico(1);
+						System.out.println(Login.userLogeado);
+						query.setQueryGenerico("INSERT INTO ucsaws_zona"
+								+ "( id_zona, desc_zona, nro_zona, id_distrito ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "VALUES (" + "nextval('ucsaws_zona_seq') ,"
+								+ " upper('" + txtDescripcion.getText()
+								+ "'), '"
 
-							QueryGenericoResponse response = weatherClient
-									.getQueryGenericoResponse(query);
-							weatherClient.printQueryGenericoResponse(response);
+								+ txtNroZona.getText() + "' ,'"
+								+ distritoSelected + "','" + Login.userLogeado
+								+ "' , now(), '" + Login.userLogeado
+								+ "' , now())");
 
-							model = new ZonaJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado la Zona.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
+						QueryGenericoResponse response = weatherClient
+								.getQueryGenericoResponse(query);
+						weatherClient.printQueryGenericoResponse(response);
 
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
+						model = new ZonaJTableModel();
+						recuperarDatos();
+						table.setModel(model);
+						model.fireTableDataChanged();
+						table.removeColumn(table.getColumnModel().getColumn(0));
+						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+						lblMensaje
+								.setText("Excelente, se ha guardado la Zona.");
+						Timer t = new Timer(Login.timer, new ActionListener() {
 
-							txtNroZona.setText("");
-							txtDescripcion.setText("");
+							public void actionPerformed(ActionEvent e) {
+								lblMensaje.setText(null);
+							}
+						});
+						t.setRepeats(false);
+						t.start();
 
-							// this.dispose();
-//						} else {
-//							// JOptionPane.showMessageDialog(null,
-//							// "Ya existe el genero " + txtDesc.getText(),
-//							// "Información",JOptionPane.WARNING_MESSAGE);
-//							lblMensaje
-//									.setText("La Persona no puede tener mas de una candidatura");
-//							Timer t = new Timer(Login.timer,
-//									new ActionListener() {
-//
-//										public void actionPerformed(
-//												ActionEvent e) {
-//											lblMensaje.setText(null);
-//										}
-//									});
-//							t.setRepeats(false);
-//							t.start();
-//						}
+						txtNroZona.setText("");
+						txtDescripcion.setText("");
+
+						// this.dispose();
+						// } else {
+						// // JOptionPane.showMessageDialog(null,
+						// // "Ya existe el genero " + txtDesc.getText(),
+						// // "Información",JOptionPane.WARNING_MESSAGE);
+						// lblMensaje
+						// .setText("La Persona no puede tener mas de una candidatura");
+						// Timer t = new Timer(Login.timer,
+						// new ActionListener() {
+						//
+						// public void actionPerformed(
+						// ActionEvent e) {
+						// lblMensaje.setText(null);
+						// }
+						// });
+						// t.setRepeats(false);
+						// t.start();
+						// }
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
-						lblMensaje
-								.setText("Ya existe la Zona "
-										+ txtNroZona.getText());
+						lblMensaje.setText("Ya existe la Zona "
+								+ txtNroZona.getText());
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -426,8 +418,8 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar la Zona?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar la Zona?", "Confirmación",
+						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
@@ -508,14 +500,6 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 			this.dispose();
 
 		}
-	}
-
-	public VentanaRegistro getVentanaRegistro() {
-		return ventanaRegistro;
-	}
-
-	public void setVentanaRegistro(VentanaRegistro ventanaRegistro) {
-		this.ventanaRegistro = ventanaRegistro;
 	}
 
 	private void recuperarDatos() {
@@ -657,8 +641,5 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		return model;
 
 	}
-
-
-
 
 }

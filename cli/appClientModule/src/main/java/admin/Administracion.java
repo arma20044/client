@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
+
 import src.main.java.admin.evento.VentanaPrincipalEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
