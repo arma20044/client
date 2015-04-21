@@ -1,5 +1,4 @@
 package src.main.java.dao.listas;
-
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
@@ -8,14 +7,13 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Lista;
-import src.main.java.hello.Genero;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-
 
 public class ListasDAO {
 	
@@ -39,9 +37,10 @@ public class ListasDAO {
 //		}
 //	}
 
-	public Lista buscarLista(String codigo) throws ParseException 
+	public JSONArray buscarLista(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
-		Lista gen = new Lista();
+		JSONArray filas = new JSONArray();
+		
 		Date date = null;
 		
 		boolean existe=false;
@@ -59,10 +58,9 @@ public class ListasDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT nro_lista, nombre_lista,descripcion, anho, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS'), usuario_ins  from ucsaws_listas "
-					+ "where nro_lista = "
-					
-					+ codigo + "");
+			query.setQueryGenerico("SELECT id_lista, nombre_lista "
+					+ " from ucsaws_listas "
+				  + "where upper(nombre_lista) like upper('%"+codigo+"%')  ");
 			
 			
 			
@@ -71,9 +69,9 @@ public class ListasDAO {
 			
 			String res = response.getQueryGenericoResponse();
 	
-				if(res.compareTo("ERRORRRRRRR")==0){
-					JOptionPane.showMessageDialog(null, "La Lista: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-					return gen;
+				if(res.compareTo("[]")==0){
+					JOptionPane.showMessageDialog(null, "La Lista no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					return filas;
 				}
 				
 				else
@@ -83,32 +81,71 @@ public class ListasDAO {
 				
 				
 				String generoAntesPartir = response.getQueryGenericoResponse();
-				String[] parts = generoAntesPartir.split(",");
-				String part1 = parts[0]; //nro lista
-				String part2 = parts[1]; // nombre lista
-				String part3 = parts[2]; // descripcion
-				String part4 = parts[3]; // año
-				String part5 = parts[4]; // fecha insert
-				String part6 = parts[5]; // usuario insert
+				
+				JSONParser j = new JSONParser();
+				Object ob;
+				String part1,part2,part3;
+				
+					ob = j.parse(generoAntesPartir);
+					filas = (JSONArray) ob;
+					
+					
+					
+				//	JSONArray fila		= (JSONArray) filas.get(0);
+					//JSONArray fila1		= (JSONArray) filas.get(1);
+							
+//					System.out.print(filas);
+//					System.out.print("\\n");
+//				//	System.out.print(fila);
+//					System.out.print("\\n");
+//					System.out.print(fila1);
+					
+					
+					
+//					 part1 = (String) array1.get(0);
+//					 part2 = (String) array1.get(1);
+//					 part3 = (String) array1.get(2);
+					 
+//					 gen.setDescripcion(part1);
+//					 gen.setFecha(part2);
+//					 gen.setUsuario(part3);
+					
 				
 				
-				//seteo de la entidad
-				gen.setAnhoLista(part4);
-				gen.setDescripcion(part3);
-				gen.setNombreLista(part2);
-				gen.setNroLista(part1);
-				gen.setUsuIns(part6);
-				gen.setFechaIns(part5);
-				
-				
-			
 				
 				
 				
 				
+
 				
 				
-				return gen;
+				
+				
+//				String[] parts = generoAntesPartir.split(",");
+//				
+				
+				
+				
+//				DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+//				DateTime dt = formatter.parseDateTime(part2);
+				
+//				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
+//				
+//				
+//					date = formatter.parse(part2);
+//					
+//				GregorianCalendar newCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
+//				newCalendar.setTime(date);
+				//GregorianCalendar fecha = date.tog
+				
+				//fecha.setTime(date);
+				
+//				gen.setFecha(part2);
+//				
+//				gen.setUsuario(part3);
+				
+				
+				return filas;
 				
 			}
 			
@@ -121,49 +158,9 @@ public class ListasDAO {
 						
 	}
 
-	public void modificarLista(String codigoASetear, String codigoWhere , String descripcion, String fecha, String nombrelista) {
-		
-		
-		try{
-			
-		
-		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-		
-		
-		query.setTipoQueryGenerico(3);
-		
-		query.setQueryGenerico("update ucsaws_listas "
-				+ "set nro_lista = '" +codigoASetear+"',  descripcion = upper('" +descripcion+"') , fch_upd = now() , usuario_upd = 'ucsa2014' " 
-				+ ",  nombre_lista =upper('" + nombrelista + "'),  anho ='" + fecha 
-				+ "' where nro_lista = "
-				+ "'"
-				+ codigoWhere
-				+ "' ");
-		
-		
-		
-		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-	} catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-	}
-	JOptionPane.showMessageDialog(null,"Excelente, se ha modificado la Lista " + codigoWhere +".");
-	
 
-//			if(res.compareTo("ERRORRRRRRR")==0){
-//				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-//				return gen;
-//			}
-
-	}
-
-	public boolean eliminarLista(String codigo)
+	public Boolean eliminarLista(String codigo)
 	{
 		boolean eliminado = false;
 		
@@ -200,7 +197,7 @@ public class ListasDAO {
 			}
 			
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar la lista","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Lista.","Error",JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
 		

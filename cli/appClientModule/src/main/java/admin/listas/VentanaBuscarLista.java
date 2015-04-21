@@ -1,4 +1,4 @@
-package src.main.java.admin.tipoEvento;
+package src.main.java.admin.listas;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -39,12 +39,12 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.tipoEvento.TipoEventoDAO;
+import src.main.java.dao.listas.ListasDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
+public class VentanaBuscarLista extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -57,7 +57,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private TipoEventoJTableModel model = new TipoEventoJTableModel();
+	private PaisJTableModel model = new PaisJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
@@ -68,12 +68,12 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarTipoEvento() {
+	public VentanaBuscarLista() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarLista.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setBounds(589, 422, 45, 25);
@@ -87,7 +87,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 
 		botonBuscar = new JButton();
 		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class
+		botonBuscar.setIcon(new ImageIcon(VentanaBuscarLista.class
 				.getResource("/imgs/search.png")));
 		botonBuscar.setBounds(415, 52, 32, 32);
 		botonBuscar.setOpaque(false);
@@ -100,7 +100,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class
+		botonEliminar.setIcon(new ImageIcon(VentanaBuscarLista.class
 				.getResource("/imgs/borrar.png")));
 		botonEliminar.setBounds(499, 52, 32, 32);
 		botonEliminar.setOpaque(false);
@@ -112,7 +112,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		botonEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE TIPO DE EVENTOS");
+		labelTitulo.setText("ABM DE LISTA");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -141,7 +141,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Tipo Evento");
+		scrollPane.setToolTipText("Lista de Candidatos");
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
@@ -189,7 +189,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(0));
+					txtBuscar.setText(selectedData.get(1));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -206,7 +206,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE TIPO DE EVENTOS");
+		lblListaDeGeneros.setText("LISTA DE LISTA");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
@@ -220,7 +220,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class
+		btnHome.setIcon(new ImageIcon(VentanaBuscarLista.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -232,7 +232,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroTipoEvento registro = new VentanaRegistroTipoEvento();
+				VentanaRegistroLista registro = new VentanaRegistroLista();
 				registro.setVisible(true);
 				dispose();
 			}
@@ -241,7 +241,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		btnNewButton.setOpaque(false);
 		btnNewButton.setContentAreaFilled(false);
 		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class
+		btnNewButton.setIcon(new ImageIcon(VentanaBuscarLista.class
 				.getResource("/imgs/add.png")));
 		btnNewButton.setBounds(457, 52, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
@@ -294,13 +294,12 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			TipoEventoDAO tipoEventoDAO = new TipoEventoDAO();
+			ListasDAO listasDAO = new ListasDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = tipoEventoDAO.buscarTipoEvento(txtBuscar
-							.getText());
+					miPersona = listasDAO.buscarLista(txtBuscar.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -324,7 +323,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 					modelo = new DefaultTableModel();
 					JSONArray a = (JSONArray) miPersona.get(0);
 
-					model = new TipoEventoJTableModel();
+					model = new PaisJTableModel();
 					recuperarDatos();
 					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
@@ -352,27 +351,38 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Tipo Evento?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar la Lista?", "Confirmación",
+						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					TipoEventoDAO tipoEventoDAO = new TipoEventoDAO();
+					ListasDAO listasDAO = new ListasDAO();
 
 					try {
-						tipoEventoDAO.eliminarTipoEvento(codTemporal);
+						listasDAO.eliminarLista(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					JOptionPane.showMessageDialog(null,
-							"Excelente, se ha eliminado el Tipo Evento ");
+
+					lblMensaje.setText("Excelente, se ha eliminado la Lista");
+					codTemporal = "";
+					txtBuscar.setText("");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
 					// modificarGenero(textCod.getText(),
 					// codTemporal.getText());
 					codTemporal = "";
 					limpiar();
 
-					model = new TipoEventoJTableModel();
+					model = new PaisJTableModel();
 
 					recuperarDatos();
 					table_1.setModel(model);
@@ -382,7 +392,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Tipo Evento desea Eliminar");
+						.setText("Por favor seleccione que Lista desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -456,6 +466,8 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		botonEliminar.setEnabled(bEliminar);
 	}
 
+
+
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -473,9 +485,9 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_tipo_evento, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-				+ "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd "
-				+ " from ucsaws_tipo_evento " + "ORDER BY descripcion");
+		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho "
+				+ "from  ucsaws_listas "
+				+ "order by nro_lista" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -515,8 +527,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString() };
+					fil.get(2).toString() , fil.get(3).toString()};
 
 			model.ciudades.add(fin);
 			ite++;
