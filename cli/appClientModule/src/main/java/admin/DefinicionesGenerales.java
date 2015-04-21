@@ -23,6 +23,7 @@ import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.listas.VentanaBuscarLista;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.pais.VentanaBuscarPais;
+import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -120,14 +121,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		JButton btnPersonas = new JButton("Personas");
 		btnPersonas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				src.main.java.admin.persona.VentanaPrincipal miVentanaPrincipal;
-				miVentanaPrincipal= new src.main.java.admin.persona.VentanaPrincipal();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
+				VentanaBuscarPersona persona = new VentanaBuscarPersona();
+				persona.setVisible(true);
 	            dispose();
 	            
 			}
