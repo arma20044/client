@@ -21,6 +21,8 @@ import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.local.VentanaBuscarLocal;
+import src.main.java.admin.pais.VentanaBuscarPais;
+import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
@@ -84,13 +86,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		btnTiposDeCandidatos = new JButton("Tipos de Candidatos");
 		btnTiposDeCandidatos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				src.main.java.admin.tipoCandidato.VentanaPrincipal miVentanaPrincipal;
-				miVentanaPrincipal= new src.main.java.admin.tipoCandidato.VentanaPrincipal();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
+				VentanaBuscarTipoCandidato tipoCandidato = new VentanaBuscarTipoCandidato();
+				tipoCandidato.setVisible(true);
 	            dispose();
 			}
 		});
@@ -100,13 +97,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		JButton btnPais = new JButton("Paises");
 		btnPais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				src.main.java.admin.pais.VentanaPrincipal miVentanaPrincipal;
-				miVentanaPrincipal= new src.main.java.admin.pais.VentanaPrincipal();
-	    		/*Enviamos el objeto como parametro para que sea unico
-	    		 * en toda la aplicaci�n*/
-	    		//miVentanaPrincipal.setVentanaBuscar(miVentanaPrincipal);
-	    		/*Hacemos que se cargue la ventana*/
-	    		miVentanaPrincipal.setVisible(true);
+				VentanaBuscarPais pais = new VentanaBuscarPais();
+				pais.setVisible(true);
 	            dispose();
 			}
 		});

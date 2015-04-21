@@ -44,6 +44,8 @@ import src.main.java.dao.genero.GeneroDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaRegistroGenero extends JFrame implements ActionListener {
 
@@ -186,8 +188,8 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
+					txtNroZona.setText(selectedData.get(0));
+					txtDescripcion.setText(selectedData.get(1));
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
@@ -222,11 +224,19 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNroZona.setText("Nro:");
+		lblNroZona.setText("Codigo:");
 		lblNroZona.setBounds(130, 52, 61, 25);
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
+		txtNroZona.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < 'a' || car > 'z') && (car < 'A' || car > 'Z'))
+					arg0.consume();
+			}
+		});
 
 		txtNroZona.setBounds(213, 54, 75, 20);
 		getContentPane().add(txtNroZona);
@@ -306,8 +316,8 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), "
 
-								+ " upper('" + txtNroZona.getText()
-								+ "'), '" + Login.userLogeado + "' , now(), '"
+								+ " upper('" + txtNroZona.getText() + "'), '"
+								+ Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
 
 						QueryGenericoResponse response = weatherClient

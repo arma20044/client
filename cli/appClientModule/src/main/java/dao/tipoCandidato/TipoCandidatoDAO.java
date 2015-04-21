@@ -1,5 +1,4 @@
 package src.main.java.dao.tipoCandidato;
-
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
@@ -13,7 +12,6 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.hello.Genero;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
@@ -39,10 +37,10 @@ public class TipoCandidatoDAO {
 //		}
 //	}
 
-	public JSONArray buscarTipoCandidato(String codigo, String descripcion) throws ParseException, org.json.simple.parser.ParseException 
+	public JSONArray buscarTipoCandidato(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
 		JSONArray filas = new JSONArray();
-		Genero gen = new Genero();
+		
 		Date date = null;
 		
 		boolean existe=false;
@@ -60,13 +58,10 @@ public class TipoCandidatoDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT id_tipo_candidato,codigo, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS'), usuario_ins from ucsaws_tipo_candidato "
-					+ "where upper(codigo) like "
-					+ "upper('%" + codigo + "%') and "
-					+ "upper(descripcion) like "
-					+ "upper('%"
-					+ descripcion
-					+ "') ");
+			query.setQueryGenerico("SELECT id_tipo_candidato, descripcion "
+					+ " from ucsaws_tipo_candidato "
+				  + "where upper(descripcion) like upper('%"+codigo+"%')  ");
+			
 			
 			
 			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
@@ -75,7 +70,7 @@ public class TipoCandidatoDAO {
 			String res = response.getQueryGenericoResponse();
 	
 				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Genero: "+ descripcion +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "El Tipo Candidato no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
 					return filas;
 				}
 				
@@ -163,48 +158,9 @@ public class TipoCandidatoDAO {
 						
 	}
 
-	public void modificarTipoCandidato(String codigoASetear, String codigoWhere) {
-		
-		
-		try{
-			
-		
-		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-		
-		
-		query.setTipoQueryGenerico(3);
-		
-		query.setQueryGenerico("update ucsaws_tipo_candidato "
-				+ "set descripcion = upper('" +codigoASetear+"') , fch_upd = now() , usuario_upd = 'ucsa2014' "
-				+ "where id_tipo_candidato = "
-				
-				+ codigoWhere
-				+ "");
-		
-		
-		
-		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-	} catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-	}
-	JOptionPane.showMessageDialog(null,"Excelente, se ha modificado el tipo candidato." + codigoWhere);
-	
 
-//			if(res.compareTo("ERRORRRRRRR")==0){
-//				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-//				return gen;
-//			}
-
-	}
-
-	public boolean eliminarTipoCandidato(String codigo)
+	public Boolean eliminarTipoCandidato(String codigo)
 	{
 		boolean eliminado = false;
 		
@@ -221,8 +177,8 @@ public class TipoCandidatoDAO {
 			
 			query.setQueryGenerico("DELETE FROM ucsaws_tipo_candidato WHERE"
 					+ " id_tipo_candidato = "
-					
-					+ codigo  );
+					+ codigo 
+					 );
 			
 			
 			
@@ -241,10 +197,9 @@ public class TipoCandidatoDAO {
 			}
 			
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Tipo Candidato.","Error",JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
 		
-			
-		}
+	}
 }

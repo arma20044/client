@@ -1,4 +1,4 @@
-package src.main.java.admin.genero;
+package src.main.java.admin.tipoCandidato;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -39,12 +39,12 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.genero.GeneroDAO;
+import src.main.java.dao.tipoCandidato.TipoCandidatoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaBuscarGenero extends JFrame implements ActionListener {
+public class VentanaBuscarTipoCandidato extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -57,7 +57,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private GeneroJTableModel model = new GeneroJTableModel();
+	private TipoCandidatoJTableModel model = new TipoCandidatoJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
@@ -68,12 +68,12 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarGenero() {
+	public VentanaBuscarTipoCandidato() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarTipoCandidato.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setBounds(589, 422, 45, 25);
@@ -87,7 +87,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 		botonBuscar = new JButton();
 		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		botonBuscar.setIcon(new ImageIcon(VentanaBuscarTipoCandidato.class
 				.getResource("/imgs/search.png")));
 		botonBuscar.setBounds(415, 52, 32, 32);
 		botonBuscar.setOpaque(false);
@@ -100,7 +100,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		botonEliminar.setIcon(new ImageIcon(VentanaBuscarTipoCandidato.class
 				.getResource("/imgs/borrar.png")));
 		botonEliminar.setBounds(499, 52, 32, 32);
 		botonEliminar.setOpaque(false);
@@ -112,7 +112,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		botonEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE GENERO");
+		labelTitulo.setText("ABM DE TIPO CANDIDATO");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -206,7 +206,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE GENEROS");
+		lblListaDeGeneros.setText("LISTA DE CANDIDATOS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
@@ -220,7 +220,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		btnHome.setIcon(new ImageIcon(VentanaBuscarTipoCandidato.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -232,7 +232,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroGenero registro = new VentanaRegistroGenero();
+				VentanaRegistroTipoCandidato registro = new VentanaRegistroTipoCandidato();
 				registro.setVisible(true);
 				dispose();
 			}
@@ -241,7 +241,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		btnNewButton.setOpaque(false);
 		btnNewButton.setContentAreaFilled(false);
 		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		btnNewButton.setIcon(new ImageIcon(VentanaBuscarTipoCandidato.class
 				.getResource("/imgs/add.png")));
 		btnNewButton.setBounds(457, 52, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
@@ -294,12 +294,12 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			GeneroDAO generoDAO = new GeneroDAO();
+			TipoCandidatoDAO tipoCandidatoDAO = new TipoCandidatoDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = generoDAO.buscarGenero(txtBuscar.getText());
+					miPersona = tipoCandidatoDAO.buscarTipoCandidato(txtBuscar.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -323,7 +323,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 					modelo = new DefaultTableModel();
 					JSONArray a = (JSONArray) miPersona.get(0);
 
-					model = new GeneroJTableModel();
+					model = new TipoCandidatoJTableModel();
 					recuperarDatos();
 					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
@@ -351,13 +351,13 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Genero?", "Confirmación",
+						"¿Esta seguro de eliminar el Tipo Candidato?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					GeneroDAO generoDAO = new GeneroDAO();
+					TipoCandidatoDAO tipoCandidatoDAO = new TipoCandidatoDAO();
 
 					try {
-						generoDAO.eliminarGenero(codTemporal);
+						tipoCandidatoDAO.eliminarTipoCandidato(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -365,7 +365,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
 
-					lblMensaje.setText("Excelente, se ha eliminado el Genero");
+					lblMensaje.setText("Excelente, se ha eliminado el Tipo Candidato");
 					codTemporal = "";
 					txtBuscar.setText("");
 
@@ -382,7 +382,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 					codTemporal = "";
 					limpiar();
 
-					model = new GeneroJTableModel();
+					model = new TipoCandidatoJTableModel();
 
 					recuperarDatos();
 					table_1.setModel(model);
@@ -392,7 +392,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
+						.setText("Por favor seleccione que Tipo Candidato desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -485,8 +485,8 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_genero, codigo, descripcion "
-				+ "from  ucsaws_genero "
+		query.setQueryGenerico("SELECT  id_tipo_candidato, codigo, descripcion "
+				+ "from  ucsaws_tipo_candidato "
 				+ "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient

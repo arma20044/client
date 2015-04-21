@@ -45,6 +45,8 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaRegistroZona extends JFrame implements ActionListener {
 
@@ -240,6 +242,13 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
+		txtNroZona.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char car = e.getKeyChar();
+				if((car<'0' || car>'9')) e.consume();
+			}
+		});
 		txtNroZona.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
