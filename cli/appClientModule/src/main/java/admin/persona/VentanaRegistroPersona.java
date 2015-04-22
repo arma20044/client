@@ -37,6 +37,8 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.validator.PersonaValidator;
+import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -53,7 +55,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private PersonaJTableModel model = new PersonaJTableModel();
 	private JScrollPane scrollPane;
 
-	private PersonasValidator candidatoValidator = new CandidatoValidator();
+	private PersonaValidator personaValidator = new PersonaValidator();
 
 	private String codTemporal = "";
 	private JButton btnHome;
@@ -363,7 +365,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					} else if
 
 					(personaValidator.ValidarCodigo(txtCI.getText()) == false) {
-						if (candidatoValidator.ValidarPersona(txtCI.getText()) == false) {
+						if (personaValidator.ValidarCodigo(txtCI.getText()) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
 
@@ -387,8 +389,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 									+ "nextval('ucsaws_persona_seq')"
 									+ " , "
 									+ " upper('" + txtNombres.getText() + "'), "
-									+ " upper('" + txtApellidos.getText() + "'), '"
-									+ " upper('" + txtFchNac.getText() + "'), '"
+									+ " upper('" + txtApellidos.getText() + "'), "
+									+ " to_date('" + txtFchNac.getText() + "', 'DD/MM/YYYY'), "
 									
 									
 									+ origenSelected
@@ -396,10 +398,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 									+ actualSelected
 									+ " , "
 									+ generoSelected
-									+ ", '"
-									+ " upper('" + txtCI.getText() + "'), '"
-									+ " upper('" + txtLineaBaja.getText() + "'), '"
-									+ " upper('" + txtCelular.getText() + "'), '"
+									+ ",'"
+									+ " " + txtCI.getText() + "', "
+									+ "'" + txtLineaBaja.getText() + "',' "
+									 + txtCelular.getText() + "', '"
 									+ Login.userLogeado
 									+ "' , now(), '"
 									+ Login.userLogeado
@@ -498,17 +500,17 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
+					PersonaDAO personaDAO = new PersonaDAO();
 
 					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
+						personaDAO.eliminarPersona(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					if (candidatoDAO.eliminarCandidato(codTemporal) == true) {
+					if (personaDAO.eliminarPersona(codTemporal) == true) {
 
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
 						// + txtDesc.getText());
@@ -516,7 +518,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 						// codTemporal.getText());
 						// txtId.setText("");
 						lblMensaje
-								.setText("Excelente, se ha eliminado el Candidato ");
+								.setText("Excelente, se ha eliminado la Persona ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -539,7 +541,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					else {
 						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
 						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Candidato que desea eliminar ");
+								.setText("ERROR: Existen registros que apuntan a la Persona que desea eliminar ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -569,8 +571,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			VentanaBuscarPersona candidato = new VentanaBuscarPersona();
-			candidato.setVisible(true);
+			VentanaBuscarPersona persona = new VentanaBuscarPersona();
+			persona.setVisible(true);
 			this.dispose();
 
 		}

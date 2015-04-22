@@ -32,9 +32,9 @@ public class PersonaValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_persona, ci "
-				+ "from ucsaws_persona " + "where  ci = "
+				+ "from ucsaws_persona " + "where  ci = '"
 
-				+ "" + codigo + "");
+				+ "" + codigo + "'");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
