@@ -473,10 +473,11 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion, ci, tel_linea_baja, tel_celular"
+		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular"
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)");
+				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
+				+ "order by per.apellido , per.nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

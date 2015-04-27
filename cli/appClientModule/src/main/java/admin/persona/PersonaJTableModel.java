@@ -29,7 +29,7 @@ public class PersonaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","CI.","Linea Baja","Celular"};
+	private String[] colNames = new String[] {"ID","CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular"};
 
 	@Override
 	public String getColumnName(int col) {

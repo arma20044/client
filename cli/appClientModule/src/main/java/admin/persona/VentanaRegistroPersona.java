@@ -8,10 +8,15 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
@@ -19,6 +24,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +43,7 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.validator.PersonaValidator;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
@@ -49,9 +56,9 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
+	private JButton botonGuardar, botonCancelar, btnEliminar, btnFecha;
 	private JTable table;
-
+	private VentanaRegistroPersona ventanaRegistroPersona;
 	private PersonaJTableModel model = new PersonaJTableModel();
 	private JScrollPane scrollPane;
 
@@ -66,6 +73,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
 
+	private JFormattedTextField txtFechaNac;
+
 	private JLabel lblPaisActual;
 	private JComboBox cmbPaisActual, cmbPaisOrigen;
 	private JLabel lblGenero;
@@ -76,7 +85,6 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private JTextField txtNombres;
 	private JTextField txtApellidos;
 	private JLabel lblFchNac;
-	private JTextField txtFchNac;
 	private JLabel lblCelular;
 	private JLabel lblLineaBaja;
 	private JTextField txtCelular;
@@ -130,7 +138,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE CANDIDATOS");
+		labelTitulo.setText("REGISTRO DE PERSONAS\r\n");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -150,7 +158,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Personas\r\n");
 		scrollPane.setBounds(0, 261, 1146, 157);
 		getContentPane().add(scrollPane);
 
@@ -268,6 +276,14 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		getContentPane().add(lblCI);
 
 		txtCI = new JTextField();
+		txtCI.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
 		txtCI.setBounds(213, 54, 108, 20);
 		getContentPane().add(txtCI);
 		txtCI.setColumns(10);
@@ -299,11 +315,6 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		lblFchNac.setBounds(75, 113, 116, 25);
 		getContentPane().add(lblFchNac);
 
-		txtFchNac = new JTextField();
-		txtFchNac.setColumns(10);
-		txtFchNac.setBounds(213, 111, 108, 20);
-		getContentPane().add(txtFchNac);
-
 		lblCelular = new JLabel();
 		lblCelular.setText("Tel. Celular:");
 		lblCelular.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -317,14 +328,57 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		getContentPane().add(lblLineaBaja);
 
 		txtCelular = new JTextField();
+		txtCelular.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
 		txtCelular.setColumns(10);
-		txtCelular.setBounds(725, 83, 108, 20);
+		txtCelular.setBounds(705, 85, 108, 20);
 		getContentPane().add(txtCelular);
 
 		txtLineaBaja = new JTextField();
+		txtLineaBaja.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
 		txtLineaBaja.setColumns(10);
-		txtLineaBaja.setBounds(725, 150, 108, 20);
+		txtLineaBaja.setBounds(705, 144, 108, 20);
 		getContentPane().add(txtLineaBaja);
+
+		txtFechaNac = new JFormattedTextField();
+		txtFechaNac.setText("23/04/2015");
+		txtFechaNac.setBounds(213, 115, 69, 20);
+		getContentPane().add(txtFechaNac);
+
+		JButton btnFecha = new JButton("");
+		btnFecha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Calendario cal = new Calendario(ventanaRegistroPersona);
+				cal.displayDate();
+				if (!Calendario.fechafinalSeleccionada.startsWith("/")) {
+					txtFechaNac.setText(Calendario.fechafinalSeleccionada);
+				}
+			}
+		});
+		btnFecha.setToolTipText("Calendario");
+		btnFecha.setBounds(292, 110, 30, 23);
+		btnFecha.setOpaque(false);
+		btnFecha.setContentAreaFilled(false);
+		btnFecha.setBorderPainted(false);
+		Image img5 = ((ImageIcon) botonGuardar.getIcon()).getImage();
+		Image newimg5 = img5.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnFecha.setIcon(new ImageIcon(VentanaRegistroPersona.class
+				.getResource("/imgs/cal.png")));
+		getContentPane().add(btnFecha);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -350,10 +404,15 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 				Item item3 = (Item) cmbPaisOrigen.getSelectedItem();
 				Integer origenSelected = item3.getId();
-				if (!(txtCI.getText().length() == 0) && !(txtCelular.getText().length() == 0)  && !(txtFchNac.getText().length() == 0)  
-						&& !(txtLineaBaja.getText().length() == 0 ) && !(txtNombres.getText().length() == 0 ) && !(txtApellidos.getText().length() == 0  )){
+				if (!(txtCI.getText().length() == 0)
+						&& !(txtCelular.getText().length() == 0)
+						&& !(txtFechaNac.getText().length() == 0)
+						&& !(txtLineaBaja.getText().length() == 0)
+						&& !(txtNombres.getText().length() == 0)
+						&& !(txtApellidos.getText().length() == 0)) {
 					if (txtCI.getText().length() > 7) {
-						lblMensaje.setText("El codigo debe ser de maximo 7 caracteres.");
+						lblMensaje
+								.setText("El codigo debe ser de maximo 7 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -365,7 +424,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					} else if
 
 					(personaValidator.ValidarCodigo(txtCI.getText()) == false) {
-						if (personaValidator.ValidarCodigo(txtCI.getText()) == false) {
+					//	if (personaValidator.ValidarCodigo(txtCI.getText()) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
 
@@ -386,26 +445,33 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 									+ "( id_persona, nombre, apellido, fecha_nacimiento, id_pais_origen,id_pais_actual,id_genero,ci, tel_linea_baja,tel_celular,"
 									+ " usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
-									+ "nextval('ucsaws_persona_seq')"
-									+ " , "
-									+ " upper('" + txtNombres.getText() + "'), "
-									+ " upper('" + txtApellidos.getText() + "'), "
-									+ " to_date('" + txtFchNac.getText() + "', 'DD/MM/YYYY'), "
-									
-									
+									+ "nextval('ucsaws_persona_seq')" + " , "
+									+ " upper('"
+									+ txtNombres.getText()
+									+ "'), "
+									+ " upper('"
+									+ txtApellidos.getText()
+									+ "'), "
+									+ " to_date('"
+									+ txtFechaNac.getText()
+									+ "', 'DD/MM/YYYY'), "
+
 									+ origenSelected
 									+ " , "
 									+ actualSelected
 									+ " , "
 									+ generoSelected
 									+ ",'"
-									+ " " + txtCI.getText() + "', "
-									+ "'" + txtLineaBaja.getText() + "',' "
-									 + txtCelular.getText() + "', '"
+									+ txtCI.getText()
+									+ "', "
+									+ "'"
+									+ txtLineaBaja.getText()
+									+ "',' "
+									+ txtCelular.getText()
+									+ "', '"
 									+ Login.userLogeado
 									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
+									+ Login.userLogeado + "' , now())");
 
 							QueryGenericoResponse response = weatherClient
 									.getQueryGenericoResponse(query);
@@ -432,31 +498,26 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 							t.start();
 
 							txtCI.setText("");
-
+							txtNombres.setText("");
+							txtApellidos.setText("");
+							txtCelular.setText("");
+							txtLineaBaja.setText("");
+							DateFormat dateFormat;
+							Date date;
+							dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+							date = new Date();
+							   System.out.println(dateFormat.format(date));
+							   txtFechaNac.setText(dateFormat.format(date));
+							   
+							
 							// this.dispose();
-						} else {
-							// JOptionPane.showMessageDialog(null,
-							// "Ya existe el genero " + txtDesc.getText(),
-							// "Información",JOptionPane.WARNING_MESSAGE);
-							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-						}
+						 
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe el candidato con el codigo "
+								.setText("Ya existe una Persona con esta cedula Nro. : "
 										+ txtCI.getText());
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -495,7 +556,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
+						"¿Esta seguro de eliminar a la Persona?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
@@ -558,7 +619,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 				// "Por favor seleccione que Genero desea Eliminar",
 				// "Información",JOptionPane.WARNING_MESSAGE);
 				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
+						.setText("Por favor seleccione que Persona desea Eliminar");
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -595,10 +656,11 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion, ci, tel_linea_baja, tel_celular"
+		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular"
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)");
+				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
+				+ "order by per.apellido , per.nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
