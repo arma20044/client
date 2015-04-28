@@ -4,21 +4,15 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.google.gson.JsonArray;
-
-import src.main.java.hello.Genero;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -45,10 +39,10 @@ public class EventoDAO {
 //		}
 //	}
 
-	public JSONArray buscarEvento(String codigo, String descripcion) throws ParseException, org.json.simple.parser.ParseException 
+	public JSONArray buscarEvento(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
 		JSONArray filas = new JSONArray();
-		Genero gen = new Genero();
+		
 		Date date = null;
 		
 		boolean existe=false;
@@ -66,15 +60,12 @@ public class EventoDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT id_evento, nro_evento, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS'), to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') , usuario_ins, usuario_upd "
-					+ "from ucsaws_evento "
-					+ "where nro_evento = '"
-					+ codigo + "' and "
-					+ "upper(descripcion) like "
-					+ "upper('%"
-					+ descripcion
-					+ "%') order by descripcion ");
-			
+			query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, fch_desde, fch_hasta , tev.descripcion "
+
+				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
+				
+				  + "where upper(ev.descripcion) like upper('%"+codigo+"%') or upper(tev.descripcion) like upper('%"+codigo+"%') or upper(nro_evento) like upper('%"+codigo+"%')");
+			 
 			
 			
 			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
@@ -83,7 +74,7 @@ public class EventoDAO {
 			String res = response.getQueryGenericoResponse();
 	
 				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Evento: "+ descripcion +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "El Evento no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
 					return filas;
 				}
 				
@@ -171,47 +162,7 @@ public class EventoDAO {
 						
 	}
 
-	public void modificarEvento(String codigoASetear, String codigoWhere) {
-		
-		
-		try{
-			
-		
-		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-		
-		
-		query.setTipoQueryGenerico(3);
-		
-		query.setQueryGenerico("update ucsaws_evento "
-				+ "set descripcion = upper('" +codigoASetear+"') , fch_upd = now() , usuario_upd = '" +  Login.userLogeado
-				+ "' where id_evento = "
-				
-				+ codigoWhere
-				+ "");
-		
-		
-		
-		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-	} catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-	}
-	//JOptionPane.showMessageDialog(null,"Excelente, se ha modificado el genero.");
 	
-
-//			if(res.compareTo("ERRORRRRRRR")==0){
-//				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-//				return gen;
-//			}
-
-	}
-
 	public Boolean eliminarEvento(String codigo)
 	{
 		boolean eliminado = false;
@@ -249,7 +200,7 @@ public class EventoDAO {
 			}
 			
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Evento","Error",JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
 		

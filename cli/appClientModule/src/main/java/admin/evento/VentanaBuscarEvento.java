@@ -1,4 +1,4 @@
-package src.main.java.admin.persona;
+package src.main.java.admin.evento;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -35,17 +35,18 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.Administracion;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.persona.PersonaDAO;
+import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 import java.awt.Color;
 
-public class VentanaBuscarPersona extends JFrame implements ActionListener {
+public class VentanaBuscarEvento extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -58,7 +59,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private PersonaJTableModel model = new PersonaJTableModel();
+	private EventoJTableModel model = new EventoJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
@@ -69,12 +70,12 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarPersona() {
+	public VentanaBuscarEvento() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarPersona.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setBounds(1101, 422, 45, 25);
@@ -88,7 +89,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 		botonBuscar = new JButton();
 		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarPersona.class
+		botonBuscar.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/search.png")));
 		botonBuscar.setBounds(415, 52, 32, 32);
 		botonBuscar.setOpaque(false);
@@ -101,7 +102,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarPersona.class
+		botonEliminar.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/borrar.png")));
 		botonEliminar.setBounds(499, 52, 32, 32);
 		botonEliminar.setOpaque(false);
@@ -113,7 +114,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		botonEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE PERSONA");
+		labelTitulo.setText("ABM DE EVENTO");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -142,7 +143,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Personas");
+		scrollPane.setToolTipText("Lista de Eventos");
 		scrollPane.setBounds(0, 158, 1146, 265);
 		getContentPane().add(scrollPane);
 
@@ -207,7 +208,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE PERSONAS");
+		lblListaDeGeneros.setText("LISTA DE EVENTOS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
@@ -221,7 +222,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarPersona.class
+		btnHome.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -233,7 +234,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroPersona registro = new VentanaRegistroPersona();
+				VentanaRegistroEvento registro = new VentanaRegistroEvento();
 				registro.setVisible(true);
 				dispose();
 			}
@@ -242,7 +243,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		btnNewButton.setOpaque(false);
 		btnNewButton.setContentAreaFilled(false);
 		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarPersona.class
+		btnNewButton.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/add.png")));
 		btnNewButton.setBounds(457, 52, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
@@ -295,12 +296,12 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			PersonaDAO personaDAO = new PersonaDAO();
+			EventoDAO eventoDAO = new EventoDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = personaDAO.buscarPersona(txtBuscar.getText());
+					miPersona = eventoDAO.buscarEvento(txtBuscar.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -324,7 +325,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 					modelo = new DefaultTableModel();
 					JSONArray a = (JSONArray) miPersona.get(0);
 
-					model = new PersonaJTableModel();
+					model = new EventoJTableModel();
 					recuperarDatos();
 					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
@@ -352,27 +353,36 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar la Persona?",
+						"¿Esta seguro de eliminar el Evento?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					PersonaDAO personaDAO = new PersonaDAO();
+					EventoDAO eventoDAO = new EventoDAO();
 
 					try {
-						personaDAO.eliminarPersona(codTemporal);
+						eventoDAO.eliminarEvento(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					JOptionPane.showMessageDialog(null,
-							"Excelente, se ha eliminado la Persona ");
-					// modificarGenero(textCod.getText(),
-					// codTemporal.getText());
+					
+					lblMensaje.setText("Excelente, se ha eliminado el Evento");
+					codTemporal = "";
+					txtBuscar.setText("");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					
+					
 					codTemporal = "";
 					limpiar();
 
-					model = new PersonaJTableModel();
+					model = new EventoJTableModel();
 
 					recuperarDatos();
 					table_1.setModel(model);
@@ -382,7 +392,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Persona desea Eliminar");
+						.setText("Por favor seleccione que Evento desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -400,8 +410,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			DefinicionesGenerales definiciones = new DefinicionesGenerales();
-			definiciones.setVisible(true);
+			Administracion administracion = new Administracion();
+			administracion.setVisible(true);
 			this.dispose();
 		}
 
@@ -473,11 +483,10 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular"
+		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, fch_desde, fch_hasta , tev.descripcion as Tdescripcion "
 
-				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
-				+ "order by per.apellido , per.nombre");
+				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
+				+ "order by nro_evento");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -518,9 +527,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString(), fil.get(7).toString(),
-					fil.get(8).toString(), fil.get(9).toString() };
+					fil.get(4).toString(), fil.get(5).toString() };
 
 			model.ciudades.add(fin);
 			ite++;

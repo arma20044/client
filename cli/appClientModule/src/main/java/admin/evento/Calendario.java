@@ -1,4 +1,4 @@
-package src.main.java.admin.persona;
+package src.main.java.admin.evento;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

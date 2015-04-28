@@ -1,4 +1,4 @@
-package src.main.java.admin.persona;
+package src.main.java.admin.evento;
 
 import java.awt.geom.Area;
 import java.util.ArrayList;
@@ -8,13 +8,13 @@ import javax.swing.table.AbstractTableModel;
 
 import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
-public class PersonaJTableModel extends AbstractTableModel {
+public class EventoJTableModel extends AbstractTableModel {
 
 	List<Object[]> ciudades = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 10;
+		return 6;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class PersonaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID","CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular"};
+	private String[] colNames = new String[] {"ID","Nro.", "Desc. Evento","Fch. Ini.","Fch. Fin.","Desc. Tipo Evento"};
 
 	@Override
 	public String getColumnName(int col) {
