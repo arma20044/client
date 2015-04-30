@@ -39,11 +39,14 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.admin.validator.GeneroValidator;
 import src.main.java.dao.genero.GeneroDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -311,12 +314,14 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
 						query.setQueryGenerico("INSERT INTO ucsaws_genero"
-								+ "( id_genero, descripcion, codigo,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "( id_genero, descripcion, codigo,id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 								+ "VALUES (" + "nextval('ucsaws_genero_seq') ,"
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), "
 
-								+ " upper('" + txtNroZona.getText() + "'), '"
+								+ " upper('" + txtNroZona.getText() + "'), "
+								+ VentanaBuscarEvento.evento + ","
+								+ "'"
 								+ Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
 
@@ -508,7 +513,8 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_genero, codigo, descripcion "
-				+ "from  ucsaws_genero " + "order by codigo" + "");
+				+ "from  ucsaws_genero where id_evento = " + VentanaBuscarEvento.evento 
+				+ "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

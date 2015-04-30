@@ -48,6 +48,8 @@ import java.awt.Color;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 
+	public static String evento;
+
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
@@ -161,6 +163,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 				return component;
 			}
 		};
+		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setToolTipText("Listado de Generos.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -198,9 +201,22 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
+					
+					evento = (String) (table_1.getModel().getValueAt(
+							selectedRow[i], 0));
+					
+					System.out.println(evento);
+							
+					VentanaMainEvento main = new VentanaMainEvento();
+					main.setVisible(true);
+					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
+				
+				
+
+				
 
 			}
 		});
@@ -353,8 +369,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Evento?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar el Evento?", "Confirmación",
+						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
 					EventoDAO eventoDAO = new EventoDAO();
 
@@ -366,7 +382,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					
+
 					lblMensaje.setText("Excelente, se ha eliminado el Evento");
 					codTemporal = "";
 					txtBuscar.setText("");
@@ -377,8 +393,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 							lblMensaje.setText(null);
 						}
 					});
-					
-					
+
 					codTemporal = "";
 					limpiar();
 

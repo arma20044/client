@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.genero.GeneroDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -486,7 +487,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_genero, codigo, descripcion "
-				+ "from  ucsaws_genero "
+				+ "from  ucsaws_genero where id_evento = " + VentanaBuscarEvento.evento 
 				+ "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient
