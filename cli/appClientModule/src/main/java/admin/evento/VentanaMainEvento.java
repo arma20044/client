@@ -33,6 +33,8 @@ import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.Font;
+import javax.swing.JLayeredPane;
 
 public class VentanaMainEvento extends JFrame implements ActionListener {
 
@@ -63,8 +65,10 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 	private JLabel label_1;
 	private JLabel label_2;
 	private JLabel label_3;
-	private JLabel label_4;
 	private JButton btnDefinicionesGenerales;
+	private JLabel label_5;
+	private JLabel label_6;
+	private JLabel label_7;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -73,7 +77,7 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 	public VentanaMainEvento() {
 
 		recuperarDatosEvento();
-
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -81,10 +85,14 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 		botonCancelar.setIcon(new ImageIcon(VentanaMainEvento.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setBounds(1267, 422, 45, 25);
+		botonCancelar.setBounds(768, 422, 45, 25);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
+		Image img2 = ((ImageIcon) botonCancelar.getIcon()).getImage();
+		Image newimg2 = img2.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		botonCancelar.setIcon(new ImageIcon(newimg2));
 
 
 		labelTitulo = new JLabel();
@@ -97,7 +105,7 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 		getContentPane().add(labelTitulo);
 		limpiar();
 
-		setSize(1318, 476);
+		setSize(819, 476);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -115,54 +123,11 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 
-		lblNroEvento = new JLabel("Nro. Evento:");
-		lblNroEvento.setBounds(21, 11, 94, 14);
-		getContentPane().add(lblNroEvento);
-
 		System.out.println(nroEvento);
-
-		label = new JLabel(nroEvento);
-		label.setForeground(Color.RED);
-		label.setBounds(172, 11, 214, 14);
-		getContentPane().add(label);
-		
-		lblDescripcionEvento = new JLabel("Descripcion Evento:");
-		lblDescripcionEvento.setBounds(21, 36, 129, 14);
-		getContentPane().add(lblDescripcionEvento);
-		
-		lblFechaDesde = new JLabel("Fecha Desde:");
-		lblFechaDesde.setBounds(516, 8, 94, 14);
-		getContentPane().add(lblFechaDesde);
-		
-		lblFechaHasta = new JLabel("Fecha Hasta");
-		lblFechaHasta.setBounds(516, 39, 94, 14);
-		getContentPane().add(lblFechaHasta);
-		
-		lblTipoEvento = new JLabel("Tipo Evento:");
-		lblTipoEvento.setBounds(21, 72, 94, 14);
-		getContentPane().add(lblTipoEvento);
-		
-		label_1 = new JLabel(descripcionEvento);
-		label_1.setForeground(Color.RED);
-		label_1.setBounds(172, 36, 214, 14);
-		getContentPane().add(label_1);
-		
-		label_2 = new JLabel(fechaDesde);
-		label_2.setForeground(Color.RED);
-		label_2.setBounds(649, 8, 214, 14);
-		getContentPane().add(label_2);
-		
-		label_3 = new JLabel(fechaHasta);
-		label_3.setForeground(Color.RED);
-		label_3.setBounds(649, 39, 214, 14);
-		getContentPane().add(label_3);
-		
-		label_4 = new JLabel(tipoEventoDescripcon);
-		label_4.setForeground(Color.RED);
-		label_4.setBounds(107, 72, 214, 14);
-		getContentPane().add(label_4);
 		
 		btnDefinicionesGenerales = new JButton("Definiciones Generales");
+		btnDefinicionesGenerales.setIcon(new ImageIcon(VentanaMainEvento.class.getResource("/imgs/def.png")));
+		btnDefinicionesGenerales.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		btnDefinicionesGenerales.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				DefinicionesGenerales definiciones = new DefinicionesGenerales();
@@ -170,8 +135,74 @@ public class VentanaMainEvento extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnDefinicionesGenerales.setBounds(145, 156, 200, 50);
+		btnDefinicionesGenerales.setBounds(262, 158, 338, 73);
 		getContentPane().add(btnDefinicionesGenerales);
+		
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setBounds(22, 11, 781, 83);
+		getContentPane().add(layeredPane);
+		
+		lblTipoEvento = new JLabel("Tipo Evento:");
+		lblTipoEvento.setBounds(10, 61, 94, 14);
+		layeredPane.add(lblTipoEvento);
+		
+				lblNroEvento = new JLabel("Nro. Evento:");
+				lblNroEvento.setBounds(10, 36, 94, 14);
+				layeredPane.add(lblNroEvento);
+				
+						label = new JLabel(nroEvento);
+						label.setBounds(161, 36, 214, 14);
+						layeredPane.add(label);
+						label.setFont(new Font("Tahoma", Font.BOLD, 11));
+						label.setForeground(Color.BLACK);
+						
+						lblDescripcionEvento = new JLabel("Descripcion Evento:");
+						lblDescripcionEvento.setBounds(10, 46, 129, 14);
+						layeredPane.add(lblDescripcionEvento);
+						
+						label_1 = new JLabel(descripcionEvento);
+						label_1.setBounds(161, 46, 214, 14);
+						layeredPane.add(label_1);
+						label_1.setFont(new Font("Tahoma", Font.BOLD, 11));
+						label_1.setForeground(Color.BLACK);
+						
+						lblFechaDesde = new JLabel("Fecha Desde:");
+						lblFechaDesde.setBounds(385, 46, 94, 14);
+						layeredPane.add(lblFechaDesde);
+						
+						label_2 = new JLabel(fechaDesde);
+						label_2.setBounds(518, 46, 214, 14);
+						layeredPane.add(label_2);
+						label_2.setFont(new Font("Tahoma", Font.BOLD, 11));
+						label_2.setForeground(Color.BLACK);
+						
+						lblFechaHasta = new JLabel("Fecha Hasta");
+						lblFechaHasta.setBounds(385, 61, 94, 14);
+						layeredPane.add(lblFechaHasta);
+						
+						label_3 = new JLabel(fechaHasta);
+						label_3.setBounds(518, 61, 214, 14);
+						layeredPane.add(label_3);
+						label_3.setFont(new Font("Tahoma", Font.BOLD, 11));
+						label_3.setForeground(Color.BLACK);
+						
+						JLabel label_4 = new JLabel(tipoEventoDescripcon);
+						label_4.setBounds(161, 61, 214, 14);
+						layeredPane.add(label_4);
+						label_4.setForeground(Color.BLACK);
+						label_4.setFont(new Font("Tahoma", Font.BOLD, 11));
+						
+						label_5 = new JLabel("Administrador");
+						label_5.setBounds(0, 0, 89, 14);
+						layeredPane.add(label_5);
+						
+						label_6 = new JLabel("Nombre:");
+						label_6.setBounds(0, 11, 54, 14);
+						layeredPane.add(label_6);
+						
+						label_7 = new JLabel(Login.nombreApellidoUserLogeado);
+						label_7.setBounds(68, 11, 278, 14);
+						layeredPane.add(label_7);
 		// recuperarDatos();
 
 		// cellSelectionModel.addListSelectionListener(new

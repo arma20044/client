@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="appClientModule"/>
+	<classpathentry excluding="JasperTemplates/|jasper/templates/" kind="src" path="appClientModule"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -31,5 +31,10 @@
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/maven-jaxb2-plugin-0.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/spring-xml-2.0.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.collections.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.codehaus.groovy-1.6.5.jar"/>
+	<classpathentry kind="lib" path="lib/com.springsource.org.objectweb.asm_2.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/com.lowagie.text-2.1.7.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

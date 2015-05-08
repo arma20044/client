@@ -32,7 +32,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 				+ "La aplicaci�n permite registrar, actualizar, buscar y eliminar registros de una tabla Persona." +
 				"tambien son vinculados algunos conceptos de los Patrones Value Object y Data Access Objetc\n";
 	
-		setSize(575, 501);
+		setSize(575, 460);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -49,20 +49,6 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		lblNombreDescripcion.setBounds(73, 36, 278, 14);
 		//lblNombreDescripcion.setText();
 		getContentPane().add(lblNombreDescripcion);
-		
-		JButton btnDefinicionesGenerales = new JButton("Definiciones\r\n Generales");
-		btnDefinicionesGenerales.setHorizontalAlignment(SwingConstants.LEFT);
-		btnDefinicionesGenerales.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imgs/def.png")));
-		btnDefinicionesGenerales.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				DefinicionesGenerales definicionesGenerales = new DefinicionesGenerales();
-				definicionesGenerales.setVisible(true);
-				dispose();
-			}
-		});
-		btnDefinicionesGenerales.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		btnDefinicionesGenerales.setBounds(122, 253, 338, 73);
-		getContentPane().add(btnDefinicionesGenerales);
 		
 		JButton btnAdministracion = new JButton("Administracion");
 		btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
@@ -96,7 +82,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		btnReportes.setHorizontalAlignment(SwingConstants.LEFT);
 		btnReportes.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imgs/pfd64.png")));
 		btnReportes.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		btnReportes.setBounds(122, 337, 338, 73);
+		btnReportes.setBounds(122, 282, 338, 73);
 		getContentPane().add(btnReportes);
 		//lblNombreDescripcion.repaint();
 		
