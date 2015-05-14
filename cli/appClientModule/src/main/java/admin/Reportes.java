@@ -1,27 +1,17 @@
 package src.main.java.admin;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-
-import scr.main.java.admin.distrito.VentanaPrincipalDistrito;
-import src.main.java.admin.evento.VentanaPrincipalEvento;
 import src.main.java.admin.reportes.ReporteDymmy;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-import javax.swing.ImageIcon;
 
 public class Reportes extends JFrame implements ActionListener{
 	
