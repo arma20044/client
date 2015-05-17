@@ -10,7 +10,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import src.main.java.admin.reportes.Candidatos;
 import src.main.java.admin.reportes.ReporteDymmy;
+import src.main.java.admin.reportes.Votantes;
 import src.main.java.login.Login;
 
 public class Reportes extends JFrame implements ActionListener{
@@ -74,14 +76,14 @@ public class Reportes extends JFrame implements ActionListener{
 				labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 				getContentPane().add(labelTitulo);
 				
-				JButton btnPersonas = new JButton("Personas");
+				JButton btnPersonas = new JButton("Votantes");
 				btnPersonas.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						ReporteDymmy rep = new ReporteDymmy();
-						rep.setVisible(true);
-						dispose();
+					public void actionPerformed(ActionEvent arg0) {
+						Votantes votantes = new Votantes();
+						votantes.start();
 					}
 				});
+			
 				btnPersonas.setBounds(113, 133, 173, 23);
 				getContentPane().add(btnPersonas);
 				
@@ -114,12 +116,22 @@ public class Reportes extends JFrame implements ActionListener{
 				getContentPane().add(btnTotalParticipacion);
 				
 				JButton btnCantidadVotosNulos = new JButton("Cantidad Votos Nulos");
-				btnCantidadVotosNulos.setBounds(113, 209, 173, 23);
+				btnCantidadVotosNulos.setBounds(114, 244, 173, 23);
 				getContentPane().add(btnCantidadVotosNulos);
 				
 				JButton btnCantidadVotosBlancos = new JButton("Cantidad Votos Blancos");
-				btnCantidadVotosBlancos.setBounds(113, 246, 173, 23);
+				btnCantidadVotosBlancos.setBounds(114, 281, 173, 23);
 				getContentPane().add(btnCantidadVotosBlancos);
+				
+				JButton btnListaCandidatos = new JButton("Lista de Candidatos");
+				btnListaCandidatos.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Candidatos can = new Candidatos();
+						can.start();
+					}
+				});
+				btnListaCandidatos.setBounds(114, 209, 173, 23);
+				getContentPane().add(btnListaCandidatos);
 		//lblNombreDescripcion.repaint();
 		
 		

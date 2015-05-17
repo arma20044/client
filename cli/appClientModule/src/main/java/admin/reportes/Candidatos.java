@@ -22,18 +22,18 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
  
-public class Votantes {
+public class Candidatos {
  
-    private Logger logger = Logger.getLogger(Votantes.class);
+    private Logger logger = Logger.getLogger(Candidatos.class);
  
-    public Votantes() {
+    public Candidatos() {
     }
  
     public void start() {
         try {                                           
             // load report location
         	
-        	File a = new File("jasperTemplates/votantes.jasper");
+        	File a = new File("jasperTemplates/candidatos.jasper");
         	
             FileInputStream fis = new FileInputStream(a);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fis);
@@ -85,7 +85,7 @@ public class Votantes {
     	PatternLayout pl = new PatternLayout("[%-5p] %C.%M:%L: %m%n");
         ConsoleAppender appender = new ConsoleAppender(pl);
         Logger.getRootLogger().addAppender(appender);
-        Votantes main = new Votantes();
+        Candidatos main = new Candidatos();
         main.start();
     }
 }
