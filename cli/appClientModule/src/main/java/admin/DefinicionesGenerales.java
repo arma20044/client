@@ -23,11 +23,13 @@ import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.listas.VentanaBuscarLista;
 import src.main.java.admin.local.VentanaBuscarLocal;
+import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
 import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.vigencia.VentanaBuscarVigencia;
+import src.main.java.admin.votantesHabilitados.VentanaBuscarVotantesHabilitados;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -217,6 +219,13 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				getContentPane().add(btnCiudad);
 				
 				JButton btnVotantesHabilitados = new JButton("Votantes Habilitados");
+				btnVotantesHabilitados.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarVotantesHabilitados votantesHabilitados = new VentanaBuscarVotantesHabilitados();
+						votantesHabilitados.setVisible(true);
+						dispose();
+					}
+				});
 				btnVotantesHabilitados.setBounds(460, 366, 176, 23);
 				getContentPane().add(btnVotantesHabilitados);
 				
@@ -287,6 +296,17 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				});
 				btnVigenciaHorarioXPais.setBounds(73, 400, 155, 23);
 				getContentPane().add(btnVigenciaHorarioXPais);
+				
+				JButton btnNacionalidades = new JButton("Nacionalidades\r\n");
+				btnNacionalidades.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarNacionalidad nacionalidad = new VentanaBuscarNacionalidad();
+						nacionalidad.setVisible(true);
+						dispose();
+					}
+				});
+				btnNacionalidades.setBounds(460, 400, 176, 23);
+				getContentPane().add(btnNacionalidades);
 		//lblNombreDescripcion.repaint();
 		
 		
