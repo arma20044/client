@@ -27,6 +27,7 @@ import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
+import src.main.java.admin.vigencia.VentanaBuscarVigencia;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -275,6 +276,17 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				label_9.setForeground(Color.RED);
 				label_9.setBounds(96, 138, 214, 14);
 				getContentPane().add(label_9);
+				
+				JButton btnVigenciaHorarioXPais = new JButton("Vigencia Horario por Pais");
+				btnVigenciaHorarioXPais.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarVigencia vigencia = new VentanaBuscarVigencia();
+						vigencia.setVisible(true);
+						dispose();
+					}
+				});
+				btnVigenciaHorarioXPais.setBounds(73, 400, 155, 23);
+				getContentPane().add(btnVigenciaHorarioXPais);
 		//lblNombreDescripcion.repaint();
 		
 		
