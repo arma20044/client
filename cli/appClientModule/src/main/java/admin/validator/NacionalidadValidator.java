@@ -77,7 +77,7 @@ query.setTipoQueryGenerico(2);
 query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
 		+ "from ucsaws_nacionalidad " + "where  id_pais = "
 
-		+  pais + "");
+		+  pais + " and id_evento = " + VentanaBuscarEvento.evento );
 
 QueryGenericoResponse response = weatherClient
 		.getQueryGenericoResponse(query);

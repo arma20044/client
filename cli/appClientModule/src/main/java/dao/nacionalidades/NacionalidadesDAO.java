@@ -62,7 +62,7 @@ public class NacionalidadesDAO {
 			
 			query.setQueryGenerico("Select id_nacionalidad, cod_nacionalidad, desc_nacionalidad"
 					+ " from ucsaws_nacionalidad nac join ucsaws_pais p on (nac.id_pais = p.id_pais)"
-					+ " where cod_nacionalidad = " + codigo);
+					+ " where upper(cod_nacionalidad) like upper('%" + codigo + "%')");
 			
 			
 			

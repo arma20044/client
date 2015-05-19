@@ -38,10 +38,12 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.candidato.CandidatoDAO;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.nacionalidades.NacionalidadesDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.Color;
 
 public class VentanaBuscarNacionalidad extends JFrame implements ActionListener {
@@ -141,7 +143,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Nacionalidades");
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
@@ -159,7 +161,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Listado de Nacionalidades.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -294,12 +296,12 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			CandidatoDAO candidatoDAO = new CandidatoDAO();
+			NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = candidatoDAO.buscarCandidato(txtBuscar
+					miPersona = nacionalidadesDAO.buscarNacionalidad(txtBuscar
 							.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
@@ -352,21 +354,32 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
+						"¿Esta seguro de eliminar la Nacionalidad?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
+					NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
 
 					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
+						nacionalidadesDAO.eliminarNacionalidad(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					JOptionPane.showMessageDialog(null,
-							"Excelente, se ha eliminado el candidato ");
+					lblMensaje
+					.setText("Excelente, se ha eliminado la Nacionalidad.");
+
+			Timer t = new Timer(Login.timer, new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					lblMensaje.setText(null);
+				}
+			});
+			t.setRepeats(false);
+			t.start();
+					//JOptionPane.showMessageDialog(null,
+				//			"Excelente, se ha eliminado el candidato ");
 					// modificarGenero(textCod.getText(),
 					// codTemporal.getText());
 					codTemporal = "";
@@ -382,7 +395,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Candidato desea Eliminar");
+						.setText("Por favor seleccione que Nacionalidad desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -476,7 +489,8 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre" +
-		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)");
+		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
+		+ "where id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

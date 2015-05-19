@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -44,6 +45,8 @@ import src.main.java.dao.nacionalidades.NacionalidadesDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaRegistroNacionalidad extends JFrame implements ActionListener {
 
@@ -239,6 +242,14 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		getContentPane().add(lblCod);
 
 		txtCod = new JTextField();
+		txtCod.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < 'a' || car > 'z') && (car < 'A' || car > 'Z'))
+					arg0.consume();
+			}
+		});
 		txtCod.setBounds(213, 54, 108, 24);
 		getContentPane().add(txtCod);
 		txtCod.setColumns(10);
@@ -352,6 +363,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 							t.start();
 
 							txtCod.setText("");
+							txtDescripcion.setText("");
 
 							// this.dispose();
 						} else {
@@ -359,7 +371,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 							// "Ya existe el genero " + txtDesc.getText(),
 							// "Información",JOptionPane.WARNING_MESSAGE);
 							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura");
+									.setText("Ya existe nacionalidad para el Pais: " + cmbPais.getSelectedItem() );
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -370,6 +382,12 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 									});
 							t.setRepeats(false);
 							t.start();
+							
+							txtCod.setText("");
+							txtDescripcion.setText("");
+							
+							//cmbPais.removeAllItems();
+							
 						}
 					} else {
 						// JOptionPane.showMessageDialog(null,
@@ -518,7 +536,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre" +
-		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)");
+		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
+		+ "where id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -566,7 +585,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 
 	}
 
-	private Vector recuperarDatosComboBoxPaisActual() {
+	public Vector recuperarDatosComboBoxPaisActual() {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
