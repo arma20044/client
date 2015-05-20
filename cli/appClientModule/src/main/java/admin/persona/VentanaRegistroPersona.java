@@ -44,6 +44,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.Calendario;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.PersonaValidator;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
@@ -78,7 +79,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private JLabel lblPaisActual;
 	private JComboBox cmbPaisActual, cmbPaisOrigen;
 	private JLabel lblGenero;
-	private JComboBox cmbGenero;
+	private JComboBox cmbGenero,cmbNacionalidad;
 	private JLabel lblCI;
 	private JTextField txtCI;
 	private JLabel lblNombreApellido;
@@ -89,6 +90,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private JLabel lblLineaBaja;
 	private JTextField txtCelular;
 	private JTextField txtLineaBaja;
+	private JLabel lblNacionalidad;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -268,6 +270,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		cmbGenero = new JComboBox(recuperarDatosComboBoxGenero());
 		cmbGenero.setBounds(213, 210, 340, 20);
 		getContentPane().add(cmbGenero);
+		
+		cmbNacionalidad = new JComboBox(recuperarDatosComboBoxNacionalidad());
+		cmbNacionalidad.setBounds(705, 195, 158, 20);
+		getContentPane().add(cmbNacionalidad);
 
 		lblCI = new JLabel();
 		lblCI.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -337,7 +343,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		txtCelular.setColumns(10);
-		txtCelular.setBounds(705, 85, 108, 20);
+		txtCelular.setBounds(705, 85, 158, 20);
 		getContentPane().add(txtCelular);
 
 		txtLineaBaja = new JTextField();
@@ -350,7 +356,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		txtLineaBaja.setColumns(10);
-		txtLineaBaja.setBounds(705, 144, 108, 20);
+		txtLineaBaja.setBounds(705, 144, 158, 20);
 		getContentPane().add(txtLineaBaja);
 
 		txtFechaNac = new JFormattedTextField();
@@ -379,6 +385,14 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		btnFecha.setIcon(new ImageIcon(VentanaRegistroPersona.class
 				.getResource("/imgs/cal.png")));
 		getContentPane().add(btnFecha);
+		
+		lblNacionalidad = new JLabel();
+		lblNacionalidad.setText("Nacionalidad:");
+		lblNacionalidad.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNacionalidad.setBounds(579, 193, 116, 25);
+		getContentPane().add(lblNacionalidad);
+		
+	
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -404,6 +418,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 				Item item3 = (Item) cmbPaisOrigen.getSelectedItem();
 				Integer origenSelected = item3.getId();
+				
+				Item item4 = (Item) cmbNacionalidad.getSelectedItem();
+				Integer nacionalidadSelected = item4.getId();
+				
 				if (!(txtCI.getText().length() == 0)
 						&& !(txtCelular.getText().length() == 0)
 						&& !(txtFechaNac.getText().length() == 0)
@@ -442,10 +460,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
 							query.setQueryGenerico("INSERT INTO ucsaws_persona"
-									+ "( id_persona, nombre, apellido, fecha_nacimiento, id_pais_origen,id_pais_actual,id_genero,ci, tel_linea_baja,tel_celular,"
+									+ "( id_persona,id_evento, id_nacionalidad, nombre, apellido, fecha_nacimiento, id_pais_origen,id_pais_actual,id_genero,ci, tel_linea_baja,tel_celular,"
 									+ " usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
-									+ "nextval('ucsaws_persona_seq')" + " , "
+									+ "nextval('ucsaws_persona_seq')," + VentanaBuscarEvento.evento + "," + nacionalidadSelected +  " , "
 									+ " upper('"
 									+ txtNombres.getText()
 									+ "'), "
@@ -485,7 +503,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 									.getColumn(0));
 							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 							lblMensaje
-									.setText("Excelente, se ha guardado el genero.");
+									.setText("Excelente, se ha guardado la Persona.");
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -660,7 +678,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
 				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
-				+ "order by per.apellido , per.nombre");
+				+ "where per.id_evento = " + VentanaBuscarEvento.evento
+				+ " order by per.apellido , per.nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -879,6 +898,78 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_genero, descripcion"
 				+ " from ucsaws_genero " + "order by codigo");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			listas.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
+	
+	private Vector recuperarDatosComboBoxNacionalidad() {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_nacionalidad, desc_nacionalidad"
+				+ " from ucsaws_nacionalidad " + "order by cod_nacionalidad");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

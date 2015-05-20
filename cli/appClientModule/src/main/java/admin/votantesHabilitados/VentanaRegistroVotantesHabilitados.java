@@ -37,13 +37,17 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.validator.CandidatoValidator;
-import src.main.java.dao.candidato.CandidatoDAO;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.validator.VotantesHabilitadosValidator;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaRegistroVotantesHabilitados extends JFrame implements ActionListener {
+import javax.swing.JCheckBox;
+
+public class VentanaRegistroVotantesHabilitados extends JFrame implements
+		ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -55,7 +59,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 	private VotantesHabilitadosJTableModel model = new VotantesHabilitadosJTableModel();
 	private JScrollPane scrollPane;
 
-	private CandidatoValidator candidatoValidator = new CandidatoValidator();
+	private VotantesHabilitadosValidator votantesHabilitadosValidator = new VotantesHabilitadosValidator();
 
 	private String codTemporal = "";
 	private JButton btnHome;
@@ -65,9 +69,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbPersona;
-	private JLabel lblCod;
-	private JTextField txtCod;
+	private JComboBox cmbPersona, cmbHabilitado;
+	private JLabel lblHabilitado;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -77,9 +80,10 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
-		botonGuardar.setIcon(new ImageIcon(VentanaRegistroVotantesHabilitados.class
-				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setIcon(new ImageIcon(
+				VentanaRegistroVotantesHabilitados.class
+						.getResource("/imgs/save.png")));
+		botonGuardar.setBounds(498, 47, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -91,8 +95,9 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 		botonCancelar = new JButton();
 		botonCancelar.setBackground(Color.WHITE);
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroVotantesHabilitados.class
-				.getResource("/imgs/back2.png")));
+		botonCancelar.setIcon(new ImageIcon(
+				VentanaRegistroVotantesHabilitados.class
+						.getResource("/imgs/back2.png")));
 		botonCancelar.setBounds(774, 383, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
@@ -104,10 +109,11 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
 		btnEliminar = new JButton();
 		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroVotantesHabilitados.class
-				.getResource("/imgs/borrar.png")));
+		btnEliminar.setIcon(new ImageIcon(
+				VentanaRegistroVotantesHabilitados.class
+						.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
+		btnEliminar.setBounds(540, 47, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -117,8 +123,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE CANDIDATOS");
-		labelTitulo.setBounds(269, 11, 380, 30);
+		labelTitulo.setText("REGISTRO DE VOTANTES HABILITADOS");
+		labelTitulo.setBounds(163, 11, 486, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		botonGuardar.addActionListener(this);
@@ -137,7 +143,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Votantes Habilitados");
 		scrollPane.setBounds(0, 190, 806, 193);
 		getContentPane().add(scrollPane);
 
@@ -219,25 +225,24 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 		getContentPane().add(btnHome);
 
 		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbPersona.setBounds(213, 90, 340, 20);
+		cmbPersona.setBounds(208, 59, 289, 20);
 		getContentPane().add(cmbPersona);
+
+		cmbHabilitado = new JComboBox(recuperarDatosComboBoxHabilitado());
+		cmbHabilitado.setBounds(208, 95, 69, 20);
+		getContentPane().add(cmbHabilitado);
 
 		JLabel lblPersona = new JLabel();
 		lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPersona.setText("Persona:");
-		lblPersona.setBounds(130, 88, 61, 25);
+		lblPersona.setBounds(140, 57, 61, 25);
 		getContentPane().add(lblPersona);
 
-		lblCod = new JLabel();
-		lblCod.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCod.setText("Codigo:");
-		lblCod.setBounds(130, 52, 61, 25);
-		getContentPane().add(lblCod);
-
-		txtCod = new JTextField();
-		txtCod.setBounds(213, 54, 108, 20);
-		getContentPane().add(txtCod);
-		txtCod.setColumns(10);
+		lblHabilitado = new JLabel();
+		lblHabilitado.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblHabilitado.setText("Habilitado:");
+		lblHabilitado.setBounds(140, 93, 61, 25);
+		getContentPane().add(lblHabilitado);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -262,23 +267,15 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 			try {
 				
 
-				Item item3 = (Item) cmbPersona.getSelectedItem();
-				Integer personaSelected = item3.getId();
-				if (!(txtCod.getText().length() == 0)) {
-					if (txtCod.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					} else if
-
-					(candidatoValidator.ValidarCodigo(txtCod.getText()) == false) {
-						if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+				Item item = (Item) cmbPersona.getSelectedItem();
+				Integer personaSelected = item.getId();
+				
+				Item item2 = (Item) cmbHabilitado.getSelectedItem();
+				Integer habilitadoSelected = item2.getId();
+				
+				//if (!(txtCod.getText().length() == 0)) {
+					
+						if (votantesHabilitadosValidator.ValidarCedula(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
 
@@ -296,18 +293,16 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
 							query.setQueryGenerico("INSERT INTO ucsaws_votante"
-									+ "( id_candidatos, id_persona, id_tipo_candidato, id_lista, codigo ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+									+ "( id_votante, id_persona, habilitado,sufrago,  usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
-									+ "nextval('ucsaws_candidatos_seq')"
+									+ "nextval('ucsaws_votante_seq')"
 									+ " , "
 									+ personaSelected
-								
+									+ ", "
+									+ habilitadoSelected
+									+ ","
+									+ "2"
 									+ ", '"
-									+ year
-									+ "/'"
-									+ " || upper('"
-									+ txtCod.getText()
-									+ "'), '"
 									+ Login.userLogeado
 									+ "' , now(), '"
 									+ Login.userLogeado
@@ -325,7 +320,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 									.getColumn(0));
 							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 							lblMensaje
-									.setText("Excelente, se ha guardado el genero.");
+									.setText("Excelente, se ha guardado al Votante.");
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -337,7 +332,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 							t.setRepeats(false);
 							t.start();
 
-							txtCod.setText("");
+							//txtCod.setText("");
 
 							// this.dispose();
 						} else {
@@ -357,38 +352,11 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 							t.setRepeats(false);
 							t.start();
 						}
-					} else {
-						// JOptionPane.showMessageDialog(null,
-						// "Ya existe el genero " + txtDesc.getText(),
-						// "Información",JOptionPane.WARNING_MESSAGE);
-						lblMensaje
-								.setText("Ya existe el candidato con el codigo "
-										+ txtCod.getText());
-						Timer t = new Timer(Login.timer, new ActionListener() {
+				
 
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-
-				}
-
-				else {
-					// JOptionPane.showMessageDialog(null, ,
-					// "Información",JOptionPane.WARNING_MESSAGE);
-					lblMensaje.setText("Debe ingresar todos los campos.");
-					Timer t = new Timer(Login.timer, new ActionListener() {
-
-						public void actionPerformed(ActionEvent e) {
-							lblMensaje.setText(null);
-						}
-					});
-					t.setRepeats(false);
-					t.start();
-				}
+				//}
+			
+			
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
 						"Error al intentar insertar", "Error",
@@ -401,22 +369,22 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
+						"¿Esta seguro de eliminar al Votante?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
+					VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
 
 					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
+						votantesHabilitadosDAO.eliminarVotante(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					if (candidatoDAO.eliminarCandidato(codTemporal) == true) {
+					if (votantesHabilitadosDAO.eliminarVotante(codTemporal) == true) {
 
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
 						// + txtDesc.getText());
@@ -424,7 +392,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 						// codTemporal.getText());
 						// txtId.setText("");
 						lblMensaje
-								.setText("Excelente, se ha eliminado el Candidato ");
+								.setText("Excelente, se ha eliminado al Votante ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -447,7 +415,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 					else {
 						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
 						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Candidato que desea eliminar ");
+								.setText("ERROR: Existen registros que apuntan al Votante que desea eliminar ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -464,7 +432,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 				// "Por favor seleccione que Genero desea Eliminar",
 				// "Información",JOptionPane.WARNING_MESSAGE);
 				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
+						.setText("Por favor seleccione que Votante desea Eliminar");
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -477,14 +445,12 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
 		}
 		if (e.getSource() == botonCancelar) {
-			VentanaBuscarVotantesHabilitados candidato = new VentanaBuscarVotantesHabilitados();
-			candidato.setVisible(true);
+			VentanaBuscarVotantesHabilitados votante = new VentanaBuscarVotantesHabilitados();
+			votante.setVisible(true);
 			this.dispose();
 
 		}
 	}
-
-
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
@@ -503,11 +469,14 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_votante,per.nombre, apellido, pOrigen.nombre as PaisOrigen, pActual.nombre as PaisActual,"
-				+ "habilitado, sufrago"
+		query.setQueryGenerico("SELECT id_votante,ci,per.nombre, apellido, pOrigen.nombre as PaisOrigen, pActual.nombre as PaisActual,"
+				+ "hab.cod_habilitado habilitado, suf.cod_habilitado sufrago"
 				+ "  from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona)"
 				+ "join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen)"
-				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)");
+				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)"
+				+ "join ucsaws_habilitado hab on (hab.id_habilitado = habilitado)"
+				+ "join ucsaws_habilitado suf on (suf.id_habilitado = sufrago)"
+				+ " where id_evento= " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -549,7 +518,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString()};
+					fil.get(6).toString(),fil.get(7).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
@@ -629,7 +598,75 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
 	}
 
+	private Vector recuperarDatosComboBoxHabilitado() {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
 
+		boolean existe = false;
 
-	
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_habilitado, cod_habilitado"
+				+ " from ucsaws_habilitado " + "order by cod_habilitado");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
 }

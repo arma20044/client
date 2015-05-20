@@ -38,10 +38,12 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.candidato.CandidatoDAO;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.Color;
 
 public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionListener {
@@ -141,7 +143,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Votantes Habilitados");
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
@@ -159,7 +161,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Listado de Votantes Habilitados.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -294,12 +296,12 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			CandidatoDAO candidatoDAO = new CandidatoDAO();
+			VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = candidatoDAO.buscarCandidato(txtBuscar
+					miPersona = votantesHabilitadosDAO.buscarVotantesHabilitados(txtBuscar
 							.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
@@ -352,13 +354,13 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
+						"¿Esta seguro de eliminar al Votante?",
 						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
+					VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
 
 					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
+						votantesHabilitadosDAO.eliminarVotante(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -366,7 +368,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
 					JOptionPane.showMessageDialog(null,
-							"Excelente, se ha eliminado el candidato ");
+							"Excelente, se ha eliminado al Votante ");
 					// modificarGenero(textCod.getText(),
 					// codTemporal.getText());
 					codTemporal = "";
@@ -382,7 +384,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Candidato desea Eliminar");
+						.setText("Por favor seleccione que Votante desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -475,11 +477,14 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_votante,per.nombre, apellido, pOrigen.nombre as PaisOrigen, pActual.nombre as PaisActual,"
-				+ "habilitado, sufrago"
+		query.setQueryGenerico("SELECT id_votante,ci,per.nombre, apellido, pOrigen.nombre as PaisOrigen, pActual.nombre as PaisActual,"
+				+ "hab.cod_habilitado habilitado, suf.cod_habilitado sufrago"
 				+ "  from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona)"
 				+ "join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen)"
-				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)");
+				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)"
+				+ "join ucsaws_habilitado hab on (hab.id_habilitado = habilitado)"
+				+ "join ucsaws_habilitado suf on (suf.id_habilitado = sufrago)"
+				+ " where id_evento= " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -521,7 +526,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString()};
+					fil.get(6).toString(),fil.get(7).toString()};
 
 			model.ciudades.add(fin);
 			ite++;

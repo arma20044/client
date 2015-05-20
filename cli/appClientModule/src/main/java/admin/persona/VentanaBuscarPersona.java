@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -160,7 +161,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Listado de Personas.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -477,7 +478,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
 				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
-				+ "order by per.apellido , per.nombre");
+				+ "where per.id_evento = " + VentanaBuscarEvento.evento
+				+ " order by per.apellido , per.nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
