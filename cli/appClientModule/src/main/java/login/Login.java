@@ -174,7 +174,7 @@ public class Login extends javax.swing.JFrame {
         labelContrasena = new javax.swing.JLabel();
         botonEntrar = new javax.swing.JButton();
         botonEntrar.setIcon(new ImageIcon(Login.class.getResource("/imgs/key.png")));
-        botonSalir = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
         labelImagen = new javax.swing.JLabel();
         campoContrasena = new javax.swing.JPasswordField();
         campoContrasena.addFocusListener(new FocusAdapter() {
@@ -218,8 +218,8 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        botonSalir.setText("Salir");
-        botonSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnAtras.setText("Atras");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonSalirActionPerformed(evt);
             }
@@ -253,7 +253,7 @@ public class Login extends javax.swing.JFrame {
         						.addGroup(layout.createSequentialGroup()
         							.addComponent(botonEntrar, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
         							.addPreferredGap(ComponentPlacement.RELATED)
-        							.addComponent(botonSalir, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
+        							.addComponent(btnAtras, GroupLayout.PREFERRED_SIZE, 102, GroupLayout.PREFERRED_SIZE))
         						.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
         							.addGroup(layout.createParallelGroup(Alignment.TRAILING)
         								.addComponent(labelContrasena)
@@ -284,7 +284,7 @@ public class Login extends javax.swing.JFrame {
         					.addGap(27)
         					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
         						.addComponent(botonEntrar, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-        						.addComponent(botonSalir, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
+        						.addComponent(btnAtras, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addComponent(labelTitulo))
         				.addComponent(labelImagen, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE))
@@ -386,6 +386,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEntrarActionPerformed
 
     private void botonSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirActionPerformed
+    	PreLogin pL = new PreLogin();
+    	pL.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_botonSalirActionPerformed
 
@@ -482,22 +484,22 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_campoContrasenaKeyPressed
 
   
-    public static void main(String args[]) {
-    	try {   
-    		  javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");               
-    		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-    		  java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    		}
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//    	try {   
+//    		  javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");               
+//    		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+//    		  java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//    		}
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Login().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEntrar;
-    private javax.swing.JButton botonSalir;
+    private javax.swing.JButton btnAtras;
     private javax.swing.JPasswordField campoContrasena;
     private javax.swing.JTextField campoUsuario;
     private javax.swing.JLabel jLabel3;

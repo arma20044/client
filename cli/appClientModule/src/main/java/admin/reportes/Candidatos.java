@@ -33,8 +33,8 @@ public class Candidatos {
         try {                                           
             // load report location
         	
+        	//File a = new File("candidatos.jasper");
         	File a = new File("jasperTemplates/candidatos.jasper");
-        	
             FileInputStream fis = new FileInputStream(a);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fis);
  
@@ -66,7 +66,7 @@ public class Candidatos {
         Connection jdbcConnection = null;
         try {
       	  Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/VOTOPY";
+            String url = "jdbc:postgresql://voto.db:5432/VOTOPY";
             jdbcConnection = DriverManager.getConnection(url,"ucsa2014", "ucsa2014");
         } catch (Exception ex) {
              String connectMsg = "Could not connect to the database: "

@@ -8,7 +8,10 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 @Configuration
 public class WeatherConfiguration {
 	
-	public final static String URL = "http://0.0.0.0:8080/";
+	public final static String URL = "http://voto.ws:8080/";
+	
+//	apunta a ubuntu maquina virtual
+//	public final static String URL = "http://192.168.1.103:8080/";
 
 	@Bean
 	public Jaxb2Marshaller marshaller() {

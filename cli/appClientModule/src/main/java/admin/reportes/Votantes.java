@@ -66,7 +66,9 @@ public class Votantes {
         Connection jdbcConnection = null;
         try {
       	  Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://localhost:5432/VOTOPY";
+           // String url = "jdbc:postgresql://192.168.1.2:5432/VOTOPY"; ip casa
+      	String url = "jdbc:postgresql://voto.db:5432/VOTOPY";
+      	  
             jdbcConnection = DriverManager.getConnection(url,"ucsa2014", "ucsa2014");
         } catch (Exception ex) {
              String connectMsg = "Could not connect to the database: "
