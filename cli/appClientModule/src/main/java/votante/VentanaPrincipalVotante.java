@@ -15,6 +15,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -30,6 +31,7 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -53,8 +55,10 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo;
 	private JButton botonCancelar, btnNewButton;
-	
+
 	public static String votante;
+
+	public final static int INTERVAL = 5000;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -74,15 +78,13 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-	
-
 		labelTitulo = new JLabel();
 		labelTitulo.setText("BIENVENIDO - FAVOR SELECCIONE SU NOMBRE");
 		labelTitulo.setBounds(66, 24, 518, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
-		//botonCancelar.addActionListener(this);
+		// botonCancelar.addActionListener(this);
 
-		//getContentPane().add(botonCancelar);
+		// getContentPane().add(botonCancelar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -141,44 +143,37 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					//txtBuscar.setText(selectedData.get(0));
+					// txtBuscar.setText(selectedData.get(0));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
-					
+
 					votante = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
-					
+
 					System.out.println(votante);
-							
+
 					VentanaPresidente main = new VentanaPresidente();
 					main.setVisible(true);
 					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
-				
-				
-
-				
 
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
-		
-	
-		
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
-		
+
 		JLabel lblParaIniciarSu = new JLabel();
 		lblParaIniciarSu.setText("PARA INICIAR SU VOTACIÓN");
 		lblParaIniciarSu.setFont(new Font("Verdana", Font.BOLD, 18));
@@ -213,13 +208,36 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 
+		Timer timer = new Timer(INTERVAL, new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+
+				// recuperarDatos();
+				// Refresh the panel
+
+			
+
+				recuperarDatos();
+				//table_1.setModel(model);
+			//	table_1.tableChanged(e);
+				table_1.removeAll();
+				table_1.revalidate();
+			//	table_1.repaint();
+
+				// revalidate();
+				// repaint(table_1);
+				// if (/* condition to terminate the thread. */) {
+				// timer.stop();
+				// }
+			}
+		});
+
+		timer.start();
+
 	}
 
 	public void setCoordinador(Coordinador miCoordinador) {
 		this.miCoordinador = miCoordinador;
 	}
-
-	
 
 	/**
 	 * permite cargar los datos de la persona consultada
@@ -229,7 +247,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 	private void muestraPersona(JSONArray genero) {
 		JSONArray a = (JSONArray) genero.get(0);
 		// txtId.setText(Long.toString( (Long) a.get(0)) );
-	//	txtBuscar.setText((String) a.get(1));
+		// txtBuscar.setText((String) a.get(1));
 		// textFecha.setText((String) a.get(2));
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
@@ -265,9 +283,10 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 			boolean bModificar, boolean bEliminar) {
 	}
 
-
-
 	private void recuperarDatos() {
+		
+		model.ciudades = new  ArrayList<Object[]>();
+		
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -285,9 +304,9 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select id_votante_habilitado, ci, nombre, apellido "
-		+ "from ucsaws_votante_habilitado vh "
-		+ "join ucsaws_votante vo on (vh.id_votante = vo.id_votante) "
-		+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)");
+				+ "from ucsaws_votante_habilitado vh "
+				+ "join ucsaws_votante vo on (vh.id_votante = vo.id_votante) "
+				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -327,7 +346,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString()};
+					fil.get(2).toString(), fil.get(3).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
@@ -336,7 +355,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 	}
 
 	void LimpiarCampos() {
-		//txtBuscar.setText("");
+		// txtBuscar.setText("");
 		// textFecha.setText("");
 		// textUsu.setText("");
 		codTemporal = "";
@@ -347,6 +366,6 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
