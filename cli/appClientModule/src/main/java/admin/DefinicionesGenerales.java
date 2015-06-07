@@ -182,17 +182,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				btnCandidatos.setBounds(288, 366, 146, 23);
 				getContentPane().add(btnCandidatos);
 				
-				JButton btnMesa = new JButton("Mesa");
-				btnMesa.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarMesa mesa = new VentanaBuscarMesa();
-						mesa.setVisible(true);
-						dispose();
-					}
-				});
-				btnMesa.setBounds(460, 332, 176, 23);
-				getContentPane().add(btnMesa);
-				
 				JButton btnVotantesHabilitados = new JButton("Votantes Habilitados");
 				btnVotantesHabilitados.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {

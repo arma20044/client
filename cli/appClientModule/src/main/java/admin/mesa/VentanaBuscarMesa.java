@@ -40,6 +40,8 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.local.VentanaBuscarLocal;
+import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.dao.mesa.MesaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -412,8 +414,8 @@ public class VentanaBuscarMesa extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			DefinicionesGenerales definiciones = new DefinicionesGenerales();
-			definiciones.setVisible(true);
+			VentanaBuscarLocal volver = new VentanaBuscarLocal();
+			volver.setVisible(true);
 			this.dispose();
 		}
 
@@ -487,11 +489,17 @@ public class VentanaBuscarMesa extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_mesa, nro_mesa,desc_mesa,nro_local, desc_local "
-				+ "from  ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-				+ " where id_evento = " + VentanaBuscarEvento.evento 
-				+ " order by nro_local,  nro_mesa" + "");
 
+
+		query.setQueryGenerico("SELECT  id_mesa, nro_mesa,desc_mesa,nro_local, desc_local "
+				+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+				+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
+				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
+				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
+				+ " where m.id_evento = " + VentanaBuscarEvento.evento
+				+ " and l.id_local = " + VentanaBuscarLocal.localSeleccionado
+				+ " order by nro_local , nro_mesa" + "");
+		
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);

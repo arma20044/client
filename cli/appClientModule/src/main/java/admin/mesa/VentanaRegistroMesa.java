@@ -38,6 +38,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.validator.MesaValidator;
 import src.main.java.dao.mesa.MesaDAO;
 import src.main.java.hello.WeatherClient;
@@ -71,7 +72,6 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbLocal;
 	private JLabel lblNroMesa;
 	private JTextField txtNroMesa;
 	private JTextField txtDescripcion;
@@ -225,17 +225,6 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbLocal = new JComboBox(recuperarDatosComboBoxZona());
-		cmbLocal.setToolTipText("Nro. y Descripcion de Distrito");
-		cmbLocal.setBounds(213, 120, 340, 20);
-		getContentPane().add(cmbLocal);
-
-		JLabel lblLocal = new JLabel();
-		lblLocal.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblLocal.setText("Local");
-		lblLocal.setBounds(130, 118, 61, 25);
-		getContentPane().add(lblLocal);
-
 		lblNroMesa = new JLabel();
 		lblNroMesa.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroMesa.setText("Nro:");
@@ -297,8 +286,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 			try {
 				
 
-				Item item3 = (Item) cmbLocal.getSelectedItem();
-				Integer localSelected = item3.getId();
+				
 				if (!(txtNroMesa.getText().length() == 0)) {
 					if (txtNroMesa.getText().length() > 3) {
 						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
@@ -312,7 +300,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(mesaValidator.ValidarCodigo(txtNroMesa.getText() , txtDescripcion.getText() , localSelected) == false) {
+					(mesaValidator.ValidarCodigo(txtNroMesa.getText() , txtDescripcion.getText() , VentanaBuscarLocal.localSeleccionado) == false) {
 						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
@@ -340,7 +328,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 									
 									+ txtNroMesa.getText()
 									+ "' ,'"
-									+ localSelected + "',"
+									+ VentanaBuscarLocal.localSeleccionado + "',"
 									+ VentanaBuscarEvento.evento + ",'"
 									+ Login.userLogeado
 									+ "' , now(), '"
@@ -398,7 +386,8 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
 								.setText("Ya existe la Mesa "
-										+ txtNroMesa.getText());
+										+ "Verifique que no ingrese un numero o nombre ya existente."
+										);
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -540,9 +529,13 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_mesa, nro_mesa,desc_mesa,nro_local, desc_local "
-				+ "from  ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-				+ " where id_evento = " + VentanaBuscarEvento.evento 
-				+ " order by nro_local,  nro_mesa" + "");
+				+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+				+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
+				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
+				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
+				+ " where m.id_evento = " + VentanaBuscarEvento.evento
+				+ " and l.id_local = " + VentanaBuscarLocal.localSeleccionado
+				+ " order by nro_local , nro_mesa" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -591,77 +584,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 
 	}
 
-	private Vector recuperarDatosComboBoxZona() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_local, nro_local || ' -  ' || desc_local"
-				+ " from ucsaws_local " + "order by nro_local");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
-	}
 
 
 

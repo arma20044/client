@@ -426,8 +426,8 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			DefinicionesGenerales definiciones = new DefinicionesGenerales();
-			definiciones.setVisible(true);
+			VentanaBuscarDepartamento volver = new VentanaBuscarDepartamento();
+			volver.setVisible(true);
 			this.dispose();
 		}
 

@@ -379,7 +379,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje.setText("Ya existe la Zona. "
 								+ "Verifique que no ingrese un numero o nombre ya existente."
-								+ txtNroZona.getText());
+								);
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {

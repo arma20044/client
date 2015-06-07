@@ -39,6 +39,7 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.LocalValidator;
+import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -71,7 +72,6 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbZona;
 	private JLabel lblNroZona;
 	private JTextField txtNroZona;
 	private JTextField txtDescripcion;
@@ -225,17 +225,6 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbZona = new JComboBox(recuperarDatosComboBoxZona());
-		cmbZona.setToolTipText("Nro. y Descripcion de Distrito");
-		cmbZona.setBounds(213, 120, 340, 20);
-		getContentPane().add(cmbZona);
-
-		JLabel lblZona = new JLabel();
-		lblZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblZona.setText("Zona:");
-		lblZona.setBounds(130, 118, 61, 25);
-		getContentPane().add(lblZona);
-
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroZona.setText("Nro:");
@@ -297,8 +286,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 			try {
 				
 
-				Item item3 = (Item) cmbZona.getSelectedItem();
-				Integer distritoSelected = item3.getId();
+				
 				if (!(txtNroZona.getText().length() == 0)) {
 					if (txtNroZona.getText().length() > 3) {
 						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
@@ -312,7 +300,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(localValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , distritoSelected) == false) {
+					(localValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , VentanaBuscarZona.zonaSeleccionada) == false) {
 						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
@@ -340,7 +328,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 									
 									+ txtNroZona.getText()
 									+ "' ,'"
-									+ distritoSelected + "','"
+									+ VentanaBuscarZona.zonaSeleccionada + "','"
 									+ Login.userLogeado
 									+ "' , now(), '"
 									+ Login.userLogeado
@@ -396,8 +384,9 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe el Local "
-										+ txtNroZona.getText());
+								.setText("Ya existe el Local. "
+										+ "Verifique que no ingrese un numero o nombre ya existente."
+										);
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -543,7 +532,8 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
 				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
 				+ " where id_evento = " + VentanaBuscarEvento.evento
-				+ "order by nro_zona , nro_local" + "");
+				+ " and l.id_zona = " + VentanaBuscarZona.zonaSeleccionada
+				+ " order by nro_zona , nro_local" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -592,77 +582,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 	}
 
-	private Vector recuperarDatosComboBoxZona() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_zona, nro_zona || ' -  ' || desc_zona"
-				+ " from ucsaws_zona " + "order by nro_zona");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
-	}
+	
 
 
 

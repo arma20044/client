@@ -40,6 +40,7 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.mesa.VentanaBuscarMesa;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
@@ -65,6 +66,8 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	public static String localSeleccionado;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -198,6 +201,15 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
+					
+					localSeleccionado = (String) (table_1.getModel().getValueAt(
+							selectedRow[i], 0));
+					
+					System.out.println(localSeleccionado);
+							
+					VentanaBuscarMesa mesa = new VentanaBuscarMesa();
+					mesa.setVisible(true);
+					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
@@ -413,8 +425,8 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			DefinicionesGenerales definiciones = new DefinicionesGenerales();
-			definiciones.setVisible(true);
+			VentanaBuscarZona volver = new VentanaBuscarZona();
+			volver.setVisible(true);
 			this.dispose();
 		}
 
@@ -492,7 +504,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
 				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
 				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ " where id_evento = " + VentanaBuscarEvento.evento
+				+ " where dep.id_evento = " + VentanaBuscarEvento.evento
 				+ " and l.id_zona = " + VentanaBuscarZona.zonaSeleccionada
 				+ " order by nro_zona , nro_local" + "");
 
