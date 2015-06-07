@@ -10,12 +10,13 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
 public class DistritoValidator {
 
-	public Boolean ValidarCodigo(String nro, String desc, Integer departamento)
+	public Boolean ValidarCodigo(String nro, String desc, String departamento)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -32,8 +33,10 @@ public class DistritoValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_distrito, nro_distrito "
-				+ "from ucsaws_distrito " + "where nro_distrito ='" + nro
-				+ "' and   id_departamento =" +departamento+ "" );
+				+ "from ucsaws_distrito dis join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento)"
+				+ "where (nro_distrito ='" + nro + "' or  upper(desc_distrito) = upper('" + desc + "')  " 
+				+ ") and  dis.id_departamento =" +departamento+" "
+						+ " and id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

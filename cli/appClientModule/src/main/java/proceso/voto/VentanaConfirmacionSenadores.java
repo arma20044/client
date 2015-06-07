@@ -1,5 +1,7 @@
 package src.main.java.proceso.voto;
 
+import hello.wsdl.QueryGenericoRequest;
+import hello.wsdl.QueryGenericoResponse;
 import hello.wsdl.Voto;
 import hello.wsdl.ConsultarRequest;
 import hello.wsdl.ConsultarResponse;
@@ -11,6 +13,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,8 +27,10 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
 
 public class VentanaConfirmacionSenadores extends JDialog{
@@ -66,8 +72,45 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		JButton btnNewButton = new JButton("SI");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaPrincipalVotante votante = new VentanaPrincipalVotante();
-				votante.setVisible(true);
+				
+				
+				//insertar voto inicioS
+				Calendar calendar = new GregorianCalendar();
+				int year = calendar.get(Calendar.YEAR);
+
+				ApplicationContext ctx = SpringApplication
+						.run(WeatherConfiguration.class);
+
+				WeatherClient weatherClient = ctx
+						.getBean(WeatherClient.class);
+				QueryGenericoRequest query = new QueryGenericoRequest();
+
+				// para registrar se inserta el codigo es 1
+				query.setTipoQueryGenerico(1);
+				System.out.println(Login.userLogeado);
+				query.setQueryGenerico("INSERT INTO ucsaws_votos"
+						+ "( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+						+ "VALUES (" + "nextval('ucsaws_votos_seq') ,"
+						+ " upper('" + txtDescripcion.getText()
+						+ "'), "
+
+						+ " upper('" + txtNroZona.getText() + "'), "
+						+ VentanaBuscarEvento.evento + ","
+						+ "'"
+						+ Login.userLogeado + "' , now(), '"
+						+ Login.userLogeado + "' , now())");
+
+				QueryGenericoResponse response = weatherClient
+						.getQueryGenericoResponse(query);
+				weatherClient.printQueryGenericoResponse(response);
+				
+				//insertar votoS fin
+				
+				
+				
+				
+				VentanaVotoFinal end  = new VentanaVotoFinal();
+				end.setVisible(true);
 				dispose(); 
 				
 				

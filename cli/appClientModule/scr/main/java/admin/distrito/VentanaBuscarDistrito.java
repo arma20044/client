@@ -39,6 +39,9 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.departamento.VentanaBuscarDepartamento;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.dao.distrito.DistritoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -63,6 +66,8 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	public static String distritoSeleccionado;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -196,6 +201,16 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
+					
+					
+					distritoSeleccionado = (String) (table_1.getModel().getValueAt(
+							selectedRow[i], 0));
+					
+					System.out.println(distritoSeleccionado);
+							
+					VentanaBuscarZona zona = new VentanaBuscarZona();
+					zona.setVisible(true);
+					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
@@ -488,7 +503,9 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_distrito, nro_distrito,desc_distrito,nro_departamento, desc_departamento  "
 				+ " from ucsaws_distrito di join ucsaws_departamento de on (di.id_departamento = de.id_departamento)"
-				+ "order by nro_departamento, nro_distrito" + "");
+				+ " where id_evento =" + VentanaBuscarEvento.evento
+				+ " and di.id_departamento =" + VentanaBuscarDepartamento.departamentoSeleccionado
+				+ " order by nro_departamento, nro_distrito" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

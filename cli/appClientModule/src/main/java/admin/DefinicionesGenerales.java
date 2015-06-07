@@ -23,6 +23,7 @@ import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.listas.VentanaBuscarLista;
 import src.main.java.admin.local.VentanaBuscarLocal;
+import src.main.java.admin.mesa.VentanaBuscarMesa;
 import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
 import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
@@ -147,17 +148,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		btnDepartamentos.setBounds(288, 298, 146, 23);
 		getContentPane().add(btnDepartamentos);
 		
-		JButton btnDistritos = new JButton("Distritos");
-		btnDistritos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarDistrito distrito = new VentanaBuscarDistrito();
-				distrito.setVisible(true);
-				dispose();
-			}
-		});
-		btnDistritos.setBounds(288, 332, 146, 23);
-		getContentPane().add(btnDistritos);
-		
 		JLabel lblAdmin = new JLabel("Administrador");
 		lblAdmin.setBounds(24, 11, 89, 14);
 		getContentPane().add(lblAdmin);
@@ -192,31 +182,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				btnCandidatos.setBounds(288, 366, 146, 23);
 				getContentPane().add(btnCandidatos);
 				
-				JButton btnZonas = new JButton("Zonas");
-				btnZonas.addActionListener(new ActionListener() {
+				JButton btnMesa = new JButton("Mesa");
+				btnMesa.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarZona zona = new VentanaBuscarZona();
-						zona.setVisible(true);
+						VentanaBuscarMesa mesa = new VentanaBuscarMesa();
+						mesa.setVisible(true);
 						dispose();
 					}
 				});
-				btnZonas.setBounds(460, 260, 176, 23);
-				getContentPane().add(btnZonas);
-				
-				JButton btnLocal = new JButton("Local");
-				btnLocal.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarLocal local = new VentanaBuscarLocal();
-						local.setVisible(true);
-						dispose();
-					}
-				});
-				btnLocal.setBounds(460, 298, 176, 23);
-				getContentPane().add(btnLocal);
-				
-				JButton btnCiudad = new JButton("Ciudad");
-				btnCiudad.setBounds(460, 332, 176, 23);
-				getContentPane().add(btnCiudad);
+				btnMesa.setBounds(460, 332, 176, 23);
+				getContentPane().add(btnMesa);
 				
 				JButton btnVotantesHabilitados = new JButton("Votantes Habilitados");
 				btnVotantesHabilitados.addActionListener(new ActionListener() {
@@ -226,7 +201,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnVotantesHabilitados.setBounds(460, 366, 176, 23);
+				btnVotantesHabilitados.setBounds(460, 264, 176, 23);
 				getContentPane().add(btnVotantesHabilitados);
 				
 				JButton btnTipoEvento = new JButton("Tipo Evento");
@@ -238,7 +213,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnTipoEvento.setBounds(288, 400, 146, 23);
+				btnTipoEvento.setBounds(288, 332, 146, 23);
 				getContentPane().add(btnTipoEvento);
 				
 				JLabel label = new JLabel("Nro. Evento:");
@@ -305,7 +280,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnNacionalidades.setBounds(460, 400, 176, 23);
+				btnNacionalidades.setBounds(460, 298, 176, 23);
 				getContentPane().add(btnNacionalidades);
 		//lblNombreDescripcion.repaint();
 		

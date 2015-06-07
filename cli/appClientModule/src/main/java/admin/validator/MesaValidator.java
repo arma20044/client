@@ -10,13 +10,12 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
-public class ZonaValidator {
+public class MesaValidator {
 
-	public Boolean ValidarCodigo(String nro, String desc, String distrito)
+	public Boolean ValidarCodigo(String nro, String desc, Integer distrito)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -32,12 +31,9 @@ public class ZonaValidator {
 
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_zona, nro_zona "
-				+ "from ucsaws_distrito dis join ucsaws_zona z on (dis.id_distrito = z.id_distrito)"
-				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ "where (nro_zona ='" + nro + "' or  upper(desc_zona) = upper('" + desc + "')  " 
-				+ ") and  dis.id_distrito =" +distrito+" "
-						+ " and id_evento = " + VentanaBuscarEvento.evento);
+		query.setQueryGenerico("SELECT id_mesa, nro_mesa "
+				+ "from ucsaws_mesa " + "where nro_mesa ='" + nro
+				+ "'  and id_local =" +distrito+ "" );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -1,4 +1,4 @@
-package src.main.java.admin.local;
+package src.main.java.admin.mesa;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -40,13 +40,12 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.zona.VentanaBuscarZona;
-import src.main.java.dao.local.LocalDAO;
+import src.main.java.dao.mesa.MesaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaBuscarLocal extends JFrame implements ActionListener {
+public class VentanaBuscarMesa extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -59,7 +58,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private LocalJTableModel model = new LocalJTableModel();
+	private MesaJTableModel model = new MesaJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
@@ -70,12 +69,12 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarLocal() {
+	public VentanaBuscarMesa() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarLocal.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarMesa.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setBounds(589, 422, 45, 25);
@@ -89,7 +88,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 
 		botonBuscar = new JButton();
 		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarLocal.class
+		botonBuscar.setIcon(new ImageIcon(VentanaBuscarMesa.class
 				.getResource("/imgs/search.png")));
 		botonBuscar.setBounds(415, 52, 32, 32);
 		botonBuscar.setOpaque(false);
@@ -102,7 +101,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarLocal.class
+		botonEliminar.setIcon(new ImageIcon(VentanaBuscarMesa.class
 				.getResource("/imgs/borrar.png")));
 		botonEliminar.setBounds(499, 52, 32, 32);
 		botonEliminar.setOpaque(false);
@@ -114,7 +113,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		botonEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE LOCAL");
+		labelTitulo.setText("ABM DE MESA");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -161,7 +160,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Listado de Mesas.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -208,7 +207,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE LOCALES");
+		lblListaDeGeneros.setText("LISTA DE MESA");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
@@ -222,7 +221,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarLocal.class
+		btnHome.setIcon(new ImageIcon(VentanaBuscarMesa.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -234,7 +233,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroLocal registro = new VentanaRegistroLocal();
+				VentanaRegistroMesa registro = new VentanaRegistroMesa();
 				registro.setVisible(true);
 				dispose();
 			}
@@ -243,7 +242,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		btnNewButton.setOpaque(false);
 		btnNewButton.setContentAreaFilled(false);
 		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarLocal.class
+		btnNewButton.setIcon(new ImageIcon(VentanaBuscarMesa.class
 				.getResource("/imgs/add.png")));
 		btnNewButton.setBounds(457, 52, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
@@ -296,12 +295,12 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			LocalDAO localDAO = new LocalDAO();
+			MesaDAO mesaDAO = new MesaDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = localDAO.buscarLocal(txtBuscar.getText());
+					miPersona = mesaDAO.buscarMesa(txtBuscar.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -325,7 +324,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 					modelo = new DefaultTableModel();
 					JSONArray a = (JSONArray) miPersona.get(0);
 
-					model = new LocalJTableModel();
+					model = new MesaJTableModel();
 					recuperarDatos();
 					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
@@ -353,13 +352,13 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Local?", "Confirmación",
+						"¿Esta seguro de eliminar la Mesa?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					LocalDAO localDAO = new LocalDAO();
+					MesaDAO mesaDAO = new MesaDAO();
 
 					try {
-						localDAO.eliminarLocal(codTemporal);
+						mesaDAO.eliminarMesa(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -368,7 +367,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 					}
 					
 					lblMensaje
-					.setText("Excelente, se ha eliminado el Local");
+					.setText("Excelente, se ha eliminado la Mesa");
 			codTemporal = "";
 			txtBuscar.setText("");
 
@@ -385,7 +384,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 					codTemporal = "";
 					limpiar();
 
-					model = new LocalJTableModel();
+					model = new MesaJTableModel();
 
 					recuperarDatos();
 					table_1.setModel(model);
@@ -395,7 +394,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Local desea Eliminar");
+						.setText("Por favor seleccione que Mesa desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -488,13 +487,10 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_local, nro_local,desc_local,nro_zona, desc_zona "
-				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
-				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ " where id_evento = " + VentanaBuscarEvento.evento
-				+ " and l.id_zona = " + VentanaBuscarZona.zonaSeleccionada
-				+ " order by nro_zona , nro_local" + "");
+		query.setQueryGenerico("SELECT  id_mesa, nro_mesa,desc_mesa,nro_local, desc_local "
+				+ "from  ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+				+ " where id_evento = " + VentanaBuscarEvento.evento 
+				+ " order by nro_local,  nro_mesa" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

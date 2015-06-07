@@ -37,11 +37,13 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.LocalValidator;
 import src.main.java.dao.local.LocalDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -538,7 +540,10 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT  id_local, nro_local,desc_local,nro_zona, desc_zona "
 				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				+ "order by nro_local" + "");
+				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
+				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
+				+ " where id_evento = " + VentanaBuscarEvento.evento
+				+ "order by nro_zona , nro_local" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -113,8 +113,8 @@ public class PreLogin extends javax.swing.JFrame {
         JButton btnVotante = new JButton("VOTANTE");
         btnVotante.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		VentanaPrincipalVotante votantePrincipal = new VentanaPrincipalVotante();
-        		votantePrincipal.setVisible(true);
+        		EleccionMesa mesa = new EleccionMesa();
+        		mesa.setVisible(true);
         		dispose();
         	}
         });

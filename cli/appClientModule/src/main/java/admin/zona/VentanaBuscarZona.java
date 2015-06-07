@@ -36,9 +36,13 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import scr.main.java.admin.distrito.VentanaBuscarDistrito;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.departamento.VentanaBuscarDepartamento;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.dao.zona.ZonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -63,6 +67,8 @@ public class VentanaBuscarZona extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	public static String zonaSeleccionada;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -196,6 +202,16 @@ public class VentanaBuscarZona extends JFrame implements ActionListener {
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
+					
+					
+					zonaSeleccionada = (String) (table_1.getModel().getValueAt(
+							selectedRow[i], 0));
+					
+					System.out.println(zonaSeleccionada);
+							
+					VentanaBuscarLocal local = new VentanaBuscarLocal();
+					local.setVisible(true);
+					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
@@ -488,7 +504,10 @@ public class VentanaBuscarZona extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_zona, nro_zona,desc_zona,nro_distrito, desc_distrito  "
 				+ " from ucsaws_zona zona join ucsaws_distrito dis on (zona.id_distrito = dis.id_distrito)"
-				+ "order by nro_zona" + "");
+				+ " join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento )"
+				+ " where id_evento = " + VentanaBuscarEvento.evento
+				+ " and zona.id_distrito = " + VentanaBuscarDistrito.distritoSeleccionado
+				+ "order by nro_distrito, nro_zona" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

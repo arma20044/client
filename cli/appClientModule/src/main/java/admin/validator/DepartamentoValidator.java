@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
@@ -33,7 +34,7 @@ public class DepartamentoValidator {
 
 		query.setQueryGenerico("SELECT id_departamento, nro_departamento "
 				+ "from ucsaws_departamento " + "where nro_departamento ='" + nro
-				+ "' " );
+				+ "' and id_evento= " + VentanaBuscarEvento.evento );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
