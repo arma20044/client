@@ -54,7 +54,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonBuscar, botonEliminar, btnNewButton;
+	private JButton botonCancelar, btnNewButton;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -86,32 +86,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-
-		botonBuscar = new JButton();
-		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
-				.getResource("/imgs/search.png")));
-		botonBuscar.setBounds(415, 52, 32, 32);
-		botonBuscar.setOpaque(false);
-		botonBuscar.setContentAreaFilled(false);
-		botonBuscar.setBorderPainted(false);
-		Image img3 = ((ImageIcon) botonBuscar.getIcon()).getImage();
-		Image newimg3 = img3.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		botonBuscar.setIcon(new ImageIcon(newimg3));
-
-		botonEliminar = new JButton();
-		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
-				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(499, 52, 32, 32);
-		botonEliminar.setOpaque(false);
-		botonEliminar.setContentAreaFilled(false);
-		botonEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) botonEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		botonEliminar.setIcon(new ImageIcon(newimg4));
+		
+	
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE VOTANTES HABILITADOS");
@@ -126,13 +102,9 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		txtBuscar = new JTextField();
 		txtBuscar.setBounds(86, 52, 319, 25);
 		getContentPane().add(txtBuscar);
-		botonEliminar.addActionListener(this);
-		botonBuscar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonBuscar);
-		getContentPane().add(botonEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -245,7 +217,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		btnNewButton.setBorderPainted(false);
 		btnNewButton.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(457, 52, 32, 32);
+		btnNewButton.setBounds(415, 52, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
@@ -292,115 +264,6 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == botonBuscar) {
-			String ge = txtBuscar.getText();
-
-			VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
-
-			if (!(txtBuscar.getText().length() == 0)) {
-
-				try {
-					miPersona = votantesHabilitadosDAO.buscarVotantesHabilitados(txtBuscar
-							.getText());
-				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (org.json.simple.parser.ParseException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-				if (miPersona.size() > 0) {
-
-					muestraPersona(miPersona);
-
-					try {
-						// VentanaVer ver = new VentanaVer(miPersona);
-						// ver.setVisible(true);
-					} catch (Exception e2) {
-						// TODO: handle exception
-						System.out.print(e2);
-					}
-
-					modelo = new DefaultTableModel();
-					JSONArray a = (JSONArray) miPersona.get(0);
-
-					model = new VotantesHabilitadosJTableModel();
-					recuperarDatos();
-					table_1.setModel(model);
-					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
-					model.fireTableDataChanged();
-				}
-				//
-
-			} else {
-				lblMensaje
-						.setText("Por favor complete los campos para realizar la busqueda");
-				codTemporal = "";
-				txtBuscar.setText("");
-
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-		}
-
-		if (e.getSource() == botonEliminar) {
-			if (!codTemporal.equals("")) {
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar al Votante?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
-
-					try {
-						votantesHabilitadosDAO.eliminarVotante(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					JOptionPane.showMessageDialog(null,
-							"Excelente, se ha eliminado al Votante ");
-					// modificarGenero(textCod.getText(),
-					// codTemporal.getText());
-					codTemporal = "";
-					limpiar();
-
-					model = new VotantesHabilitadosJTableModel();
-
-					recuperarDatos();
-					table_1.setModel(model);
-					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
-					// model.fireTableDataChanged();
-					// table_1.repaint();
-				}
-			} else {
-				lblMensaje
-						.setText("Por favor seleccione que Votante desea Eliminar");
-
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			DefinicionesGenerales definiciones = new DefinicionesGenerales();
 			definiciones.setVisible(true);
@@ -453,9 +316,6 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
 		txtBuscar.setEditable(codigo);
-		botonBuscar.setEnabled(bBuscar);
-		// botonModificar.setEnabled(true);
-		botonEliminar.setEnabled(bEliminar);
 	}
 
 
@@ -477,14 +337,16 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT id_votante,ci,per.nombre, apellido, pOrigen.nombre as PaisOrigen, pActual.nombre as PaisActual,"
+		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido,  pActual.nombre as PaisActual, desc_mesa, "
 				+ "hab.cod_habilitado habilitado, suf.cod_habilitado sufrago"
-				+ "  from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona)"
+				+ " from ucsaws_votante vo join ucsaws_votante_habilitado vh on (vo.id_votante = vh.id_votante)"
+				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)"
 				+ "join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen)"
 				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)"
 				+ "join ucsaws_habilitado hab on (hab.id_habilitado = habilitado)"
 				+ "join ucsaws_habilitado suf on (suf.id_habilitado = sufrago)"
-				+ " where id_evento= " + VentanaBuscarEvento.evento);
+				+ "join ucsaws_mesa m on (vo.id_mesa = m.id_mesa)"
+				+ " where per.id_evento= " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

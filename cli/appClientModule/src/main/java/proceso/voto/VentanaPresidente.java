@@ -2,6 +2,7 @@ package src.main.java.proceso.voto;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,8 +15,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 public class VentanaPresidente extends JFrame implements ActionListener{
 	
@@ -50,14 +53,40 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	//datos a enviar
 	
 	public VentanaPresidente(){
+		getContentPane().setForeground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		
 		/*permite iniciar las propiedades de los componentes*/
 		iniciarComponentes();
 		setTitle("Sistema E-vote - 2014");
-		setSize(1366,708);
+		setSize(1089,621);
 		getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/imgs/justicia electoral logo.jpg")));
+		lblNewLabel_1.setBounds(0, 0, 117, 115);
+		
+		Image img6 = ((ImageIcon) lblNewLabel_1.getIcon()).getImage();
+		Image newimg6 = img6.getScaledInstance(lblNewLabel_1.getWidth(), lblNewLabel_1.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblNewLabel_1.setIcon(new ImageIcon(newimg6));
+		
+		
+		getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblBoletinDeVoto = new JLabel("BOLETIN DE VOTO OFICIAL");
+		lblBoletinDeVoto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblBoletinDeVoto.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblBoletinDeVoto.setBounds(341, 24, 536, 31);
+		getContentPane().add(lblBoletinDeVoto);
+		
+		JLabel lblPeriodo = new JLabel("PERIODO 2016-2021");
+		lblPeriodo.setForeground(Color.GRAY);
+		lblPeriodo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPeriodo.setFont(new Font("Tahoma", Font.BOLD, 25));
+		lblPeriodo.setBounds(325, 108, 536, 31);
+		getContentPane().add(lblPeriodo);
    		/*Asigna un titulo a la barra de titulo*/
 		//setTitle("CoDejaVu : JFrame VentanaPrincipal");
 		/*tama�o de la ventana*/
@@ -86,34 +115,51 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	JLabel lblNewLabel = new JLabel("CANDIDATOS A PRESIDENTE Y VICEPRESIDENTE DE LA REPUBLICA ");
 	lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setBounds(166, 59, 850, 31);
+	lblNewLabel.setBounds(171, 66, 850, 31);
 	getContentPane().add(lblNewLabel);
 	
 	JPanel panel = new JPanel();
-	panel.setBounds(35, 99, 364, 363);
+	panel.setBounds(210, 181, 211, 290);
 	getContentPane().add(panel);
 	panel.setLayout(null);
 	
-	JLabel lblHC = new JLabel("");
+	JLabel lblFotoPrimerCandidatoPresidente = new JLabel("Bill Gates");
+	lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/billGates.jpg")));
 	//lblHC.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/img/hc.jpg")));
-	lblHC.setBounds(20, 18, 129, 167);
-	panel.add(lblHC);
+	lblFotoPrimerCandidatoPresidente.setBounds(0, 0, 100, 141);
+	
+	Image img = ((ImageIcon) lblFotoPrimerCandidatoPresidente.getIcon()).getImage();
+	Image newimg = img.getScaledInstance(lblFotoPrimerCandidatoPresidente.getWidth(), lblFotoPrimerCandidatoPresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon(newimg));
+	
+	panel.add(lblFotoPrimerCandidatoPresidente);
 	//lblHC.setIcon(new ImageIcon(Main.class.getResource("/img/hc.jpg")));
 	
-	JLabel lblAfara = new JLabel("");
-	lblAfara.setBounds(189, 42, 124, 143);
-	panel.add(lblAfara);
+	JLabel lblFotoPrimerCandidatoVicePresidente = new JLabel("Paul Allen");
+	lblFotoPrimerCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/Paul Allen.jpg")));
+	lblFotoPrimerCandidatoVicePresidente.setBounds(110, 0, 100, 141);
+	
+	Image img2 = ((ImageIcon) lblFotoPrimerCandidatoVicePresidente.getIcon()).getImage();
+	Image newimg2 = img2.getScaledInstance(lblFotoPrimerCandidatoVicePresidente.getWidth(), lblFotoPrimerCandidatoVicePresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoPrimerCandidatoVicePresidente.setIcon(new ImageIcon(newimg2));
+	
+	panel.add(lblFotoPrimerCandidatoVicePresidente);
 	//lblAfara.setIcon(new ImageIcon(Main.class.getResource("/img/afara.gif")));
 	
-	JLabel lblNewLabel_2 = new JLabel("candidato a vice");
-	lblNewLabel_2.setBounds(189, 196, 141, 14);
-	panel.add(lblNewLabel_2);
-	lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	JLabel lblNombrePrimerCandidatoVicePresidente = new JLabel("candidato a vice");
+	lblNombrePrimerCandidatoVicePresidente.setBounds(136, 139, 72, 14);
+	lblNombrePrimerCandidatoVicePresidente.setText(lblFotoPrimerCandidatoVicePresidente.getText());
+	panel.add(lblNombrePrimerCandidatoVicePresidente);
+	lblNombrePrimerCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
 	
-	JLabel lblNewLabel_1 = new JLabel("candidato a presidente");
-	lblNewLabel_1.setBounds(0, 196, 161, 13);
-	panel.add(lblNewLabel_1);
-	lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	JLabel lblNombrePrimerCandidatoPresidente = new JLabel("candidato a presidente");
+	lblNombrePrimerCandidatoPresidente.setBounds(21, 140, 72, 13);
+	lblNombrePrimerCandidatoPresidente.setText(lblFotoPrimerCandidatoPresidente.getText());
+	panel.add(lblNombrePrimerCandidatoPresidente);
+	
+	lblNombrePrimerCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
 	
 	final JRadioButton rdbLista1 = new JRadioButton("LISTA 1");
 	rdbLista1.addMouseListener(new MouseAdapter() {
@@ -125,43 +171,69 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	});
 	buttonGroup.add(rdbLista1);
 	rdbLista1.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista1.setBounds(107, 234, 123, 39);
+	rdbLista1.setBounds(55, 173, 123, 39);
 	panel.add(rdbLista1);
 	
-	JLabel lblPartidoColorado = new JLabel("Nombre de la lista");
-	lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblPartidoColorado.setBounds(79, 280, 185, 31);
+	JLabel lblPartidoColorado = new JLabel("Ventanas del Futuro");
+	lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	lblPartidoColorado.setBounds(21, 219, 185, 31);
 	panel.add(lblPartidoColorado);
 	
-	JLabel lblAnr = new JLabel("sigla");
+	JLabel lblAnr = new JLabel("V.F.");
 	lblAnr.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAnr.setBounds(136, 322, 72, 31);
+	lblAnr.setBounds(88, 259, 54, 31);
 	panel.add(lblAnr);
+	
+	JLabel label = new JLabel("Presidente");
+	label.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	label.setBounds(21, 153, 72, 13);
+	panel.add(label);
+	
+	JLabel label_1 = new JLabel("Vicepresidente");
+	label_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	label_1.setBounds(130, 152, 90, 13);
+	panel.add(label_1);
 	
 	JPanel panel_1 = new JPanel();
 	panel_1.setLayout(null);
-	panel_1.setBounds(421, 101, 364, 363);
+	panel_1.setBounds(460, 181, 211, 290);
 	getContentPane().add(panel_1);
 	
-	JLabel label = new JLabel("");
+	JLabel lblFotoSegundoCandidatoPresidente = new JLabel("Steve Jobs");
+	lblFotoSegundoCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/steveJobs.jpg")));
 	//label.setIcon(new ImageIcon(Main.class.getResource("/img/ferre.jpg")));
-	label.setBounds(20, 18, 129, 167);
-	panel_1.add(label);
+	lblFotoSegundoCandidatoPresidente.setBounds(0, 0, 100, 141);
 	
-	JLabel label_1 = new JLabel("");
+	Image img3 = ((ImageIcon) lblFotoSegundoCandidatoPresidente.getIcon()).getImage();
+	Image newimg3 = img3.getScaledInstance(lblFotoSegundoCandidatoPresidente.getWidth(), lblFotoSegundoCandidatoPresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoSegundoCandidatoPresidente.setIcon(new ImageIcon(newimg3));
+	
+	panel_1.add(lblFotoSegundoCandidatoPresidente);
+	
+	JLabel lblFotoSegundoCandidatoVicePresidente = new JLabel("Steve Wozniak");
+	lblFotoSegundoCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/Steve Wozniak.jpg")));
 	//label_1.setIcon(new ImageIcon(Main.class.getResource("/img/imagen-cynthia-brizuela-speratti.jpg")));
-	label_1.setBounds(189, 42, 124, 143);
-	panel_1.add(label_1);
+	lblFotoSegundoCandidatoVicePresidente.setBounds(110, 0, 100, 141);
 	
-	JLabel lblCynthiaElviraBrizuela = new JLabel("vice 2");
-	lblCynthiaElviraBrizuela.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblCynthiaElviraBrizuela.setBounds(171, 195, 175, 14);
-	panel_1.add(lblCynthiaElviraBrizuela);
+	Image img4 = ((ImageIcon) lblFotoSegundoCandidatoVicePresidente.getIcon()).getImage();
+	Image newimg4 = img4.getScaledInstance(lblFotoSegundoCandidatoVicePresidente.getWidth(), lblFotoSegundoCandidatoVicePresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoSegundoCandidatoVicePresidente.setIcon(new ImageIcon(newimg4));
 	
-	JLabel lblMarioAnibalFerreiro = new JLabel("candidato 2");
-	lblMarioAnibalFerreiro.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblMarioAnibalFerreiro.setBounds(0, 196, 161, 13);
-	panel_1.add(lblMarioAnibalFerreiro);
+	panel_1.add(lblFotoSegundoCandidatoVicePresidente);
+	
+	JLabel lblNombreSegundoCandidatoVicePresidente = new JLabel("vice 2");
+	lblNombreSegundoCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
+	lblNombreSegundoCandidatoVicePresidente.setBounds(110, 140, 100, 14);
+	lblNombreSegundoCandidatoVicePresidente.setText(lblFotoSegundoCandidatoVicePresidente.getText());
+	panel_1.add(lblNombreSegundoCandidatoVicePresidente);
+	
+	JLabel lblNombreSegundoCandidatoPresidente = new JLabel("candidato 2");
+	lblNombreSegundoCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
+	lblNombreSegundoCandidatoPresidente.setBounds(10, 141, 80, 13);
+	lblNombreSegundoCandidatoPresidente.setText(lblFotoSegundoCandidatoPresidente.getText());
+	panel_1.add(lblNombreSegundoCandidatoPresidente);
 	
 	final JRadioButton rdbLista2 = new JRadioButton("LISTA 2");
 	rdbLista2.addMouseListener(new MouseAdapter() {
@@ -173,44 +245,71 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	});
 	buttonGroup.add(rdbLista2);
 	rdbLista2.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista2.setBounds(107, 234, 123, 39);
+	rdbLista2.setBounds(50, 172, 123, 39);
 	panel_1.add(rdbLista2);
 	
-	JLabel lblAvanzaPais = new JLabel("Nombre de la lista");
+	JLabel lblAvanzaPais = new JLabel("Camino a la \r\nInnovación");
 	lblAvanzaPais.setHorizontalAlignment(SwingConstants.CENTER);
-	lblAvanzaPais.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAvanzaPais.setBounds(87, 280, 185, 31);
+	lblAvanzaPais.setFont(new Font("Tahoma", Font.PLAIN, 20));
+	lblAvanzaPais.setBounds(-20, 202, 246, 65);
 	panel_1.add(lblAvanzaPais);
 	
-	JLabel lblMap = new JLabel("sigla");
+	JLabel lblMap = new JLabel("C.I.");
 	lblMap.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblMap.setBounds(136, 322, 72, 31);
+	lblMap.setBounds(88, 255, 72, 31);
 	panel_1.add(lblMap);
+	
+	JLabel lblPresidente1 = new JLabel("Presidente");
+	lblPresidente1.setBounds(29, 152, 72, 13);
+	panel_1.add(lblPresidente1);
+	lblPresidente1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	
+	JLabel lblVice1 = new JLabel("Vicepresidente");
+	lblVice1.setBounds(120, 152, 90, 13);
+	panel_1.add(lblVice1);
+	lblVice1.setFont(new Font("Tahoma", Font.PLAIN, 10));
 	
 	JPanel panel_2 = new JPanel();
 	panel_2.setLayout(null);
-	panel_2.setBounds(799, 101, 364, 363);
+	panel_2.setBounds(711, 183, 211, 290);
 	getContentPane().add(panel_2);
 	
-	JLabel label_2 = new JLabel("");
+	JLabel lblFotoTercerCandidatoPresidente = new JLabel("Richard Stallman");
+	lblFotoTercerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/RichardStallman.jpg")));
 	//label_2.setIcon(new ImageIcon(Main.class.getResource("/img/alegre.jpg")));
-	label_2.setBounds(20, 18, 129, 167);
-	panel_2.add(label_2);
+	lblFotoTercerCandidatoPresidente.setBounds(0, 0, 100, 141);
 	
-	JLabel label_3 = new JLabel("");
+	Image img5 = ((ImageIcon) lblFotoTercerCandidatoPresidente.getIcon()).getImage();
+	Image newimg5 = img5.getScaledInstance(lblFotoTercerCandidatoPresidente.getWidth(), lblFotoTercerCandidatoPresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoTercerCandidatoPresidente.setIcon(new ImageIcon(newimg5));
+	
+	panel_2.add(lblFotoTercerCandidatoPresidente);
+	
+	JLabel lblFotoTercerCandidatoVicePresidente = new JLabel("Linus Torvalds");
+	lblFotoTercerCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class.getResource("/candidatosJpeg/Linus Benedict Torvalds.jpeg")));
 	//label_3.setIcon(new ImageIcon(Main.class.getResource("/img/fili.jpg")));
-	label_3.setBounds(189, 42, 124, 143);
-	panel_2.add(label_3);
+	lblFotoTercerCandidatoVicePresidente.setBounds(110, 0, 100, 141);
 	
-	JLabel lblRafaelAugustoFilizzola = new JLabel("vice 3");
-	lblRafaelAugustoFilizzola.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblRafaelAugustoFilizzola.setBounds(171, 195, 175, 14);
-	panel_2.add(lblRafaelAugustoFilizzola);
+	Image img6 = ((ImageIcon) lblFotoTercerCandidatoVicePresidente.getIcon()).getImage();
+	Image newimg6 = img6.getScaledInstance(lblFotoTercerCandidatoVicePresidente.getWidth(), lblFotoTercerCandidatoVicePresidente.getHeight(),
+			java.awt.Image.SCALE_SMOOTH);
+	lblFotoTercerCandidatoVicePresidente.setIcon(new ImageIcon(newimg6));
 	
-	JLabel lblPedroEfrainAlegre = new JLabel("candidato 3");
-	lblPedroEfrainAlegre.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblPedroEfrainAlegre.setBounds(0, 196, 161, 13);
-	panel_2.add(lblPedroEfrainAlegre);
+	
+	panel_2.add(lblFotoTercerCandidatoVicePresidente);
+	
+	JLabel lblNombreTercerCandidatoVicePresidente = new JLabel("vice 3");
+	lblNombreTercerCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
+	lblNombreTercerCandidatoVicePresidente.setBounds(120, 139, 100, 14);
+	lblNombreTercerCandidatoVicePresidente.setText(lblFotoTercerCandidatoVicePresidente.getText());
+	panel_2.add(lblNombreTercerCandidatoVicePresidente);
+	
+	JLabel lblNombreTercerCandidatoPresidente = new JLabel("candidato 3");
+	lblNombreTercerCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
+	lblNombreTercerCandidatoPresidente.setBounds(0, 140, 109, 13);
+	lblNombreTercerCandidatoPresidente.setText(lblFotoTercerCandidatoPresidente.getText());
+	panel_2.add(lblNombreTercerCandidatoPresidente);
 	
 	final JRadioButton rdbLista3 = new JRadioButton("LISTA 3");
 	rdbLista3.addMouseListener(new MouseAdapter() {
@@ -222,19 +321,29 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	});
 	buttonGroup.add(rdbLista3);
 	rdbLista3.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista3.setBounds(107, 234, 123, 39);
+	rdbLista3.setBounds(47, 170, 123, 39);
 	panel_2.add(rdbLista3);
 	
-	JLabel lblAlianzaParaguayAlegre = new JLabel("Nombre de la lista");
+	JLabel lblAlianzaParaguayAlegre = new JLabel("Partido Libre");
 	lblAlianzaParaguayAlegre.setHorizontalAlignment(SwingConstants.CENTER);
 	lblAlianzaParaguayAlegre.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAlianzaParaguayAlegre.setBounds(48, 280, 279, 31);
+	lblAlianzaParaguayAlegre.setBounds(-18, 216, 279, 31);
 	panel_2.add(lblAlianzaParaguayAlegre);
 	
-	JLabel lblApa = new JLabel("sigla");
+	JLabel lblApa = new JLabel("P.L.");
 	lblApa.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblApa.setBounds(136, 322, 72, 31);
+	lblApa.setBounds(82, 248, 72, 31);
 	panel_2.add(lblApa);
+	
+	JLabel label_2 = new JLabel("Presidente");
+	label_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	label_2.setBounds(28, 150, 72, 13);
+	panel_2.add(label_2);
+	
+	JLabel label_3 = new JLabel("Vicepresidente");
+	label_3.setFont(new Font("Tahoma", Font.PLAIN, 10));
+	label_3.setBounds(130, 150, 90, 13);
+	panel_2.add(label_3);
 	
 	
 	//ver www.camick.com select button group
@@ -317,12 +426,12 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 //		}
 //	});
 	botonCambiar.setFont(new Font("Tahoma", Font.PLAIN, 23));
-	botonCambiar.setBounds(178, 608, 185, 37);
+	botonCambiar.setBounds(294, 537, 185, 37);
 	getContentPane().add(botonCambiar);
 	
 	JButton btnNewButton_1 = new JButton("Votar BLANCO");
 	btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-	btnNewButton_1.setBounds(495, 608, 179, 37);
+	btnNewButton_1.setBounds(639, 537, 179, 37);
 	getContentPane().add(btnNewButton_1);
 	
 

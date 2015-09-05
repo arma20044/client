@@ -60,7 +60,7 @@ public class ReporteDymmy extends JFrame {
 		JButton btnNewButton = new JButton("Generar Reporte");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Report te = new Report();
+			//	Report te = new Report();
 				
 			}
 		});
