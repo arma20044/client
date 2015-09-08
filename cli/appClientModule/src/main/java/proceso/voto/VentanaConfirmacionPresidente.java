@@ -65,8 +65,8 @@ public class VentanaConfirmacionPresidente extends JDialog{
 		JButton btnNewButton = new JButton("SI");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentanaDiputados diputados = new VentanaDiputados();
-				diputados.setVisible(true);
+				VentanaSenadores senadores = new VentanaSenadores();
+				senadores.setVisible(true);
 				dispose(); 
 				
 				

@@ -73,44 +73,8 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
-				//insertar voto inicioS
-				Calendar calendar = new GregorianCalendar();
-				int year = calendar.get(Calendar.YEAR);
-
-				ApplicationContext ctx = SpringApplication
-						.run(WeatherConfiguration.class);
-
-				WeatherClient weatherClient = ctx
-						.getBean(WeatherClient.class);
-				QueryGenericoRequest query = new QueryGenericoRequest();
-
-				// para registrar se inserta el codigo es 1
-				query.setTipoQueryGenerico(1);
-				System.out.println(Login.userLogeado);
-				query.setQueryGenerico("INSERT INTO ucsaws_votos"
-						+ "( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-						+ "VALUES (" + "nextval('ucsaws_votos_seq') ,"
-						+ " upper('" + txtDescripcion.getText()
-						+ "'), "
-
-						+ " upper('" + txtNroZona.getText() + "'), "
-						+ VentanaBuscarEvento.evento + ","
-						+ "'"
-						+ Login.userLogeado + "' , now(), '"
-						+ Login.userLogeado + "' , now())");
-
-				QueryGenericoResponse response = weatherClient
-						.getQueryGenericoResponse(query);
-				weatherClient.printQueryGenericoResponse(response);
-				
-				//insertar votoS fin
-				
-				
-				
-				
-				VentanaVotoFinal end  = new VentanaVotoFinal();
-				end.setVisible(true);
+				VentanaDiputados diputados = new VentanaDiputados();
+				diputados.setVisible(true);
 				dispose(); 
 				
 				
@@ -125,12 +89,6 @@ public class VentanaConfirmacionSenadores extends JDialog{
 				senadores.setVisible(true);
 			}
 		});
-		
-		JLabel lblNewLabel = new JLabel("Presidente Lista: " + VentanaPresidente.presidente);
-		
-		JLabel label = new JLabel("Diputado Lista: " + VentanaDiputados.diputados);
-		
-		JLabel label_1 = new JLabel("Senador Lista: " + VentanaSenadores.senadores);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -143,14 +101,7 @@ public class VentanaConfirmacionSenadores extends JDialog{
 							.addComponent(btnNewButton_1))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(51)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblEstSeguro, GroupLayout.PREFERRED_SIZE, 284, GroupLayout.PREFERRED_SIZE)
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(10)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(label, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE)
-										.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE))))))
+							.addComponent(lblEstSeguro, GroupLayout.PREFERRED_SIZE, 284, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
@@ -158,13 +109,7 @@ public class VentanaConfirmacionSenadores extends JDialog{
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(30)
 					.addComponent(lblEstSeguro, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(label, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton)
 						.addComponent(btnNewButton_1))

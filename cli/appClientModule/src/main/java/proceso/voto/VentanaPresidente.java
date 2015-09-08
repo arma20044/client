@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
+import src.main.java.votante.VentanaPrincipalVotante;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
@@ -30,16 +32,16 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	private VentanaPresidente miVentanaPrincipal;
 	
 	//datos a enviar
-	String cedula;
+	Integer cedula;
 	Integer candidato;
 	String lista;
 	
 	
-	public String getCedula() {
+	public Integer getCedula() {
 		return cedula;
 	}
 
-	public void setCedula(String cedula) {
+	public void setCedula(Integer cedula) {
 		this.cedula = cedula;
 	}
 
@@ -50,8 +52,18 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	public void setCandidato(Integer candidato) {
 		this.candidato = candidato;
 	}
+	
+	
 	//datos a enviar
 	
+	public String getLista() {
+		return lista;
+	}
+
+	public void setLista(String lista) {
+		this.lista = lista;
+	}
+
 	public VentanaPresidente(){
 		getContentPane().setForeground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -78,15 +90,22 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 		JLabel lblBoletinDeVoto = new JLabel("BOLETIN DE VOTO OFICIAL");
 		lblBoletinDeVoto.setHorizontalAlignment(SwingConstants.CENTER);
 		lblBoletinDeVoto.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblBoletinDeVoto.setBounds(341, 24, 536, 31);
+		lblBoletinDeVoto.setBounds(405, 24, 342, 31);
 		getContentPane().add(lblBoletinDeVoto);
 		
 		JLabel lblPeriodo = new JLabel("PERIODO 2016-2021");
 		lblPeriodo.setForeground(Color.GRAY);
 		lblPeriodo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPeriodo.setFont(new Font("Tahoma", Font.BOLD, 25));
-		lblPeriodo.setBounds(325, 108, 536, 31);
+		lblPeriodo.setBounds(445, 108, 264, 31);
 		getContentPane().add(lblPeriodo);
+		
+		JLabel lblS = new JLabel("SELECCIONE LA CANDIDATURA DE SU PREFERENCIA");
+		lblS.setHorizontalAlignment(SwingConstants.CENTER);
+		lblS.setForeground(Color.BLACK);
+		lblS.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblS.setBounds(311, 150, 531, 25);
+		getContentPane().add(lblS);
    		/*Asigna un titulo a la barra de titulo*/
 		//setTitle("CoDejaVu : JFrame VentanaPrincipal");
 		/*tama�o de la ventana*/
@@ -119,7 +138,7 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	getContentPane().add(lblNewLabel);
 	
 	JPanel panel = new JPanel();
-	panel.setBounds(210, 181, 211, 290);
+	panel.setBounds(211, 204, 211, 290);
 	getContentPane().add(panel);
 	panel.setLayout(null);
 	
@@ -176,12 +195,12 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	
 	JLabel lblPartidoColorado = new JLabel("Ventanas del Futuro");
 	lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 20));
-	lblPartidoColorado.setBounds(21, 219, 185, 31);
+	lblPartidoColorado.setBounds(21, 219, 179, 25);
 	panel.add(lblPartidoColorado);
 	
 	JLabel lblAnr = new JLabel("V.F.");
 	lblAnr.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAnr.setBounds(88, 259, 54, 31);
+	lblAnr.setBounds(88, 259, 44, 31);
 	panel.add(lblAnr);
 	
 	JLabel label = new JLabel("Presidente");
@@ -196,7 +215,7 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	
 	JPanel panel_1 = new JPanel();
 	panel_1.setLayout(null);
-	panel_1.setBounds(460, 181, 211, 290);
+	panel_1.setBounds(461, 204, 211, 290);
 	getContentPane().add(panel_1);
 	
 	JLabel lblFotoSegundoCandidatoPresidente = new JLabel("Steve Jobs");
@@ -251,12 +270,12 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	JLabel lblAvanzaPais = new JLabel("Camino a la \r\nInnovación");
 	lblAvanzaPais.setHorizontalAlignment(SwingConstants.CENTER);
 	lblAvanzaPais.setFont(new Font("Tahoma", Font.PLAIN, 20));
-	lblAvanzaPais.setBounds(-20, 202, 246, 65);
+	lblAvanzaPais.setBounds(0, 218, 209, 25);
 	panel_1.add(lblAvanzaPais);
 	
 	JLabel lblMap = new JLabel("C.I.");
 	lblMap.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblMap.setBounds(88, 255, 72, 31);
+	lblMap.setBounds(87, 259, 40, 31);
 	panel_1.add(lblMap);
 	
 	JLabel lblPresidente1 = new JLabel("Presidente");
@@ -271,7 +290,7 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	
 	JPanel panel_2 = new JPanel();
 	panel_2.setLayout(null);
-	panel_2.setBounds(711, 183, 211, 290);
+	panel_2.setBounds(712, 206, 211, 290);
 	getContentPane().add(panel_2);
 	
 	JLabel lblFotoTercerCandidatoPresidente = new JLabel("Richard Stallman");
@@ -327,12 +346,12 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	JLabel lblAlianzaParaguayAlegre = new JLabel("Partido Libre");
 	lblAlianzaParaguayAlegre.setHorizontalAlignment(SwingConstants.CENTER);
 	lblAlianzaParaguayAlegre.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAlianzaParaguayAlegre.setBounds(-18, 216, 279, 31);
+	lblAlianzaParaguayAlegre.setBounds(44, 216, 140, 31);
 	panel_2.add(lblAlianzaParaguayAlegre);
 	
 	JLabel lblApa = new JLabel("P.L.");
 	lblApa.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblApa.setBounds(82, 248, 72, 31);
+	lblApa.setBounds(93, 259, 42, 31);
 	panel_2.add(lblApa);
 	
 	JLabel label_2 = new JLabel("Presidente");
@@ -364,10 +383,12 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 						if(!lista.isEmpty()){
 							dispose();
 							VentanaConfirmacionPresidente miVentanaConfirmacion=new VentanaConfirmacionPresidente(miVentanaPrincipal,true);
-							if (lista.compareTo("LISTA 1")== 0){
-							miVentanaPrincipal.setCandidato(1);
-							}
-							miVentanaPrincipal.setCedula("3619250");
+							//if (lista.compareTo("LISTA 1")== 0){
+							//miVentanaPrincipal.setCandidato(1);
+							//}
+							
+							//miVentanaPrincipal.setLista(VentanaPresidente.presidente);
+							//miVentanaPrincipal.setCedula(VentanaPrincipalVotante.cedulaVotante);
 							//setear voto para lista
 							
 							

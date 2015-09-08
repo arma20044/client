@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -57,8 +58,16 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 	private JButton botonCancelar, btnNewButton;
 
 	public static String votante;
+	
+	public static Integer cedulaVotante;
+	
+	public static Integer idVotanteHabilitado;
+	
+	public static Integer idVotante;
 
 	public final static int INTERVAL = 5000;
+	
+	public Timer timer;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -121,6 +130,8 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				
 				List<String> selectedData = new ArrayList<String>();
 
 				int[] selectedRow = table_1.getSelectedRows();
@@ -131,6 +142,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 					while (table_1.getColumnCount() > col) {
 						System.out.println(table_1.getValueAt(selectedRow[i],
 								col));
+						VentanaPrincipalVotante.cedulaVotante = Integer.parseInt((String) (table_1.getValueAt(0, 0)));
 						try {
 							selectedData.add((String) table_1.getValueAt(
 									selectedRow[i], col));
@@ -158,10 +170,13 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 
 					VentanaPresidente main = new VentanaPresidente();
 					main.setVisible(true);
+					
 					dispose();
 
 				}
 				System.out.println("Selected: " + selectedData);
+				
+				stopTimer();
 
 			}
 		});
@@ -208,7 +223,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 
-		Timer timer = new Timer(INTERVAL, new ActionListener() {
+		timer = new Timer(INTERVAL, new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 
 				// recuperarDatos();
@@ -303,7 +318,7 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_votante_habilitado, ci, nombre, apellido "
+		query.setQueryGenerico("select id_votante_habilitado, ci, nombre, apellido, vh.id_votante "
 				+ "from ucsaws_votante_habilitado vh "
 				+ "join ucsaws_votante vo on (vh.id_votante = vo.id_votante) "
 				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)");
@@ -344,6 +359,10 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		String campo4, campo5 = "";
 		while (filas.size() > ite) {
 			fil = (JSONArray) filas.get(ite);
+			
+			idVotanteHabilitado = Integer.parseInt(fil.get(0).toString());
+			
+			idVotante = Integer.parseInt(fil.get(4).toString());
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString() };
@@ -368,4 +387,13 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+	
+	 
+     public void stopTimer() {
+         Toolkit.getDefaultToolkit().beep();
+         if (timer.isRunning()){
+        	 timer.stop();
+        	          }
+         
+     }
 }

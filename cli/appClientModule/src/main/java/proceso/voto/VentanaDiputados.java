@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -119,8 +120,7 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	rdbLista1.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			diputados = rdbLista1 .getText().substring(rdbLista1.getText().length()-1, rdbLista1.getText().length());
-			System.out.println("DIPUTADOS: " + diputados);
+			capturarDiputado((JRadioButton) arg0.getSource());
 		}
 	});
 	buttonGroup.add(rdbLista1);
@@ -145,7 +145,7 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	
 	JLabel label = new JLabel("");
 	//label.setIcon(new ImageIcon(Main.class.getResource("/img/ferre.jpg")));
-	label.setBounds(20, 18, 129, 167);
+	label.setBounds(136, 11, 129, 167);
 	panel_1.add(label);
 	
 	JLabel label_1 = new JLabel("");
@@ -167,8 +167,7 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	rdbLista2.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			diputados = rdbLista2 .getText().substring(rdbLista2.getText().length()-1, rdbLista2.getText().length());
-			System.out.println("DIPUTADOS: " + diputados);
+			capturarDiputado((JRadioButton) arg0.getSource());
 		}
 	});
 	buttonGroup.add(rdbLista2);
@@ -216,8 +215,7 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	rdbLista3.addMouseListener(new MouseAdapter() {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			diputados = rdbLista3 .getText().substring(rdbLista3.getText().length()-1, rdbLista3.getText().length());
-			System.out.println("DIPUTADOS: " + diputados);
+			capturarDiputado((JRadioButton) arg0.getSource());
 		}
 	});
 	buttonGroup.add(rdbLista3);
@@ -254,10 +252,10 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 						if(!lista.isEmpty()){
 							dispose();
 							VentanaConfirmacionDiputados diputados = new VentanaConfirmacionDiputados(miVentanaPrincipal, true);
-							if (lista.compareTo("LISTA 1")== 0){
-							miVentanaPrincipal.setCandidato(1);
-							}
-							miVentanaPrincipal.setCedula("3619250");
+//							if (lista.compareTo("LISTA 1")== 0){
+//							miVentanaPrincipal.setCandidato(1);
+//							}
+//							miVentanaPrincipal.setCedula("3619250");
 							//setear voto para lista
 							
 							
@@ -334,5 +332,10 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		//	VentanaConfirmacion miVentanaConfirmacion=new VentanaConfirmacion(miVentanaPrincipal,true);
 			//miVentanaConfirmacion.setVisible(true);
 		}
+	}
+	
+	public void capturarDiputado(JRadioButton rdb){
+		diputados = rdb.getText().substring(rdb.getText().length()-1, rdb.getText().length());
+		System.out.println("Diputado: " + diputados);
 	}
 }
