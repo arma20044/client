@@ -475,11 +475,11 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo, nombre, apellido , tc.descripcion, li.nro_lista || ' - ' ||  li.nombre_lista"
-				+ " from ucsaws_candidatos "
-				+ " ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
-				+ " join ucsaws_tipo_candidato tc on (ca.id_tipo_candidato = tc.id_tipo_candidato)"
-				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)" + "");
+		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo, nombre, apellido , li.nro_lista || ' - ' ||  li.nombre_lista "
+				+ " , tl.descripcion, ca.descripcion  as obs" +
+								" from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) " +  
+								" join ucsaws_listas li on (ca.id_lista = li.id_lista)"
+								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -520,7 +520,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString() };
+					fil.get(4).toString(),fil.get(5).toString(),fil.get(6).toString() };
 
 			model.ciudades.add(fin);
 			ite++;

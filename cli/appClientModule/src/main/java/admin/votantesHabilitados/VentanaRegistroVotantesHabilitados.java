@@ -39,19 +39,27 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.departamento.Item;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaRegistroEvento;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.validator.VotantesHabilitadosValidator;
 import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
+import src.main.java.login.PreLogin;
+import src.main.java.proceso.voto.VentanaVotoFinal;
+import src.main.java.votante.VentanaPrincipalVotante;
 import sun.awt.RepaintArea;
 
 import javax.swing.JCheckBox;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		ActionListener {
@@ -76,10 +84,16 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbPersona, cmbHabilitado ,cmbMesa;
-	private JLabel lblHabilitado;
+	private JComboBox cmbPersona, cmbDepartamento, cmbMesa, cmbZona;
+	private JLabel lblDepartamento;
 	private JLabel lblZona;
-	private JComboBox cmbZona;
+	private JComboBox comboBox;
+
+	private JComboBox cmbDistrito;
+
+	private static String nombrecmb;
+	private JLabel lblLocal;
+	private JComboBox cmbLocal;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -107,7 +121,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		botonCancelar.setIcon(new ImageIcon(
 				VentanaRegistroVotantesHabilitados.class
 						.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(774, 429, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -144,7 +158,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(812, 490);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -153,11 +167,9 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Votantes Habilitados");
-		scrollPane.setBounds(0, 190, 806, 193);
+		scrollPane.setBounds(0, 265, 806, 169);
 		getContentPane().add(scrollPane);
-		
-		
-		
+
 		table = new JTable() {
 			@Override
 			public Component prepareRenderer(TableCellRenderer renderer,
@@ -239,88 +251,164 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		cmbPersona.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				//cmbMesa.setVisible(false);
-//				if(cmbMesa != null){
-//					if(cmbMesa.getModel().getSize() == 0){
-//						
-//					}
-//				}
-//				else
-				if (cmbZona != null){
+				// cmbMesa.setVisible(false);
+				// if(cmbMesa != null){
+				// if(cmbMesa.getModel().getSize() == 0){
+				//
+				// }
+				// }
+				// else
+				if (cmbZona != null) {
 					cmbZona.removeAllItems();
-					
-					
+
 					System.out.println(cmbZona.getItemCount());
-					//cmbMesa = null;
-					
-					//cmbMesa.revalidate();
-					//cmbMesa.repaint();
-					
-					
-					
+					// cmbMesa = null;
+
+					// cmbMesa.revalidate();
+					// cmbMesa.repaint();
+
 					Item item = (Item) cmbPersona.getSelectedItem();
 					Integer personaSelected = item.getId();
-					
+
 					Integer pais = PaisDePersonaSeleccionada(personaSelected);
-					
-					
-					//recuperarDatosComboBoxMesaPorPais(pais);
+
+					// recuperarDatosComboBoxMesaPorPais(pais);
 					Vector zonaXPais = recuperarDatosComboBoxZonaPorPais(pais);
-					if (zonaXPais.toString().compareTo("[]") != 0){
+					if (zonaXPais.toString().compareTo("[]") != 0) {
 						cmbZona = new JComboBox(zonaXPais);
 						cmbZona.setBounds(209, 112, 289, 20);
 						cmbZona.revalidate();
-					getContentPane().add(cmbZona);
-					System.out.println(cmbZona.getItemCount());
-					
-					//cmbMesa.repaint();
-					
-					lblMesa.setVisible(true);
-					lblMesa.revalidate();
-					
-					if (cmbZona.getItemCount() == 0){
-						cmbZona.removeAllItems();
-						cmbZona.setVisible(false);
-						cmbZona.revalidate();
+						getContentPane().add(cmbZona);
+						System.out.println(cmbZona.getItemCount());
+
+						// cmbMesa.repaint();
+
+						lblMesa.setVisible(true);
+						lblMesa.revalidate();
+
+						if (cmbZona.getItemCount() == 0) {
+							cmbZona.removeAllItems();
+							cmbZona.setVisible(false);
+							cmbZona.revalidate();
+						}
 					}
+
+				} else {
+					Item item = (Item) cmbPersona.getSelectedItem();
+					Integer personaSelected = item.getId();
+
+					Integer pais = PaisDePersonaSeleccionada(personaSelected);
+
+					// recuperarDatosComboBoxMesaPorPais(pais);
+					// cmbMesa.setModel( );
+
+					Vector zonaXPais = recuperarDatosComboBoxZonaPorPais(pais);
+
+					if (zonaXPais.toString().compareTo("[]") != 0) {
+						cmbZona = new JComboBox(zonaXPais);
+						cmbZona.setBounds(209, 112, 289, 20);
+						// cmbMesa.revalidate();
+						cmbZona.repaint();
+						getContentPane().add(cmbZona);
+
 					}
-					
+					// lblMesa.setVisible(true);
+					// lblMesa.revalidate();
+
+					// pais = 0;
+
 				}
-				else{
-				Item item = (Item) cmbPersona.getSelectedItem();
-				Integer personaSelected = item.getId();
-				
-				Integer pais = PaisDePersonaSeleccionada(personaSelected);
-				
-				
-				//recuperarDatosComboBoxMesaPorPais(pais);
-				//cmbMesa.setModel( );
-				
-				Vector zonaXPais = recuperarDatosComboBoxZonaPorPais(pais);
-				
-				if (zonaXPais.toString().compareTo("[]") != 0){
-					cmbZona = new JComboBox(zonaXPais);
-					cmbZona.setBounds(209, 112, 289, 20);
-				//cmbMesa.revalidate();
-					cmbZona.repaint();
-				getContentPane().add(cmbZona);
-				
-				}
-//				lblMesa.setVisible(true);
-//				lblMesa.revalidate();
-				
-				//pais = 0;
-				
-			}
 			}
 		});
-		
+
 		cmbPersona.setBounds(209, 48, 289, 20);
 		getContentPane().add(cmbPersona);
 
-		cmbHabilitado = new JComboBox(recuperarDatosComboBoxHabilitado());
-		cmbHabilitado.setBounds(209, 81, 69, 20);
-		getContentPane().add(cmbHabilitado);
+		cmbDepartamento = new JComboBox(recuperarDatosComboBoxDepartamento());
+
+		cmbDepartamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				Item item = (Item) cmbDepartamento.getSelectedItem();
+				Integer idDepartamentoSelected = item.getId();
+
+				cmbDistrito = new JComboBox(
+						recuperarDatosComboBoxDistrito(idDepartamentoSelected));
+				cmbDistrito.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						// TODO Auto-generated method stub
+
+						Item item = (Item) cmbDistrito.getSelectedItem();
+						Integer idDistritoSelected = item.getId();
+
+						cmbZona = new JComboBox(
+								recuperarDatosComboBoxZona(idDistritoSelected));
+						cmbZona.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								// TODO Auto-generated method stub
+
+								Item item = (Item) cmbZona.getSelectedItem();
+								Integer idDistritoSelected = item.getId();
+
+								cmbLocal = new JComboBox(
+										recuperarDatosComboBoxLocal(idDistritoSelected));
+								cmbLocal.addActionListener(new ActionListener() {
+
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										// TODO Auto-generated method stub
+
+										Item item = (Item) cmbLocal
+												.getSelectedItem();
+										Integer idDistritoSelected = item
+												.getId();
+
+										cmbMesa = new JComboBox(recuperarDatosComboBoxMesa(idDistritoSelected));
+										cmbMesa.setBounds(209, 199, 169, 20);
+										getContentPane().add(cmbMesa);
+									}
+								});
+
+								
+
+								cmbLocal.setBounds(209, 172, 289, 20);
+								getContentPane().add(cmbLocal);
+
+							}
+						});
+						cmbZona.setBounds(209, 144, 289, 20);
+						getContentPane().add(cmbZona);
+
+					}
+				});
+
+				cmbDistrito.setBounds(209, 111, 289, 20);
+				cmbDistrito.revalidate();
+
+				// repaint();
+				getContentPane().add(cmbDistrito);
+
+				cmbDistrito.paint(cmbDistrito.getGraphics());
+			}
+		});
+
+		// cmbDepartamento.addItemListener(new ItemListener() {
+		// public void itemStateChanged(ItemEvent arg0) {
+		//
+		//
+		//
+		//
+		//
+		//
+		// }
+		// });
+
+		cmbDepartamento.setBounds(209, 81, 289, 20);
+		getContentPane().add(cmbDepartamento);
 
 		JLabel lblPersona = new JLabel();
 		lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -328,112 +416,120 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		lblPersona.setBounds(141, 46, 61, 25);
 		getContentPane().add(lblPersona);
 
-		lblHabilitado = new JLabel();
-		lblHabilitado.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblHabilitado.setText("Habilitado:");
-		lblHabilitado.setBounds(141, 79, 61, 25);
-		getContentPane().add(lblHabilitado);
+		lblDepartamento = new JLabel();
+		lblDepartamento.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDepartamento.setText("Departamento:");
+		lblDepartamento.setBounds(129, 84, 73, 14);
+		getContentPane().add(lblDepartamento);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(140, 175, 363, 14);
+		lblMensaje.setBounds(433, 240, 363, 14);
 		getContentPane().add(lblMensaje);
-		
+
 		lblMesa = new JLabel();
 		lblMesa.setText("Mesa:");
 		lblMesa.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblMesa.setBounds(141, 143, 61, 25);
+		lblMesa.setBounds(141, 197, 61, 25);
 		lblMesa.setVisible(true);
 		getContentPane().add(lblMesa);
-		
+
 		lblZona = new JLabel("Zona:");
 		lblZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblZona.setBounds(161, 112, 41, 20);
+		lblZona.setBounds(163, 144, 41, 20);
 		getContentPane().add(lblZona);
-		
-		//cmbZona = new JComboBox();
-//		cmbZona.addFocusListener(new FocusAdapter() {
-//			@Override
-//			public void focusLost(FocusEvent arg0) {
-//				//cmbMesa.setVisible(false);
-////				if(cmbMesa != null){
-////					if(cmbMesa.getModel().getSize() == 0){
-////						
-////					}
-////				}
-////				else
-//				if (cmbMesa != null){
-//					cmbMesa.removeAllItems();
-//					
-//					
-//					System.out.println(cmbMesa.getItemCount());
-//					//cmbMesa = null;
-//					
-//					//cmbMesa.revalidate();
-//					//cmbMesa.repaint();
-//					
-//					
-//					
-//					Item item = (Item) cmbPersona.getSelectedItem();
-//					Integer personaSelected = item.getId();
-//					
-//					Integer pais = PaisDePersonaSeleccionada(personaSelected);
-//					
-//					
-//					//recuperarDatosComboBoxMesaPorPais(pais);
-//					Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
-//					if (mesaXPais.toString().compareTo("[]") != 0){
-//					cmbMesa = new JComboBox(mesaXPais);
-//					cmbMesa.setBounds(209, 143, 289, 20);
-//					cmbMesa.revalidate();
-//					getContentPane().add(cmbMesa);
-//					System.out.println(cmbMesa.getItemCount());
-//					
-//					//cmbMesa.repaint();
-//					
-//					lblMesa.setVisible(true);
-//					lblMesa.revalidate();
-//					
-//					if (cmbMesa.getItemCount() == 0){
-//						cmbMesa.removeAllItems();
-//						cmbMesa.setVisible(false);
-//						cmbMesa.revalidate();
-//					}
-//					}
-//					
-//				}
-//				else{
-//				Item item = (Item) cmbPersona.getSelectedItem();
-//				Integer personaSelected = item.getId();
-//				
-//				Integer pais = PaisDePersonaSeleccionada(personaSelected);
-//				
-//				
-//				//recuperarDatosComboBoxMesaPorPais(pais);
-//				//cmbMesa.setModel( );
-//				
-//				Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
-//				
-//				if (mesaXPais.toString().compareTo("[]") != 0){
-//				cmbMesa = new JComboBox(mesaXPais);
-//				cmbMesa.setBounds(209, 143, 289, 20);
-//				//cmbMesa.revalidate();
-//				cmbMesa.repaint();
-//				getContentPane().add(cmbMesa);
-//				
-//				}
-////				lblMesa.setVisible(true);
-////				lblMesa.revalidate();
-//				
-//				//pais = 0;
-//				
-//			}
-//			}
-//		});
-		//cmbZona.setBounds(209, 112, 164, 20);
-		//getContentPane().add(cmbZona);
-		
-		
+
+		JLabel lblDistrito = new JLabel();
+		lblDistrito.setText("Distrito");
+		lblDistrito.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDistrito.setBounds(129, 114, 73, 14);
+		getContentPane().add(lblDistrito);
+
+		lblLocal = new JLabel("Local:");
+		lblLocal.setBounds(174, 172, 28, 14);
+		getContentPane().add(lblLocal);
+
+		// cmbZona = new JComboBox();
+		// cmbZona.addFocusListener(new FocusAdapter() {
+		// @Override
+		// public void focusLost(FocusEvent arg0) {
+		// //cmbMesa.setVisible(false);
+		// // if(cmbMesa != null){
+		// // if(cmbMesa.getModel().getSize() == 0){
+		// //
+		// // }
+		// // }
+		// // else
+		// if (cmbMesa != null){
+		// cmbMesa.removeAllItems();
+		//
+		//
+		// System.out.println(cmbMesa.getItemCount());
+		// //cmbMesa = null;
+		//
+		// //cmbMesa.revalidate();
+		// //cmbMesa.repaint();
+		//
+		//
+		//
+		// Item item = (Item) cmbPersona.getSelectedItem();
+		// Integer personaSelected = item.getId();
+		//
+		// Integer pais = PaisDePersonaSeleccionada(personaSelected);
+		//
+		//
+		// //recuperarDatosComboBoxMesaPorPais(pais);
+		// Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
+		// if (mesaXPais.toString().compareTo("[]") != 0){
+		// cmbMesa = new JComboBox(mesaXPais);
+		// cmbMesa.setBounds(209, 143, 289, 20);
+		// cmbMesa.revalidate();
+		// getContentPane().add(cmbMesa);
+		// System.out.println(cmbMesa.getItemCount());
+		//
+		// //cmbMesa.repaint();
+		//
+		// lblMesa.setVisible(true);
+		// lblMesa.revalidate();
+		//
+		// if (cmbMesa.getItemCount() == 0){
+		// cmbMesa.removeAllItems();
+		// cmbMesa.setVisible(false);
+		// cmbMesa.revalidate();
+		// }
+		// }
+		//
+		// }
+		// else{
+		// Item item = (Item) cmbPersona.getSelectedItem();
+		// Integer personaSelected = item.getId();
+		//
+		// Integer pais = PaisDePersonaSeleccionada(personaSelected);
+		//
+		//
+		// //recuperarDatosComboBoxMesaPorPais(pais);
+		// //cmbMesa.setModel( );
+		//
+		// Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
+		//
+		// if (mesaXPais.toString().compareTo("[]") != 0){
+		// cmbMesa = new JComboBox(mesaXPais);
+		// cmbMesa.setBounds(209, 143, 289, 20);
+		// //cmbMesa.revalidate();
+		// cmbMesa.repaint();
+		// getContentPane().add(cmbMesa);
+		//
+		// }
+		// // lblMesa.setVisible(true);
+		// // lblMesa.revalidate();
+		//
+		// //pais = 0;
+		//
+		// }
+		// }
+		// });
+		// cmbZona.setBounds(209, 112, 164, 20);
+		// getContentPane().add(cmbZona);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -451,98 +547,90 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				
 
 				Item item = (Item) cmbPersona.getSelectedItem();
 				Integer personaSelected = item.getId();
-				
-				Item item2 = (Item) cmbHabilitado.getSelectedItem();
+
+				Item item2 = (Item) cmbDepartamento.getSelectedItem();
 				Integer habilitadoSelected = item2.getId();
+
+				// if (!(txtCod.getText().length() == 0)) {
+
+				 if (votantesHabilitadosValidator.ValidarCedula(personaSelected) == false) {
+				// Genero genero = new Genero();
+				// genero.setDescripcion(textGenero.getText());
+
+				Calendar calendar = new GregorianCalendar();
+				int year = calendar.get(Calendar.YEAR);
+
+				ApplicationContext ctx = SpringApplication
+						.run(WeatherConfiguration.class);
+
+				WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+				QueryGenericoRequest query = new QueryGenericoRequest();
+
+				// para registrar se inserta el codigo es 1
 				
-				//if (!(txtCod.getText().length() == 0)) {
-					
-						if (votantesHabilitadosValidator.ValidarCedula(personaSelected) == false) {
-							// Genero genero = new Genero();
-							// genero.setDescripcion(textGenero.getText());
-
-							Calendar calendar = new GregorianCalendar();
-							int year = calendar.get(Calendar.YEAR);
-
-							ApplicationContext ctx = SpringApplication
-									.run(WeatherConfiguration.class);
-
-							WeatherClient weatherClient = ctx
-									.getBean(WeatherClient.class);
-							QueryGenericoRequest query = new QueryGenericoRequest();
-
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
-							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_votante"
-									+ "( id_votante, id_persona, habilitado,sufrago,  usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_votante_seq')"
-									+ " , "
-									+ personaSelected
-									+ ", "
-									+ habilitadoSelected
-									+ ","
-									+ "2"
-									+ ", '"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
-
-							QueryGenericoResponse response = weatherClient
-									.getQueryGenericoResponse(query);
-							weatherClient.printQueryGenericoResponse(response);
-
-							model = new VotantesHabilitadosJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado al Votante.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-
-							//txtCod.setText("");
-
-							// this.dispose();
-						} else {
-							// JOptionPane.showMessageDialog(null,
-							// "Ya existe el genero " + txtDesc.getText(),
-							// "Información",JOptionPane.WARNING_MESSAGE);
-							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-						}
+				Item itemMesa = (Item) cmbMesa.getSelectedItem();
+				Integer idMesa = itemMesa.getId();
+				System.out.println(idMesa);
 				
+				query.setTipoQueryGenerico(1);
+				System.out.println(Login.userLogeado);
+				query.setQueryGenerico("INSERT INTO ucsaws_votante"
+						+ "( id_votante, id_persona, habilitado,sufrago, id_mesa, id_evento,  usuario_ins,fch_ins, usuario_upd, fch_upd) "
+						+ "VALUES (" + "nextval('ucsaws_votante_seq')" + " , "
+						+ personaSelected + ", 2 ,"
+						+ "0" + ", " + idMesa + "," + VentanaBuscarEvento.evento +  ", '" + Login.userLogeado + "' , now(), '"
+						+ Login.userLogeado + "' , now())");
 
-				//}
-			
-			
+				QueryGenericoResponse response = weatherClient
+						.getQueryGenericoResponse(query);
+				weatherClient.printQueryGenericoResponse(response);
+				
+				VentanaBuscarVotantesHabilitados buscar = new VentanaBuscarVotantesHabilitados();
+				buscar.setVisible(true);
+				dispose();
+
+				/*model = new VotantesHabilitadosJTableModel();
+				recuperarDatos();
+				table.setModel(model);
+				model.fireTableDataChanged();
+				table.removeColumn(table.getColumnModel().getColumn(0));
+				// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+				lblMensaje.setText("Excelente, se ha guardado al Votante.");
+				Timer t = new Timer(Login.timer, new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						lblMensaje.setText(null);
+					}
+				});
+				t.setRepeats(false);
+				t.start();*/
+
+				// txtCod.setText("");
+
+				// this.dispose();
+				} else {
+				//JOptionPane.showMessageDialog(null,
+				//"Ya existe el genero " + txtDesc.getText(),
+				 // "Información",JOptionPane.WARNING_MESSAGE);
+				 lblMensaje
+				 .setText("La persona ya esta habilitada con esa cedula: " + cmbPersona.getSelectedItem().toString());
+				 Timer t = new Timer(Login.timer,
+				 new ActionListener() {
+				
+				 public void actionPerformed(
+				 ActionEvent e) {
+				 lblMensaje.setText(null);
+				 }
+				 });
+				 t.setRepeats(false);
+				 t.start();
+				 }
+
+				// }
+
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
 						"Error al intentar insertar", "Error",
@@ -555,8 +643,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 			if (!codTemporal.equals("")) {
 
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar al Votante?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar al Votante?", "Confirmación",
+						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
@@ -655,17 +743,14 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido,  pActual.nombre as PaisActual, desc_mesa, "
-				+ "hab.cod_habilitado habilitado, suf.cod_habilitado sufrago"
-				+ " from ucsaws_votante vo join ucsaws_votante_habilitado vh on (vo.id_votante = vh.id_votante)"
-				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)"
-				+ "join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen)"
-				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)"
-				+ "join ucsaws_habilitado hab on (hab.id_habilitado = habilitado)"
-				+ "join ucsaws_habilitado suf on (suf.id_habilitado = sufrago)"
-				+ "join ucsaws_mesa m on (vo.id_mesa = m.id_mesa)"
-				+ " where per.id_evento= " + VentanaBuscarEvento.evento);
+		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido,  hab.cod_habilitado,sufrago , pActual.nombre as PaisActual, desc_mesa "
 
+				+ "from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona) "
+				//+ " join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen) "
+				+ " join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual) "
+				+ " join ucsaws_habilitado hab on (hab.id_habilitado = habilitado) "
+				+ " join ucsaws_mesa m on (vo.id_mesa = m.id_mesa) where vo.id_evento= "
+				+ VentanaBuscarEvento.evento + " and sufrago = 0");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -706,8 +791,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString(),fil.get(7).toString() };
+					fil.get(4).toString(), fil.get(5).toString(), fil.get(6).toString(),fil.get(7).toString()};
 
 			model.ciudades.add(fin);
 			ite++;
@@ -737,8 +821,12 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido"
-				+ " from ucsaws_persona " + "order by apellido");
+		query.setQueryGenerico("SELECT per.id_persona, nombre || ' ' || apellido "
+				+ "from ucsaws_persona per left join ucsaws_votante vot "
+				+ "on (per.id_persona = vot.id_persona) "
+				+ " where per.id_persona not in "
+				+ "(select id_persona from ucsaws_votante where sufrago = 0 )"
+				);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -787,11 +875,88 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 	}
 
-	private Vector recuperarDatosComboBoxMesa(Integer pais) {
-		
-		Item item = (Item) cmbPersona.getSelectedItem();
-		Integer personaSelected = item.getId();
-		
+//	private Vector recuperarDatosComboBoxMesa(Integer pais) {
+//
+//		Item item = (Item) cmbPersona.getSelectedItem();
+//		Integer personaSelected = item.getId();
+//
+//		Vector model = new Vector();
+//		JSONArray filas = new JSONArray();
+//		JSONArray fil = new JSONArray();
+//
+//		boolean existe = false;
+//
+//		// Statement estatuto = conex.getConnection().createStatement();
+//
+//		ApplicationContext ctx = SpringApplication
+//				.run(WeatherConfiguration.class);
+//
+//		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+//		QueryGenericoRequest query = new QueryGenericoRequest();
+//
+//		// para registrar se inserta el codigo es 1
+//		query.setTipoQueryGenerico(2);
+//
+//		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+//		// +
+//		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+//
+//		query.setQueryGenerico("SELECT id_mesa, desc_mesa"
+//				+ " ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+//				+ " join ucsaws_zona z on (l.id_zona = z.id_zona)"
+//				+ " join ucsaws_distrito d on (d.id_distrito = z.id_distrito)"
+//				+ " join ucsaws_departamento de on (de.id_departamento = d.id_departamento)"
+//				+ " join ucsaws_votante vo on (vo.id_mesa = m.id_mesa)"
+//				+ " join ucsaws_persona per on (per.id_persona = vo.id_persona)"
+//				+ " where id_pais_actual = " + pais);
+//
+//		QueryGenericoResponse response = weatherClient
+//				.getQueryGenericoResponse(query);
+//		weatherClient.printQueryGenericoResponse(response);
+//
+//		String res = response.getQueryGenericoResponse();
+//
+//		if (res.compareTo("ERRORRRRRRR") == 0) {
+//			JOptionPane.showMessageDialog(null, "algo salio mal",
+//					"Advertencia", JOptionPane.WARNING_MESSAGE);
+//
+//		}
+//
+//		else {
+//			existe = true;
+//
+//			String generoAntesPartir = response.getQueryGenericoResponse();
+//
+//			JSONParser j = new JSONParser();
+//			Object ob = null;
+//			String part1, part2, part3;
+//
+//			try {
+//				ob = j.parse(generoAntesPartir);
+//			} catch (org.json.simple.parser.ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//			filas = (JSONArray) ob;
+//
+//		}
+//
+//		int ite = 0;
+//		String campo4, campo5 = "";
+//		while (filas.size() > ite) {
+//			fil = (JSONArray) filas.get(ite);
+//
+//			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+//
+//			ciudades.add(fin);
+//			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+//			ite++;
+//		}
+//		return model;
+//	}
+
+	private Vector recuperarDatosComboBoxHabilitado() {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -813,14 +978,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_mesa, desc_mesa" 
-				+ " ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-				+ " join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				+ " join ucsaws_distrito d on (d.id_distrito = z.id_distrito)"
-				+ " join ucsaws_departamento de on (de.id_departamento = d.id_departamento)"
-				+ " join ucsaws_votante vo on (vo.id_mesa = m.id_mesa)"
-				+ " join ucsaws_persona per on (per.id_persona = vo.id_persona)"
-				+ " where id_pais_actual = " + pais );
+		query.setQueryGenerico("SELECT id_habilitado, cod_habilitado"
+				+ " from ucsaws_habilitado " + "order by cod_habilitado");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -866,310 +1025,607 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 			ite++;
 		}
 		return model;
+
 	}
-		private Vector recuperarDatosComboBoxHabilitado() {
-			Vector model = new Vector();
-			JSONArray filas = new JSONArray();
-			JSONArray fil = new JSONArray();
 
-			boolean existe = false;
+	private Integer PaisDePersonaSeleccionada(Integer personaSelected) {
 
-			// Statement estatuto = conex.getConnection().createStatement();
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+		boolean existe = false;
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+		// Statement estatuto = conex.getConnection().createStatement();
 
-			// para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
 
-			// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-			// +
-			// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
 
-			query.setQueryGenerico("SELECT id_habilitado, cod_habilitado"
-					+ " from ucsaws_habilitado " + "order by cod_habilitado");
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
 
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-			String res = response.getQueryGenericoResponse();
+		query.setQueryGenerico("SELECT id_persona, id_pais_actual"
+				+ " from ucsaws_persona where id_persona = " + personaSelected
+				+ "order by nombre");
 
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-				JOptionPane.showMessageDialog(null, "algo salio mal",
-						"Advertencia", JOptionPane.WARNING_MESSAGE);
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
 
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			else {
-				existe = true;
+			filas = (JSONArray) ob;
 
-				String generoAntesPartir = response.getQueryGenericoResponse();
+		}
 
-				JSONParser j = new JSONParser();
-				Object ob = null;
-				String part1, part2, part3;
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
 
-				try {
-					ob = j.parse(generoAntesPartir);
-				} catch (org.json.simple.parser.ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
 
-				filas = (JSONArray) ob;
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		System.out.println(fil.get(1));
+		Integer i = (int) (long) fil.get(1);
+		return i;
 
+	}
+
+	private Vector recuperarDatosComboBoxMesaPorPais(Integer pais) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT  id_mesa, desc_mesa "
+				+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+				+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
+				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
+				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
+				+ " where m.id_evento = " + VentanaBuscarEvento.evento
+				+ " and dis.id_distrito = " + pais
+				+ " order by nro_local , nro_mesa" + "");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			int ite = 0;
-			String campo4, campo5 = "";
-			while (filas.size() > ite) {
-				fil = (JSONArray) filas.get(ite);
+			filas = (JSONArray) ob;
 
-				String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+		}
 
-				ciudades.add(fin);
-				model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-				ite++;
-			}
-			return model;
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
 
-			}
-		
-		
-	 private Integer PaisDePersonaSeleccionada(Integer personaSelected){
-		 
-		 Vector model = new Vector();
-			JSONArray filas = new JSONArray();
-			JSONArray fil = new JSONArray();
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
 
-			boolean existe = false;
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
 
-			// Statement estatuto = conex.getConnection().createStatement();
+	}
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+	private Vector recuperarDatosComboBoxZonaPorPais(Integer pais) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+		boolean existe = false;
 
-			// para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
+		// Statement estatuto = conex.getConnection().createStatement();
 
-			// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-			// +
-			// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
 
-			query.setQueryGenerico("SELECT id_persona, id_pais_actual"
-					+ " from ucsaws_persona where id_persona = " + personaSelected + "order by nombre");
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
 
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
 
-			String res = response.getQueryGenericoResponse();
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-				JOptionPane.showMessageDialog(null, "algo salio mal",
-						"Advertencia", JOptionPane.WARNING_MESSAGE);
+		query.setQueryGenerico("SELECT  z.id_zona, z.desc_zona "
+				+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
+				+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
+				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
+				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
+				+ " where m.id_evento = " + VentanaBuscarEvento.evento
+				+ " and dis.id_distrito = " + pais
+				+ " order by nro_local , nro_mesa" + "");
 
-			}
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
 
-			else {
-				existe = true;
+		String res = response.getQueryGenericoResponse();
 
-				String generoAntesPartir = response.getQueryGenericoResponse();
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
 
-				JSONParser j = new JSONParser();
-				Object ob = null;
-				String part1, part2, part3;
+		}
 
-				try {
-					ob = j.parse(generoAntesPartir);
-				} catch (org.json.simple.parser.ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		else {
+			existe = true;
 
-				filas = (JSONArray) ob;
+			String generoAntesPartir = response.getQueryGenericoResponse();
 
-			}
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
 
-			int ite = 0;
-			String campo4, campo5 = "";
-			while (filas.size() > ite) {
-				fil = (JSONArray) filas.get(ite);
-
-				String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-				ciudades.add(fin);
-				model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-				ite++;
-			}
-			System.out.println(fil.get(1));
-			Integer i = (int) (long) fil.get(1);
-			return i;
-			
-			
-	 }
-	 
-	 
-		private Vector recuperarDatosComboBoxMesaPorPais(Integer pais) {
-			Vector model = new Vector();
-			JSONArray filas = new JSONArray();
-			JSONArray fil = new JSONArray();
-
-			boolean existe = false;
-
-			// Statement estatuto = conex.getConnection().createStatement();
-
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
-
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-
-			// para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
-
-			// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-			// +
-			// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-					query.setQueryGenerico("SELECT  id_mesa, desc_mesa "
-					+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-					+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
-					+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
-					+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-					+ " where m.id_evento = " + VentanaBuscarEvento.evento
-					+ " and dis.id_distrito = " + pais
-					+ " order by nro_local , nro_mesa" + "");
-
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-
-			String res = response.getQueryGenericoResponse();
-
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-				JOptionPane.showMessageDialog(null, "algo salio mal",
-						"Advertencia", JOptionPane.WARNING_MESSAGE);
-
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			else {
-				existe = true;
+			filas = (JSONArray) ob;
 
-				String generoAntesPartir = response.getQueryGenericoResponse();
+		}
 
-				JSONParser j = new JSONParser();
-				Object ob = null;
-				String part1, part2, part3;
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
 
-				try {
-					ob = j.parse(generoAntesPartir);
-				} catch (org.json.simple.parser.ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
 
-				filas = (JSONArray) ob;
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
 
+	}
+
+	private Vector recuperarDatosComboBoxDepartamento() {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_departamento, nro_departamento || ' -  ' || desc_departamento"
+				+ " from ucsaws_departamento " + "order by nro_departamento");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			int ite = 0;
-			String campo4, campo5 = "";
-			while (filas.size() > ite) {
-				fil = (JSONArray) filas.get(ite);
+			filas = (JSONArray) ob;
 
-				String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+		}
 
-				ciudades.add(fin);
-				model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-				ite++;
-			}
-			return model;
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
 
-			}
-		
-		private Vector recuperarDatosComboBoxZonaPorPais(Integer pais) {
-			Vector model = new Vector();
-			JSONArray filas = new JSONArray();
-			JSONArray fil = new JSONArray();
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
 
-			boolean existe = false;
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
 
-			// Statement estatuto = conex.getConnection().createStatement();
+	}
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+	private Vector recuperarDatosComboBoxDistrito(Integer idDepartamento) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+		boolean existe = false;
 
-			// para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
+		// Statement estatuto = conex.getConnection().createStatement();
 
-			// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-			// +
-			// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
 
-					query.setQueryGenerico("SELECT  z.id_zona, z.desc_zona "
-					+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-					+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
-					+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
-					+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-					+ " where m.id_evento = " + VentanaBuscarEvento.evento
-					+ " and dis.id_distrito = " + pais
-					+ " order by nro_local , nro_mesa" + "");
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
 
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
 
-			String res = response.getQueryGenericoResponse();
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-				JOptionPane.showMessageDialog(null, "algo salio mal",
-						"Advertencia", JOptionPane.WARNING_MESSAGE);
+		query.setQueryGenerico("SELECT id_distrito, nro_distrito || ' -  ' || desc_distrito"
+				+ " from ucsaws_distrito where id_departamento = "
+				+ idDepartamento + "order by nro_distrito");
 
-			}
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
 
-			else {
-				existe = true;
+		String res = response.getQueryGenericoResponse();
 
-				String generoAntesPartir = response.getQueryGenericoResponse();
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
 
-				JSONParser j = new JSONParser();
-				Object ob = null;
-				String part1, part2, part3;
+		}
 
-				try {
-					ob = j.parse(generoAntesPartir);
-				} catch (org.json.simple.parser.ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		else {
+			existe = true;
 
-				filas = (JSONArray) ob;
+			String generoAntesPartir = response.getQueryGenericoResponse();
 
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-			int ite = 0;
-			String campo4, campo5 = "";
-			while (filas.size() > ite) {
-				fil = (JSONArray) filas.get(ite);
+			filas = (JSONArray) ob;
 
-				String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+		}
 
-				ciudades.add(fin);
-				model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-				ite++;
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
+
+	private Vector recuperarDatosComboBoxZona(Integer idZona) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_zona, nro_zona || ' -  ' || desc_zona"
+				+ " from ucsaws_zona where id_distrito = "
+				+ idZona
+				+ "order by nro_zona");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			return model;
 
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
+
+	private Vector recuperarDatosComboBoxLocal(Integer idZona) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_local, nro_local || ' -  ' || desc_local"
+				+ " from ucsaws_local where id_zona = "
+				+ idZona
+				+ "order by nro_local");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
+	
+	private Vector recuperarDatosComboBoxMesa(Integer idLocal) {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_mesa, nro_mesa || ' -  ' || desc_mesa"
+				+ " from ucsaws_mesa where id_local = "
+				+ idLocal
+				+ "order by nro_mesa");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			ciudades.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
+
+	}
+	
+	
 }

@@ -46,6 +46,7 @@ import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.dao.pais.PaisDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
 import src.main.java.proceso.voto.VentanaPresidente;
 
@@ -300,6 +301,8 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 
 	private void recuperarDatos() {
 		
+		Integer idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento, Integer.parseInt(EleccionMesa.local));
+		
 		model.ciudades = new  ArrayList<Object[]>();
 		
 		JSONArray filas = new JSONArray();
@@ -318,10 +321,10 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_votante_habilitado, ci, nombre, apellido, vh.id_votante "
-				+ "from ucsaws_votante_habilitado vh "
-				+ "join ucsaws_votante vo on (vh.id_votante = vo.id_votante) "
-				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)");
+		query.setQueryGenerico("select id_votante, ci, nombre, apellido from ucsaws_votante vo "
+								+ " join ucsaws_persona per on (vo.id_persona = per.id_persona)where  "
+								+ "habilitado = 1 and sufrago = 0 and vo.id_evento = " + EleccionMesa.idEvento +
+								" and id_mesa = " + idMesa);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -360,9 +363,9 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
 		while (filas.size() > ite) {
 			fil = (JSONArray) filas.get(ite);
 			
-			idVotanteHabilitado = Integer.parseInt(fil.get(0).toString());
+			//idVotanteHabilitado = Integer.parseInt(fil.get(0).toString());
 			
-			idVotante = Integer.parseInt(fil.get(4).toString());
+			idVotante = Integer.parseInt(fil.get(0).toString());
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString() };
@@ -396,4 +399,57 @@ public class VentanaPrincipalVotante extends JFrame implements ActionListener {
         	          }
          
      }
+     
+ 	//Metodo para obtener el ID de la Mesa en donde se voto
+ 	private Integer obtenerMesa(int nroMesa, Integer idEvento, Integer idLocal) {
+
+ 		JSONArray filas = new JSONArray();
+ 		JSONArray fil = new JSONArray();
+
+ 		Object ob = null;
+
+ 		ApplicationContext ctx = SpringApplication
+ 				.run(WeatherConfiguration.class);
+
+ 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+ 		QueryGenericoRequest query = new QueryGenericoRequest();
+
+ 		// para registrar se inserta el codigo es 1
+ 		query.setTipoQueryGenerico(2);
+ 		System.out.println(Login.userLogeado);
+ 		query.setQueryGenerico("select id_mesa, desc_mesa, id_local, id_evento"
+ 				+ " from ucsaws_mesa" + " where nro_mesa = " + nroMesa
+ 				+ " and id_evento = " + idEvento
+ 				+ " and  id_local = " + idLocal);
+
+ 		QueryGenericoResponse response = weatherClient
+ 				.getQueryGenericoResponse(query);
+ 		weatherClient.printQueryGenericoResponse(response);
+
+ 		JSONParser j = new JSONParser();
+
+ 		String generoAntesPartir = response.getQueryGenericoResponse();
+
+ 		try {
+			ob = j.parse(generoAntesPartir);
+		} catch (org.json.simple.parser.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+ 		filas = (JSONArray) ob;
+
+ 		fil = (JSONArray) filas.get(0);
+ 		
+ 		idLocal =  Integer.parseInt(fil.get(2).toString());
+ 		
+ 		idEvento = Integer.parseInt(fil.get(3).toString());
+ 		
+ 		String result = fil.get(0).toString();
+
+ 		return Integer.parseInt(result);
+
+ 	}
+     
+     
 }

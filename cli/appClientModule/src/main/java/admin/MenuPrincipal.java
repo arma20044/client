@@ -9,14 +9,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.login.Login;
+
 import javax.swing.ImageIcon;
 
 public class MenuPrincipal extends JFrame implements ActionListener{
 	
 	private Coordinador miCoordinador; //objeto miCoordinador que permite la relacion entre esta clase y la clase coordinador
 	
-	
+	public static boolean reporte;
 
 	/**
 	 * Establece la informacion que se presentara como introduccion del sistema
@@ -24,6 +26,9 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	public String textoIntroduccion = "";
 	
 	public MenuPrincipal() {
+		
+		reporte = false;
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -74,9 +79,12 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		JButton btnReportes = new JButton("Reportes");
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Reportes reportes = new Reportes();
-				reportes.setVisible(true);
+				
+				reporte = true;
+				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
+				ventanaBuscarEvento.setVisible(true);
 				dispose();
+				
 			}
 		});
 		btnReportes.setHorizontalAlignment(SwingConstants.LEFT);

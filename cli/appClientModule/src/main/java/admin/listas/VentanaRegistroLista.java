@@ -37,6 +37,8 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.ListasValidator;
 import src.main.java.dao.listas.ListasDAO;
 import src.main.java.hello.WeatherClient;
@@ -45,6 +47,10 @@ import src.main.java.login.Login;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
+import javax.swing.JComboBox;
+
+import java.util.Vector;
 
 public class VentanaRegistroLista extends JFrame implements ActionListener {
 
@@ -73,6 +79,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	private JTextField txtNombre;
 	private JLabel lblAnho;
 	private JTextField txtAnho;
+	private JComboBox cmbTipoLista;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -143,7 +150,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 164, 806, 219);
+		scrollPane.setBounds(0, 200, 806, 183);
 		getContentPane().add(scrollPane);
 
 		table = new JTable() {
@@ -246,7 +253,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(213, 141, 454, 14);
+		lblMensaje.setBounds(213, 175, 454, 14);
 		getContentPane().add(lblMensaje);
 
 		JLabel lblNombre = new JLabel();
@@ -278,6 +285,16 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		txtAnho.setColumns(10);
 		txtAnho.setBounds(213, 116, 75, 20);
 		getContentPane().add(txtAnho);
+		
+		JLabel lblTipoLista = new JLabel();
+		lblTipoLista.setText("Tipo Lista:");
+		lblTipoLista.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTipoLista.setBounds(129, 141, 61, 25);
+		getContentPane().add(lblTipoLista);
+		
+		cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
+		cmbTipoLista.setBounds(212, 143, 340, 20);
+		getContentPane().add(cmbTipoLista);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -295,6 +312,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
+				Item item = (Item) cmbTipoLista.getSelectedItem();
+				Integer tipoListaSelected = item.getId();
 
 				if (!(txtNro.getText().length() == 0 ) && !(txtAnho.getText().length() == 0 ) && !(txtNombre.getText().length() == 0  )
 						&& !(txtNombre.getText().length() == 0)) {
@@ -311,12 +330,14 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(listasValidator.ValidarCodigo(txtNro.getText()) == false) {
+					(listasValidator.ValidarCodigo(txtNro.getText(), tipoListaSelected) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
+						
+						
 
 						Calendar calendar = new GregorianCalendar();
 						int year = calendar.get(Calendar.YEAR);
@@ -332,12 +353,12 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
 						query.setQueryGenerico("INSERT INTO ucsaws_listas"
-								+ "( id_lista, nombre_lista, nro_lista, anho, usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "( id_lista, nombre_lista, nro_lista, anho,id_tipo_lista, id_evento  ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 								+ "VALUES (" + "nextval('ucsaws_listas_seq') ,"
 								+ " upper('" + txtNombre.getText() + "'), "
 
 								+ " " + txtNro.getText() + ", "
-								+ txtAnho.getText() + "  , '"
+								+ txtAnho.getText() + "  , " + tipoListaSelected + ","+ VentanaBuscarEvento.evento +",'" 
 								+ Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
 
@@ -528,8 +549,10 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho "
-				+ "from  ucsaws_listas " + "order by nro_lista" + "");
+		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
+				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
+				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)" + "order by tlis.descripcion, nro_lista" + "");
+
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -569,11 +592,83 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString() };
+					fil.get(2).toString(), fil.get(3).toString(), fil.get(4).toString()  };
 
 			model.ciudades.add(fin);
 			ite++;
 		}
+
+	}
+	
+	private Vector recuperarDatosComboBoxTipoLista() {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT id_tipo_lista, descripcion"
+				+ " from ucsaws_tipo_lista " + "order by descripcion");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			listas.add(fin);
+			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			ite++;
+		}
+		return model;
 
 	}
 }

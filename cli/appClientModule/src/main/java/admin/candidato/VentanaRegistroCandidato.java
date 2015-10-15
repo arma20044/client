@@ -37,6 +37,7 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.CandidatoValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
@@ -65,9 +66,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-
-	private JLabel lblTipoCandidato;
-	private JComboBox cmbTipoCandidato, cmbPersona;
+	private JComboBox cmbPersona;
 	private JLabel lblLista;
 	private JComboBox cmbLista;
 	private JLabel lblCod;
@@ -142,7 +141,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 190, 806, 193);
+		scrollPane.setBounds(0, 176, 806, 207);
 		getContentPane().add(scrollPane);
 
 		table = new JTable() {
@@ -232,24 +231,14 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		lblPersona.setBounds(130, 88, 61, 25);
 		getContentPane().add(lblPersona);
 
-		lblTipoCandidato = new JLabel();
-		lblTipoCandidato.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTipoCandidato.setText("Tipo Candidato:");
-		lblTipoCandidato.setBounds(101, 121, 90, 25);
-		getContentPane().add(lblTipoCandidato);
-
-		cmbTipoCandidato = new JComboBox(recuperarDatosComboBoxTipoCandidato());
-		cmbTipoCandidato.setBounds(213, 123, 340, 20);
-		getContentPane().add(cmbTipoCandidato);
-
 		lblLista = new JLabel();
 		lblLista.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblLista.setText("Lista:");
-		lblLista.setBounds(130, 154, 61, 25);
+		lblLista.setBounds(130, 121, 61, 25);
 		getContentPane().add(lblLista);
 
 		cmbLista = new JComboBox(recuperarDatosComboBoxLista());
-		cmbLista.setBounds(213, 156, 340, 20);
+		cmbLista.setBounds(213, 123, 340, 20);
 		getContentPane().add(cmbLista);
 
 		lblCod = new JLabel();
@@ -265,7 +254,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(413, 176, 363, 14);
+		lblMensaje.setBounds(404, 154, 363, 14);
 		getContentPane().add(lblMensaje);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -286,9 +275,6 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 			try {
 				Item item = (Item) cmbLista.getSelectedItem();
 				Integer listaSelected = item.getId();
-
-				Item item2 = (Item) cmbTipoCandidato.getSelectedItem();
-				Integer tipoCandidatoSelected = item2.getId();
 
 				Item item3 = (Item) cmbPersona.getSelectedItem();
 				Integer personaSelected = item3.getId();
@@ -324,21 +310,21 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
 							query.setQueryGenerico("INSERT INTO ucsaws_candidatos"
-									+ "( id_candidatos, id_persona, id_tipo_candidato, id_lista, codigo ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+									+ "( id_candidatos, id_persona, id_lista, codigo , id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
 									+ "nextval('ucsaws_candidatos_seq')"
 									+ " , "
 									+ personaSelected
 									+ " , "
-									+ tipoCandidatoSelected
-									+ " , "
+									
 									+ listaSelected
 									+ ", '"
 									+ year
 									+ "/'"
 									+ " || upper('"
 									+ txtCod.getText()
-									+ "'), '"
+									+ "')," + VentanaBuscarEvento.evento + " , " 
+									+ " '"
 									+ Login.userLogeado
 									+ "' , now(), '"
 									+ Login.userLogeado
@@ -354,6 +340,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							model.fireTableDataChanged();
 							table.removeColumn(table.getColumnModel()
 									.getColumn(0));
+							
+							
 							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 							lblMensaje
 									.setText("Excelente, se ha guardado el genero.");
@@ -369,6 +357,12 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							t.start();
 
 							txtCod.setText("");
+						
+							
+						VentanaRegistroCandidato can = new VentanaRegistroCandidato();
+						can.setVisible(true);
+						dispose();
+							
 
 							// this.dispose();
 						} else {
@@ -420,6 +414,9 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 					t.setRepeats(false);
 					t.start();
 				}
+				
+				
+				
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
 						"Error al intentar insertar", "Error",
@@ -534,11 +531,11 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo,nombre, apellido , tc.descripcion, li.nro_lista || ' - ' ||  li.nombre_lista"
-				+ " from ucsaws_candidatos "
-				+ " ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
-				+ " join ucsaws_tipo_candidato tc on (ca.id_tipo_candidato = tc.id_tipo_candidato)"
-				+ "join ucsaws_listas li on (ca.id_lista = li.id_lista)" + "");
+		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo, nombre, apellido , li.nro_lista || ' - ' ||  li.nombre_lista "
+				+ " , tl.descripcion, ca.descripcion obs" +
+								" from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) " +  
+								" join ucsaws_listas li on (ca.id_lista = li.id_lista)"
+								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -579,7 +576,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString() };
+					fil.get(4).toString(),fil.get(5).toString(),fil.get(6).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
@@ -609,8 +606,10 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido"
-				+ " from ucsaws_persona " + "order by apellido");
+		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido  from ucsaws_persona "
+								+ "where id_persona not in (select id_persona from ucsaws_candidatos "
+								+ "where id_evento = " + VentanaBuscarEvento.evento + " ) "
+								+ " and  id_evento = " + VentanaBuscarEvento.evento + " order by apellido");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -753,8 +752,9 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_lista, nro_lista || ' - ' || nombre_lista"
-				+ " from ucsaws_listas " + "order by nro_lista");
+		query.setQueryGenerico("SELECT id_lista, nro_lista || ' - ' || nombre_lista || ' - ' || tlis.descripcion " +
+								" from ucsaws_listas lis join ucsaws_tipo_lista tlis on (lis.id_tipo_lista = tlis.id_tipo_lista) "+
+								" order by nro_lista");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -802,4 +802,24 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		return model;
 
 	}
+	
+//	public void borrarElementosComboPersona(){
+//		cmbPersona.removeAllItems();
+//	}
+//	
+//	public void refrescarComboPersona(){
+//		
+//		
+//		
+//		
+//		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
+//		
+//		//cmbPersona.revalidate();
+//		
+//		this.getContentPane().validate();
+//		this.getContentPane().repaint();
+//		
+//		
+//		
+//	}
 }

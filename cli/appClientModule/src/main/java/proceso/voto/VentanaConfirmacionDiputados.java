@@ -71,16 +71,19 @@ public class VentanaConfirmacionDiputados extends JDialog {
 						Integer.parseInt(VentanaPresidente.presidente));
 				
 				votar(idListaPresidete, idMesa);
+				System.out.println("Se voto presidente");
 				
-				Integer idListaSenador = obtenerLista(1,
+				Integer idListaSenador = obtenerLista(8,
 						Integer.parseInt(VentanaSenadores.senadores));
 				
 				votar(idListaSenador, idMesa);
+				System.out.println("Se voto Senador");
 				
-				Integer idListaDiputado = obtenerLista(1,
+				Integer idListaDiputado = obtenerLista(7,
 						Integer.parseInt(VentanaDiputados.diputados));
 				
 				votar(idListaDiputado, idMesa);
+				System.out.println("Se voto Diputado");
 				
 				
 				actualizarVotante();
@@ -315,6 +318,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		return Integer.parseInt(result);
 
 	}
+	
 	
 	private void votar(Integer idLista, Integer idMesa){
 		

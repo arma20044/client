@@ -29,7 +29,7 @@ public class VotantesHabilitadosJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "CI","Nombre", "Apellido", "Lugar de Votación","Mesa N°", "Habilitado","Sufrago"};
+	private String[] colNames = new String[] {"ID", "CI","Nombre", "Apellido","Habilitado?", "Sufrago?","Lugar de Votación","Mesa N°"};
 
 	@Override
 	public String getColumnName(int col) {

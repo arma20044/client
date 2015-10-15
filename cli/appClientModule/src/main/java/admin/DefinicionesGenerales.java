@@ -4,6 +4,7 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -149,11 +150,11 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		getContentPane().add(btnDepartamentos);
 		
 		JLabel lblAdmin = new JLabel("Administrador");
-		lblAdmin.setBounds(24, 11, 89, 14);
+		lblAdmin.setBounds(50, 10, 89, 14);
 		getContentPane().add(lblAdmin);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(24, 35, 54, 14);
+		lblNombre.setBounds(50, 36, 54, 14);
 		getContentPane().add(lblNombre);
 		
 		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
@@ -271,6 +272,27 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				});
 				btnNacionalidades.setBounds(460, 298, 176, 23);
 				getContentPane().add(btnNacionalidades);
+				
+				JButton btnHome = new JButton("");
+				btnHome.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						MenuPrincipal menuprincipal = new MenuPrincipal();
+						menuprincipal.setVisible(true);
+						dispose();
+					}
+				});
+				btnHome.setSelectedIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/home.png")));
+				btnHome.setToolTipText("Inicio");
+				btnHome.setBounds(0, 0, 32, 32);
+				getContentPane().add(btnHome);
+				btnHome.setIcon(new ImageIcon(VentanaBuscarEvento.class
+						.getResource("/imgs/home.png")));
+				btnHome.setBounds(0, 0, 32, 32);
+				Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
+				Image newimg5 = img5.getScaledInstance(32, 32,
+						java.awt.Image.SCALE_SMOOTH);
+				btnHome.setIcon(new ImageIcon(newimg5));
+				getContentPane().add(btnHome);
 		//lblNombreDescripcion.repaint();
 		
 		

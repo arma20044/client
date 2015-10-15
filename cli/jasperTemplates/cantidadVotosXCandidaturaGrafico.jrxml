@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7ef0be9b-a5e8-4700-893b-f32bd0bdb4ca">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_Tipo_Candidato" class="java.lang.Integer"/>
+	<parameter name="P_Candidato_Desc" class="java.lang.String"/>
+	<parameter name="P_ID_Evento" class="java.lang.Integer"/>
+	<parameter name="P_FECHA" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select nombre || ' ' ||  apellido   as nom,nombre_lista ,count(vo.id_lista) , (select count(*)
+  FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
+			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
+where tlista.id_tipo_lista = $P{P_Tipo_Candidato} and id_evento = $P{P_ID_Evento} ) total
+ FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
+			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
+			join ucsaws_candidatos can on (can.id_lista = li.id_lista)
+			join ucsaws_persona per on (per.id_persona = can.id_persona)
+
+where tlista.id_tipo_lista = $P{P_Tipo_Candidato}   and can.id_evento = $P{P_ID_Evento} and can.descripcion = 'PRE'
+group by nombre_lista, nombre || ' ' ||  apellido
+order by  1, 2]]>
+	</queryString>
+	<field name="nom" class="java.lang.String"/>
+	<field name="nombre_lista" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<field name="total" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="118" splitType="Stretch">
+			<staticText>
+				<reportElement x="179" y="38" width="220" height="19" uuid="a3279cc9-8605-4504-a652-7b23fd2bd6d4"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resultados Oficiales de Votación]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="75" y="57" width="427" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="dc4c8855-54b3-4e96-a4a2-968e1e318e57"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="13" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_Candidato_Desc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="204" y="0" width="170" height="18" uuid="9a090c0b-5b9d-4ce6-9f1a-8c0103608754"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUSTICIA ELECTORAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="148" y="18" width="180" height="20" uuid="38dab8ee-e3e3-4ccd-b224-213fb170fd75"/>
+				<textElement textAlignment="Justified">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECCIONES GENERALES]]></text>
+			</staticText>
+			<textField pattern="dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement x="328" y="18" width="196" height="20" uuid="4448cbcb-0156-42b9-ad6f-75fad24173fb"/>
+				<textElement textAlignment="Justified">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="179" y="77" width="220" height="19" uuid="cf70b74f-5589-4d32-888a-cdea853b2ae9"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen Nacional]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="19" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="328" height="19" uuid="eed8d54b-7e3e-48ce-a610-1d5754130e38"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOTOS PARA PRESIDENTE/VICEPRESIDENTE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="265" y="0" width="190" height="22" uuid="9a5c79f5-0463-4f5f-80a5-6004253edecd"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Candidato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="22" uuid="b26744f7-d26b-4f81-84fe-e36587c1eba8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="0" width="228" height="22" uuid="934df627-0265-4939-a35b-c94cf220fa4a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PARTIDO/MOV/ALIANZA/CONCERTACION]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="50946648-2e49-469c-a5fe-c97510106295"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="37" y="0" width="228" height="20" uuid="db9c146f-1ce1-4582-b8c4-8a67738e8721"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombre_lista}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="265" y="0" width="190" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="484ac282-9528-4b42-81cd-6d82c76b9602"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="241" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="374" y="0" width="81" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="b8661df1-a906-49ce-8e73-dff7d0b6e90a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="455" y="0" width="100" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="eec36dfe-55fe-4682-92c2-53ea37939ac8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<pie3DChart>
+				<chart>
+					<reportElement x="23" y="22" width="494" height="219" uuid="053efc75-7323-4952-8d41-8a62ff9f43df"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{nombre_lista}]]></keyExpression>
+					<valueExpression><![CDATA[$F{count}]]></valueExpression>
+					<labelExpression><![CDATA[($F{count}*100)/$F{total} + " %"]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+		</band>
+	</summary>
+</jasperReport>

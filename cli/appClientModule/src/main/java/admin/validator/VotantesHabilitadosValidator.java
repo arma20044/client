@@ -33,7 +33,9 @@ public class VotantesHabilitadosValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select id_votante, ci  from ucsaws_votante vot join ucsaws_persona per "
-					+ "on (vot.id_persona = per.id_persona) where id_evento = " + VentanaBuscarEvento.evento + "and per.id_persona = '" + idPersona + "'" );
+				
+					+ "on (vot.id_persona = per.id_persona) where per.id_evento = " + VentanaBuscarEvento.evento + " "
+							+ "and per.id_persona = '" + idPersona + "'" );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

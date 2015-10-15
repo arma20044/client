@@ -193,14 +193,14 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	rdbLista1.setBounds(55, 173, 123, 39);
 	panel.add(rdbLista1);
 	
-	JLabel lblPartidoColorado = new JLabel("Ventanas del Futuro");
+	JLabel lblPartidoColorado = new JLabel("Ventanas Unidas");
 	lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 20));
 	lblPartidoColorado.setBounds(21, 219, 179, 25);
 	panel.add(lblPartidoColorado);
 	
-	JLabel lblAnr = new JLabel("V.F.");
+	JLabel lblAnr = new JLabel("V.U.");
 	lblAnr.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAnr.setBounds(88, 259, 44, 31);
+	lblAnr.setBounds(88, 259, 63, 31);
 	panel.add(lblAnr);
 	
 	JLabel label = new JLabel("Presidente");

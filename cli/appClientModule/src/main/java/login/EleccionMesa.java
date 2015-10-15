@@ -41,6 +41,8 @@ public class EleccionMesa extends JFrame {
 	public static Integer Mesa = 0;
 	
 	public static String local ;
+	
+	public static Integer idEvento;
 
 	/**
 	 * Launch the application.
@@ -80,6 +82,8 @@ public class EleccionMesa extends JFrame {
 				System.out.println("Mesa Seleccionada es: " + Mesa);
 				
 				local = obtenerLocal(Mesa.toString());
+				
+				idEvento = obtenerEvento(Integer.parseInt(local));
 				
 				VentanaPrincipalVotante votantePrincipal = new VentanaPrincipalVotante();
         		votantePrincipal.setVisible(true);
@@ -197,6 +201,56 @@ public class EleccionMesa extends JFrame {
 					String result = fil.get(0).toString();
 
 					return result;
+
+				}
+				
+				//Metodo para obtener el ID del evento
+				private static Integer obtenerEvento(Integer idLocal) {
+
+					JSONArray filas = new JSONArray();
+					JSONArray fil = new JSONArray();
+
+					Object ob = null;
+
+					ApplicationContext ctx = SpringApplication
+							.run(WeatherConfiguration.class);
+
+					WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+					QueryGenericoRequest query = new QueryGenericoRequest();
+
+					// para registrar se inserta el codigo es 1
+					query.setTipoQueryGenerico(2);
+					System.out.println(Login.userLogeado);
+					query.setQueryGenerico("SELECT  mesa.id_evento, desc_local "
+							+ "from  ucsaws_local l join ucsaws_mesa mesa on (mesa.id_local = l.id_local)"
+							+ " where l.id_local = " + idLocal );
+					
+					
+					
+				 
+
+					QueryGenericoResponse response = weatherClient
+							.getQueryGenericoResponse(query);
+					weatherClient.printQueryGenericoResponse(response);
+
+					JSONParser j = new JSONParser();
+
+					String generoAntesPartir = response.getQueryGenericoResponse();
+
+					try {
+						ob = j.parse(generoAntesPartir);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					filas = (JSONArray) ob;
+
+					fil = (JSONArray) filas.get(0);
+
+					String result = fil.get(0).toString();
+
+					return Integer.parseInt(result);
 
 				}
 		

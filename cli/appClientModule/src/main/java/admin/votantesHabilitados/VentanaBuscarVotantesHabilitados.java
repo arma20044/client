@@ -51,6 +51,12 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
+	
+	String tempNombre, tempApellido,tempIdMesa,mesa;
+	Integer tempCI ;
+	
+	static Integer ciVotante;
+	
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
@@ -141,6 +147,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				
 				List<String> selectedData = new ArrayList<String>();
 
 				int[] selectedRow = table_1.getSelectedRows();
@@ -170,9 +178,31 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = (String) (table_1.getModel().getValueAt(
 							selectedRow[i], 0));
+					
+					
+					ciVotante = Integer.parseInt(codTemporal);
+					
+					tempCI = Integer.parseInt((String) table_1.getModel().getValueAt(
+							selectedRow[i], 1));
+					
+					tempNombre = (String) table_1.getModel().getValueAt(
+							selectedRow[i], 2);
+					
+					tempApellido = (String) table_1.getModel().getValueAt(
+							selectedRow[i], 3);
+					
+					tempIdMesa =  (String) table_1.getModel().getValueAt(
+							selectedRow[i], 7);
+					
+					mesa = tempIdMesa.substring(tempIdMesa.length()-1);
 
 				}
 				System.out.println("Selected: " + selectedData);
+				
+				VentanaHabilitarVotante habilitar = new VentanaHabilitarVotante(tempCI,tempNombre,tempApellido, Integer.parseInt(mesa));
+				habilitar.setVisible(true);
+				dispose();
+				
 
 			}
 		});
@@ -337,16 +367,14 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido,  pActual.nombre as PaisActual, desc_mesa, "
-				+ "hab.cod_habilitado habilitado, suf.cod_habilitado sufrago"
-				+ " from ucsaws_votante vo join ucsaws_votante_habilitado vh on (vo.id_votante = vh.id_votante)"
-				+ "join ucsaws_persona per on (vo.id_persona = per.id_persona)"
-				+ "join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen)"
-				+ "join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual)"
-				+ "join ucsaws_habilitado hab on (hab.id_habilitado = habilitado)"
-				+ "join ucsaws_habilitado suf on (suf.id_habilitado = sufrago)"
-				+ "join ucsaws_mesa m on (vo.id_mesa = m.id_mesa)"
-				+ " where per.id_evento= " + VentanaBuscarEvento.evento);
+		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido, hab.cod_habilitado ,sufrago, pActual.nombre as PaisActual, desc_mesa, m.id_mesa "
+				
+				 + "from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona) "
+				// + " join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen) "
+				 + " join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual) "
+				 + " join ucsaws_habilitado hab on (hab.id_habilitado = habilitado) "
+				 + " join ucsaws_mesa m on (vo.id_mesa = m.id_mesa) where vo.id_evento= " + VentanaBuscarEvento.evento
+				 + " and sufrago = 0");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -387,8 +415,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString(),fil.get(7).toString()};
+					fil.get(4).toString(), fil.get(5).toString(), fil.get(6).toString(),fil.get(7).toString(),fil.get(8).toString()};
 
 			model.ciudades.add(fin);
 			ite++;

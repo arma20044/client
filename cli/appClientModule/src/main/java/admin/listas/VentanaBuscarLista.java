@@ -485,9 +485,9 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho "
-				+ "from  ucsaws_listas "
-				+ "order by nro_lista" + "");
+		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
+				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
+				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)" + "order by tlis.descripcion, nro_lista" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -527,7 +527,7 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
-					fil.get(2).toString() , fil.get(3).toString()};
+					fil.get(2).toString() , fil.get(3).toString(), fil.get(4).toString()};
 
 			model.ciudades.add(fin);
 			ite++;

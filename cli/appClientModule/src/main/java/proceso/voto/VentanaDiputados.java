@@ -2,6 +2,7 @@ package src.main.java.proceso.voto;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,8 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
+import src.main.java.votante.VentanaPrincipalVotante;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Color;
 
 public class VentanaDiputados extends JFrame implements ActionListener{
 	
@@ -26,18 +30,20 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	JButton botonCambiar;/*declaramos el objeto Boton*/
 	JLabel labelTitulo;/*declaramos el objeto Label*/
 	private VentanaDiputados miVentanaPrincipal;
-	
+	final JRadioButton  rdbList1, rdbList2,rdbList3,rdbList4, rdbList5, rdbList6, rdbList7, rdbList8 ;
+	ButtonGroup buttonGroup;
 	//datos a enviar
-	String cedula;
+	Integer cedula;
 	Integer candidato;
 	String lista;
+	private ButtonGroup buttonGroup_1;
 	
 	
-	public String getCedula() {
+	public Integer getCedula() {
 		return cedula;
 	}
 
-	public void setCedula(String cedula) {
+	public void setCedula(Integer cedula) {
 		this.cedula = cedula;
 	}
 
@@ -57,8 +63,405 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		/*permite iniciar las propiedades de los componentes*/
 		iniciarComponentes();
 		setTitle("Sistema E-vote - 2014");
-		setSize(1366,708);
+		setSize(1201,763);
 		getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setLayout(null);
+		panel.setBounds(900, 192, 203, 234);
+		getContentPane().add(panel);
+		
+		JLabel lblAlanTuring = new JLabel("Marcian Hoff");
+		lblAlanTuring.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Marcian Hoff.jpg")));
+		lblAlanTuring.setBounds(0, 0, 100, 141);
+		
+		Image img = ((ImageIcon) lblAlanTuring.getIcon()).getImage();
+		Image newimg = img.getScaledInstance(lblAlanTuring.getWidth(), lblAlanTuring.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblAlanTuring.setIcon(new ImageIcon(newimg));
+		
+		panel.add(lblAlanTuring);
+		
+		JLabel label_3 = new JLabel(lblAlanTuring.getText());
+		label_3.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_3.setBounds(21, 140, 78, 15);
+		panel.add(label_3);
+		
+		JLabel lblPartidoDeInformaticos = new JLabel("Partido de Informaticos");
+		lblPartidoDeInformaticos.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblPartidoDeInformaticos.setBounds(0, 167, 208, 25);
+		panel.add(lblPartidoDeInformaticos);
+		
+		JLabel lblPi = new JLabel("P.I.");
+		lblPi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPi.setBounds(90, 203, 44, 31);
+		panel.add(lblPi);
+		
+		rdbList4 = new JRadioButton("4");
+		buttonGroup_1.add(rdbList4);
+		rdbList4.setBounds(106, 36, 75, 105);
+		panel.add(rdbList4);
+		rdbList4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				capturarSenador((JRadioButton) arg0.getSource());
+			}
+		});
+		rdbList4.setFont(new Font("Tahoma", Font.BOLD, 79));
+		
+		JLabel label_8 = new JLabel("");
+		label_8.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/imgs/justicia electoral logo.jpg")));
+		label_8.setBounds(0, 0, 117, 115);
+		
+		Image img7 = ((ImageIcon) label_8.getIcon()).getImage();
+		Image newimg7 = img7.getScaledInstance(label_8.getWidth(), label_8.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		label_8.setIcon(new ImageIcon(newimg7));
+		
+		getContentPane().add(label_8);
+		
+		JLabel label = new JLabel("BOLETIN DE VOTO OFICIAL");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label.setBounds(444, 24, 342, 31);
+		getContentPane().add(label);
+		
+		JLabel label_1 = new JLabel("PERIODO 2016-2021");
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setForeground(Color.GRAY);
+		label_1.setFont(new Font("Tahoma", Font.BOLD, 25));
+		label_1.setBounds(351, 108, 536, 31);
+		getContentPane().add(label_1);
+		
+		JLabel label_2 = new JLabel("SELECCIONE LA CANDIDATURA DE SU PREFERENCIA");
+		label_2.setHorizontalAlignment(SwingConstants.CENTER);
+		label_2.setForeground(Color.BLACK);
+		label_2.setFont(new Font("Tahoma", Font.BOLD, 20));
+		label_2.setBounds(302, 150, 631, 31);
+		getContentPane().add(label_2);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setBounds(129, 192, 203, 234);
+		getContentPane().add(panel_1);
+		
+		JLabel lblStevenBallmer = new JLabel("Philip Donald Estridge");
+		lblStevenBallmer.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Philip Donald Estridge.jpg")));
+		lblStevenBallmer.setBounds(0, 0, 100, 141);
+		
+		Image img4 = ((ImageIcon) lblStevenBallmer.getIcon()).getImage();
+		Image newimg4 = img4.getScaledInstance(lblStevenBallmer.getWidth(), lblStevenBallmer.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblStevenBallmer.setIcon(new ImageIcon(newimg4));
+		
+		panel_1.add(lblStevenBallmer);
+		
+		JLabel label_7 = new JLabel(lblStevenBallmer.getText());
+		label_7.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_7.setBounds(10, 141, 134, 15);
+		panel_1.add(label_7);
+		
+		JLabel label_9 = new JLabel("Ventanas del Futuro");
+		label_9.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		label_9.setBounds(21, 167, 179, 25);
+		panel_1.add(label_9);
+		
+		JLabel label_10 = new JLabel("V.F.");
+		label_10.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		label_10.setBounds(90, 203, 44, 31);
+		panel_1.add(label_10);
+		
+		rdbList1 = new JRadioButton("1");
+		rdbList1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				capturarSenador((JRadioButton) arg0.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList1);
+		rdbList1.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList1.setBounds(106, 36, 75, 105);
+		panel_1.add(rdbList1);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setBounds(377, 192, 203, 234);
+		getContentPane().add(panel_2);
+		
+		JLabel lblRolandWayne = new JLabel("Robert Noyce");
+		lblRolandWayne.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Robert Noyce.jpg")));
+		lblRolandWayne.setBounds(0, 0, 100, 141);
+		
+		Image img5 = ((ImageIcon) lblRolandWayne.getIcon()).getImage();
+		Image newimg5 = img5.getScaledInstance(lblRolandWayne.getWidth(), lblRolandWayne.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblRolandWayne.setIcon(new ImageIcon(newimg5));
+		
+		panel_2.add(lblRolandWayne);
+		
+		JLabel label_6 = new JLabel(lblRolandWayne.getText());
+		label_6.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_6.setBounds(0, 141, 83, 15);
+		panel_2.add(label_6);
+		
+		JLabel lblCaminoALa = new JLabel("Camino a la Innovación");
+		lblCaminoALa.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblCaminoALa.setBounds(0, 167, 196, 23);
+		panel_2.add(lblCaminoALa);
+		
+		JLabel lblCi = new JLabel("C.I.");
+		lblCi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblCi.setBounds(90, 203, 44, 31);
+		panel_2.add(lblCi);
+		
+		rdbList2 = new JRadioButton("2");
+		rdbList2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList2);
+		rdbList2.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList2.setBounds(106, 36, 75, 105);
+		panel_2.add(rdbList2);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBounds(639, 192, 203, 234);
+		getContentPane().add(panel_3);
+		
+		JLabel lblShawnFanning = new JLabel("Jimmy Wales");
+		lblShawnFanning.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Jimmy Wales.jpg")));
+		lblShawnFanning.setBounds(0, 0, 100, 141);
+		
+		Image img8 = ((ImageIcon) lblShawnFanning.getIcon()).getImage();
+		Image newimg8 = img8.getScaledInstance(lblShawnFanning.getWidth(), lblShawnFanning.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblShawnFanning.setIcon(new ImageIcon(newimg8));
+		
+		panel_3.add(lblShawnFanning);
+		
+		JLabel label_11 = new JLabel(lblShawnFanning.getText());
+		label_11.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_11.setBounds(0, 141, 94, 15);
+		panel_3.add(label_11);
+		
+		JLabel lblPartidoLibre = new JLabel("Partido Libre");
+		lblPartidoLibre.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblPartidoLibre.setBounds(40, 169, 105, 23);
+		panel_3.add(lblPartidoLibre);
+		
+		JLabel lblPl = new JLabel("P.L.");
+		lblPl.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPl.setBounds(90, 203, 44, 31);
+		panel_3.add(lblPl);
+		
+		rdbList3 = new JRadioButton("3");
+		rdbList3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList3);
+		rdbList3.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList3.setBounds(106, 36, 75, 105);
+		panel_3.add(rdbList3);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setLayout(null);
+		panel_4.setBounds(129, 437, 203, 234);
+		getContentPane().add(panel_4);
+		
+		JLabel lblVintonCerf = new JLabel("Michael Saul Dell");
+		lblVintonCerf.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Michael Saul Dell.jpg")));
+		lblVintonCerf.setBounds(0, 0, 100, 141);
+		
+		Image img9 = ((ImageIcon) lblVintonCerf.getIcon()).getImage();
+		Image newimg9 = img9.getScaledInstance(lblVintonCerf.getWidth(), lblVintonCerf.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblVintonCerf.setIcon(new ImageIcon(newimg9));
+		
+		panel_4.add(lblVintonCerf);
+		
+		JLabel label_5 = new JLabel(lblVintonCerf.getText());
+		label_5.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_5.setBounds(10, 141, 101, 15);
+		panel_4.add(label_5);
+		
+		JLabel lblPartidoDeAlgoritmos = new JLabel("Partido de Algoritmos");
+		lblPartidoDeAlgoritmos.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPartidoDeAlgoritmos.setBounds(0, 167, 192, 25);
+		panel_4.add(lblPartidoDeAlgoritmos);
+		
+		JLabel lblPa = new JLabel("P.A.");
+		lblPa.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPa.setBounds(90, 203, 45, 31);
+		panel_4.add(lblPa);
+		
+		rdbList5 = new JRadioButton("5");
+		rdbList5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList5);
+		rdbList5.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList5.setBounds(106, 36, 75, 105);
+		panel_4.add(rdbList5);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.setLayout(null);
+		panel_5.setBounds(377, 437, 203, 234);
+		getContentPane().add(panel_5);
+		
+		JLabel lblJackSKilby = new JLabel("Seymour Cray");
+		lblJackSKilby.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Seymour Cray.jpg")));
+		lblJackSKilby.setBounds(0, 0, 100, 141);
+		
+		Image img10 = ((ImageIcon) lblJackSKilby.getIcon()).getImage();
+		Image newimg10 = img10.getScaledInstance(lblJackSKilby.getWidth(), lblJackSKilby.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblJackSKilby.setIcon(new ImageIcon(newimg10));
+		
+		
+		panel_5.add(lblJackSKilby);
+		
+		JLabel label_15 = new JLabel(lblJackSKilby.getText());
+		label_15.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_15.setBounds(10, 141, 91, 15);
+		panel_5.add(label_15);
+		
+		JLabel lblMovimientoDeProgramadores = new JLabel("Movimiento de");
+		lblMovimientoDeProgramadores.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblMovimientoDeProgramadores.setBounds(52, 152, 116, 22);
+		panel_5.add(lblMovimientoDeProgramadores);
+		
+		JLabel lblMpi = new JLabel("M.P.I.");
+		lblMpi.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblMpi.setBounds(90, 203, 66, 31);
+		panel_5.add(lblMpi);
+		
+		rdbList6 = new JRadioButton("6");
+		rdbList6.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList6);
+		rdbList6.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList6.setBounds(106, 36, 75, 105);
+		panel_5.add(rdbList6);
+		
+		JLabel lblProgramadores = new JLabel("Programadores");
+		lblProgramadores.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblProgramadores.setBounds(52, 167, 118, 22);
+		panel_5.add(lblProgramadores);
+		
+		JLabel lblIndependientes = new JLabel("Independientes");
+		lblIndependientes.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblIndependientes.setBounds(50, 185, 121, 22);
+		panel_5.add(lblIndependientes);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setLayout(null);
+		panel_6.setBounds(639, 437, 203, 234);
+		getContentPane().add(panel_6);
+		
+		JLabel lblGuglielmoMarconi = new JLabel("Douglas Engelbart");
+		lblGuglielmoMarconi.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Douglas Engelbart.jpg")));
+		lblGuglielmoMarconi.setBounds(0, 0, 100, 141);
+		
+		Image img11 = ((ImageIcon) lblGuglielmoMarconi.getIcon()).getImage();
+		Image newimg11 = img11.getScaledInstance(lblGuglielmoMarconi.getWidth(), lblGuglielmoMarconi.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblGuglielmoMarconi.setIcon(new ImageIcon(newimg11));
+		
+		panel_6.add(lblGuglielmoMarconi);
+		
+		JLabel label_19 = new JLabel(lblGuglielmoMarconi.getText());
+		label_19.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_19.setBounds(0, 141, 111, 15);
+		panel_6.add(label_19);
+		
+		JLabel lblPartidoDeAnalistas = new JLabel("Partido de Analistas");
+		lblPartidoDeAnalistas.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPartidoDeAnalistas.setBounds(20, 167, 177, 25);
+		panel_6.add(lblPartidoDeAnalistas);
+		
+		JLabel lblPaa = new JLabel("P.A.A.");
+		lblPaa.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPaa.setBounds(90, 203, 68, 31);
+		panel_6.add(lblPaa);
+		
+		rdbList7 = new JRadioButton("7");
+		rdbList7.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList7);
+		rdbList7.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList7.setBounds(106, 36, 75, 105);
+		panel_6.add(rdbList7);
+		
+		JLabel lblAliados = new JLabel("Aliados");
+		lblAliados.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblAliados.setBounds(73, 187, 64, 25);
+		panel_6.add(lblAliados);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setLayout(null);
+		panel_7.setBounds(900, 437, 203, 234);
+		getContentPane().add(panel_7);
+		
+		JLabel lblLawrenceJEllison = new JLabel("Tim Berners-Lee");
+		lblLawrenceJEllison.setIcon(new ImageIcon(VentanaDiputados.class.getResource("/candidatosJpeg/Tim Berners-Lee.jpg")));
+		lblLawrenceJEllison.setBounds(0, 0, 100, 141);
+		
+		Image img12 = ((ImageIcon) lblLawrenceJEllison.getIcon()).getImage();
+		Image newimg12 = img12.getScaledInstance(lblLawrenceJEllison.getWidth(), lblLawrenceJEllison.getHeight(),
+				java.awt.Image.SCALE_SMOOTH);
+		lblLawrenceJEllison.setIcon(new ImageIcon(newimg12));
+		
+		
+		panel_7.add(lblLawrenceJEllison);
+		
+		JLabel label_23 = new JLabel(lblLawrenceJEllison.getText());
+		label_23.setFont(new Font("Tahoma", Font.BOLD, 12));
+		label_23.setBounds(0, 142, 114, 15);
+		panel_7.add(label_23);
+		
+		JLabel lblPartidoDeIngenieros = new JLabel("Partido de Ingenieros");
+		lblPartidoDeIngenieros.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblPartidoDeIngenieros.setBounds(10, 152, 191, 25);
+		panel_7.add(lblPartidoDeIngenieros);
+		
+		JLabel lblPip = new JLabel("P.I.P.");
+		lblPip.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblPip.setBounds(90, 203, 61, 31);
+		panel_7.add(lblPip);
+		
+		rdbList8 = new JRadioButton("8");
+		rdbList8.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				capturarSenador((JRadioButton) e.getSource());
+			}
+		});
+		buttonGroup_1.add(rdbList8);
+		rdbList8.setFont(new Font("Tahoma", Font.BOLD, 79));
+		rdbList8.setBounds(106, 36, 75, 105);
+		panel_7.add(rdbList8);
+		
+		JLabel lblProgresistas = new JLabel("Progresistas");
+		lblProgresistas.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblProgresistas.setBounds(20, 179, 191, 25);
+		panel_7.add(lblProgresistas);
    		/*Asigna un titulo a la barra de titulo*/
 		//setTitle("CoDejaVu : JFrame VentanaPrincipal");
 		/*tama�o de la ventana*/
@@ -80,159 +483,15 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		/*con esto definmos nosotros mismos los tama�os y posicion
 		 * de los componentes*/
 		contenedor.setLayout(null);	
-	final ButtonGroup  buttonGroup= new ButtonGroup();	
+	buttonGroup_1= new ButtonGroup();	
 	//VentanaPrincipal frmSistemaEvote = new VentanaPrincipal();
 	
 	
-	JLabel lblNewLabel = new JLabel("CANDIDATOS A DIPUTADOS");
+	JLabel lblNewLabel = new JLabel("CANDIDATOS A DIPUTADOS DE LA NACIÓN");
 	lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 	lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	lblNewLabel.setBounds(166, 59, 850, 31);
+	lblNewLabel.setBounds(341, 66, 544, 31);
 	getContentPane().add(lblNewLabel);
-	
-	JPanel panel = new JPanel();
-	panel.setBounds(35, 99, 364, 363);
-	getContentPane().add(panel);
-	panel.setLayout(null);
-	
-	JLabel lblHC = new JLabel("");
-	//lblHC.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/img/hc.jpg")));
-	lblHC.setBounds(20, 18, 129, 167);
-	panel.add(lblHC);
-	//lblHC.setIcon(new ImageIcon(Main.class.getResource("/img/hc.jpg")));
-	
-	JLabel lblAfara = new JLabel("");
-	lblAfara.setBounds(189, 42, 124, 143);
-	panel.add(lblAfara);
-	//lblAfara.setIcon(new ImageIcon(Main.class.getResource("/img/afara.gif")));
-	
-	JLabel lblNewLabel_2 = new JLabel("candidato a vice");
-	lblNewLabel_2.setBounds(189, 196, 141, 14);
-	panel.add(lblNewLabel_2);
-	lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	
-	JLabel lblNewLabel_1 = new JLabel("candidato a presidente");
-	lblNewLabel_1.setBounds(0, 196, 161, 13);
-	panel.add(lblNewLabel_1);
-	lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	
-	final JRadioButton rdbLista1 = new JRadioButton("LISTA 1");
-	rdbLista1.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			capturarDiputado((JRadioButton) arg0.getSource());
-		}
-	});
-	buttonGroup.add(rdbLista1);
-	rdbLista1.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista1.setBounds(107, 234, 123, 39);
-	panel.add(rdbLista1);
-	
-	JLabel lblPartidoColorado = new JLabel("Nombre de la lista");
-	lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblPartidoColorado.setBounds(79, 280, 185, 31);
-	panel.add(lblPartidoColorado);
-	
-	JLabel lblAnr = new JLabel("sigla");
-	lblAnr.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAnr.setBounds(136, 322, 72, 31);
-	panel.add(lblAnr);
-	
-	JPanel panel_1 = new JPanel();
-	panel_1.setLayout(null);
-	panel_1.setBounds(421, 101, 364, 363);
-	getContentPane().add(panel_1);
-	
-	JLabel label = new JLabel("");
-	//label.setIcon(new ImageIcon(Main.class.getResource("/img/ferre.jpg")));
-	label.setBounds(136, 11, 129, 167);
-	panel_1.add(label);
-	
-	JLabel label_1 = new JLabel("");
-	//label_1.setIcon(new ImageIcon(Main.class.getResource("/img/imagen-cynthia-brizuela-speratti.jpg")));
-	label_1.setBounds(189, 42, 124, 143);
-	panel_1.add(label_1);
-	
-	JLabel lblCynthiaElviraBrizuela = new JLabel("vice 2");
-	lblCynthiaElviraBrizuela.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblCynthiaElviraBrizuela.setBounds(171, 195, 175, 14);
-	panel_1.add(lblCynthiaElviraBrizuela);
-	
-	JLabel lblMarioAnibalFerreiro = new JLabel("candidato 2");
-	lblMarioAnibalFerreiro.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblMarioAnibalFerreiro.setBounds(0, 196, 161, 13);
-	panel_1.add(lblMarioAnibalFerreiro);
-	
-	final JRadioButton rdbLista2 = new JRadioButton("LISTA 2");
-	rdbLista2.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			capturarDiputado((JRadioButton) arg0.getSource());
-		}
-	});
-	buttonGroup.add(rdbLista2);
-	rdbLista2.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista2.setBounds(107, 234, 123, 39);
-	panel_1.add(rdbLista2);
-	
-	JLabel lblAvanzaPais = new JLabel("Nombre de la lista");
-	lblAvanzaPais.setHorizontalAlignment(SwingConstants.CENTER);
-	lblAvanzaPais.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAvanzaPais.setBounds(87, 280, 185, 31);
-	panel_1.add(lblAvanzaPais);
-	
-	JLabel lblMap = new JLabel("sigla");
-	lblMap.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblMap.setBounds(136, 322, 72, 31);
-	panel_1.add(lblMap);
-	
-	JPanel panel_2 = new JPanel();
-	panel_2.setLayout(null);
-	panel_2.setBounds(799, 101, 364, 363);
-	getContentPane().add(panel_2);
-	
-	JLabel label_2 = new JLabel("");
-	//label_2.setIcon(new ImageIcon(Main.class.getResource("/img/alegre.jpg")));
-	label_2.setBounds(20, 18, 129, 167);
-	panel_2.add(label_2);
-	
-	JLabel label_3 = new JLabel("");
-	//label_3.setIcon(new ImageIcon(Main.class.getResource("/img/fili.jpg")));
-	label_3.setBounds(189, 42, 124, 143);
-	panel_2.add(label_3);
-	
-	JLabel lblRafaelAugustoFilizzola = new JLabel("vice 3");
-	lblRafaelAugustoFilizzola.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblRafaelAugustoFilizzola.setBounds(171, 195, 175, 14);
-	panel_2.add(lblRafaelAugustoFilizzola);
-	
-	JLabel lblPedroEfrainAlegre = new JLabel("candidato 3");
-	lblPedroEfrainAlegre.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	lblPedroEfrainAlegre.setBounds(0, 196, 161, 13);
-	panel_2.add(lblPedroEfrainAlegre);
-	
-	final JRadioButton rdbLista3 = new JRadioButton("LISTA 3");
-	rdbLista3.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			capturarDiputado((JRadioButton) arg0.getSource());
-		}
-	});
-	buttonGroup.add(rdbLista3);
-	rdbLista3.setFont(new Font("Tahoma", Font.BOLD, 25));
-	rdbLista3.setBounds(107, 234, 123, 39);
-	panel_2.add(rdbLista3);
-	
-	JLabel lblAlianzaParaguayAlegre = new JLabel("Nombre de la lista");
-	lblAlianzaParaguayAlegre.setHorizontalAlignment(SwingConstants.CENTER);
-	lblAlianzaParaguayAlegre.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblAlianzaParaguayAlegre.setBounds(48, 280, 279, 31);
-	panel_2.add(lblAlianzaParaguayAlegre);
-	
-	JLabel lblApa = new JLabel("sigla");
-	lblApa.setFont(new Font("Tahoma", Font.PLAIN, 25));
-	lblApa.setBounds(136, 322, 72, 31);
-	panel_2.add(lblApa);
 	
 	
 	//ver www.camick.com select button group
@@ -245,20 +504,21 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		if (evento.getSource()==botonCambiar)
 		{
 			//para saber que rdb se selecciono//
-			JRadioButton[] rdb = {rdbLista1,rdbLista2, rdbLista3	};
+			JRadioButton[] rdb = {rdbList1, rdbList2,rdbList3,rdbList4, rdbList5, rdbList6, rdbList7, rdbList8	}; //agregar cada RDB
 			for(int i = 0; i<rdb.length; i++){
 				if(rdb[i].isSelected()){
 					lista = rdb[i].getText();
 						if(!lista.isEmpty()){
 							dispose();
-							VentanaConfirmacionDiputados diputados = new VentanaConfirmacionDiputados(miVentanaPrincipal, true);
+							VentanaConfirmacionDiputados miVentanaConfirmacion=new VentanaConfirmacionDiputados(miVentanaPrincipal,true);
 //							if (lista.compareTo("LISTA 1")== 0){
 //							miVentanaPrincipal.setCandidato(1);
 //							}
 //							miVentanaPrincipal.setCedula("3619250");
 							//setear voto para lista
 							
-							
+							//miVentanaPrincipal.setLista(VentanaSenadores.senadores);
+							//miVentanaPrincipal.setCedula(VentanaPrincipalVotante.cedulaVotante);
 							ban = 1;
 							break;
 						}
@@ -314,15 +574,31 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 //		}
 //	});
 	botonCambiar.setFont(new Font("Tahoma", Font.PLAIN, 23));
-	botonCambiar.setBounds(178, 608, 185, 37);
+	botonCambiar.setBounds(395, 686, 185, 37);
 	getContentPane().add(botonCambiar);
 	
 	JButton btnNewButton_1 = new JButton("Votar BLANCO");
 	btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-	btnNewButton_1.setBounds(495, 608, 179, 37);
+	btnNewButton_1.setBounds(639, 686, 179, 37);
 	getContentPane().add(btnNewButton_1);
 	
 
+	}
+
+	public static String getDiputados() {
+		return diputados;
+	}
+
+	public static void setSenadores(String diputados) {
+		VentanaDiputados.diputados = diputados;
+	}
+
+	public String getLista() {
+		return lista;
+	}
+
+	public void setLista(String lista) {
+		this.lista = lista;
 	}
 
 	/*Agregamos el evento al momento de llamar la otra ventana*/
@@ -334,8 +610,8 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		}
 	}
 	
-	public void capturarDiputado(JRadioButton rdb){
+	public void capturarSenador(JRadioButton rdb){
 		diputados = rdb.getText().substring(rdb.getText().length()-1, rdb.getText().length());
-		System.out.println("Diputado: " + diputados);
+		System.out.println("Senador: " + diputados);
 	}
 }

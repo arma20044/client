@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -39,6 +40,7 @@ import src.main.java.admin.Administracion;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.Reportes;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -49,6 +51,8 @@ import java.awt.Color;
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 
 	public static String evento;
+	
+	public static Date date;
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -206,10 +210,41 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 							selectedRow[i], 0));
 					
 					System.out.println(evento);
-							
+					
+					String fechaEvento = (String) (table_1.getModel().getValueAt(
+							selectedRow[i], 3));
+					
+					
+					DateFormat fechaEventoFormated = new SimpleDateFormat("yyyy-MM-dd");
+					
+					String str = fechaEvento.substring(0, 10);
+
+				   
+					try {
+						date = fechaEventoFormated.parse(str);
+						System.out.println(" Date: " + date.toString());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				    
+					
+					
+					
+					System.out.println();
+					
+					if (MenuPrincipal.reporte){
+						Reportes reportes = new Reportes();
+						reportes.setVisible(true);
+						dispose();
+					}
+					
+					else{		
 					VentanaMainEvento main = new VentanaMainEvento();
 					main.setVisible(true);
 					dispose();
+					}
 
 				}
 				System.out.println("Selected: " + selectedData);
@@ -428,6 +463,23 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			Administracion administracion = new Administracion();
 			administracion.setVisible(true);
 			this.dispose();
+			
+			
+			if (MenuPrincipal.reporte){
+				MenuPrincipal menu = new MenuPrincipal();
+				menu.setVisible(true);
+				dispose();
+			}
+			
+			else{		
+				Administracion administracion1 = new Administracion();
+				administracion1.setVisible(true);
+				this.dispose();
+			}
+			
+			
+			
+			
 		}
 
 	}

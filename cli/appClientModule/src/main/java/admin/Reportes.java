@@ -1,6 +1,7 @@
 package src.main.java.admin;
 
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,7 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reportes.Candidatos;
+import src.main.java.admin.reportes.CantidadVotosElegir;
 import src.main.java.admin.reportes.ReporteDymmy;
 import src.main.java.admin.reportes.Votantes;
 import src.main.java.login.Login;
@@ -56,11 +59,11 @@ public class Reportes extends JFrame implements ActionListener{
 		getContentPane().setLayout(null);
 		
 		JLabel lblAdmin = new JLabel("Administrador");
-		lblAdmin.setBounds(24, 11, 89, 14);
+		lblAdmin.setBounds(55, 11, 89, 14);
 		getContentPane().add(lblAdmin);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(24, 35, 54, 14);
+		lblNombre.setBounds(55, 35, 54, 14);
 		getContentPane().add(lblNombre);
 		
 		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
@@ -132,6 +135,38 @@ public class Reportes extends JFrame implements ActionListener{
 				});
 				btnListaCandidatos.setBounds(114, 209, 173, 23);
 				getContentPane().add(btnListaCandidatos);
+				
+				JButton btnVotosXCandidatura = new JButton("Votos por Candidatura");
+				btnVotosXCandidatura.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						CantidadVotosElegir elegir = new CantidadVotosElegir();
+						elegir.setVisible(true);
+						dispose();
+					}
+				});
+				btnVotosXCandidatura.setBounds(114, 314, 173, 23);
+				getContentPane().add(btnVotosXCandidatura);
+				
+				JButton btnHome = new JButton("");
+				btnHome.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						MenuPrincipal menuprincipal = new MenuPrincipal();
+						menuprincipal.setVisible(true);
+						dispose();
+					}
+				});
+				btnHome.setIcon(new ImageIcon(Reportes.class.getResource("/imgs/home.png")));
+				btnHome.setToolTipText("Inicio");
+				btnHome.setBounds(0, 0, 32, 32);
+				getContentPane().add(btnHome);
+				btnHome.setIcon(new ImageIcon(VentanaBuscarEvento.class
+						.getResource("/imgs/home.png")));
+				btnHome.setBounds(0, 0, 32, 32);
+				Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
+				Image newimg5 = img5.getScaledInstance(32, 32,
+						java.awt.Image.SCALE_SMOOTH);
+				btnHome.setIcon(new ImageIcon(newimg5));
 		//lblNombreDescripcion.repaint();
 		
 		
