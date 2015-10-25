@@ -49,6 +49,8 @@ import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
@@ -81,6 +83,10 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	private JLabel lblDescripcion;
 	private JTextField txtDescripcion;
 	private JLabel lblFechaDesde;
+	private JTextField txtHoraDesde;
+	private JTextField txtMinDesde;
+	private JTextField txtHoraHasta;
+	private JTextField txtMinHasta;
 	
 
 	/**
@@ -235,11 +241,11 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		lblTipoEvento = new JLabel();
 		lblTipoEvento.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTipoEvento.setText("Genero:");
-		lblTipoEvento.setBounds(129, 178, 61, 25);
+		lblTipoEvento.setBounds(130, 206, 61, 25);
 		getContentPane().add(lblTipoEvento);
 
 		cmbTipoEvento = new JComboBox(recuperarDatosComboBoxTipoEvento());
-		cmbTipoEvento.setBounds(212, 180, 340, 20);
+		cmbTipoEvento.setBounds(213, 208, 340, 25);
 		getContentPane().add(cmbTipoEvento);
 
 		lblNro = new JLabel();
@@ -257,35 +263,35 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 					arg0.consume();
 			}
 		});
-		txtNro.setBounds(213, 54, 108, 20);
+		txtNro.setBounds(213, 54, 108, 25);
 		getContentPane().add(txtNro);
 		txtNro.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(184, 199, 619, 14);
+		lblMensaje.setBounds(188, 242, 619, 14);
 		getContentPane().add(lblMensaje);
 
 		lblDescripcion = new JLabel();
 		lblDescripcion.setText("Descripcion:");
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcion.setBounds(75, 83, 116, 25);
+		lblDescripcion.setBounds(75, 95, 116, 25);
 		getContentPane().add(lblDescripcion);
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 158, 20);
+		txtDescripcion.setBounds(213, 95, 158, 25);
 		getContentPane().add(txtDescripcion);
 
 		lblFechaDesde = new JLabel();
 		lblFechaDesde.setText("Fch. Desde:");
 		lblFechaDesde.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFechaDesde.setBounds(75, 113, 116, 25);
+		lblFechaDesde.setBounds(75, 134, 116, 25);
 		getContentPane().add(lblFechaDesde);
 
 		txtFchDesde = new JFormattedTextField();
 		txtFchDesde.setText("23/04/2015");
-		txtFchDesde.setBounds(213, 115, 69, 20);
+		txtFchDesde.setBounds(213, 134, 89, 25);
 		getContentPane().add(txtFchDesde);
 
 		JButton btnFchDesde = new JButton("");
@@ -299,7 +305,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 			}
 		});
 		btnFchDesde.setToolTipText("Calendario");
-		btnFchDesde.setBounds(292, 116, 30, 23);
+		btnFchDesde.setBounds(312, 140, 30, 23);
 		btnFchDesde.setOpaque(false);
 		btnFchDesde.setContentAreaFilled(false);
 		btnFchDesde.setBorderPainted(false);
@@ -313,12 +319,12 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		JLabel lblFchHasta = new JLabel();
 		lblFchHasta.setText("Fch. Hasta:");
 		lblFchHasta.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFchHasta.setBounds(75, 148, 116, 25);
+		lblFchHasta.setBounds(75, 170, 116, 25);
 		getContentPane().add(lblFchHasta);
 
 		txtFchHasta = new JFormattedTextField();
 		txtFchHasta.setText("23/04/2015");
-		txtFchHasta.setBounds(213, 150, 69, 20);
+		txtFchHasta.setBounds(213, 170, 89, 25);
 		getContentPane().add(txtFchHasta);
 		
 		JButton btnFechaHasta;
@@ -337,8 +343,133 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		btnFechaHasta.setOpaque(false);
 		btnFechaHasta.setContentAreaFilled(false);
 		btnFechaHasta.setBorderPainted(false);
-		btnFechaHasta.setBounds(292, 150, 30, 23);
+		btnFechaHasta.setBounds(312, 174, 30, 23);
 		getContentPane().add(btnFechaHasta);
+		
+		txtHoraDesde = new JTextField();
+		txtHoraDesde.addKeyListener(new KeyAdapter() {
+			
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
+		txtHoraDesde.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				Integer hora = Integer.parseInt(txtHoraDesde.getText());
+				if ( hora > 23){
+					txtHoraDesde.setText("23");
+				}
+				else
+					if (hora < 1){
+						txtHoraDesde.setText("01");
+					}
+				
+				
+			}
+			
+		});
+		txtHoraDesde.setBounds(347, 138, 30, 25);
+		getContentPane().add(txtHoraDesde);
+		txtHoraDesde.setColumns(10);
+		
+		txtMinDesde = new JTextField();
+		txtMinDesde.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
+		txtMinDesde.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				
+				Integer min = Integer.parseInt(txtMinDesde.getText());
+				if ( min > 59){
+					txtMinDesde.setText("59");
+				}
+				else
+					if (min < 0 ){
+						txtMinDesde.setText("00");
+					}
+			}
+			
+		});
+		txtMinDesde.setColumns(10);
+		txtMinDesde.setBounds(401, 138, 30, 25);
+		getContentPane().add(txtMinDesde);
+		
+		txtHoraHasta = new JTextField();
+		txtHoraHasta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
+		txtHoraHasta.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				
+				Integer hora = Integer.parseInt(txtHoraHasta.getText());
+				if ( hora > 23){
+					txtHoraHasta.setText("23");
+				}
+				else
+					if (hora < 1){
+						txtHoraHasta.setText("01");
+					}
+				
+				
+			}
+			
+		});
+		txtHoraHasta.setColumns(10);
+		txtHoraHasta.setBounds(347, 169, 30, 25);
+		getContentPane().add(txtHoraHasta);
+		
+		txtMinHasta = new JTextField();
+		txtMinHasta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
+		txtMinHasta.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				
+				Integer min = Integer.parseInt(txtMinHasta.getText());
+				if ( min > 59){
+					txtMinHasta.setText("59");
+				}
+				else
+					if (min < 0 ){
+						txtMinHasta.setText("00");
+					}
+				
+			}
+			
+		});
+		txtMinHasta.setColumns(10);
+		txtMinHasta.setBounds(401, 169, 30, 25);
+		getContentPane().add(txtMinHasta);
+		
+		JLabel lblNewLabel = new JLabel(":");
+		lblNewLabel.setBounds(387, 143, 4, 14);
+		getContentPane().add(lblNewLabel);
+		
+		JLabel label = new JLabel(":");
+		label.setBounds(387, 174, 4, 19);
+		getContentPane().add(label);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -359,7 +490,15 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 				Item item = (Item) cmbTipoEvento.getSelectedItem();
 				Integer tipoEventoSelected = item.getId();
 
-				if (!(txtNro.getText().length() == 0)
+				if (!(txtNro.getText().length() == 0) 
+						
+				&&  !(txtHoraDesde.getText().length() == 0)
+				
+				&&  !(txtMinDesde.getText().length() == 0)
+				
+				&&  !(txtHoraHasta.getText().length() == 0)
+				
+				&&  !(txtMinHasta.getText().length() == 0)
 
 				&& !(txtFchDesde.getText().length() == 0)
 
@@ -382,6 +521,14 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						// == false) {
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
+						
+						
+						String horaDesde = armarHoraMinuto(txtHoraDesde.getText(), txtMinDesde.getText());
+						String fechaDesdeFinal = txtFchDesde + " " + horaDesde;
+						
+						String horaHasta = armarHoraMinuto(txtHoraHasta.getText(), txtMinHasta.getText());
+						String fechaHastaFinal = txtFchHasta + " " + horaHasta; 
+						
 
 						Calendar calendar = new GregorianCalendar();
 						int year = calendar.get(Calendar.YEAR);
@@ -412,13 +559,13 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 								+ tipoEventoSelected
 								+ ", "
 
-								+ " to_date('"
-								+ txtFchDesde.getText()
-								+ "', 'DD/MM/YYYY'), "
+								+ " TO_TIMESTAMP('"
+								+ fechaDesdeFinal
+								+ "', 'YYYY-MM-DD HH24:MI:SS'), "
 
-								+ " to_date('"
-								+ txtFchHasta.getText()
-								+ "', 'DD/MM/YYYY'), '"
+								+ " TO_TIMESTAMP('"
+								+ fechaHastaFinal
+								+ "', 'YYYY-MM-DD HH24:MI:SS'), '"
 								
 								+ Login.userLogeado
 								+ "' , now(), '"
@@ -722,5 +869,18 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		}
 		return model;
 
+	}
+	
+	public String armarHoraMinuto(String hora, String minuto){
+		
+		
+		String result = "";
+		
+		result = hora + " : " + minuto;
+		
+		
+		
+		return result;
+		
 	}
 }

@@ -100,9 +100,19 @@ public class CantidadVotosElegir extends JFrame {
 				
 				;
 				
-				CantidadVotos votos = new CantidadVotos(tipoSelected);
+				
+				if (tipoSelected == 1 ){
+				CantidadVotosPresidente votos = new CantidadVotosPresidente(tipoSelected);
 				System.out.println(idTipo);
 				votos.start();
+				}
+				
+				else 
+					if (tipoSelected == 8 || tipoSelected == 7){
+						CantidadVotosSenadorDiputado votos = new CantidadVotosSenadorDiputado(tipoSelected);
+						System.out.println(idTipo);
+						votos.start();
+					}
 				//dispose();
 			}
 		});

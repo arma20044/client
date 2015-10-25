@@ -3,28 +3,37 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="P_ID_EVENTO" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select * from ucsaws_users u join ucsaws_persona p on (p.id_persona = u.id_persona)
-order by ci desc]]>
+		<![CDATA[select * from ucsaws_votante u join ucsaws_persona p on (p.id_persona = u.id_persona)
+join ucsaws_genero g on (g.id_genero = p.id_genero)
+where u.id_evento = $P{P_ID_EVENTO}
+order by apellido desc]]>
 	</queryString>
-	<field name="id_user" class="java.lang.Integer"/>
+	<field name="id_votante" class="java.lang.Integer"/>
 	<field name="id_persona" class="java.lang.Integer"/>
+	<field name="sufrago" class="java.lang.Integer"/>
 	<field name="fch_ins" class="java.sql.Timestamp"/>
 	<field name="fch_upd" class="java.sql.Timestamp"/>
 	<field name="usuario_ins" class="java.lang.String"/>
 	<field name="usuario_upd" class="java.lang.String"/>
-	<field name="pass" class="java.lang.String"/>
-	<field name="es_admin" class="java.lang.Boolean"/>
-	<field name="usuario" class="java.lang.String"/>
+	<field name="habilitado" class="java.lang.Integer"/>
+	<field name="id_mesa" class="java.lang.Integer"/>
+	<field name="id_evento" class="java.lang.Integer"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="apellido" class="java.lang.String"/>
 	<field name="fecha_nacimiento" class="java.sql.Timestamp"/>
 	<field name="id_pais_origen" class="java.lang.Integer"/>
 	<field name="id_pais_actual" class="java.lang.Integer"/>
 	<field name="id_genero" class="java.lang.Integer"/>
-	<field name="ci" class="java.lang.Integer"/>
+	<field name="ci" class="java.lang.String"/>
 	<field name="tel_linea_baja" class="java.lang.String"/>
 	<field name="tel_celular" class="java.lang.String"/>
+	<field name="id_nacionalidad" class="java.lang.Integer"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="codigo" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -57,7 +66,7 @@ order by ci desc]]>
 				<text><![CDATA[ci]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="64" y="0" width="148" height="23" uuid="f982ff52-b9d4-41be-ae36-f40e6f3aee95"/>
+				<reportElement x="227" y="0" width="148" height="23" uuid="f982ff52-b9d4-41be-ae36-f40e6f3aee95"/>
 				<box>
 					<pen lineWidth="0.75"/>
 					<topPen lineWidth="0.75"/>
@@ -67,18 +76,6 @@ order by ci desc]]>
 				</box>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[nombre]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="212" y="0" width="163" height="23" uuid="75686a46-c1ea-4e2e-ba77-65e887766156"/>
-				<box>
-					<pen lineWidth="0.75"/>
-					<topPen lineWidth="0.75"/>
-					<leftPen lineWidth="0.75"/>
-					<bottomPen lineWidth="0.75"/>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[apellido]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="375" y="0" width="100" height="23" uuid="71782a8d-a8fe-47bf-bbd2-b8ca18816adb"/>
@@ -102,7 +99,19 @@ order by ci desc]]>
 					<rightPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[id_genero]]></text>
+				<text><![CDATA[Genero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="64" y="0" width="163" height="23" uuid="75686a46-c1ea-4e2e-ba77-65e887766156"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[apellido]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -121,19 +130,7 @@ order by ci desc]]>
 				<textFieldExpression><![CDATA[$F{ci}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="64" y="0" width="148" height="24" uuid="20a15f9b-1ced-4195-8de2-edb0827e1755"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="212" y="0" width="163" height="24" uuid="4e010124-30d4-4a22-a710-83fa1c09b2d7"/>
+				<reportElement x="64" y="0" width="163" height="24" uuid="4e010124-30d4-4a22-a710-83fa1c09b2d7"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -156,8 +153,23 @@ order by ci desc]]>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{fecha_nacimiento}]]></textFieldExpression>
 			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="475" y="0" width="80" height="24" forecolor="#000000" backcolor="#FFFFFF" uuid="c1d194ec-c2c8-4faa-8318-046d20e40411"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="475" y="0" width="80" height="24" uuid="85507e1a-c517-4a79-99dc-1df4acd4b2e9"/>
+				<reportElement x="227" y="0" width="148" height="24" uuid="20a15f9b-1ced-4195-8de2-edb0827e1755"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -166,7 +178,7 @@ order by ci desc]]>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{id_genero}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -161,10 +161,10 @@ public class VentanaSenadores extends JFrame implements ActionListener{
 		label_7.setBounds(10, 141, 91, 15);
 		panel_1.add(label_7);
 		
-		JLabel label_9 = new JLabel("Ventanas del Futuro");
-		label_9.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		label_9.setBounds(21, 167, 179, 25);
-		panel_1.add(label_9);
+		JLabel lblVentanasUnidas = new JLabel("Ventanas Unidas");
+		lblVentanasUnidas.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblVentanasUnidas.setBounds(21, 167, 179, 25);
+		panel_1.add(lblVentanasUnidas);
 		
 		JLabel label_10 = new JLabel("V.F.");
 		label_10.setFont(new Font("Tahoma", Font.PLAIN, 25));

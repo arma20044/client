@@ -460,9 +460,9 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 
 		}
 		if (e.getSource() == botonCancelar) {
-			Administracion administracion = new Administracion();
+			/*Administracion administracion = new Administracion();
 			administracion.setVisible(true);
-			this.dispose();
+			this.dispose();*/
 			
 			
 			if (MenuPrincipal.reporte){

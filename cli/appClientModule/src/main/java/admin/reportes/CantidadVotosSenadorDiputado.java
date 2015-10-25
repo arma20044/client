@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +26,31 @@ import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
  
-public class Votantes {
+public class CantidadVotosSenadorDiputado {
+	
+	String P_Candidato_Desc_String;
  
-    private Logger logger = Logger.getLogger(Votantes.class);
+    private Logger logger = Logger.getLogger(CantidadVotosSenadorDiputado.class);
  
-    public Votantes() {
+    public CantidadVotosSenadorDiputado(Integer idTipo) {
+    	System.out.println(idTipo);
+    	if (idTipo == 1){
+    		P_Candidato_Desc_String = "Presidente de la Republica del Paraguay";
+    	}
+    	else if (idTipo == 7 ){
+    		
+    		P_Candidato_Desc_String =  "DIPUTADO";
+    	}
+    	else if (idTipo == 8){
+    		P_Candidato_Desc_String =  "SENADOR";
+    	}
     }
  
     public void start() {
         try {                                           
             // load report location
         	
-        	File a = new File("jasperTemplates/votantes.jasper");
+        	File a = new File("jasperTemplates/cantidadVotosXCandidaturaGraficoSenadoresDiputados.jasper");
         	
             FileInputStream fis = new FileInputStream(a);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fis);
@@ -56,13 +71,15 @@ public class Votantes {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(bufferedInputStream);
             
             HashMap<String, Object> parameters = new HashMap<String, Object>();  
-           
-            //parameters.put("P_ID_Evento", Integer.parseInt(VentanaBuscarEvento.evento));
-            parameters.put("P_ID_EVENTO", Integer.parseInt(VentanaBuscarEvento.evento));
+            parameters.put("P_Tipo_Candidato", CantidadVotosElegir.tipoSelected);
+            parameters.put("P_Candidato_Desc",P_Candidato_Desc_String);
+ //           parameters.put("P_Tipo_Candidato", 1);
+//            parameters.put("P_Candidato_Desc","Presidente de la Republica del Paraguay");
+            parameters.put("P_FECHA", VentanaBuscarEvento.date );
+            parameters.put("P_ID_Evento", Integer.parseInt(VentanaBuscarEvento.evento));
             
             
-            
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jdbcConnection);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parameters, jdbcConnection);
  
             // view report to UI
             JasperViewer.viewReport(jasperPrint, false);
@@ -97,7 +114,8 @@ public class Votantes {
     	PatternLayout pl = new PatternLayout("[%-5p] %C.%M:%L: %m%n");
         ConsoleAppender appender = new ConsoleAppender(pl);
         Logger.getRootLogger().addAppender(appender);
-        Votantes main = new Votantes();
+        CantidadVotosSenadorDiputado main = new CantidadVotosSenadorDiputado(CantidadVotosElegir.tipoSelected);
+       // CantidadVotos main = new CantidadVotos(1);
         main.start();
     }
 }
