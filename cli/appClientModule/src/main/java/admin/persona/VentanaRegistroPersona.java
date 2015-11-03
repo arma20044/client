@@ -57,7 +57,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar, btnFecha;
+	private JButton botonGuardar, botonCancelar, btnFecha;
 	private JTable table;
 	private VentanaRegistroPersona ventanaRegistroPersona;
 	private PersonaJTableModel model = new PersonaJTableModel();
@@ -124,20 +124,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroPersona.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		//Image newimg4 = img4.getScaledInstance(32, 32,
+			//	java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("REGISTRO DE PERSONAS\r\n");
@@ -146,10 +134,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(1152, 476);
@@ -242,33 +228,33 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		getContentPane().add(btnHome);
 
 		cmbPaisOrigen = new JComboBox(recuperarDatosComboBoxPaisOrigen());
-		cmbPaisOrigen.setBounds(213, 144, 340, 20);
+		cmbPaisOrigen.setBounds(213, 151, 340, 20);
 		getContentPane().add(cmbPaisOrigen);
 
 		JLabel lblPaisOrigen = new JLabel();
 		lblPaisOrigen.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPaisOrigen.setText("Pais Origen:");
-		lblPaisOrigen.setBounds(130, 142, 61, 25);
+		lblPaisOrigen.setBounds(130, 149, 61, 25);
 		getContentPane().add(lblPaisOrigen);
 
 		lblPaisActual = new JLabel();
 		lblPaisActual.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPaisActual.setText("PaisActual:");
-		lblPaisActual.setBounds(101, 175, 90, 25);
+		lblPaisActual.setBounds(101, 182, 90, 25);
 		getContentPane().add(lblPaisActual);
 
 		cmbPaisActual = new JComboBox(recuperarDatosComboBoxPaisActual());
-		cmbPaisActual.setBounds(213, 177, 340, 20);
+		cmbPaisActual.setBounds(213, 184, 340, 20);
 		getContentPane().add(cmbPaisActual);
 
 		lblGenero = new JLabel();
 		lblGenero.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblGenero.setText("Genero:");
-		lblGenero.setBounds(130, 208, 61, 25);
+		lblGenero.setBounds(130, 215, 61, 25);
 		getContentPane().add(lblGenero);
 
 		cmbGenero = new JComboBox(recuperarDatosComboBoxGenero());
-		cmbGenero.setBounds(213, 210, 340, 20);
+		cmbGenero.setBounds(213, 217, 340, 20);
 		getContentPane().add(cmbGenero);
 		
 		cmbNacionalidad = new JComboBox(recuperarDatosComboBoxNacionalidad());
@@ -290,13 +276,13 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					arg0.consume();
 			}
 		});
-		txtCI.setBounds(213, 54, 108, 20);
+		txtCI.setBounds(213, 54, 108, 26);
 		getContentPane().add(txtCI);
 		txtCI.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(223, 236, 619, 14);
+		lblMensaje.setBounds(263, 247, 619, 14);
 		getContentPane().add(lblMensaje);
 
 		lblNombreApellido = new JLabel();
@@ -307,12 +293,12 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		txtNombres = new JTextField();
 		txtNombres.setColumns(10);
-		txtNombres.setBounds(213, 85, 158, 20);
+		txtNombres.setBounds(213, 85, 158, 26);
 		getContentPane().add(txtNombres);
 
 		txtApellidos = new JTextField();
 		txtApellidos.setColumns(10);
-		txtApellidos.setBounds(381, 85, 172, 20);
+		txtApellidos.setBounds(381, 85, 172, 26);
 		getContentPane().add(txtApellidos);
 
 		lblFchNac = new JLabel();
@@ -343,7 +329,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		txtCelular.setColumns(10);
-		txtCelular.setBounds(705, 85, 158, 20);
+		txtCelular.setBounds(705, 85, 158, 26);
 		getContentPane().add(txtCelular);
 
 		txtLineaBaja = new JTextField();
@@ -356,12 +342,12 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		txtLineaBaja.setColumns(10);
-		txtLineaBaja.setBounds(705, 144, 158, 20);
+		txtLineaBaja.setBounds(705, 144, 158, 26);
 		getContentPane().add(txtLineaBaja);
 
 		txtFechaNac = new JFormattedTextField();
 		txtFechaNac.setText("23/04/2015");
-		txtFechaNac.setBounds(213, 115, 69, 20);
+		txtFechaNac.setBounds(213, 115, 80, 26);
 		getContentPane().add(txtFechaNac);
 
 		JButton btnFecha = new JButton("");
@@ -375,7 +361,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		btnFecha.setToolTipText("Calendario");
-		btnFecha.setBounds(292, 110, 30, 23);
+		btnFecha.setBounds(302, 117, 30, 23);
 		btnFecha.setOpaque(false);
 		btnFecha.setContentAreaFilled(false);
 		btnFecha.setBorderPainted(false);
@@ -569,86 +555,6 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 
 		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar a la Persona?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					PersonaDAO personaDAO = new PersonaDAO();
-
-					try {
-						personaDAO.eliminarPersona(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (personaDAO.eliminarPersona(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado la Persona ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-
-						model = new PersonaJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan a la Persona que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Persona desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarPersona persona = new VentanaBuscarPersona();
 			persona.setVisible(true);
@@ -752,8 +658,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais "
-				+ "order by nombre");
+		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento =  " + VentanaBuscarEvento.evento
+				+ " order by nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -824,8 +730,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais "
-				+ "order by nombre");
+		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento= " + VentanaBuscarEvento.evento
+				+ " order by nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -897,7 +803,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
 		query.setQueryGenerico("SELECT id_genero, descripcion"
-				+ " from ucsaws_genero " + "order by codigo");
+				+ " from ucsaws_genero where id_evento = " + VentanaBuscarEvento.evento + "order by codigo");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -969,7 +875,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
 		query.setQueryGenerico("SELECT id_nacionalidad, desc_nacionalidad"
-				+ " from ucsaws_nacionalidad " + "order by cod_nacionalidad");
+				+ " from ucsaws_nacionalidad where id_evento =  "+ VentanaBuscarEvento.evento + " order by cod_nacionalidad");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

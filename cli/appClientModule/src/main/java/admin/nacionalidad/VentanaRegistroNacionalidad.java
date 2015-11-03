@@ -48,13 +48,14 @@ import src.main.java.login.Login;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class VentanaRegistroNacionalidad extends JFrame implements ActionListener {
+public class VentanaRegistroNacionalidad extends JFrame implements
+		ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
+	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
 	private NacionalidadJTableModel model = new NacionalidadJTableModel();
@@ -86,7 +87,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 41, 32, 32);
+		botonGuardar.setBounds(331, 45, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -108,20 +109,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 41, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		// Image newimg4 = img4.getScaledInstance(32, 32,
+		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("REGISTRO DE NACIONALIDADES");
@@ -130,10 +119,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(812, 444);
@@ -250,7 +237,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 					arg0.consume();
 			}
 		});
-		txtCod.setBounds(213, 54, 108, 24);
+		txtCod.setBounds(213, 54, 108, 26);
 		getContentPane().add(txtCod);
 		txtCod.setColumns(10);
 
@@ -258,12 +245,12 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(413, 176, 363, 14);
 		getContentPane().add(lblMensaje);
-		
+
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 86, 340, 24);
+		txtDescripcion.setBounds(213, 86, 340, 26);
 		getContentPane().add(txtDescripcion);
-		
+
 		lblDescripcion = new JLabel();
 		lblDescripcion.setText("Descripcion:");
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -286,13 +273,13 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				
 
 				Item item3 = (Item) cmbPais.getSelectedItem();
 				Integer paisSelected = item3.getId();
 				if (!(txtCod.getText().length() == 0)) {
 					if (txtCod.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
+						lblMensaje
+								.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -303,7 +290,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 						t.start();
 					} else if
 
-					(nacionalidadValidator.ValidarCodigo(txtCod.getText()) == false) {
+					(nacionalidadValidator.ValidarCodigo(txtCod.getText(),
+							txtDescripcion.getText()) == false) {
 						if (nacionalidadValidator.ValidarPais(paisSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
@@ -327,16 +315,18 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 									+ "nextval('ucsaws_nacionalidad_seq')"
 									+ " , "
 									+ paisSelected
-									
+
 									+ ", upper('"
-									+ txtCod.getText() + "'), upper('" + txtDescripcion.getText()+ "'),"
-									
+									+ txtCod.getText()
+									+ "'), upper('"
+									+ txtDescripcion.getText()
+									+ "'),"
+
 									+ VentanaBuscarEvento.evento
-									+",'"
+									+ ",'"
 									+ Login.userLogeado
 									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
+									+ Login.userLogeado + "' , now())");
 
 							QueryGenericoResponse response = weatherClient
 									.getQueryGenericoResponse(query);
@@ -371,7 +361,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 							// "Ya existe el genero " + txtDesc.getText(),
 							// "Información",JOptionPane.WARNING_MESSAGE);
 							lblMensaje
-									.setText("Ya existe nacionalidad para el Pais: " + cmbPais.getSelectedItem() );
+									.setText("Ya existe nacionalidad para el Pais: "
+											+ cmbPais.getSelectedItem());
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -382,20 +373,19 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 									});
 							t.setRepeats(false);
 							t.start();
-							
+
 							txtCod.setText("");
 							txtDescripcion.setText("");
-							
-							//cmbPais.removeAllItems();
-							
+
+							// cmbPais.removeAllItems();
+
 						}
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe una Nacionalidad con el codigo "
-										+ txtCod.getText());
+								.setText("Ya existe una Nacionalidad con esos datos.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -428,86 +418,6 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 			}
 
 		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar la Nacionalidad?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
-
-					try {
-						nacionalidadesDAO.eliminarNacionalidad(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (nacionalidadesDAO.eliminarNacionalidad(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado la Nacionalidad ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-
-						model = new NacionalidadJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan a la Nacionalidad que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarNacionalidad nacionalidad = new VentanaBuscarNacionalidad();
 			nacionalidad.setVisible(true);
@@ -515,8 +425,6 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 
 		}
 	}
-
-
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
@@ -535,9 +443,9 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre" +
-		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
-		+ "where id_evento = " + VentanaBuscarEvento.evento);
+		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre"
+				+ " from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
+				+ "where nac.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -607,8 +515,9 @@ public class VentanaRegistroNacionalidad extends JFrame implements ActionListene
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais "
-				+ "order by nombre");
+		query.setQueryGenerico("SELECT id_pais, nombre"
+				+ " from ucsaws_pais where id_evento = "
+				+ VentanaBuscarEvento.evento + "order by nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

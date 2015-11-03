@@ -124,7 +124,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 52, 319, 25);
+		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);
@@ -490,7 +490,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 
 		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre" +
 		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
-		+ "where id_evento = " + VentanaBuscarEvento.evento);
+		+ "where nac.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

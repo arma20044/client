@@ -37,6 +37,7 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.PaisValidator;
 import src.main.java.dao.pais.PaisDAO;
 import src.main.java.hello.WeatherClient;
@@ -294,8 +295,8 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
 						query.setQueryGenerico("INSERT INTO ucsaws_pais"
-								+ "( id_pais, nombre, codigo,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_pais_seq') ,"
+								+ "( id_pais,id_evento, nombre, codigo,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "VALUES (" + "nextval('ucsaws_pais_seq') ," + VentanaBuscarEvento.evento + "," 
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), "
 

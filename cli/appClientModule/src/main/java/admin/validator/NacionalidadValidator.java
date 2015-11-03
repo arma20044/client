@@ -16,9 +16,8 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class NacionalidadValidator {
 
-	public Boolean ValidarCodigo(String codigo) throws ParseException,
-			org.json.simple.parser.ParseException {
-		
+	public Boolean ValidarCodigo(String codigo, String desc)
+			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
 
@@ -34,9 +33,11 @@ public class NacionalidadValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
-				+ "from ucsaws_nacionalidad " + "where  upper(cod_nacionalidad) = "
-
-				+ "upper('"+codigo+"') and id_evento = " + VentanaBuscarEvento.evento);
+				+ "from ucsaws_nacionalidad "
+				+ "where  (upper(cod_nacionalidad) = "
+				+ "upper('" + codigo + "') or " + "upper(desc_nacionalidad) = "
+				+ "upper('" + desc + "'))" + "and id_evento = "
+				+ VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -57,48 +58,43 @@ public class NacionalidadValidator {
 		}
 
 	}
-	
+
 	public Boolean ValidarPais(Integer pais) throws ParseException,
-	org.json.simple.parser.ParseException {
+			org.json.simple.parser.ParseException {
 
+		boolean existe = false;
 
-boolean existe = false;
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
 
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
 
+		query.setTipoQueryGenerico(2);
 
-ApplicationContext ctx = SpringApplication
-		.run(WeatherConfiguration.class);
+		query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
+				+ "from ucsaws_nacionalidad " + "where  id_pais = "
 
-WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-QueryGenericoRequest query = new QueryGenericoRequest();
+				+ pais + " and id_evento = " + VentanaBuscarEvento.evento);
 
-query.setTipoQueryGenerico(2);
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
 
-query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
-		+ "from ucsaws_nacionalidad " + "where  id_pais = "
+		String res = response.getQueryGenericoResponse();
 
-		+  pais + " and id_evento = " + VentanaBuscarEvento.evento );
+		if (res.compareTo("[]") != 0) {
 
-QueryGenericoResponse response = weatherClient
-		.getQueryGenericoResponse(query);
-weatherClient.printQueryGenericoResponse(response);
+			return existe = true;
+		}
 
-String res = response.getQueryGenericoResponse();
+		else {
+			existe = false;
 
-if (res.compareTo("[]") != 0) {
+			return existe;
 
-	return existe = true;
-}
+		}
 
-else {
-	existe = false;
-
-	return existe;
-
-}
-
-}
-	
-
+	}
 
 }
