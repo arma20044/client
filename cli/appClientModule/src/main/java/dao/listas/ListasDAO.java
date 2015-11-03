@@ -12,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
@@ -60,7 +61,7 @@ public class ListasDAO {
 			
 			query.setQueryGenerico("SELECT id_lista, nombre_lista "
 					+ " from ucsaws_listas "
-				  + "where upper(nombre_lista) like upper('%"+codigo+"%')  ");
+				  + "where upper(nombre_lista) like upper('%"+codigo+"%') and id_evento =   "+ VentanaBuscarEvento.evento);
 			
 			
 			

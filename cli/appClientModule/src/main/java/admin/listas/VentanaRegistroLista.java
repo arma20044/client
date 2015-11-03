@@ -58,7 +58,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
+	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
 	private PaisJTableModel model = new PaisJTableModel();
@@ -91,7 +91,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroLista.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(315, 39, 32, 32);
+		botonGuardar.setBounds(298, 48, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -113,20 +113,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroLista.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(372, 39, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		// Image newimg4 = img4.getScaledInstance(32, 32,
+		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("REGISTRO DE LISTAS");
@@ -135,10 +123,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(812, 444);
@@ -237,7 +223,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		getContentPane().add(lblNro);
 
 		txtNro = new JTextField();
-		
+
 		txtNro.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
@@ -247,7 +233,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			}
 		});
 
-		txtNro.setBounds(213, 54, 75, 20);
+		txtNro.setBounds(213, 54, 75, 26);
 		getContentPane().add(txtNro);
 		txtNro.setColumns(10);
 
@@ -264,7 +250,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		txtNombre = new JTextField();
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(213, 85, 310, 20);
+		txtNombre.setBounds(213, 85, 310, 26);
 		getContentPane().add(txtNombre);
 
 		lblAnho = new JLabel();
@@ -283,17 +269,17 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			}
 		});
 		txtAnho.setColumns(10);
-		txtAnho.setBounds(213, 116, 75, 20);
+		txtAnho.setBounds(213, 116, 75, 26);
 		getContentPane().add(txtAnho);
-		
+
 		JLabel lblTipoLista = new JLabel();
 		lblTipoLista.setText("Tipo Lista:");
 		lblTipoLista.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTipoLista.setBounds(129, 141, 61, 25);
+		lblTipoLista.setBounds(130, 144, 61, 25);
 		getContentPane().add(lblTipoLista);
-		
+
 		cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
-		cmbTipoLista.setBounds(212, 143, 340, 20);
+		cmbTipoLista.setBounds(213, 146, 340, 20);
 		getContentPane().add(cmbTipoLista);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -315,7 +301,9 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 				Item item = (Item) cmbTipoLista.getSelectedItem();
 				Integer tipoListaSelected = item.getId();
 
-				if (!(txtNro.getText().length() == 0 ) && !(txtAnho.getText().length() == 0 ) && !(txtNombre.getText().length() == 0  )
+				if (!(txtNro.getText().length() == 0)
+						&& !(txtAnho.getText().length() == 0)
+						&& !(txtNombre.getText().length() == 0)
 						&& !(txtNombre.getText().length() == 0)) {
 					if (txtNro.getText().length() > 3) {
 						lblMensaje
@@ -330,14 +318,14 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(listasValidator.ValidarCodigo(txtNro.getText(), tipoListaSelected) == false) {
+					(listasValidator.ValidarCodigo(txtNro.getText(),
+							tipoListaSelected, txtNombre.getText(),
+							txtAnho.getText()) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
-						
-						
 
 						Calendar calendar = new GregorianCalendar();
 						int year = calendar.get(Calendar.YEAR);
@@ -358,7 +346,9 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 								+ " upper('" + txtNombre.getText() + "'), "
 
 								+ " " + txtNro.getText() + ", "
-								+ txtAnho.getText() + "  , " + tipoListaSelected + ","+ VentanaBuscarEvento.evento +",'" 
+								+ txtAnho.getText() + "  , "
+								+ tipoListaSelected + ","
+								+ VentanaBuscarEvento.evento + ",'"
 								+ Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
 
@@ -408,8 +398,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
-						lblMensaje.setText("Ya existe la Lista con ese codigo. "
-								+ txtNro.getText());
+						lblMensaje
+								.setText("Ya existe una Lista con esos datos. ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -442,88 +432,6 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			}
 
 		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar la Lista?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					ListasDAO listasDAO = new ListasDAO();
-
-					try {
-						listasDAO.eliminarLista(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (listasDAO.eliminarLista(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado la Lista ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-						txtNombre.setText("");
-						txtNro.setText("");
-						txtAnho.setText("");
-						model = new PaisJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan a la Lista que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Lista desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarLista candidato = new VentanaBuscarLista();
 			candidato.setVisible(true);
@@ -551,8 +459,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
 				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
-				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)" + "order by tlis.descripcion, nro_lista" + "");
-
+				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)"
+				+ "order by tlis.descripcion, nro_lista" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -592,14 +500,15 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(), fil.get(4).toString()  };
+					fil.get(2).toString(), fil.get(3).toString(),
+					fil.get(4).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
 		}
 
 	}
-	
+
 	private Vector recuperarDatosComboBoxTipoLista() {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();

@@ -43,14 +43,13 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaRegistroPais extends JFrame implements
-		ActionListener {
+public class VentanaRegistroPais extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
+	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
 	private PaisJTableModel model = new PaisJTableModel();
@@ -67,7 +66,7 @@ public class VentanaRegistroPais extends JFrame implements
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
 	private JLabel lblNroZona;
-	private JTextField txtNroZona;
+	private JTextField txtCodigoPais;
 	private JTextField txtDescripcion;
 
 	/**
@@ -80,7 +79,7 @@ public class VentanaRegistroPais extends JFrame implements
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroPais.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(311, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -102,20 +101,8 @@ public class VentanaRegistroPais extends JFrame implements
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroPais.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		// Image newimg4 = img4.getScaledInstance(32, 32,
+		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("REGISTRO DE PAIS");
@@ -124,10 +111,8 @@ public class VentanaRegistroPais extends JFrame implements
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(812, 444);
@@ -185,7 +170,7 @@ public class VentanaRegistroPais extends JFrame implements
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					 txtNroZona.setText(selectedData.get(0));
+					txtCodigoPais.setText(selectedData.get(0));
 					txtDescripcion.setText(selectedData.get(1));
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -225,8 +210,8 @@ public class VentanaRegistroPais extends JFrame implements
 		lblNroZona.setBounds(130, 52, 61, 25);
 		getContentPane().add(lblNroZona);
 
-		txtNroZona = new JTextField();
-		txtNroZona.addKeyListener(new KeyAdapter() {
+		txtCodigoPais = new JTextField();
+		txtCodigoPais.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
 				char car = arg0.getKeyChar();
@@ -235,9 +220,9 @@ public class VentanaRegistroPais extends JFrame implements
 			}
 		});
 
-		txtNroZona.setBounds(213, 54, 75, 20);
-		getContentPane().add(txtNroZona);
-		txtNroZona.setColumns(10);
+		txtCodigoPais.setBounds(213, 54, 75, 26);
+		getContentPane().add(txtCodigoPais);
+		txtCodigoPais.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -252,7 +237,7 @@ public class VentanaRegistroPais extends JFrame implements
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 310, 20);
+		txtDescripcion.setBounds(213, 85, 310, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -272,9 +257,9 @@ public class VentanaRegistroPais extends JFrame implements
 		if (e.getSource() == botonGuardar) {
 			try {
 
-				if (!(txtNroZona.getText().length() == 0)
+				if (!(txtCodigoPais.getText().length() == 0)
 						&& !(txtDescripcion.getText().length() == 0)) {
-					if (txtNroZona.getText().length() > 3) {
+					if (txtCodigoPais.getText().length() > 3) {
 						lblMensaje
 								.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
@@ -287,7 +272,8 @@ public class VentanaRegistroPais extends JFrame implements
 						t.start();
 					} else if
 
-					(paisValidator.ValidarCodigo(txtNroZona.getText()) == false) {
+					(paisValidator.ValidarCodigo(txtCodigoPais.getText(),
+							txtDescripcion.getText()) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
@@ -313,8 +299,8 @@ public class VentanaRegistroPais extends JFrame implements
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), "
 
-								+ " upper('" + txtNroZona.getText() + "'), '"
-								+ Login.userLogeado + "' , now(), '"
+								+ " upper('" + txtCodigoPais.getText()
+								+ "'), '" + Login.userLogeado + "' , now(), '"
 								+ Login.userLogeado + "' , now())");
 
 						QueryGenericoResponse response = weatherClient
@@ -338,7 +324,7 @@ public class VentanaRegistroPais extends JFrame implements
 						t.setRepeats(false);
 						t.start();
 
-						txtNroZona.setText("");
+						txtCodigoPais.setText("");
 						txtDescripcion.setText("");
 
 						// this.dispose();
@@ -364,8 +350,7 @@ public class VentanaRegistroPais extends JFrame implements
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe el Pais con ese codigo. "
-										+ txtNroZona.getText());
+								.setText("Ya existe el Pais con esos datos. ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -398,87 +383,6 @@ public class VentanaRegistroPais extends JFrame implements
 			}
 
 		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Pais?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					PaisDAO paisDAO = new PaisDAO();
-
-					try {
-						paisDAO.eliminarPais(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (paisDAO.eliminarPais(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado el Pais ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-						txtDescripcion.setText("");
-						txtNroZona.setText("");
-						model = new PaisJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Pais que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Pais desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarPais candidato = new VentanaBuscarPais();
 			candidato.setVisible(true);
@@ -505,8 +409,7 @@ public class VentanaRegistroPais extends JFrame implements
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_pais, codigo, nombre "
-				+ "from  ucsaws_pais "
-				+ "order by codigo" + "");
+				+ "from  ucsaws_pais " + "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

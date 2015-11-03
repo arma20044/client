@@ -10,12 +10,13 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
 public class PaisValidator {
 
-	public Boolean ValidarCodigo(String nro)
+	public Boolean ValidarCodigo(String nro, String nombre)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -32,8 +33,9 @@ public class PaisValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_pais, codigo "
-				+ "from ucsaws_pais " + "where upper(codigo) = upper('" + nro
-				+ "') " );
+				+ "from ucsaws_pais " + "where (upper(codigo) = upper('" + nro
+				+ "') or upper(nombre) like upper('" + nombre
+				+ "')) and id_evento = " +VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

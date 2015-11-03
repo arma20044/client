@@ -241,7 +241,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 			}
 		});
 
-		txtNroZona.setBounds(213, 54, 75, 20);
+		txtNroZona.setBounds(213, 52, 75, 26);
 		getContentPane().add(txtNroZona);
 		txtNroZona.setColumns(10);
 
@@ -258,7 +258,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 310, 20);
+		txtDescripcion.setBounds(213, 87, 310, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));

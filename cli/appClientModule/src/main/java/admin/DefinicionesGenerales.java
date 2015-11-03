@@ -53,7 +53,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 	 * Establece la informacion que se presentara como introduccion del sistema
 	 */
 	public String textoIntroduccion = "";
-	private JButton btnTiposDeCandidatos;
 	
 	public DefinicionesGenerales() {
 		setResizable(false);
@@ -92,17 +91,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		});
 		btnGenero.setBounds(73, 264, 155, 23);
 		getContentPane().add(btnGenero);
-		
-		btnTiposDeCandidatos = new JButton("Tipos de Candidatos");
-		btnTiposDeCandidatos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarTipoCandidato tipoCandidato = new VentanaBuscarTipoCandidato();
-				tipoCandidato.setVisible(true);
-	            dispose();
-			}
-		});
-		btnTiposDeCandidatos.setBounds(73, 298, 157, 23);
-		getContentPane().add(btnTiposDeCandidatos);
 		
 		JButton btnPais = new JButton("Paises");
 		btnPais.addActionListener(new ActionListener() {
@@ -259,7 +247,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnVigenciaHorarioXPais.setBounds(73, 400, 155, 23);
+				btnVigenciaHorarioXPais.setBounds(73, 298, 155, 23);
 				getContentPane().add(btnVigenciaHorarioXPais);
 				
 				JButton btnNacionalidades = new JButton("Nacionalidades\r\n");

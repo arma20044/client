@@ -10,6 +10,8 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import com.lowagie.toolbox.plugins.Txt2Pdf;
+
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.hello.WeatherClient;
@@ -17,7 +19,7 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class ListasValidator {
 
-	public Boolean ValidarCodigo(String nro, Integer tipoLista)
+	public Boolean ValidarCodigo(String nro, Integer tipoLista, String nombre, String anho)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -35,7 +37,8 @@ public class ListasValidator {
 
 		query.setQueryGenerico("SELECT id_lista, nro_lista "
 				+ "from ucsaws_listas " + "where nro_lista = " + nro
-				+ " and id_tipo_lista = " + tipoLista  + " and id_evento = " + VentanaBuscarEvento.evento);
+				+ " and id_tipo_lista = " + tipoLista  + " and id_evento = " + VentanaBuscarEvento.evento
+				+ " and upper(nombre_lista) = upper('" + nombre + "') and anho = " +anho);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
