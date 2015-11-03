@@ -59,6 +59,12 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
+	
+	
+	String fechaDesde, fechaHasta;
+	
+	
+	
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar, btnEliminar;
 	private JTable table;
@@ -92,6 +98,8 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 	 * ventana de registro
 	 */
 	public VentanaRegistroVigencia() {
+		
+		recuperarDatosFechaRangoDelEvento();
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
@@ -259,27 +267,10 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		getContentPane().add(lblDesde);
 		
 		txtDesde = new JFormattedTextField();
-		txtDesde.setText("23/04/2015");
+		txtDesde.setText(fechaDesde);
 		txtDesde.setBounds(164, 98, 103, 23);
 		getContentPane().add(txtDesde);
-		
-		JButton button = new JButton("");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Calendario cal = new Calendario(ventanaRegistroVigencia);
-				cal.displayDate();
-				if (!Calendario.fechafinalSeleccionada.startsWith("/")) {
-					txtDesde.setText(Calendario.fechafinalSeleccionada);
-				}
-			}
-		});
-		button.setIcon(new ImageIcon(VentanaRegistroVigencia.class.getResource("/imgs/cal.png")));
-		button.setToolTipText("Calendario");
-		button.setOpaque(false);
-		button.setContentAreaFilled(false);
-		button.setBorderPainted(false);
-		button.setBounds(277, 96, 30, 23);
-		getContentPane().add(button);
+		txtDesde.setEditable(false);
 		
 		JLabel lblhasta = new JLabel();
 		lblhasta.setText("Fch. Hasta:");
@@ -288,46 +279,65 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		getContentPane().add(lblhasta);
 		
 		txtHasta = new JFormattedTextField();
-		txtHasta.setText("23/04/2015");
+		txtHasta.setText(fechaDesde);
 		txtHasta.setBounds(164, 133, 103, 23);
 		getContentPane().add(txtHasta);
-		
-		JButton button_1 = new JButton("");
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Calendario cal = new Calendario(ventanaRegistroVigencia);
-				cal.displayDate();
-				if (!Calendario.fechafinalSeleccionada.startsWith("/")) {
-					txtHasta.setText(Calendario.fechafinalSeleccionada);
-				}
-			}
-		});
-		button_1.setIcon(new ImageIcon(VentanaRegistroVigencia.class.getResource("/imgs/cal.png")));
-		button_1.setToolTipText("Calendario");
-		button_1.setOpaque(false);
-		button_1.setContentAreaFilled(false);
-		button_1.setBorderPainted(false);
-		button_1.setBounds(277, 133, 30, 23);
-		getContentPane().add(button_1);
+		txtHasta.setEditable(false);
 		
 		txtHoraDesde = new JTextField();
+		txtHoraDesde.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char car = arg0.getKeyChar();
+				if ((car < '0' || car > '9'))
+					arg0.consume();
+			}
+		});
 		txtHoraDesde.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				Integer hora = Integer.parseInt(txtHoraDesde.getText());
+				if ( hora > 23){
+					txtHoraDesde.setText("23");
+				}
+				else
+					if (hora < 1){
+						txtHoraDesde.setText("01");
+					}
+				
+				
 				if (txtHoraDesde.getText().length() == 1)
 				{
 					txtHoraDesde.setText(0 + txtHoraDesde.getText() );
 				}
 			}
 		});
-		txtHoraDesde.setBounds(326, 98, 32, 23);
+		txtHoraDesde.setBounds(277, 96, 32, 23);
 		getContentPane().add(txtHoraDesde);
 		txtHoraDesde.setColumns(10);
 		
 		txtMinutoDesde = new JTextField();
+		txtMinutoDesde.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char car = e.getKeyChar();
+				if ((car < '0' || car > '9'))
+					e.consume();
+			}
+		});
 		txtMinutoDesde.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				
+				Integer min = Integer.parseInt(txtMinutoDesde.getText());
+				if ( min > 59){
+					txtMinutoDesde.setText("59");
+				}
+				else
+					if (min < 0 ){
+						txtMinutoDesde.setText("00");
+					}
+				
 				if (txtMinutoDesde.getText().length() == 1)
 				{
 					txtMinutoDesde.setText(0 + txtMinutoDesde.getText() );
@@ -335,13 +345,31 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 			}
 		});
 		txtMinutoDesde.setColumns(10);
-		txtMinutoDesde.setBounds(368, 98, 32, 23);
+		txtMinutoDesde.setBounds(319, 96, 32, 23);
 		getContentPane().add(txtMinutoDesde);
 		
 		txtHoraHasta = new JTextField();
+		txtHoraHasta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char car = e.getKeyChar();
+				if ((car < '0' || car > '9'))
+					e.consume();
+			}
+		});
 		txtHoraHasta.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				
+				Integer hora = Integer.parseInt(txtHoraHasta.getText());
+				if ( hora > 23){
+					txtHoraHasta.setText("23");
+				}
+				else
+					if (hora < 1){
+						txtHoraHasta.setText("01");
+					}
+				
 				if (txtHoraHasta.getText().length() == 1)
 				{
 					txtHoraHasta.setText(0 + txtHoraHasta.getText() );
@@ -349,13 +377,31 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 			}
 		});
 		txtHoraHasta.setColumns(10);
-		txtHoraHasta.setBounds(326, 134, 32, 23);
+		txtHoraHasta.setBounds(277, 132, 32, 23);
 		getContentPane().add(txtHoraHasta);
 		
 		txtMinutoHasta = new JTextField();
+		txtMinutoHasta.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char car = e.getKeyChar();
+				if ((car < '0' || car > '9'))
+					e.consume();
+			}
+		});
 		txtMinutoHasta.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				
+				Integer min = Integer.parseInt(txtMinutoHasta.getText());
+				if ( min > 59){
+					txtMinutoHasta.setText("59");
+				}
+				else
+					if (min < 0 ){
+						txtMinutoHasta.setText("00");
+					}
+				
 				if (txtMinutoHasta.getText().length() == 1)
 				{
 					txtMinutoHasta.setText(0 + txtMinutoHasta.getText() );
@@ -363,15 +409,15 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 			}
 		});
 		txtMinutoHasta.setColumns(10);
-		txtMinutoHasta.setBounds(368, 133, 32, 23);
+		txtMinutoHasta.setBounds(319, 131, 32, 23);
 		getContentPane().add(txtMinutoHasta);
 		
 		JLabel lblNewLabel = new JLabel(":");
-		lblNewLabel.setBounds(360, 98, 18, 20);
+		lblNewLabel.setBounds(311, 96, 18, 20);
 		getContentPane().add(lblNewLabel);
 		
 		label = new JLabel(":");
-		label.setBounds(360, 134, 18, 20);
+		label.setBounds(311, 132, 18, 20);
 		getContentPane().add(label);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -411,6 +457,12 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
+							
+							String horaDesde = armarHoraMinuto(txtHoraDesde.getText(), txtMinutoDesde.getText());
+							String fechaDesdeFinal = txtDesde.getText() + " " + horaDesde;
+							
+							String horaHasta = armarHoraMinuto(txtHoraHasta.getText(), txtMinutoHasta.getText());
+							String fechaHastaFinal = txtHasta.getText() + " " + horaHasta; 
 
 							Calendar calendar = new GregorianCalendar();
 							int year = calendar.get(Calendar.YEAR);
@@ -430,8 +482,8 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 									+ "VALUES ("
 									+ "nextval('ucsaws_vigencia_seq') "
 									+ " ,'"
-									+ distritoSelected + "' , '"+ txtDesde.getText()+ " " + txtHoraDesde.getText() + ":" + txtMinutoDesde.getText()+
-									"','" + txtHasta.getText() + " " + txtHoraHasta.getText() + ":" + txtMinutoHasta.getText() + "'," + VentanaBuscarEvento.evento + " ,'"
+									+ distritoSelected + "' , '"+ fechaDesdeFinal+
+									"','" + fechaHastaFinal + "'," + VentanaBuscarEvento.evento + " ,'"
 									+ Login.userLogeado
 									+ "' , now(), '"
 									+ Login.userLogeado
@@ -531,17 +583,17 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 				if (respuesta == JOptionPane.YES_NO_OPTION)
 
 				{
-					VigenciaDAO localDAO = new VigenciaDAO();
+					VigenciaDAO vigenciaDAO = new VigenciaDAO();
 
 					try {
-						localDAO.eliminarLocal(codTemporal);
+						vigenciaDAO.eliminarVigencia(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-					if (localDAO.eliminarLocal(codTemporal) == true) {
+					if (vigenciaDAO.eliminarVigencia(codTemporal) == true) {
 
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
 						// + txtDesc.getText());
@@ -549,7 +601,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 						// codTemporal.getText());
 						// txtId.setText("");
 						lblMensaje
-								.setText("Excelente, se ha eliminado el Local ");
+								.setText("Excelente, se ha eliminado la Vigencia ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -572,7 +624,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 					else {
 						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
 						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Local que desea eliminar ");
+								.setText("ERROR: Existen registros que apuntan a la Vigencia que desea eliminar ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -589,7 +641,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 				// "Por favor seleccione que Genero desea Eliminar",
 				// "Información",JOptionPane.WARNING_MESSAGE);
 				lblMensaje
-						.setText("Por favor seleccione que Local desea Eliminar");
+						.setText("Por favor seleccione que Vigencia desea Eliminar");
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -626,7 +678,8 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,fch_vigencia_desde, fch_vigencia_hasta "
+		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI:SS') as desde"
+				+ ", to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI:SS') as desde "
 				+ "from  ucsaws_vigencia_horario_x_pais v join ucsaws_pais p on (v.id_pais = p.id_pais)"
 				+ "order by nombre" + "");
 
@@ -748,4 +801,92 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		return model;
 
 	}
+	
+	private void recuperarDatosFechaRangoDelEvento() {
+		Vector model = new Vector();
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+		// +
+		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+		query.setQueryGenerico("SELECT to_char(fch_desde, 'dd/MM/yyyy') as desde,  to_char(fch_hasta, 'dd/MM/yyyy') as hasta" + " from ucsaws_evento "
+				+ " where id_evento = " + VentanaBuscarEvento.evento
+				);
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		while (filas.size() > ite) {
+			fil = (JSONArray) filas.get(ite);
+
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+			fechaDesde =  fil.get(0).toString();
+			
+			fechaHasta = fil.get(1).toString();
+			
+			ite++;
+		}
+		//return model;
+
+	}
+	public String armarHoraMinuto(String hora, String minuto){
+		
+		
+		String result = "";
+		
+		result = hora + ":" + minuto;
+		
+		
+		
+		return result;
+		
+	}
+	
 }

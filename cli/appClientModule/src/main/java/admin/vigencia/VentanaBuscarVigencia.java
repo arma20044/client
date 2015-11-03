@@ -39,7 +39,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.dao.local.LocalDAO;
+import src.main.java.dao.vigencia.VigenciaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -141,7 +141,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Vigencia por Pais");
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
@@ -159,7 +159,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Lista de Vigencia por Pais");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -293,12 +293,12 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		if (e.getSource() == botonBuscar) {
 			String ge = txtBuscar.getText();
 
-			LocalDAO localDAO = new LocalDAO();
+			VigenciaDAO vigenciaDAO = new VigenciaDAO();
 
 			if (!(txtBuscar.getText().length() == 0)) {
 
 				try {
-					miPersona = localDAO.buscarLocal(txtBuscar.getText());
+					miPersona = vigenciaDAO.buscarVigencia(txtBuscar.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -350,13 +350,13 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Local?", "Confirmación",
+						"¿Esta seguro de eliminar la Vigencia?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					LocalDAO localDAO = new LocalDAO();
+					VigenciaDAO vigenciaDAO = new VigenciaDAO();
 
 					try {
-						localDAO.eliminarLocal(codTemporal);
+						vigenciaDAO.eliminarVigencia(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -365,7 +365,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 					}
 					
 					lblMensaje
-					.setText("Excelente, se ha eliminado el Local");
+					.setText("Excelente, se ha eliminado la Vigencia.");
 			codTemporal = "";
 			txtBuscar.setText("");
 
@@ -392,7 +392,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 				}
 			} else {
 				lblMensaje
-						.setText("Por favor seleccione que Local desea Eliminar");
+						.setText("Por favor seleccione que Vigencia desea Eliminar");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -485,7 +485,8 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,fch_vigencia_desde, fch_vigencia_hasta "
+		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI') as desde"
+				+ ", to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI') as hasta "
 				+ "from  ucsaws_vigencia_horario_x_pais v join ucsaws_pais p on (v.id_pais = p.id_pais)"
 				+ "order by nombre" + "");
 

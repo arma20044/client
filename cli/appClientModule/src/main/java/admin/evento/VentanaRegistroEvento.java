@@ -63,7 +63,12 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	private VentanaRegistroEvento ventanaRegistroPersona;
 	private EventoJTableModel model = new EventoJTableModel();
 	private JScrollPane scrollPane;
-
+	
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	Date date = new Date();
+	
+	
+	
 	private EventoValidator eventoValidator = new EventoValidator();
 
 	private String codTemporal = "";
@@ -175,7 +180,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 				return component;
 			}
 		};
-		table.setToolTipText("");
+		table.setToolTipText("Lista de Eventos");
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table);
@@ -290,7 +295,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		getContentPane().add(lblFechaDesde);
 
 		txtFchDesde = new JFormattedTextField();
-		txtFchDesde.setText("23/04/2015");
+		txtFchDesde.setText(dateFormat.format(date));
 		txtFchDesde.setBounds(213, 134, 89, 25);
 		getContentPane().add(txtFchDesde);
 
@@ -323,7 +328,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		getContentPane().add(lblFchHasta);
 
 		txtFchHasta = new JFormattedTextField();
-		txtFchHasta.setText("23/04/2015");
+		txtFchHasta.setText(dateFormat.format(date));
 		txtFchHasta.setBounds(213, 170, 89, 25);
 		getContentPane().add(txtFchHasta);
 		
@@ -524,10 +529,10 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						
 						
 						String horaDesde = armarHoraMinuto(txtHoraDesde.getText(), txtMinDesde.getText());
-						String fechaDesdeFinal = txtFchDesde + " " + horaDesde;
+						String fechaDesdeFinal = txtFchDesde.getText() + " " + horaDesde;
 						
 						String horaHasta = armarHoraMinuto(txtHoraHasta.getText(), txtMinHasta.getText());
-						String fechaHastaFinal = txtFchHasta + " " + horaHasta; 
+						String fechaHastaFinal = txtFchHasta.getText() + " " + horaHasta; 
 						
 
 						Calendar calendar = new GregorianCalendar();
@@ -561,11 +566,11 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 								+ " TO_TIMESTAMP('"
 								+ fechaDesdeFinal
-								+ "', 'YYYY-MM-DD HH24:MI:SS'), "
+								+ "', 'DD/MM/YYYY HH24:MI:SS'), "
 
 								+ " TO_TIMESTAMP('"
 								+ fechaHastaFinal
-								+ "', 'YYYY-MM-DD HH24:MI:SS'), '"
+								+ "', 'DD/MM/YYYY HH24:MI:SS'), '"
 								
 								+ Login.userLogeado
 								+ "' , now(), '"
@@ -747,7 +752,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, fch_desde, fch_hasta , tev.descripcion as Tdescripcion "
+		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI:SS') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI:SS') as hasta , tev.descripcion as Tdescripcion "
 
 				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
 				+ "order by nro_evento");
@@ -876,7 +881,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		
 		String result = "";
 		
-		result = hora + " : " + minuto;
+		result = hora + ":" + minuto;
 		
 		
 		

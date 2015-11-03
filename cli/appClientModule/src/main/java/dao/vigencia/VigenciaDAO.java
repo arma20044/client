@@ -60,9 +60,10 @@ public class VigenciaDAO {
 			//para registrar se inserta el codigo es 1
 			query.setTipoQueryGenerico(2);
 			
-			query.setQueryGenerico("SELECT id_local, desc_local "
-					+ " from ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				  + "where upper(desc_local) like upper('%"+codigo+"%')  ");
+			query.setQueryGenerico("SELECT id_vigencia, id_pais "
+					+ " from ucsaws_vigencia_horario_x_pais vigencia "
+					+ "join ucsaws_pais pais on (vigencia.id_pais = pais.id_pais)"
+				  + "where upper(nombre) like upper('%"+codigo+"%')  ");
 			
 			
 			
@@ -72,7 +73,7 @@ public class VigenciaDAO {
 			String res = response.getQueryGenericoResponse();
 	
 				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Local no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "La Vigencia no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
 					return filas;
 				}
 				
@@ -162,7 +163,7 @@ public class VigenciaDAO {
 
 
 
-	public Boolean eliminarLocal(String codigo)
+	public Boolean eliminarVigencia(String codigo)
 	{
 		boolean eliminado = false;
 		
@@ -177,8 +178,8 @@ public class VigenciaDAO {
 			
 			query.setTipoQueryGenerico(4);
 			
-			query.setQueryGenerico("DELETE FROM ucsaws_local WHERE"
-					+ " id_local = "
+			query.setQueryGenerico("DELETE FROM ucsaws_vigencia_horario_x_pais WHERE"
+					+ " id_vigencia = "
 					+ codigo 
 					 );
 			
@@ -199,7 +200,7 @@ public class VigenciaDAO {
 			}
 			
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Local","Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Vigencia","Error",JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
 		

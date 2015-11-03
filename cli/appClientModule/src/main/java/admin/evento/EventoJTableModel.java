@@ -29,7 +29,7 @@ public class EventoJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID","Nro.", "Desc. Evento","Fch. Ini.","Fch. Fin.","Desc. Tipo Evento"};
+	private String[] colNames = new String[] {"ID","Nro.", "Desc. Evento","Inicio","Fin","Desc. Tipo Evento"};
 
 	@Override
 	public String getColumnName(int col) {
