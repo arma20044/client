@@ -127,7 +127,7 @@ public class VentanaBuscarDepartamento extends JFrame implements ActionListener 
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 52, 319, 25);
+		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);

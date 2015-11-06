@@ -86,7 +86,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroDepartamento.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(385, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -114,7 +114,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		btnEliminar.setIcon(new ImageIcon(VentanaRegistroDepartamento.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
+		btnEliminar.setBounds(427, 52, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -228,7 +228,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroZona.setText("Nro:");
-		lblNroZona.setBounds(130, 52, 61, 25);
+		lblNroZona.setBounds(142, 59, 61, 25);
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
@@ -236,7 +236,8 @@ public class VentanaRegistroDepartamento extends JFrame implements
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char car = e.getKeyChar();
-				if((car<'0' || car>'9')) e.consume();
+				if ((car < '0' || car > '9'))
+					e.consume();
 			}
 		});
 		txtNroZona.addFocusListener(new FocusAdapter() {
@@ -247,7 +248,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 				}
 			}
 		});
-		txtNroZona.setBounds(213, 54, 75, 20);
+		txtNroZona.setBounds(213, 54, 75, 26);
 		getContentPane().add(txtNroZona);
 		txtNroZona.setColumns(10);
 
@@ -259,12 +260,12 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		JLabel lblDescripcionZona = new JLabel();
 		lblDescripcionZona.setText("Descripcion:");
 		lblDescripcionZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcionZona.setBounds(102, 82, 89, 25);
+		lblDescripcionZona.setBounds(114, 86, 89, 25);
 		getContentPane().add(lblDescripcionZona);
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 108, 20);
+		txtDescripcion.setBounds(213, 85, 246, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -298,7 +299,8 @@ public class VentanaRegistroDepartamento extends JFrame implements
 						t.start();
 					} else if
 
-					(departamentoValidator.ValidarCodigo(txtNroZona.getText()) == false) {
+					(departamentoValidator.ValidarCodigo(txtNroZona.getText(),
+							txtDescripcion.getText()) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
@@ -327,7 +329,9 @@ public class VentanaRegistroDepartamento extends JFrame implements
 								+ "'), '"
 
 								+ txtNroZona.getText()
-								+ "', "+ VentanaBuscarEvento.evento + ",'"
+								+ "', "
+								+ VentanaBuscarEvento.evento
+								+ ",'"
 								+ Login.userLogeado
 								+ "' , now(), '"
 								+ Login.userLogeado + "' , now())");
@@ -378,8 +382,8 @@ public class VentanaRegistroDepartamento extends JFrame implements
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
-						lblMensaje.setText("Ya existe el Departamento "
-								+ txtNroZona.getText());
+						lblMensaje
+								.setText("Ya existe un Departamento con esos Datos.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -520,8 +524,8 @@ public class VentanaRegistroDepartamento extends JFrame implements
 
 		query.setQueryGenerico("SELECT id_departamento, nro_departamento,desc_departamento  "
 				+ " from ucsaws_departamento"
-				+ " where id_evento = " + VentanaBuscarEvento.evento
-				+ " order by nro_departamento");
+				+ " where id_evento = "
+				+ VentanaBuscarEvento.evento + " order by nro_departamento");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

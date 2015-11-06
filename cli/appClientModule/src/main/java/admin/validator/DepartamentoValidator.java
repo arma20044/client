@@ -16,7 +16,7 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class DepartamentoValidator {
 
-	public Boolean ValidarCodigo(String nro)
+	public Boolean ValidarCodigo(String nro, String desc)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -33,8 +33,8 @@ public class DepartamentoValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_departamento, nro_departamento "
-				+ "from ucsaws_departamento " + "where nro_departamento ='" + nro
-				+ "' and id_evento= " + VentanaBuscarEvento.evento );
+				+ "from ucsaws_departamento " + "where (nro_departamento ='" + nro
+				+ "' or upper(desc_departamento) = upper('" +  desc  +  "'))and id_evento= " + VentanaBuscarEvento.evento );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

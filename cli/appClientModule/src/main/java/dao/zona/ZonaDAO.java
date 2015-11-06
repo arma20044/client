@@ -13,6 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -62,7 +63,7 @@ public class ZonaDAO {
 			
 			query.setQueryGenerico("SELECT id_zona, desc_zona "
 					+ " from ucsaws_zona zona join ucsaws_distrito dis on (zona.id_distrito = dis.id_distrito)"
-				  + "where upper(desc_zona) like upper('%"+codigo+"%')  ");
+				  + "where upper(desc_zona) like upper('%"+codigo+"%') and zona.id_evento = " + VentanaBuscarEvento.evento);
 			
 			
 			

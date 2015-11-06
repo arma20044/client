@@ -71,7 +71,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
 	private JLabel lblNroZona;
-	private JTextField txtNroZona;
+	private JTextField txtNro;
 	private JTextField txtDescripcion;
 
 	private DistritoValidator distritoValidator = new DistritoValidator();
@@ -86,7 +86,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(448, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -114,7 +114,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
+		btnEliminar.setBounds(490, 52, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -228,44 +228,44 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroZona.setText("Nro:");
-		lblNroZona.setBounds(130, 52, 61, 25);
+		lblNroZona.setBounds(142, 59, 61, 25);
 		getContentPane().add(lblNroZona);
 
-		txtNroZona = new JTextField();
-		txtNroZona.addKeyListener(new KeyAdapter() {
+		txtNro = new JTextField();
+		txtNro.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char car = e.getKeyChar();
 				if((car<'0' || car>'9')) e.consume();
 			}
 		});
-		txtNroZona.addFocusListener(new FocusAdapter() {
+		txtNro.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				if (txtNroZona.getText().length() == 1)
+				if (txtNro.getText().length() == 1)
 				{
-					txtNroZona.setText(0 + txtNroZona.getText() );
+					txtNro.setText(0 + txtNro.getText() );
 				}
 			}
 		});
-		txtNroZona.setBounds(213, 54, 75, 20);
-		getContentPane().add(txtNroZona);
-		txtNroZona.setColumns(10);
+		txtNro.setBounds(213, 54, 75, 26);
+		getContentPane().add(txtNro);
+		txtNro.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(326, 165, 363, 14);
+		lblMensaje.setBounds(114, 165, 575, 14);
 		getContentPane().add(lblMensaje);
 
 		JLabel lblDescripcionZona = new JLabel();
 		lblDescripcionZona.setText("Descripcion:");
 		lblDescripcionZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcionZona.setBounds(102, 82, 89, 25);
+		lblDescripcionZona.setBounds(114, 86, 89, 25);
 		getContentPane().add(lblDescripcionZona);
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 108, 20);
+		txtDescripcion.setBounds(213, 85, 309, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -286,8 +286,8 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 			try {
 
 				
-				if (!(txtNroZona.getText().length() == 0)) {
-					if (txtNroZona.getText().length() > 3) {
+				if (!(txtNro.getText().length() == 0)) {
+					if (txtNro.getText().length() > 3) {
 						lblMensaje
 								.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
@@ -300,7 +300,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(distritoValidator.ValidarCodigo(txtNroZona.getText(),
+					(distritoValidator.ValidarCodigo(txtNro.getText(),
 							txtDescripcion.getText(), VentanaBuscarDepartamento.departamentoSeleccionado) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
@@ -322,12 +322,12 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
 						query.setQueryGenerico("INSERT INTO ucsaws_distrito"
-								+ "( id_distrito, desc_distrito, nro_distrito, id_departamento ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_distrito_seq') ,"
+								+ "( id_distrito, id_evento, desc_distrito, nro_distrito, id_departamento ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "VALUES (" + "nextval('ucsaws_distrito_seq') ," + VentanaBuscarEvento.evento + ","
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), '"
 
-								+ txtNroZona.getText() + "' ,'"
+								+ txtNro.getText() + "' ,'"
 								+ VentanaBuscarDepartamento.departamentoSeleccionado + "','" + Login.userLogeado
 								+ "' , now(), '" + Login.userLogeado
 								+ "' , now())");
@@ -353,7 +353,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 						t.setRepeats(false);
 						t.start();
 
-						txtNroZona.setText("");
+						txtNro.setText("");
 						txtDescripcion.setText("");
 
 						// this.dispose();
@@ -452,7 +452,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 						t.start();
 						limpiar();
 						txtDescripcion.setText("");
-						txtNroZona.setText("");
+						txtNro.setText("");
 						model = new DistritoJTableModel();
 
 						recuperarDatos();
@@ -523,8 +523,9 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_distrito, nro_distrito,desc_distrito,nro_departamento, desc_departamento  "
 				+ " from ucsaws_distrito di join ucsaws_departamento de on (di.id_departamento = de.id_departamento)"
-				+ " where id_evento =" + VentanaBuscarEvento.evento
-				+ " order by nro_departamento, nro_distrito" + "");;
+				+ " where di.id_evento =" + VentanaBuscarEvento.evento
+				+ " and di.id_departamento =" + VentanaBuscarDepartamento.departamentoSeleccionado
+				+ " order by nro_departamento, nro_distrito" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -127,7 +127,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 52, 319, 25);
+		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);
@@ -504,7 +504,7 @@ public class VentanaBuscarLocal extends JFrame implements ActionListener {
 				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
 				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
 				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ " where dep.id_evento = " + VentanaBuscarEvento.evento
+				+ " where l.id_evento = " + VentanaBuscarEvento.evento
 				+ " and l.id_zona = " + VentanaBuscarZona.zonaSeleccionada
 				+ " order by nro_zona , nro_local" + "");
 

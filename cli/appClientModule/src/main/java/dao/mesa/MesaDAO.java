@@ -13,6 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -62,7 +63,7 @@ public class MesaDAO {
 			
 			query.setQueryGenerico("SELECT id_mesa, desc_mesa "
 					+ " from ucsaws_mesa "
-				  + "where upper(desc_mesa) like upper('%"+codigo+"%')  ");
+				  + "where upper(desc_mesa) like upper('%"+codigo+"%') and id_evento = " + VentanaBuscarEvento.evento);
 			
 			
 			

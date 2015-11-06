@@ -36,7 +36,7 @@ public class DistritoValidator {
 				+ "from ucsaws_distrito dis join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento)"
 				+ "where (nro_distrito ='" + nro + "' or  upper(desc_distrito) = upper('" + desc + "')  " 
 				+ ") and  dis.id_departamento =" +departamento+" "
-						+ " and id_evento = " + VentanaBuscarEvento.evento);
+						+ " and dis.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

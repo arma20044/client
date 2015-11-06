@@ -38,7 +38,7 @@ public class LocalValidator {
 				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
 				+ "where (nro_local ='" + nro + "' or  upper(desc_local) = upper('" + desc + "')  " 
 				+ ") and  l.id_zona =" +distrito+" "
-						+ " and id_evento = " + VentanaBuscarEvento.evento);
+						+ " and l.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

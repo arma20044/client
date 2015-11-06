@@ -86,7 +86,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroZona.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(486, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -114,7 +114,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(VentanaRegistroZona.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
+		btnEliminar.setBounds(518, 52, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -228,7 +228,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		lblNroZona = new JLabel();
 		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroZona.setText("Nro:");
-		lblNroZona.setBounds(130, 52, 61, 25);
+		lblNroZona.setBounds(141, 59, 61, 25);
 		getContentPane().add(lblNroZona);
 
 		txtNroZona = new JTextField();
@@ -247,7 +247,7 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 				}
 			}
 		});
-		txtNroZona.setBounds(213, 54, 75, 20);
+		txtNroZona.setBounds(213, 54, 75, 26);
 		getContentPane().add(txtNroZona);
 		txtNroZona.setColumns(10);
 
@@ -259,12 +259,12 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		JLabel lblDescripcionZona = new JLabel();
 		lblDescripcionZona.setText("Descripcion:");
 		lblDescripcionZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcionZona.setBounds(102, 82, 89, 25);
+		lblDescripcionZona.setBounds(114, 86, 89, 25);
 		getContentPane().add(lblDescripcionZona);
 
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 108, 20);
+		txtDescripcion.setBounds(213, 85, 337, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -321,8 +321,8 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 						query.setTipoQueryGenerico(1);
 						System.out.println(Login.userLogeado);
 						query.setQueryGenerico("INSERT INTO ucsaws_zona"
-								+ "( id_zona, desc_zona, nro_zona, id_distrito ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_zona_seq') ,"
+								+ "( id_zona, id_evento, desc_zona, nro_zona, id_distrito ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+								+ "VALUES (" + "nextval('ucsaws_zona_seq') , " + VentanaBuscarEvento.evento + ","
 								+ " upper('" + txtDescripcion.getText()
 								+ "'), '"
 
@@ -521,9 +521,10 @@ public class VentanaRegistroZona extends JFrame implements ActionListener {
 		query.setQueryGenerico("SELECT id_zona, nro_zona,desc_zona,nro_distrito, desc_distrito  "
 				+ " from ucsaws_zona zona join ucsaws_distrito dis on (zona.id_distrito = dis.id_distrito)"
 				+ " join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento )"
-				+ " where id_evento = " + VentanaBuscarEvento.evento
+				+ " where zona.id_evento = " + VentanaBuscarEvento.evento
 				+ " and zona.id_distrito = " + VentanaBuscarDistrito.distritoSeleccionado
 				+ "order by nro_distrito, nro_zona" + "");
+
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

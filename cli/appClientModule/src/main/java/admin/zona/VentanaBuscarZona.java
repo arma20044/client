@@ -128,7 +128,7 @@ public class VentanaBuscarZona extends JFrame implements ActionListener {
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 52, 319, 25);
+		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);
@@ -505,7 +505,7 @@ public class VentanaBuscarZona extends JFrame implements ActionListener {
 		query.setQueryGenerico("SELECT id_zona, nro_zona,desc_zona,nro_distrito, desc_distrito  "
 				+ " from ucsaws_zona zona join ucsaws_distrito dis on (zona.id_distrito = dis.id_distrito)"
 				+ " join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento )"
-				+ " where id_evento = " + VentanaBuscarEvento.evento
+				+ " where zona.id_evento = " + VentanaBuscarEvento.evento
 				+ " and zona.id_distrito = " + VentanaBuscarDistrito.distritoSeleccionado
 				+ "order by nro_distrito, nro_zona" + "");
 

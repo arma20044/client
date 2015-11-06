@@ -86,7 +86,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroMesa.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(472, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -114,7 +114,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(VentanaRegistroMesa.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
+		btnEliminar.setBounds(501, 52, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -228,7 +228,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		lblNroMesa = new JLabel();
 		lblNroMesa.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNroMesa.setText("Nro:");
-		lblNroMesa.setBounds(130, 52, 61, 25);
+		lblNroMesa.setBounds(142, 52, 61, 25);
 		getContentPane().add(lblNroMesa);
 
 		txtNroMesa = new JTextField();
@@ -248,7 +248,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 				}
 			}
 		});
-		txtNroMesa.setBounds(213, 54, 75, 20);
+		txtNroMesa.setBounds(213, 54, 75, 26);
 		getContentPane().add(txtNroMesa);
 		txtNroMesa.setColumns(10);
 
@@ -260,12 +260,12 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		JLabel lblDescripcionMesa = new JLabel();
 		lblDescripcionMesa.setText("Descripcion:");
 		lblDescripcionMesa.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcionMesa.setBounds(102, 82, 89, 25);
+		lblDescripcionMesa.setBounds(114, 86, 89, 25);
 		getContentPane().add(lblDescripcionMesa);
 		
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 108, 20);
+		txtDescripcion.setBounds(213, 85, 320, 26);
 		getContentPane().add(txtDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));

@@ -37,7 +37,7 @@ public class ZonaValidator {
 				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
 				+ "where (nro_zona ='" + nro + "' or  upper(desc_zona) = upper('" + desc + "')  " 
 				+ ") and  dis.id_distrito =" +distrito+" "
-						+ " and id_evento = " + VentanaBuscarEvento.evento);
+						+ " and z.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
