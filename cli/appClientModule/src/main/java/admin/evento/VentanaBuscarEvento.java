@@ -49,6 +49,14 @@ import src.main.java.login.Login;
 import java.awt.Color;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
+	
+	
+	//public static Integer evento; // 0
+	public static String nroEvento; // 1
+	public static String descripcionEvento; // 2
+	public static String fechaDesde;
+	public static String fechaHasta;
+	public static String tipoEventoDescripcon;
 
 	public static String evento;
 	
@@ -168,7 +176,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			}
 		};
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table_1.setToolTipText("Listado de Generos.");
+		table_1.setToolTipText("Listado de Eventos.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -189,12 +197,26 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 						try {
 							selectedData.add((String) table_1.getValueAt(
 									selectedRow[i], col));
+							
+							
+							
+							
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
 
 						col++;
 					}
+					//seteo del encabezado inicio
+					
+					nroEvento = selectedData.get(0);
+					descripcionEvento = selectedData.get(1);
+					fechaDesde  = selectedData.get(2);
+					fechaHasta  = selectedData.get(3);
+					tipoEventoDescripcon = selectedData.get(4);
+					
+					//seteo del encabezado final 
+					
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
@@ -215,7 +237,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 							selectedRow[i], 3));
 					
 					
-					DateFormat fechaEventoFormated = new SimpleDateFormat("yyyy-MM-dd");
+					DateFormat fechaEventoFormated = new SimpleDateFormat("dd/MM/yyyy");
 					
 					String str = fechaEvento.substring(0, 10);
 
@@ -241,7 +263,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					}
 					
 					else{		
-					VentanaMainEvento main = new VentanaMainEvento();
+					DefinicionesGenerales main = new DefinicionesGenerales();
 					main.setVisible(true);
 					dispose();
 					}
@@ -550,7 +572,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI:SS') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI:SS') as hasta , tev.descripcion as Tdescripcion "
+		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI') as hasta , tev.descripcion as Tdescripcion "
 
 				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
 				+ "order by nro_evento");

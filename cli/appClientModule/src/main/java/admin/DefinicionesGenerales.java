@@ -40,6 +40,8 @@ import src.main.java.login.Login;
 import javax.swing.ImageIcon;
 
 import java.awt.Color;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class DefinicionesGenerales extends JFrame implements ActionListener{
 	
@@ -60,12 +62,13 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 
 		btnAtras = new JButton();
 		btnAtras.setIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/volver.png")));
-		btnAtras.setToolTipText("Volver al Menu Principal");
-		btnAtras.setBounds(104, 474, 83, 51);
+		btnAtras.setToolTipText("Atras...");
+		btnAtras.setBounds(683, 474, 83, 51);
 
 		labelSeleccion = new JLabel();
+		labelSeleccion.setFont(new Font("Tahoma", Font.ITALIC, 11));
 		labelSeleccion.setText("Escoja que operacion desea realizar");
-		labelSeleccion.setBounds(58, 450, 250, 25);
+		labelSeleccion.setBounds(272, 318, 172, 14);
 
 		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
 				+ "de dise�o MVC.\n\n"
@@ -89,7 +92,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				dispose();
 			}
 		});
-		btnGenero.setBounds(73, 264, 155, 23);
+		btnGenero.setBounds(105, 182, 155, 23);
 		getContentPane().add(btnGenero);
 		
 		JButton btnPais = new JButton("Paises");
@@ -100,7 +103,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 	            dispose();
 			}
 		});
-		btnPais.setBounds(73, 332, 155, 23);
+		btnPais.setBounds(105, 250, 155, 23);
 		getContentPane().add(btnPais);
 		
 		JButton btnListas = new JButton("Listas");
@@ -111,7 +114,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 	            dispose();
 			}
 		});
-		btnListas.setBounds(73, 366, 155, 23);
+		btnListas.setBounds(105, 284, 155, 23);
 		getContentPane().add(btnListas);
 		
 		JButton btnPersonas = new JButton("Personas");
@@ -123,7 +126,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 	            
 			}
 		});
-		btnPersonas.setBounds(288, 260, 146, 23);
+		btnPersonas.setBounds(320, 178, 146, 23);
 		getContentPane().add(btnPersonas);
 		
 		JButton btnDepartamentos = new JButton("Departamentos");
@@ -134,27 +137,14 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				dispose();
 			}
 		});
-		btnDepartamentos.setBounds(288, 298, 146, 23);
+		btnDepartamentos.setBounds(320, 216, 146, 23);
 		getContentPane().add(btnDepartamentos);
-		
-		JLabel lblAdmin = new JLabel("Administrador");
-		lblAdmin.setBounds(50, 10, 89, 14);
-		getContentPane().add(lblAdmin);
-		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(50, 36, 54, 14);
-		getContentPane().add(lblNombre);
-		
-		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
-		lblNombreDescripcion.setBounds(73, 36, 278, 14);
-		//lblNombreDescripcion.setText();
-		getContentPane().add(lblNombreDescripcion);
 		
 				labelTitulo = new JLabel();
 				labelTitulo.setIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/def.png")));
 				labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 				labelTitulo.setText("Definiciones Generales");
-				labelTitulo.setBounds(24, 177, 712, 86);
+				labelTitulo.setBounds(10, 96, 712, 86);
 				labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 				getContentPane().add(labelTitulo);
 				
@@ -168,7 +158,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						
 					}
 				});
-				btnCandidatos.setBounds(288, 366, 146, 23);
+				btnCandidatos.setBounds(320, 284, 146, 23);
 				getContentPane().add(btnCandidatos);
 				
 				JButton btnVotantesHabilitados = new JButton("Votantes Habilitados");
@@ -179,7 +169,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnVotantesHabilitados.setBounds(460, 264, 176, 23);
+				btnVotantesHabilitados.setBounds(492, 182, 176, 23);
 				getContentPane().add(btnVotantesHabilitados);
 				
 				JButton btnTipoEvento = new JButton("Tipo Evento");
@@ -191,53 +181,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnTipoEvento.setBounds(288, 332, 146, 23);
+				btnTipoEvento.setBounds(320, 250, 146, 23);
 				getContentPane().add(btnTipoEvento);
-				
-				JLabel label = new JLabel("Nro. Evento:");
-				label.setBounds(10, 77, 94, 14);
-				getContentPane().add(label);
-				
-				JLabel label_1 = new JLabel(VentanaMainEvento.nroEvento);
-				label_1.setForeground(Color.RED);
-				label_1.setBounds(161, 77, 214, 14);
-				getContentPane().add(label_1);
-				
-				JLabel label_2 = new JLabel("Descripcion Evento:");
-				label_2.setBounds(10, 102, 129, 14);
-				getContentPane().add(label_2);
-				
-				JLabel label_3 = new JLabel(VentanaMainEvento.descripcionEvento);
-				label_3.setForeground(Color.RED);
-				label_3.setBounds(161, 102, 214, 14);
-				getContentPane().add(label_3);
-				
-				JLabel label_4 = new JLabel("Fecha Desde:");
-				label_4.setBounds(419, 77, 94, 14);
-				getContentPane().add(label_4);
-				
-				JLabel label_5 = new JLabel(VentanaMainEvento.fechaDesde);
-				label_5.setForeground(Color.RED);
-				label_5.setBounds(552, 77, 214, 14);
-				getContentPane().add(label_5);
-				
-				JLabel label_6 = new JLabel("Fecha Hasta");
-				label_6.setBounds(419, 108, 94, 14);
-				getContentPane().add(label_6);
-				
-				JLabel label_7 = new JLabel(VentanaMainEvento.fechaHasta);
-				label_7.setForeground(Color.RED);
-				label_7.setBounds(552, 108, 214, 14);
-				getContentPane().add(label_7);
-				
-				JLabel label_8 = new JLabel("Tipo Evento:");
-				label_8.setBounds(10, 138, 94, 14);
-				getContentPane().add(label_8);
-				
-				JLabel label_9 = new JLabel(VentanaMainEvento.tipoEventoDescripcon);
-				label_9.setForeground(Color.RED);
-				label_9.setBounds(96, 138, 214, 14);
-				getContentPane().add(label_9);
 				
 				JButton btnVigenciaHorarioXPais = new JButton("Vigencia Horario por Pais");
 				btnVigenciaHorarioXPais.addActionListener(new ActionListener() {
@@ -247,7 +192,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnVigenciaHorarioXPais.setBounds(73, 298, 155, 23);
+				btnVigenciaHorarioXPais.setBounds(105, 216, 155, 23);
 				getContentPane().add(btnVigenciaHorarioXPais);
 				
 				JButton btnNacionalidades = new JButton("Nacionalidades\r\n");
@@ -258,7 +203,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnNacionalidades.setBounds(460, 298, 176, 23);
+				btnNacionalidades.setBounds(492, 216, 176, 23);
 				getContentPane().add(btnNacionalidades);
 				
 				JButton btnHome = new JButton("");
@@ -281,6 +226,65 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						java.awt.Image.SCALE_SMOOTH);
 				btnHome.setIcon(new ImageIcon(newimg5));
 				getContentPane().add(btnHome);
+				
+				JPanel panel = new JPanel();
+				panel.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+				panel.setBounds(49, 0, 619, 85);
+				getContentPane().add(panel);
+				panel.setLayout(null);
+				
+				JLabel lblNombre = new JLabel("Nombre:");
+				lblNombre.setBounds(0, 0, 63, 14);
+				panel.add(lblNombre);
+				
+				JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
+				lblNombreDescripcion.setBounds(73, 0, 287, 14);
+				panel.add(lblNombreDescripcion);
+				
+				JLabel label = new JLabel("Nro. Evento:");
+				label.setBounds(0, 25, 79, 14);
+				panel.add(label);
+				
+				JLabel label_1 = new JLabel(VentanaBuscarEvento.nroEvento);
+				label_1.setBounds(77, 25, 60, 14);
+				panel.add(label_1);
+				label_1.setForeground(Color.BLACK);
+				
+				JLabel label_2 = new JLabel("Descripcion Evento:");
+				label_2.setBounds(0, 37, 111, 14);
+				panel.add(label_2);
+				
+				JLabel label_3 = new JLabel(VentanaBuscarEvento.descripcionEvento);
+				label_3.setBounds(114, 37, 200, 14);
+				panel.add(label_3);
+				label_3.setForeground(Color.BLACK);
+				
+				JLabel label_4 = new JLabel("Fecha Desde:");
+				label_4.setBounds(317, 25, 83, 14);
+				panel.add(label_4);
+				
+				JLabel label_5 = new JLabel(VentanaBuscarEvento.fechaDesde);
+				label_5.setBounds(410, 25, 191, 14);
+				panel.add(label_5);
+				label_5.setForeground(Color.BLACK);
+				
+				JLabel lblFechaHasta = new JLabel("Fecha Hasta:");
+				lblFechaHasta.setBounds(317, 37, 83, 14);
+				panel.add(lblFechaHasta);
+				
+				JLabel label_7 = new JLabel(VentanaBuscarEvento.fechaHasta);
+				label_7.setBounds(410, 37, 191, 14);
+				panel.add(label_7);
+				label_7.setForeground(Color.BLACK);
+				
+				JLabel label_8 = new JLabel("Tipo Evento:");
+				label_8.setBounds(0, 50, 79, 14);
+				panel.add(label_8);
+				
+				JLabel label_9 = new JLabel(VentanaBuscarEvento.tipoEventoDescripcon);
+				label_9.setBounds(87, 50, 196, 14);
+				panel.add(label_9);
+				label_9.setForeground(Color.BLACK);
 		//lblNombreDescripcion.repaint();
 		
 		
@@ -298,7 +302,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 
 
 	public void actionPerformed(ActionEvent arg0) {
-		VentanaMainEvento mainEvento = new VentanaMainEvento();
+		VentanaBuscarEvento mainEvento = new VentanaBuscarEvento();
 		mainEvento.setVisible(true);
 		dispose();
 		// TODO Auto-generated method stub

@@ -4,20 +4,20 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[select * from ucsaws_candidatos can join ucsaws_tipo_candidato tcan on
-(can.id_tipo_candidato = tcan.id_tipo_candidato) join ucsaws_persona per
+		<![CDATA[select * from ucsaws_candidatos can  join ucsaws_persona per
 on (per.id_persona = can.id_persona) join ucsaws_listas list on
-(list.id_lista = can.id_lista)	]]>
+(list.id_lista = can.id_lista)
+order by nro_lista , anho]]>
 	</queryString>
 	<field name="id_candidatos" class="java.lang.Integer"/>
 	<field name="id_persona" class="java.lang.Integer"/>
-	<field name="id_tipo_candidato" class="java.lang.Integer"/>
 	<field name="id_lista" class="java.lang.Integer"/>
 	<field name="fch_ins" class="java.sql.Timestamp"/>
 	<field name="fch_upd" class="java.sql.Timestamp"/>
 	<field name="usuario_ins" class="java.lang.String"/>
 	<field name="usuario_upd" class="java.lang.String"/>
 	<field name="codigo" class="java.lang.String"/>
+	<field name="id_evento" class="java.lang.Integer"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="apellido" class="java.lang.String"/>
@@ -25,12 +25,14 @@ on (per.id_persona = can.id_persona) join ucsaws_listas list on
 	<field name="id_pais_origen" class="java.lang.Integer"/>
 	<field name="id_pais_actual" class="java.lang.Integer"/>
 	<field name="id_genero" class="java.lang.Integer"/>
-	<field name="ci" class="java.lang.String"/>
 	<field name="tel_linea_baja" class="java.lang.String"/>
 	<field name="tel_celular" class="java.lang.String"/>
+	<field name="id_nacionalidad" class="java.lang.Integer"/>
+	<field name="ci" class="java.math.BigDecimal"/>
 	<field name="nombre_lista" class="java.lang.String"/>
 	<field name="anho" class="java.lang.Integer"/>
 	<field name="nro_lista" class="java.lang.Integer"/>
+	<field name="id_tipo_lista" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

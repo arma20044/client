@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="votantes" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0856439-ff87-4eb9-be47-42159bc6cc64">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="votantes" pageWidth="700" pageHeight="1000" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0856439-ff87-4eb9-be47-42159bc6cc64">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_ID_EVENTO" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_FECHA" class="java.sql.Timestamp"/>
 	<queryString>
 		<![CDATA[select * from ucsaws_votante u join ucsaws_persona p on (p.id_persona = u.id_persona)
 join ucsaws_genero g on (g.id_genero = p.id_genero)
+join ucsaws_mesa m on (m.id_mesa = u.id_mesa)
 where u.id_evento = $P{P_ID_EVENTO}
-order by apellido desc]]>
+order by ci desc]]>
 	</queryString>
 	<field name="id_votante" class="java.lang.Integer"/>
 	<field name="id_persona" class="java.lang.Integer"/>
@@ -28,23 +30,47 @@ order by apellido desc]]>
 	<field name="id_pais_origen" class="java.lang.Integer"/>
 	<field name="id_pais_actual" class="java.lang.Integer"/>
 	<field name="id_genero" class="java.lang.Integer"/>
-	<field name="ci" class="java.lang.String"/>
 	<field name="tel_linea_baja" class="java.lang.String"/>
 	<field name="tel_celular" class="java.lang.String"/>
 	<field name="id_nacionalidad" class="java.lang.Integer"/>
+	<field name="ci" class="java.math.BigDecimal"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="codigo" class="java.lang.String"/>
+	<field name="desc_mesa" class="java.lang.String"/>
+	<field name="id_local" class="java.lang.Integer"/>
+	<field name="nro_mesa" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="107" splitType="Stretch">
 			<staticText>
-				<reportElement x="130" y="20" width="378" height="59" uuid="78455028-1d98-4850-ac9c-aabb6b4e726a"/>
+				<reportElement x="154" y="48" width="259" height="59" uuid="78455028-1d98-4850-ac9c-aabb6b4e726a"/>
 				<textElement>
-					<font size="30"/>
+					<font size="25"/>
 				</textElement>
 				<text><![CDATA[Listado de Votantes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="182" y="10" width="170" height="18" uuid="2202440c-6601-4e99-b9e5-9a878ad273c0"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUSTICIA ELECTORAL]]></text>
+			</staticText>
+			<textField pattern="dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement x="306" y="28" width="196" height="20" uuid="f9ae6cf0-5ef1-4d34-95bf-bea0a5b3eb4b"/>
+				<textElement textAlignment="Justified">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="126" y="28" width="180" height="20" uuid="66099ac5-cb71-4869-b3f3-fe332916c016"/>
+				<textElement textAlignment="Justified">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECCIONES GENERALES]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -53,18 +79,6 @@ order by apellido desc]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="64" height="23" uuid="4be40ee9-ac22-4711-a3e6-ed747d16090f"/>
-				<box>
-					<pen lineWidth="0.75"/>
-					<topPen lineWidth="0.75"/>
-					<leftPen lineWidth="0.75"/>
-					<bottomPen lineWidth="0.75"/>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[ci]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="227" y="0" width="148" height="23" uuid="f982ff52-b9d4-41be-ae36-f40e6f3aee95"/>
 				<box>
@@ -113,22 +127,40 @@ order by apellido desc]]>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[apellido]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="555" y="0" width="105" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="c1245b70-783a-43d0-8891-65bd1100f4df"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[# Mesa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="64" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="fc80c611-df66-4465-99d4-16de368c95b0"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[CI #]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="24" splitType="Stretch">
-			<textField pattern="#,##0;-#,##0">
-				<reportElement x="0" y="0" width="64" height="24" uuid="1557d39e-f507-485b-adec-5504564ae431"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{ci}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement x="64" y="0" width="163" height="24" uuid="4e010124-30d4-4a22-a710-83fa1c09b2d7"/>
 				<box>
@@ -179,6 +211,36 @@ order by apellido desc]]>
 				</box>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="555" y="0" width="105" height="24" forecolor="#000000" backcolor="#FFFFFF" uuid="e5cb925e-250d-48d9-a894-a9acee55b87e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_mesa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="0" width="64" height="24" forecolor="#000000" backcolor="#FFFFFF" uuid="52778a6b-3551-47aa-826b-89c61b0dafc8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ci}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

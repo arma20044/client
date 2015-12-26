@@ -5,6 +5,7 @@ import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -40,12 +41,21 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.Encabezado;
+import src.main.java.admin.utils.Header;
+import src.main.java.admin.utils.JPanelOne;
 import src.main.java.dao.genero.GeneroDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+
 public class VentanaBuscarGenero extends JFrame implements ActionListener {
+	
+	private JPanelOne panel;
+	private JPanel panelMain;
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -77,7 +87,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		botonCancelar.setIcon(new ImageIcon(VentanaBuscarGenero.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setBounds(589, 422, 45, 25);
+		botonCancelar.setBounds(589, 501, 45, 25);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -90,7 +100,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		botonBuscar.setToolTipText("Buscar");
 		botonBuscar.setIcon(new ImageIcon(VentanaBuscarGenero.class
 				.getResource("/imgs/search.png")));
-		botonBuscar.setBounds(415, 52, 32, 32);
+		botonBuscar.setBounds(415, 131, 32, 32);
 		botonBuscar.setOpaque(false);
 		botonBuscar.setContentAreaFilled(false);
 		botonBuscar.setBorderPainted(false);
@@ -103,7 +113,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		botonEliminar.setToolTipText("Eliminar");
 		botonEliminar.setIcon(new ImageIcon(VentanaBuscarGenero.class
 				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(499, 52, 32, 32);
+		botonEliminar.setBounds(499, 131, 32, 32);
 		botonEliminar.setOpaque(false);
 		botonEliminar.setContentAreaFilled(false);
 		botonEliminar.setBorderPainted(false);
@@ -111,19 +121,45 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonEliminar.setIcon(new ImageIcon(newimg4));
+		
+		/*
+		 * 
+		 * nuevo
+		 */
+		
+		  // creating main JPanel (white)
+        panelMain = new JPanel();
+        panelMain.setBackground(Color.WHITE);
+        panelMain.setBounds(34, 0, 619, 85);
+        //panelMain.setPreferredSize(new Dimension(619, 85));
+        getContentPane().add(panelMain);
 
+		   // creating new JPanelOne object from JPanelOne class containing black JPanel
+        panel = new JPanelOne();
+
+        // adding black JPanel to main JPanel (white)
+        panelMain.add(panel);
+        
+			
+        
+			
+		
+		/*
+		 * nuevo
+		 */
+		
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE GENERO");
-		labelTitulo.setBounds(248, 11, 270, 30);
+		labelTitulo.setBounds(175, 96, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		lblBuscar = new JLabel();
 		lblBuscar.setText("Buscar:");
-		lblBuscar.setBounds(20, 52, 64, 25);
+		lblBuscar.setBounds(20, 131, 64, 25);
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 52, 319, 26);
+		txtBuscar.setBounds(86, 131, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);
@@ -135,7 +171,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		getContentPane().add(labelTitulo);
 		limpiar();
 
-		setSize(640, 476);
+		setSize(640, 554);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -143,7 +179,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 158, 634, 265);
+		scrollPane.setBounds(0, 237, 634, 265);
 		getContentPane().add(scrollPane);
 
 		table_1 = new JTable() {
@@ -209,7 +245,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE GENEROS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblListaDeGeneros.setBounds(147, 117, 325, 30);
+		lblListaDeGeneros.setBounds(147, 196, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
 
 		JButton btnHome = new JButton("");
@@ -244,7 +280,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		btnNewButton.setBorderPainted(false);
 		btnNewButton.setIcon(new ImageIcon(VentanaBuscarGenero.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(457, 52, 32, 32);
+		btnNewButton.setBounds(457, 131, 32, 32);
 		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
@@ -253,7 +289,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(57, 88, 432, 14);
+		lblMensaje.setBounds(57, 167, 432, 14);
 		getContentPane().add(lblMensaje);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
