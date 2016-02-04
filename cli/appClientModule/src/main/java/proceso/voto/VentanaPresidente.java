@@ -181,13 +181,13 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	lblNombrePrimerCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
 	
 	final JRadioButton rdbLista1 = new JRadioButton("LISTA 1");
-	rdbLista1.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			presidente = rdbLista1 .getText().substring(rdbLista1.getText().length()-1, rdbLista1.getText().length());
-			System.out.println("PRESIDENTE: " + presidente);
-		}
-	});
+//	rdbLista1.addMouseListener(new MouseAdapter() {
+//		@Override
+//		public void mouseClicked(MouseEvent arg0) {
+//			presidente = rdbLista1 .getText().substring(rdbLista1.getText().length()-1, rdbLista1.getText().length());
+//			System.out.println("PRESIDENTE: " + presidente);
+//		}
+//	});
 	buttonGroup.add(rdbLista1);
 	rdbLista1.setFont(new Font("Tahoma", Font.BOLD, 25));
 	rdbLista1.setBounds(55, 173, 123, 39);
@@ -255,13 +255,13 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	panel_1.add(lblNombreSegundoCandidatoPresidente);
 	
 	final JRadioButton rdbLista2 = new JRadioButton("LISTA 2");
-	rdbLista2.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			presidente = rdbLista2 .getText().substring(rdbLista2.getText().length()-1, rdbLista2.getText().length());
-			System.out.println("PRESIDENTE: " + presidente);
-		}
-	});
+//	rdbLista2.addMouseListener(new MouseAdapter() {
+//		@Override
+//		public void mouseClicked(MouseEvent arg0) {
+//			presidente = rdbLista2 .getText().substring(rdbLista2.getText().length()-1, rdbLista2.getText().length());
+//			System.out.println("PRESIDENTE: " + presidente);
+//		}
+//	});
 	buttonGroup.add(rdbLista2);
 	rdbLista2.setFont(new Font("Tahoma", Font.BOLD, 25));
 	rdbLista2.setBounds(50, 172, 123, 39);
@@ -331,13 +331,13 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	panel_2.add(lblNombreTercerCandidatoPresidente);
 	
 	final JRadioButton rdbLista3 = new JRadioButton("LISTA 3");
-	rdbLista3.addMouseListener(new MouseAdapter() {
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			presidente = rdbLista3 .getText().substring(rdbLista3.getText().length()-1, rdbLista3.getText().length());
-			System.out.println("PRESIDENTE: " + presidente);
-		}
-	});
+//	rdbLista3.addMouseListener(new MouseAdapter() {
+//		@Override
+//		public void mouseClicked(MouseEvent arg0) {
+//			presidente = rdbLista3 .getText().substring(rdbLista3.getText().length()-1, rdbLista3.getText().length());
+//			System.out.println("PRESIDENTE: " + presidente);
+//		}
+//	});
 	buttonGroup.add(rdbLista3);
 	rdbLista3.setFont(new Font("Tahoma", Font.BOLD, 25));
 	rdbLista3.setBounds(47, 170, 123, 39);
@@ -379,22 +379,55 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 			JRadioButton[] rdb = {rdbLista1,rdbLista2, rdbLista3	};
 			for(int i = 0; i<rdb.length; i++){
 				if(rdb[i].isSelected()){
+					
+					
 					lista = rdb[i].getText();
-						if(!lista.isEmpty()){
-							dispose();
-							VentanaConfirmacionPresidente miVentanaConfirmacion=new VentanaConfirmacionPresidente(miVentanaPrincipal,true);
-							//if (lista.compareTo("LISTA 1")== 0){
-							//miVentanaPrincipal.setCandidato(1);
-							//}
+					
+					if(!lista.isEmpty()){
+						
+						if(rdbLista1.isSelected()){
 							
-							//miVentanaPrincipal.setLista(VentanaPresidente.presidente);
-							//miVentanaPrincipal.setCedula(VentanaPrincipalVotante.cedulaVotante);
-							//setear voto para lista
-							
-							
-							ban = 1;
-							break;
+							presidente = rdbLista1 .getText().substring(rdbLista1.getText().length()-1, rdbLista1.getText().length());
+							System.out.println("PRESIDENTE: " + presidente);
 						}
+						
+						else
+							if(rdbLista2.isSelected()){
+						presidente = rdbLista2 .getText().substring(rdbLista2.getText().length()-1, rdbLista2.getText().length());
+						System.out.println("PRESIDENTE: " + presidente);
+							}
+						
+							
+							else
+								if(rdbLista3.isSelected()){
+						presidente = rdbLista3 .getText().substring(rdbLista3.getText().length()-1, rdbLista3.getText().length());
+						System.out.println("PRESIDENTE: " + presidente);
+								}
+						
+						dispose();
+						VentanaConfirmacionPresidente miVentanaConfirmacion=new VentanaConfirmacionPresidente(miVentanaPrincipal,true);
+						//if (lista.compareTo("LISTA 1")== 0){
+						//miVentanaPrincipal.setCandidato(1);
+						//}
+						
+						//miVentanaPrincipal.setLista(VentanaPresidente.presidente);
+						//miVentanaPrincipal.setCedula(VentanaPrincipalVotante.cedulaVotante);
+						//setear voto para lista
+						
+						
+						ban = 1;
+						break;
+					}
+					
+					else{
+						JOptionPane.showMessageDialog(new JFrame(), "Ocurrió un error", "Dialog",
+						        JOptionPane.ERROR_MESSAGE);
+					}
+					
+					
+	
+						
+						
 				
 						//dispose(); 	
 			}

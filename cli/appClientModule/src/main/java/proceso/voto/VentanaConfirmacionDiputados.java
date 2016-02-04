@@ -160,7 +160,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 		setBounds(100, 100, 335, 305);
 
-		JLabel lblEstSeguro = new JLabel("Est\u00E1 seguro?");
+		JLabel lblEstSeguro = new JLabel("Está seguro?");
 		lblEstSeguro.setFont(new Font("Tahoma", Font.PLAIN, 40));
 
 		JButton btnNewButton = new JButton("SI");

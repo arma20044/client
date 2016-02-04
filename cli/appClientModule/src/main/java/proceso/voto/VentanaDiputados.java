@@ -101,12 +101,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		buttonGroup_1.add(rdbList4);
 		rdbList4.setBounds(106, 36, 75, 105);
 		panel.add(rdbList4);
-		rdbList4.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				capturarSenador((JRadioButton) arg0.getSource());
-			}
-		});
+//		rdbList4.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent arg0) {
+//				capturarSenador((JRadioButton) arg0.getSource());
+//			}
+//		});
 		rdbList4.setFont(new Font("Tahoma", Font.BOLD, 79));
 		
 		JLabel label_8 = new JLabel("");
@@ -172,12 +172,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_1.add(label_10);
 		
 		rdbList1 = new JRadioButton("1");
-		rdbList1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				capturarSenador((JRadioButton) arg0.getSource());
-			}
-		});
+//		rdbList1.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent arg0) {
+//				capturarSenador((JRadioButton) arg0.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList1);
 		rdbList1.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList1.setBounds(106, 36, 75, 105);
@@ -215,12 +215,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_2.add(lblCi);
 		
 		rdbList2 = new JRadioButton("2");
-		rdbList2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//	|
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList2);
 		rdbList2.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList2.setBounds(106, 36, 75, 105);
@@ -258,12 +258,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_3.add(lblPl);
 		
 		rdbList3 = new JRadioButton("3");
-		rdbList3.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//		rdbList3.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList3);
 		rdbList3.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList3.setBounds(106, 36, 75, 105);
@@ -301,12 +301,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_4.add(lblPa);
 		
 		rdbList5 = new JRadioButton("5");
-		rdbList5.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//		rdbList5.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList5);
 		rdbList5.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList5.setBounds(106, 36, 75, 105);
@@ -345,12 +345,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_5.add(lblMpi);
 		
 		rdbList6 = new JRadioButton("6");
-		rdbList6.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//		rdbList6.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList6);
 		rdbList6.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList6.setBounds(106, 36, 75, 105);
@@ -398,12 +398,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_6.add(lblPaa);
 		
 		rdbList7 = new JRadioButton("7");
-		rdbList7.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//		rdbList7.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList7);
 		rdbList7.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList7.setBounds(106, 36, 75, 105);
@@ -447,12 +447,12 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		panel_7.add(lblPip);
 		
 		rdbList8 = new JRadioButton("8");
-		rdbList8.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				capturarSenador((JRadioButton) e.getSource());
-			}
-		});
+//		rdbList8.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				capturarSenador((JRadioButton) e.getSource());
+//			}
+//		});
 		buttonGroup_1.add(rdbList8);
 		rdbList8.setFont(new Font("Tahoma", Font.BOLD, 79));
 		rdbList8.setBounds(106, 36, 75, 105);
@@ -509,6 +509,11 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 				if(rdb[i].isSelected()){
 					lista = rdb[i].getText();
 						if(!lista.isEmpty()){
+							
+							
+							diputados = lista.substring(lista.length()-1, lista.length());
+							System.out.println("Senador: " + diputados);
+							
 							dispose();
 							VentanaConfirmacionDiputados miVentanaConfirmacion=new VentanaConfirmacionDiputados(miVentanaPrincipal,true);
 //							if (lista.compareTo("LISTA 1")== 0){

@@ -111,6 +111,7 @@ public class Login extends javax.swing.JFrame {
           }
           catch(Exception e)
           {
+        	  e.printStackTrace();
               JOptionPane.showMessageDialog(this,
                 "Se ha producido la siguiente excepción: "+e,
                 "Se ha producido una excepción",
