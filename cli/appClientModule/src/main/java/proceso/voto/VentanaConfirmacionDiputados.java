@@ -36,11 +36,13 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
+import javax.swing.UIManager;
+import java.awt.Color;
 
 public class VentanaConfirmacionDiputados extends JDialog {
 	private Container contenedor;
 	JLabel labelTitulo;
-	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado;
+	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado,lblMensaje;
 	
 	//public static Integer idLocal;
 	
@@ -187,6 +189,12 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		getContentPane().add(lblListaPresidente);
 		getContentPane().add(lblListaSenador);
 		getContentPane().add(lblListaDiputado);
+		
+		lblMensaje = new JLabel("");
+		lblMensaje.setForeground(Color.RED);
+		lblMensaje.setFont(UIManager.getFont("Label.font"));
+		lblMensaje.setBounds(80, 172, 199, 32);
+		getContentPane().add(lblMensaje);
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -250,6 +258,15 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		JSONParser j = new JSONParser();
 
 		String generoAntesPartir = response.getQueryGenericoResponse();
+		
+		if (generoAntesPartir.compareTo("[]")==0){
+			
+			//JOptionPane.showMessageDialog(null, "LA consulta arrojo vacio!!!.");;
+			lblMensaje
+			.setText("Lista: LA consulta arrojo vacio!!!.");
+		}
+		
+		else
 
 		try {
 			ob = j.parse(generoAntesPartir);
@@ -377,31 +394,4 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				// actualizar situacion votante fin
 				
 	}
-	
-	/*private void eliminarVotanteHabilitado(){
-		
-		// eliminar votante habilitado inicio
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(4);
-		System.out.println(Login.userLogeado);
-		query.setQueryGenerico( 
-				"DELETE FROM ucsaws_votante_habilitado where id_votante_habilitado = " + VentanaPrincipalVotante.idVotanteHabilitado);
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		// eliminar votante habilitado fin
-		
-	}*/
-
 }
