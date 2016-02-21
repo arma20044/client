@@ -14,7 +14,7 @@ public class CandidatoJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 7;
+		return 8;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class CandidatoJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
+	private String[] colNames = new String[] {"ID", "Item",  "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
 
 	@Override
 	public String getColumnName(int col) {

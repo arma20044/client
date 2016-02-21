@@ -569,10 +569,12 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 		int ite = 0;
 		String campo4, campo5 = "";
+		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(),
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString() };
 

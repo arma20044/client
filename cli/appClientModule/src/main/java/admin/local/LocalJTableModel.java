@@ -14,7 +14,7 @@ public class LocalJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 6;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class LocalJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Nro. Local", "Desc. Local","Nro. Zona", "Desc. Zona"};
+	private String[] colNames = new String[] {"ID", "Item", "Nro. Local", "Desc. Local","Nro. Zona", "Desc. Zona"};
 
 	@Override
 	public String getColumnName(int col) {

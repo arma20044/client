@@ -14,7 +14,7 @@ public class DistritoJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 6;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class DistritoJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Nro. Distrito", "Desc. Distrito","Nro. Departamento", "Desc. Departamento"};
+	private String[] colNames = new String[] {"ID", "Item", "Nro. Distrito", "Desc. Distrito","Nro. Departamento", "Desc. Departamento"};
 
 	@Override
 	public String getColumnName(int col) {

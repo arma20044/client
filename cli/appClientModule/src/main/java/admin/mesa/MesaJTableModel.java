@@ -14,7 +14,7 @@ public class MesaJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 6;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class MesaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Nro. Mesa", "Desc. Mesa","Nro. Local", "Desc. Local"};
+	private String[] colNames = new String[] {"ID", "Item",  "Nro. Mesa", "Desc. Mesa","Nro. Local", "Desc. Local"};
 
 	@Override
 	public String getColumnName(int col) {

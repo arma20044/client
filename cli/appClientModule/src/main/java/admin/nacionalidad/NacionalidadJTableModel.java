@@ -14,7 +14,7 @@ public class NacionalidadJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 5;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class NacionalidadJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"};
+	private String[] colNames = new String[] {"ID", "Itema", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"};
 
 	@Override
 	public String getColumnName(int col) {

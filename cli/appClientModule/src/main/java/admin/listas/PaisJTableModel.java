@@ -14,7 +14,7 @@ public class PaisJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 6;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class PaisJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Nro", "Nombre","Año","Tipo Lista"};
+	private String[] colNames = new String[] {"ID","Item", "Nro", "Nombre","Año","Tipo Lista"};
 
 	@Override
 	public String getColumnName(int col) {
