@@ -79,6 +79,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	boolean eliminado;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -184,6 +186,10 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				 if (arg0.getClickCount() == 2) {
+					    System.out.println("double clicked");
+					  
 				List<String> selectedData = new ArrayList<String>();
 
 				int[] selectedRow = table_1.getSelectedRows();
@@ -234,7 +240,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					System.out.println(evento);
 					
 					String fechaEvento = (String) (table_1.getModel().getValueAt(
-							selectedRow[i], 3));
+							selectedRow[i], 4));
 					
 					
 					DateFormat fechaEventoFormated = new SimpleDateFormat("dd/MM/yyyy");
@@ -273,7 +279,38 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 				
 				
 
-				
+			}
+				 
+					 if (arg0.getClickCount() == 1) {
+						 
+						List<String> selectedData = new ArrayList<String>();
+							
+						 int[] selectedRow = table_1.getSelectedRows();
+						 
+						 for (int i = 0; i < selectedRow.length; i++) {
+								int col = 0;
+								while (table_1.getColumnCount() > col) {
+									System.out.println(table_1.getValueAt(selectedRow[i],
+											col));
+									try {
+										selectedData.add((String) table_1.getValueAt(
+												selectedRow[i], col));
+										
+										
+										
+										
+									} catch (Exception e) {
+										System.out.println(e.getMessage());
+									}
+
+									col++;
+								}
+						 codTemporal = (String) (table_1.getModel().getValueAt(
+									selectedRow[i], 0));
+						 }	 
+					 txtBuscar.setText(codTemporal);
+					 System.out.println(txtBuscar.getText());
+				 }
 
 			}
 		});
@@ -432,13 +469,29 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					EventoDAO eventoDAO = new EventoDAO();
 
 					try {
-						eventoDAO.eliminarEvento(codTemporal);
+						eliminado = eventoDAO.eliminarEvento(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
+					
+					if(eliminado == false){
+						
+						lblMensaje.setText("No se ha podido Eliminar - Existen referencias a éste registro.");
+						codTemporal = "";
+						txtBuscar.setText("");
+						
+						Timer t = new Timer(Login.timer, new ActionListener() {
+
+							public void actionPerformed(ActionEvent e) {
+								lblMensaje.setText(null);
+							}
+						});
+					}
+					
+					else{
 
 					lblMensaje.setText("Excelente, se ha eliminado el Evento");
 					codTemporal = "";
@@ -461,7 +514,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					// model.fireTableDataChanged();
 					// table_1.repaint();
-				}
+				}}
 			} else {
 				lblMensaje
 						.setText("Por favor seleccione que Evento desea Eliminar");
