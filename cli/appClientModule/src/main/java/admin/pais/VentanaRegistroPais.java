@@ -410,7 +410,9 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_pais, codigo, nombre "
-				+ "from  ucsaws_pais " + "order by codigo" + "");
+				+ "from  ucsaws_pais where id_evento = " + VentanaBuscarEvento.evento 
+				+ " order by codigo" + "");
+
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

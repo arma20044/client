@@ -215,11 +215,11 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					}
 					//seteo del encabezado inicio
 					
-					nroEvento = selectedData.get(0);
-					descripcionEvento = selectedData.get(1);
-					fechaDesde  = selectedData.get(2);
-					fechaHasta  = selectedData.get(3);
-					tipoEventoDescripcon = selectedData.get(4);
+					nroEvento = selectedData.get(1);
+					descripcionEvento = selectedData.get(2);
+					fechaDesde  = selectedData.get(3);
+					fechaHasta  = selectedData.get(4);
+					tipoEventoDescripcon = selectedData.get(5);
 					
 					//seteo del encabezado final 
 					

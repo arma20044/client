@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.listas.ListasDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -487,7 +488,8 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
 				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
-				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)" + "order by tlis.descripcion, nro_lista" + "");
+				+ "( lis.id_tipo_lista = tlis.id_tipo_lista) where lis.id_evento = " + VentanaBuscarEvento.evento
+				+  " order by tlis.descripcion, nro_lista" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.vigencia.VigenciaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -488,7 +489,8 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI') as desde"
 				+ ", to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI') as hasta "
 				+ "from  ucsaws_vigencia_horario_x_pais v join ucsaws_pais p on (v.id_pais = p.id_pais)"
-				+ "order by nombre" + "");
+				+ " where v.id_evento = " + VentanaBuscarEvento.evento
+				+ " order by nombre" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

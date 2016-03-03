@@ -38,10 +38,12 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.Color;
 
 public class VentanaBuscarCandidato extends JFrame implements ActionListener {
@@ -479,7 +481,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 				+ " , tl.descripcion, ca.descripcion  as obs" +
 								" from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) " +  
 								" join ucsaws_listas li on (ca.id_lista = li.id_lista)"
-								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)");
+								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)"
+								+ " where ca.id_evento = " + VentanaBuscarEvento.evento );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -459,8 +459,10 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
 				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
-				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)"
-				+ "order by tlis.descripcion, nro_lista" + "");
+				+ "( lis.id_tipo_lista = tlis.id_tipo_lista) where lis.id_evento = " + VentanaBuscarEvento.evento
+				+  " order by tlis.descripcion, nro_lista" + "");
+
+
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -534,7 +536,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
 		query.setQueryGenerico("SELECT id_tipo_lista, descripcion"
-				+ " from ucsaws_tipo_lista " + "order by descripcion");
+				+ " from ucsaws_tipo_lista where id_evento = " + VentanaBuscarEvento.evento + " order by descripcion");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

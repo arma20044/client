@@ -584,10 +584,11 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI:SS') as desde"
-				+ ", to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI:SS') as desde "
+		query.setQueryGenerico("SELECT  id_vigencia, codigo,nombre,to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI') as desde"
+				+ ", to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI') as hasta "
 				+ "from  ucsaws_vigencia_horario_x_pais v join ucsaws_pais p on (v.id_pais = p.id_pais)"
-				+ "order by nombre" + "");
+				+ " where v.id_evento = " + VentanaBuscarEvento.evento
+				+ " order by nombre" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -658,8 +659,9 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais "
-				+ "order by nombre");
+		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento = " 
+				+ VentanaBuscarEvento.evento
+				+ " order by nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

@@ -535,7 +535,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 				+ " , tl.descripcion, ca.descripcion obs" +
 								" from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) " +  
 								" join ucsaws_listas li on (ca.id_lista = li.id_lista)"
-								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)");
+								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)"
+								+ " where ca.id_evento = " + VentanaBuscarEvento.evento );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -756,6 +757,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_lista, nro_lista || ' - ' || nombre_lista || ' - ' || tlis.descripcion " +
 								" from ucsaws_listas lis join ucsaws_tipo_lista tlis on (lis.id_tipo_lista = tlis.id_tipo_lista) "+
+								 " where lis.id_evento = " + VentanaBuscarEvento.evento +
 								" order by nro_lista");
 
 		QueryGenericoResponse response = weatherClient

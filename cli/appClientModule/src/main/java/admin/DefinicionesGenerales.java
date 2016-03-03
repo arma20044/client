@@ -215,7 +215,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnHome.setSelectedIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/home.png")));
+				btnHome.setSelectedIcon(null);
 				btnHome.setToolTipText("Inicio");
 				btnHome.setBounds(0, 0, 32, 32);
 				getContentPane().add(btnHome);

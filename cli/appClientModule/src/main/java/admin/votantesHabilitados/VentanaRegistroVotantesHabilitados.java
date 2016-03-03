@@ -826,7 +826,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		query.setQueryGenerico("SELECT per.id_persona, nombre || ' ' || apellido "
 				+ "from ucsaws_persona per left join ucsaws_votante vot "
 				+ "on (per.id_persona = vot.id_persona) "
-				+ " where per.id_persona not in "
+				+ " where per.id_evento = " + VentanaBuscarEvento.evento + " and per.id_persona not in "
 				+ "(select id_persona from ucsaws_votante where sufrago = 0 )"
 				);
 
@@ -1285,7 +1285,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
 		query.setQueryGenerico("SELECT id_departamento, nro_departamento || ' -  ' || desc_departamento"
-				+ " from ucsaws_departamento " + "order by nro_departamento");
+				+ " from ucsaws_departamento where id_evento = " + VentanaBuscarEvento.evento
+				 + " order by nro_departamento");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -1358,7 +1359,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		query.setQueryGenerico("SELECT id_distrito, nro_distrito || ' -  ' || desc_distrito"
 				+ " from ucsaws_distrito where id_departamento = "
-				+ idDepartamento + "order by nro_distrito");
+				+ idDepartamento + " and id_evento = " + VentanaBuscarEvento.evento + " order by nro_distrito");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -1431,8 +1432,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		query.setQueryGenerico("SELECT id_zona, nro_zona || ' -  ' || desc_zona"
 				+ " from ucsaws_zona where id_distrito = "
-				+ idZona
-				+ "order by nro_zona");
+				+ idZona + " and id_evento = " + VentanaBuscarEvento.evento
+				+ " order by nro_zona");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -1505,8 +1506,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		query.setQueryGenerico("SELECT id_local, nro_local || ' -  ' || desc_local"
 				+ " from ucsaws_local where id_zona = "
-				+ idZona
-				+ "order by nro_local");
+				+ idZona + " and id_evento = " + VentanaBuscarEvento.evento
+				+ " order by nro_local");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -1579,8 +1580,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		query.setQueryGenerico("SELECT id_mesa, nro_mesa || ' -  ' || desc_mesa"
 				+ " from ucsaws_mesa where id_local = "
-				+ idLocal
-				+ "order by nro_mesa");
+				+ idLocal + " and id_evento = " + VentanaBuscarEvento.evento 
+				+ " order by nro_mesa");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
