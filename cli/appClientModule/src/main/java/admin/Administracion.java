@@ -90,10 +90,6 @@ public class Administracion extends JFrame implements ActionListener {
 		labelTitulo.setBounds(44, 59, 647, 86);
 		labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 		getContentPane().add(labelTitulo);
-
-		JButton btnEscrutinio = new JButton("Escrutinio");
-		btnEscrutinio.setBounds(402, 181, 101, 23);
-		getContentPane().add(btnEscrutinio);
 		
 		JButton btnHome = new JButton("");
 		btnHome.addActionListener(new ActionListener() {

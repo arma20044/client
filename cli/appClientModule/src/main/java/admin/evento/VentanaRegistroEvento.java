@@ -752,7 +752,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI:SS') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI:SS') as hasta , tev.descripcion as Tdescripcion "
+		query.setQueryGenerico("select ev.id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI:SS') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI:SS') as hasta , tev.descripcion as Tdescripcion "
 
 				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
 				+ "order by nro_evento");

@@ -19,6 +19,8 @@ import org.springframework.context.ApplicationContext;
 import scr.main.java.admin.distrito.VentanaBuscarDistrito;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.admin.departamento.VentanaBuscarDepartamento;
+import src.main.java.admin.escrutinio.VentanaEscrutinioDiputados;
+import src.main.java.admin.escrutinio.VentanaEscrutinioSenadores;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.admin.genero.VentanaBuscarGenero;
@@ -44,7 +46,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-public class DefinicionesGenerales extends JFrame implements ActionListener{
+public class Escrutinio extends JFrame implements ActionListener{
 	
 	private Coordinador miCoordinador; //objeto miCoordinador que permite la relacion entre esta clase y la clase coordinador
 	private JLabel labelTitulo, labelSeleccion;
@@ -57,12 +59,12 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 	 */
 	public String textoIntroduccion = "";
 	
-	public DefinicionesGenerales() {
+	public Escrutinio() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		btnAtras = new JButton();
-		btnAtras.setIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/volver.png")));
+		btnAtras.setIcon(new ImageIcon(Escrutinio.class.getResource("/imgs/volver.png")));
 		btnAtras.setToolTipText("Atras...");
 		btnAtras.setBounds(683, 474, 83, 51);
 
@@ -85,127 +87,24 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
-		JButton btnGenero = new JButton("Generos");
-		btnGenero.addActionListener(new ActionListener() {
+		JButton btnContarVotosDip = new JButton("Contar Votos Diputados");
+		btnContarVotosDip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarGenero genero = new VentanaBuscarGenero();
-				genero.setVisible(true);
+				VentanaEscrutinioDiputados escr = new VentanaEscrutinioDiputados();
+				escr.setVisible(true);
 				dispose();
 			}
 		});
-		btnGenero.setBounds(105, 182, 155, 23);
-		getContentPane().add(btnGenero);
-		
-		JButton btnPais = new JButton("Paises");
-		btnPais.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarPais pais = new VentanaBuscarPais();
-				pais.setVisible(true);
-	            dispose();
-			}
-		});
-		btnPais.setBounds(105, 250, 155, 23);
-		getContentPane().add(btnPais);
-		
-		JButton btnListas = new JButton("Listas");
-		btnListas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarLista lista = new VentanaBuscarLista();
-				lista.setVisible(true);
-	            dispose();
-			}
-		});
-		btnListas.setBounds(105, 284, 155, 23);
-		getContentPane().add(btnListas);
-		
-		JButton btnPersonas = new JButton("Personas");
-		btnPersonas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				VentanaBuscarPersona persona = new VentanaBuscarPersona();
-				persona.setVisible(true);
-	            dispose();
-	            
-			}
-		});
-		btnPersonas.setBounds(320, 178, 146, 23);
-		getContentPane().add(btnPersonas);
-		
-		JButton btnDepartamentos = new JButton("Departamentos");
-		btnDepartamentos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarDepartamento departamento = new VentanaBuscarDepartamento();
-				departamento.setVisible(true);
-				dispose();
-			}
-		});
-		btnDepartamentos.setBounds(320, 216, 146, 23);
-		getContentPane().add(btnDepartamentos);
+		btnContarVotosDip.setBounds(259, 267, 185, 23);
+		getContentPane().add(btnContarVotosDip);
 		
 				labelTitulo = new JLabel();
-				labelTitulo.setIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/def.png")));
+				labelTitulo.setIcon(new ImageIcon(Escrutinio.class.getResource("/imgs/def.png")));
 				labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-				labelTitulo.setText("Definiciones Generales");
+				labelTitulo.setText("Escrutinio");
 				labelTitulo.setBounds(10, 96, 712, 86);
 				labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 				getContentPane().add(labelTitulo);
-				
-				JButton btnCandidatos = new JButton("Candidatos");
-				btnCandidatos.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarCandidato candidato;
-						candidato = new VentanaBuscarCandidato();
-						candidato.setVisible(true);
-						dispose();
-						
-					}
-				});
-				btnCandidatos.setBounds(320, 284, 146, 23);
-				getContentPane().add(btnCandidatos);
-				
-				JButton btnVotantesHabilitados = new JButton("Votantes Habilitados");
-				btnVotantesHabilitados.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarVotantesHabilitados votantesHabilitados = new VentanaBuscarVotantesHabilitados();
-						votantesHabilitados.setVisible(true);
-						dispose();
-					}
-				});
-				btnVotantesHabilitados.setBounds(492, 182, 176, 23);
-				getContentPane().add(btnVotantesHabilitados);
-				
-				JButton btnTipoEvento = new JButton("Tipo Evento");
-				btnTipoEvento.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarTipoEvento tevento;
-						tevento = new VentanaBuscarTipoEvento();
-						tevento.setVisible(true);
-						dispose();
-					}
-				});
-				btnTipoEvento.setBounds(320, 250, 146, 23);
-				getContentPane().add(btnTipoEvento);
-				
-				JButton btnVigenciaHorarioXPais = new JButton("Vigencia Horario por Pais");
-				btnVigenciaHorarioXPais.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarVigencia vigencia = new VentanaBuscarVigencia();
-						vigencia.setVisible(true);
-						dispose();
-					}
-				});
-				btnVigenciaHorarioXPais.setBounds(105, 216, 155, 23);
-				getContentPane().add(btnVigenciaHorarioXPais);
-				
-				JButton btnNacionalidades = new JButton("Nacionalidades\r\n");
-				btnNacionalidades.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VentanaBuscarNacionalidad nacionalidad = new VentanaBuscarNacionalidad();
-						nacionalidad.setVisible(true);
-						dispose();
-					}
-				});
-				btnNacionalidades.setBounds(492, 216, 176, 23);
-				getContentPane().add(btnNacionalidades);
 				
 				JButton btnHome = new JButton("");
 				btnHome.addActionListener(new ActionListener() {
@@ -215,7 +114,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnHome.setSelectedIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/home.png")));
+				btnHome.setSelectedIcon(new ImageIcon(Escrutinio.class.getResource("/imgs/home.png")));
 				btnHome.setToolTipText("Inicio");
 				btnHome.setBounds(0, 0, 32, 32);
 				getContentPane().add(btnHome);
@@ -287,16 +186,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				panel.add(label_9);
 				label_9.setForeground(Color.BLACK);
 				
-				JButton button = new JButton("Escrutinio");
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						Escrutinio escru = new Escrutinio();
-						escru.setVisible(true);
+				JButton btnContarVotosSen = new JButton("Contar Votos Senadores");
+				btnContarVotosSen.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaEscrutinioSenadores escr = new VentanaEscrutinioSenadores();
+						escr.setVisible(true);
 						dispose();
 					}
 				});
-				button.setBounds(513, 284, 101, 23);
-				getContentPane().add(button);
+				btnContarVotosSen.setBounds(259, 233, 185, 23);
+				getContentPane().add(btnContarVotosSen);
+				
+				JButton btnContarVotosPre = new JButton("Contar Votos Presidente");
+				btnContarVotosPre.setBounds(259, 199, 185, 23);
+				getContentPane().add(btnContarVotosPre);
 		//lblNombreDescripcion.repaint();
 		
 		
@@ -314,8 +217,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 
 
 	public void actionPerformed(ActionEvent arg0) {
-		VentanaBuscarEvento mainEvento = new VentanaBuscarEvento();
-		mainEvento.setVisible(true);
+		DefinicionesGenerales def = new DefinicionesGenerales();
+		def.setVisible(true);
 		dispose();
 		// TODO Auto-generated method stub
 		

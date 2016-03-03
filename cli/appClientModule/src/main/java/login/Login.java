@@ -4,6 +4,8 @@ import hello.wsdl.AutenticarResponse;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
@@ -17,6 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.utils.StringEncrypter;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -25,6 +28,8 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.security.NoSuchAlgorithmException;
+
 import javax.swing.UIManager;
 
 public class Login extends javax.swing.JFrame {
@@ -302,7 +307,12 @@ public class Login extends javax.swing.JFrame {
     	
        if(autenticado == 12345){ //admin
     	   
+    	   
+    	
+    	   
     	   userLogeado = campoUsuario.getText();
+    	   
+    
     	   
     	   ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
@@ -523,6 +533,39 @@ public class Login extends javax.swing.JFrame {
 			AutenticarRequest autenticar = new AutenticarRequest();
 			
 			autenticar.setUsuario(codigoUsuario);
+			
+			   //desencriptar user
+//	    	   try {
+//	    	   
+//	    	   SecretKey desKey       = KeyGenerator.getInstance("DESede").generateKey();
+//	    	   
+//	    	   StringEncrypter desEncrypter = new StringEncrypter(desKey, desKey.getAlgorithm());
+//	    	   
+//	    	   
+//	    	    
+//	    	    String desEncrypted       = desEncrypter.encrypt(campoUsuario.getText());
+//	    	   
+//	    	   
+//	    	   
+//	    	   
+//	    	  
+//	    	   
+//	    	   String desDecrypted       = desEncrypter.decrypt(desEncrypted);
+//	    	   
+//	    	   
+//	    		
+//	    	   
+//	    	   //desecnriptar user
+//			   
+//			   
+//
+//	    	   autenticar.setContrasenha(desEncrypted);
+//	    	   
+//	    	   } catch (NoSuchAlgorithmException e) {
+//	  	     }
+	    	   
+			
+			
 			autenticar.setContrasenha(contrasena);			
 			
 			

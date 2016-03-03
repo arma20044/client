@@ -39,6 +39,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -475,7 +476,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 
 		query.setQueryGenerico("SELECT id_tipo_evento, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
 				+ "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd "
-				+ " from ucsaws_tipo_evento " + "ORDER BY descripcion");
+				+ " from ucsaws_tipo_evento where id_evento = " + VentanaBuscarEvento.evento + "ORDER BY descripcion");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
