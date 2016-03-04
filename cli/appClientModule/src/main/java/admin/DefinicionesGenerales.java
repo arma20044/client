@@ -30,6 +30,7 @@ import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
+import src.main.java.admin.tipoLista.VentanaBuscarTipoLista;
 import src.main.java.admin.vigencia.VentanaBuscarVigencia;
 import src.main.java.admin.votantesHabilitados.VentanaBuscarVotantesHabilitados;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -297,6 +298,17 @@ public class DefinicionesGenerales extends JFrame implements ActionListener{
 				});
 				button.setBounds(513, 284, 101, 23);
 				getContentPane().add(button);
+				
+				JButton btnTipoLista = new JButton("Tipo Lista");
+				btnTipoLista.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaBuscarTipoLista tLista = new VentanaBuscarTipoLista();
+						tLista.setVisible(true);
+						dispose();
+					}
+				});
+				btnTipoLista.setBounds(492, 250, 146, 23);
+				getContentPane().add(btnTipoLista);
 		//lblNombreDescripcion.repaint();
 		
 		

@@ -4,11 +4,15 @@ import hello.wsdl.AutenticarResponse;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.json.simple.JSONArray;
@@ -24,6 +28,7 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.votante.VentanaPrincipalVotante;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
@@ -35,6 +40,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class PreLogin extends javax.swing.JFrame {
 	
@@ -43,14 +50,52 @@ public class PreLogin extends javax.swing.JFrame {
 	 
 	 public static final Integer timer = 3000;
 	 
+	 JButton btnVotante;
+	 
 
     public PreLogin()
     {
+    	getContentPane().addKeyListener(new KeyAdapter() {
+    		@Override
+    		public void keyPressed(KeyEvent e) {
+    			
+    			if(e.getKeyCode()==KeyEvent.VK_ENTER){
+   				 
+   				 if(e.getSource() == btnAdmin && btnAdmin.isFocusOwner())
+   				  
+   				  System.out.println("admin");
+   			 }
+    			
+    		}
+    	});
+    	
     	setResizable(false);
     	setIconImage(Toolkit.getDefaultToolkit().getImage(PreLogin.class.getResource("/imgs/paraguay.png")));
         initComponents();
         this.setBounds(0,0, 419, 190);
         this.setLocationRelativeTo(null);
+        
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+        		getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+        		        public void actionPerformed(ActionEvent ae)
+        		        {
+        		        	
+        		        	if(btnAdmin.isFocusOwner()){
+        		        		System.out.println("button clicked admin");
+        		        		btnAdmin.doClick();
+        		        	}
+        		        	
+        		        	if (btnVotante.isFocusOwner()){
+        		        		System.out.println("button clicked votante");
+        		        		btnVotante.doClick();
+        		        		
+        		        }
+        		        	
+        		    
+        		        }
+        		    });
+        		    
     }
 
 
@@ -87,21 +132,22 @@ public class PreLogin extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel3 = new javax.swing.JLabel();
-        BtnAdmin = new javax.swing.JButton();
+        btnAdmin = new javax.swing.JButton();
+
         labelTitulo = new javax.swing.JLabel();
 
         jLabel3.setText("jLabel3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema E-vote: Paraguay Elecciones 2015");
-        BtnAdmin.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/admin.png")));
-        BtnAdmin.setText("ADMINISTRADOR");
-        Image img2 = ((ImageIcon) BtnAdmin.getIcon()).getImage();
+        btnAdmin.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/admin.png")));
+        btnAdmin.setText("ADMINISTRADOR");
+        Image img2 = ((ImageIcon) btnAdmin.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		BtnAdmin.setIcon(new ImageIcon(newimg2));
+		btnAdmin.setIcon(new ImageIcon(newimg2));
 		
-        BtnAdmin.addActionListener(new java.awt.event.ActionListener() {
+        btnAdmin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
             	IrLogin();
   				
@@ -110,7 +156,8 @@ public class PreLogin extends javax.swing.JFrame {
 
         labelTitulo.setText("Ver. 1.0.0");
         
-        JButton btnVotante = new JButton("VOTANTE");
+        btnVotante = new JButton("VOTANTE");
+       
         btnVotante.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
         		EleccionMesa mesa = new EleccionMesa();
@@ -138,7 +185,7 @@ public class PreLogin extends javax.swing.JFrame {
         		.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
         			.addGap(87)
         			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
-        				.addComponent(BtnAdmin, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+        				.addComponent(btnAdmin, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
         				.addComponent(btnVotante, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE))
         			.addGap(97))
         );
@@ -148,7 +195,7 @@ public class PreLogin extends javax.swing.JFrame {
         			.addGap(33)
         			.addComponent(btnVotante)
         			.addPreferredGap(ComponentPlacement.UNRELATED)
-        			.addComponent(BtnAdmin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addComponent(btnAdmin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(labelTitulo)
         			.addContainerGap())
@@ -156,13 +203,14 @@ public class PreLogin extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
 
         pack();
+        
+        
+
     }// </editor-fold>//GEN-END:initComponents
 
 
 
-
-
-
+    
 
 
   
@@ -178,7 +226,7 @@ public class PreLogin extends javax.swing.JFrame {
             }
         });
     }
-    private javax.swing.JButton BtnAdmin;
+    private javax.swing.JButton btnAdmin;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel labelTitulo;
     // End of variables declaration//GEN-END:variables

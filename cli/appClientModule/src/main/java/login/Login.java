@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.security.NoSuchAlgorithmException;
 
 import javax.swing.UIManager;
@@ -216,7 +217,8 @@ public class Login extends javax.swing.JFrame {
         botonEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 try {
-					botonEntrarActionPerformed(evt);
+                	if(campoUsuario.getText().length()>0 && campoContrasena.getPassword().length > 0){
+					botonEntrarActionPerformed(evt);}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -410,7 +412,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_campoUsuarioKeyPressed
 
     private void campoContrasenaKeyPressed(java.awt.event.KeyEvent evt) throws ParseException {//GEN-FIRST:event_campoContrasenaKeyPressed
-      if(evt.getKeyCode()==10)
+      if(evt.getKeyCode()==KeyEvent.VK_ENTER)
         {
     		Integer autenticado = autenticar();
         	
