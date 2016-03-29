@@ -1,50 +1,24 @@
 package src.main.java.admin;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-
-import scr.main.java.admin.distrito.VentanaBuscarDistrito;
-import src.main.java.admin.candidato.VentanaBuscarCandidato;
-import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.escrutinio.VentanaEscrutinioDiputados;
+import src.main.java.admin.escrutinio.VentanaEscrutinioPresidente;
 import src.main.java.admin.escrutinio.VentanaEscrutinioSenadores;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.evento.VentanaMainEvento;
-import src.main.java.admin.genero.VentanaBuscarGenero;
-import src.main.java.admin.listas.VentanaBuscarLista;
-import src.main.java.admin.local.VentanaBuscarLocal;
-import src.main.java.admin.mesa.VentanaBuscarMesa;
-import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
-import src.main.java.admin.pais.VentanaBuscarPais;
-import src.main.java.admin.persona.VentanaBuscarPersona;
-import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
-import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
-import src.main.java.admin.vigencia.VentanaBuscarVigencia;
-import src.main.java.admin.votantesHabilitados.VentanaBuscarVotantesHabilitados;
-import src.main.java.admin.zona.VentanaBuscarZona;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-
-import javax.swing.ImageIcon;
-
-import java.awt.Color;
-
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 public class Escrutinio extends JFrame implements ActionListener{
 	
@@ -198,6 +172,13 @@ public class Escrutinio extends JFrame implements ActionListener{
 				getContentPane().add(btnContarVotosSen);
 				
 				JButton btnContarVotosPre = new JButton("Contar Votos Presidente");
+				btnContarVotosPre.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						VentanaEscrutinioPresidente escr = new VentanaEscrutinioPresidente();
+						escr.setVisible(true);
+						dispose();
+					}
+				});
 				btnContarVotosPre.setBounds(259, 199, 185, 23);
 				getContentPane().add(btnContarVotosPre);
 		//lblNombreDescripcion.repaint();

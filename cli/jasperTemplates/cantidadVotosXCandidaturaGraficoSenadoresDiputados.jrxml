@@ -11,7 +11,7 @@
 		<![CDATA[select nombre || ' ' ||  apellido   as nom,nombre_lista ,count(vo.id_lista) , (select count(*)
   FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
 			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
-where tlista.id_tipo_lista = $P{P_Tipo_Candidato} and id_evento = $P{P_ID_Evento} ) total
+where tlista.id_tipo_lista = $P{P_Tipo_Candidato} and li.id_evento = $P{P_ID_Evento} ) total
   FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
 			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
 			join ucsaws_candidatos can on (can.id_lista = li.id_lista)

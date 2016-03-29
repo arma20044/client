@@ -54,7 +54,7 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo;
-	private JButton botonCancelar, botonBuscar;
+	private JButton botonCancelar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -67,6 +67,7 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 	JLabel lblCandidato2,lblCandidato3;
 	JLabel lblCandidato4;
 	JButton btnComenzar;
+	private JLabel lblListaCandidatosA;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -90,30 +91,17 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-
-		botonBuscar = new JButton();
-		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaEscrutinioPresidente.class
-				.getResource("/imgs/search.png")));
-		botonBuscar.setBounds(415, 52, 32, 32);
-		botonBuscar.setOpaque(false);
-		botonBuscar.setContentAreaFilled(false);
-		botonBuscar.setBorderPainted(false);
-		Image img3 = ((ImageIcon) botonBuscar.getIcon()).getImage();
-		Image newimg3 = img3.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		botonBuscar.setIcon(new ImageIcon(newimg3));
+		//Image newimg3 = img3.getScaledInstance(32, 32,
+			//	java.awt.Image.SCALE_SMOOTH);
 		
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE LISTA");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
-		botonBuscar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonBuscar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -233,32 +221,44 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 			   	for (int p=0; p < votes.length; p++) {
 			   		
 			   		if(ban == 0){
-			   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-			   		lblCandidato1.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+			   			Double dd = votes[p];
+			   			Integer i = dd.intValue(); // i becomes 5	
+			   			
+			   		System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
+			   		lblCandidato1.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
+			   		lblCandidato1.setFont(new Font("Verdana", Font.BOLD, 15));
 			   		ban++;
 			   		}
 			   		else
 			   		if(ban == 1){
-				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato2.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+			   			Double dd = votes[p];
+			   			Integer i = dd.intValue(); // i becomes 5	
+			   			System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
+				   		lblCandidato2.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
+				   		ban++;
+				   		}
+			   		else
+			   		if(ban == 2){
+			   			Double dd = votes[p];
+			   			Integer i = dd.intValue(); // i becomes 5	
+			   			System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
+				   		lblCandidato3.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
 				   		ban++;
 				   		}
 			   		else
 			   		if(ban == 3){
-				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato3.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		ban++;
-				   		}
-			   		else
-			   		if(ban == 4){
-			   			System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato4.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+			   			Double dd = votes[p];
+			   			Integer i = dd.intValue(); // i becomes 5	
+			   			System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
+				   		lblCandidato4.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
 				   		ban++;
 				   		}
 			   	}
 			   	btnComenzar.setText("Procesar de Nuevo?.");
 			   	btnComenzar.setSize(145, 23);
 			   	
+			   	
+			   	lblListaCandidatosA.setText("Resultado del Escrutinio de Presidentes.");
 			}
 		});
 		btnComenzar.setBounds(397, 375, 89, 23);
@@ -279,7 +279,13 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 		lblCandidato4 = new JLabel("");
 		lblCandidato4.setBounds(51, 289, 517, 32);
 		getContentPane().add(lblCandidato4);
-		recuperarDatos();
+		
+		lblListaCandidatosA = new JLabel();
+		lblListaCandidatosA.setText("LISTA CANDIDATOS A PRESIDENTE:");
+		lblListaCandidatosA.setFont(new Font("Verdana", Font.BOLD, 18));
+		lblListaCandidatosA.setBounds(102, 79, 432, 30);
+		getContentPane().add(lblListaCandidatosA);
+		
 
 
 		// cellSelectionModel.addListSelectionListener(new
@@ -302,6 +308,53 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		
+		ObtenerListaCandidatos();
+		List<String> CandidatoVotos =  ObtenerListaCandidatos();
+	   	int cont= 0;
+	   	int cont2=0;
+	   	List<String> party = new ArrayList<String>();
+	   	while (CandidatoVotos.size() > cont){
+	   		
+	   		String a = CandidatoVotos.get(cont);
+	   		String[] parts = a.split("-");
+	   		String part1 = parts[0]; // 004
+	   		//String part2 = parts[1]; // 034556
+	   		
+	   		party.add(part1);
+	   		
+	   		cont++;
+	   	}
+	   	
+	   	int ban= 0;
+		   //Output Results
+		   	for (int p=0; p < party.size(); p++) {
+		   		
+		   		if(ban == 0){
+		   		//System.out.println(party.get(p) + " obtuvo " + votes[p] + " Voto(s)");
+		   		lblCandidato1.setText(party.get(p) );
+		   		ban++;
+		   		}
+		   		else
+		   		if(ban == 1){
+		   			//System.out.println(party.get(p) + " obtuvo " + votes[p] + " Voto(s)");
+			   		lblCandidato2.setText(party.get(p) );
+			   		ban++;
+			   		}
+		   		else
+		   		if(ban == 2){
+		   			//System.out.println(party.get(p) + " obtuvo " + votes[p] + " Voto(s)");
+			   		lblCandidato3.setText(party.get(p) );
+			   		ban++;
+			   		}
+		   		else
+		   		if(ban == 3){
+		   			//System.out.println(party.get(p) + " obtuvo " + votes[p] + " Voto(s)");
+			   		lblCandidato4.setText(party.get(p) );
+			   		ban++;
+			   		}
+		   	}
 
 	}
 
@@ -310,14 +363,6 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == botonBuscar) {
-			//String ge = txtBuscar.getText();
-
-			ListasDAO listasDAO = new ListasDAO();
-
-			
-		}
 		if (e.getSource() == botonCancelar) {
 			Escrutinio escr = new Escrutinio();
 			escr.setVisible(true);
@@ -368,70 +413,11 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 	public void habilita(boolean codigo, boolean nombre, boolean edad,
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
-		botonBuscar.setEnabled(bBuscar);
 	}
 
 
 
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
-				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
-				+ "( lis.id_tipo_lista = tlis.id_tipo_lista)" + "order by tlis.descripcion, nro_lista" + "");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-
-
-	}
 
 	void LimpiarCampos() {
 		//txtBuscar.setText("");
@@ -459,8 +445,8 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select 'Lista N° ' || nro_lista || ' ' || nombre_lista as a, count(id_voto)  from ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista) " 
-				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = 'DIPUTADO' and id_evento = " +
-				VentanaBuscarEvento.evento + " group by a" );
+				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = 'PRESIDENTE - VICEPRESIDENTE' and li.id_evento = " +
+				VentanaBuscarEvento.evento + " group by a order by 2 desc" );
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -528,5 +514,87 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 	    arr = Arrays.copyOf(arr, N + 1);
 	    arr[N] = element;
 	    return arr;
+	}
+	
+	List<String> ObtenerListaCandidatos(){
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		boolean existe = false;
+
+		// Statement estatuto = conex.getConnection().createStatement();
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+
+		query.setQueryGenerico("select 'Lista N° ' || nro_lista || ' ' || nombre_lista as a, count(id_voto)  from ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista) " 
+				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = 'PRESIDENTE - VICEPRESIDENTE' and li.id_evento = " +
+				VentanaBuscarEvento.evento + " group by a order by 2 " );
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		String res = response.getQueryGenericoResponse();
+
+		if (res.compareTo("ERRORRRRRRR") == 0) {
+			JOptionPane.showMessageDialog(null, "algo salio mal",
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+		}
+
+		else {
+			existe = true;
+
+			String generoAntesPartir = response.getQueryGenericoResponse();
+
+			JSONParser j = new JSONParser();
+			Object ob = null;
+			String part1, part2, part3;
+
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (org.json.simple.parser.ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			filas = (JSONArray) ob;
+
+		}
+
+		int ite = 0;
+		String campo4, campo5 = "";
+		List<String> result = new ArrayList<String>();
+		int contador = 0;
+		
+		List<String> fin = new ArrayList<String>();
+		
+		while (filas.size() > ite) {
+			
+			contador = contador + 1  ;
+			
+			fil = (JSONArray) filas.get(ite);
+
+			
+		//	Arrays.toString()
+			
+			
+			
+			fin.add(fil.get(0).toString() + "-" + fil.get(1).toString() );
+			//= { fil.get(1).toString() };
+
+			//result.
+			//model.ciudades.add(fin);
+			ite++;
+			System.out.println(fin);
+		}
+		return fin;
 	}
 }

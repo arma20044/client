@@ -32,6 +32,9 @@ import java.awt.event.KeyEvent;
 import java.security.NoSuchAlgorithmException;
 
 import javax.swing.UIManager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowEvent;
 
 public class Login extends javax.swing.JFrame {
 	
@@ -43,6 +46,9 @@ public class Login extends javax.swing.JFrame {
 
     public Login()
     {
+    
+ 
+    
     	setResizable(false);
     	setIconImage(Toolkit.getDefaultToolkit().getImage(Login.class.getResource("/imgs/paraguay.png")));
         initComponents();
@@ -193,6 +199,11 @@ public class Login extends javax.swing.JFrame {
         		else{
         			campoContrasena.setBackground(Color.white);
         		}
+        	}
+        	@Override
+        	public void focusGained(FocusEvent arg0) {
+        	//	char car = arg0.getKeyListeners().getKeyChar();
+        	
         	}
         });
         labelTitulo = new javax.swing.JLabel();

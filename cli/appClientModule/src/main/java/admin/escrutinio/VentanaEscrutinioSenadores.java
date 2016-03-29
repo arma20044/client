@@ -67,6 +67,7 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 	JLabel lblCandidato2,lblCandidato3;
 	JLabel lblCandidato4;
 	JButton btnComenzar;
+	private JLabel lblEscrutinioSenadores;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -244,13 +245,13 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 				   		ban++;
 				   		}
 			   		else
-			   		if(ban == 3){
+			   		if(ban == 2){
 				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
 				   		lblCandidato3.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
 				   		ban++;
 				   		}
 			   		else
-			   		if(ban == 4){
+			   		if(ban == 3){
 			   			System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
 				   		lblCandidato4.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
 				   		ban++;
@@ -279,6 +280,12 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 		lblCandidato4 = new JLabel("");
 		lblCandidato4.setBounds(51, 289, 517, 32);
 		getContentPane().add(lblCandidato4);
+		
+		lblEscrutinioSenadores = new JLabel();
+		lblEscrutinioSenadores.setText("ESCRUTINIO SENADORES.");
+		lblEscrutinioSenadores.setFont(new Font("Verdana", Font.BOLD, 18));
+		lblEscrutinioSenadores.setBounds(200, 120, 270, 30);
+		getContentPane().add(lblEscrutinioSenadores);
 		recuperarDatos();
 
 
@@ -459,7 +466,7 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("select 'Lista N° ' || nro_lista || ' ' || nombre_lista as a, count(id_voto)  from ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista) " 
-				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = '"+  TCandidato + "' and id_evento = " +
+				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = '"+  TCandidato + "' and li.id_evento = " +
 				VentanaBuscarEvento.evento + " group by a" );
 
 		QueryGenericoResponse response = weatherClient
