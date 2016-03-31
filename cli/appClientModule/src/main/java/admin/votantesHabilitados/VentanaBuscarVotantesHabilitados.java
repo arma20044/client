@@ -3,6 +3,7 @@ package src.main.java.admin.votantesHabilitados;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
@@ -11,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -39,12 +38,8 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.Login;
-
-import java.awt.Color;
 
 public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionListener {
 
@@ -52,7 +47,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 										// relacion entre esta clase y la clase
 										// coordinador
 	
-	String tempNombre, tempApellido,tempIdMesa,mesa;
+	String tempNombre, tempApellido,tempIdMesa,mesa,tempHabilitado;
 	Integer tempCI ;
 	
 	static Integer ciVotante;
@@ -183,26 +178,36 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 					ciVotante = Integer.parseInt(codTemporal);
 					
 					tempCI = Integer.parseInt((String) table_1.getModel().getValueAt(
-							selectedRow[i], 1));
+							selectedRow[i], 2));
 					
 					tempNombre = (String) table_1.getModel().getValueAt(
-							selectedRow[i], 2);
-					
-					tempApellido = (String) table_1.getModel().getValueAt(
 							selectedRow[i], 3);
 					
+					tempApellido = (String) table_1.getModel().getValueAt(
+							selectedRow[i], 4);
+					
 					tempIdMesa =  (String) table_1.getModel().getValueAt(
-							selectedRow[i], 7);
+							selectedRow[i], 8);
 					
 					mesa = tempIdMesa.substring(tempIdMesa.length()-1);
+					
+					tempHabilitado =  (String) table_1.getModel().getValueAt(
+							selectedRow[i], 5);
 
 				}
 				System.out.println("Selected: " + selectedData);
 				
+				if(tempHabilitado.compareTo("SI")==0){
+					JOptionPane.showMessageDialog(null, "Ya esta habilitado",
+							"Información", JOptionPane.WARNING_MESSAGE);
+				}
+				
+				else{
+					if(tempHabilitado.compareTo("NO")==0){
 				VentanaHabilitarVotante habilitar = new VentanaHabilitarVotante(tempCI,tempNombre,tempApellido, Integer.parseInt(mesa));
 				habilitar.setVisible(true);
 				dispose();
-				
+				}}
 
 			}
 		});

@@ -827,7 +827,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 				+ "from ucsaws_persona per left join ucsaws_votante vot "
 				+ "on (per.id_persona = vot.id_persona) "
 				+ " where per.id_evento = " + VentanaBuscarEvento.evento + " and per.id_persona not in "
-				+ "(select id_persona from ucsaws_votante where sufrago = 1 ) order by 2"
+				+ "(select id_persona from ucsaws_votante where sufrago = 0 and (habilitado = 1 or habilitado = 2) )"
 				);
 
 		QueryGenericoResponse response = weatherClient

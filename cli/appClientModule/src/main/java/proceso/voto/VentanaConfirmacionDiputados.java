@@ -65,8 +65,8 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				
 				
 				
-				idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento, Integer.parseInt(EleccionMesa.local));
-				
+				//idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento, Integer.parseInt(EleccionMesa.local));
+				idMesa = EleccionMesa.Mesa;
 				
 				
 				Integer idListaPresidete = obtenerLista(1,

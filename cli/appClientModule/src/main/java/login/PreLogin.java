@@ -22,9 +22,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.proceso.voto.VentanaSenadores;
 import src.main.java.votante.VentanaPrincipalVotante;
 
 import java.awt.Color;
@@ -160,9 +162,19 @@ public class PreLogin extends javax.swing.JFrame {
        
         btnVotante.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
+        		
+        		
+        		
+        		if(eventoVigente() == 0){
+        			JOptionPane.showMessageDialog(null, "No existe ningun evento vigente.",
+        					"Advertencia", JOptionPane.WARNING_MESSAGE);
+        		}
+        		else
+        		{
         		EleccionMesa mesa = new EleccionMesa();
         		mesa.setVisible(true);
         		dispose();
+        		}
         	}
         });
         btnVotante.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/votante.png")));
@@ -277,4 +289,68 @@ public class PreLogin extends javax.swing.JFrame {
 			l.setVisible(true);
 			this.dispose();
 	}
+	
+	private static Integer eventoVigente() {
+
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		Object ob = null;
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+		System.out.println(Login.userLogeado);
+		query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) >= cast (now() as timestamp)");
+		
+		
+		
+	 
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		JSONParser j = new JSONParser();
+
+		String generoAntesPartir = response.getQueryGenericoResponse();
+		
+		if (generoAntesPartir.compareTo("[]")==0){
+			return 0;
+		}
+		
+		else{
+			
+			
+		
+
+		try {
+			ob = j.parse(generoAntesPartir);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		filas = (JSONArray) ob;
+
+		fil = (JSONArray) filas.get(0);
+
+		String result = fil.get(0).toString();
+		
+		VentanaBuscarEvento.evento = result;
+
+		return Integer.parseInt(result);
+		
+		}
+
+	}
+	
+	
+	
+	
 }

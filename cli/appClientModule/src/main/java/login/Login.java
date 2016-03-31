@@ -9,7 +9,10 @@ import javax.crypto.SecretKey;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.json.simple.JSONArray;
@@ -25,18 +28,24 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
 import java.awt.Color;
+import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.security.NoSuchAlgorithmException;
 
 import javax.swing.UIManager;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowEvent;
 
-public class Login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame implements KeyListener {
 	
 	 public static String userLogeado;
 	 public static String nombreApellidoUserLogeado;
@@ -46,6 +55,12 @@ public class Login extends javax.swing.JFrame {
 
     public Login()
     {
+    	addKeyListener(new KeyAdapter() {
+    		@Override
+    		public void keyPressed(KeyEvent e) {
+    			System.out.println("holaaaaaa");
+    		}
+    	});
     
  
     
@@ -163,6 +178,8 @@ public class Login extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+    	
+    	
 
         jLabel3 = new javax.swing.JLabel();
         labelUsuario = new javax.swing.JLabel();
@@ -312,6 +329,7 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
 
         pack();
+        getRootPane().setDefaultButton(botonEntrar);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonEntrarActionPerformed(java.awt.event.ActionEvent evt) throws ParseException {//GEN-FIRST:event_botonEntrarActionPerformed
@@ -605,6 +623,34 @@ public class Login extends javax.swing.JFrame {
 	    	 throw new Exception(e);
 	    } 
 	//return null;
-}
 
+	
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		 System.out.println("keyPressed");
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if(e.getKeyCode()== KeyEvent.VK_RIGHT)
+			System.out.println("derecha");
+        else if(e.getKeyCode()== KeyEvent.VK_LEFT)
+        	System.out.println("izq");
+        else if(e.getKeyCode()== KeyEvent.VK_DOWN)
+        	System.out.println("abajo");
+        else if(e.getKeyCode()== KeyEvent.VK_UP)
+        	System.out.println("arriba");
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		 System.out.println("keyTyped");
+		
+	}
+	
+	
 }

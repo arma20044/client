@@ -4,11 +4,13 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -20,9 +22,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.persona.Item;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.proceso.voto.VentanaPresidente;
 import src.main.java.votante.VentanaPrincipalVotante;
 
 import java.awt.Font;
@@ -31,18 +35,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JComboBox;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JPasswordField;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
 public class EleccionMesa extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
 	
 	public static Integer evento = obtenerEventoVigente();
 	
 	public static Integer Mesa = 0;
 	
+	public static Integer habilitado;
+	
 	public static String local ;
 	
 	public static Integer idEvento;
+	private JLabel lblCIN;
+	
+	List<Object[]> ciudades = new ArrayList<Object[]>();
+	private JPasswordField pfPass;
+	private JTextField txtUser;
 
 	/**
 	 * Launch the application.
@@ -55,48 +75,151 @@ public class EleccionMesa extends JFrame {
 	public EleccionMesa() {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 354, 215);
+		setBounds(100, 100, 354, 301);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		textField = new JTextField();
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				char car = arg0.getKeyChar();
-				if ((car < '0' || car > '9'))
-					arg0.consume();
-			}
-		});
-		textField.setBounds(137, 72, 89, 50);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		JButton btnNewButton = new JButton("Aceptar");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnAceptar = new JButton("Aceptar");
+		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Mesa = Integer.parseInt((textField.getText()));
 				
-				System.out.println("Mesa Seleccionada es: " + Mesa);
+				if(!(txtUser.getText().isEmpty()) && !(pfPass.getText().isEmpty()) ){
 				
-				local = obtenerLocal(Mesa.toString());
 				
-				idEvento = obtenerEvento(Integer.parseInt(local));
+				if(verificarDatos(txtUser.getText(), pfPass.getText())== true){
+					if (habilitado == 0){
+					VentanaPresidente main = new VentanaPresidente();
+					main.setVisible(true);
+					
+					dispose();
+					}
+					else{
+						JOptionPane.showMessageDialog(null,
+		                          "VOTANTE - Ud. ya ha votado",
+		                          "error",
+		                          JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
 				
-				VentanaPrincipalVotante votantePrincipal = new VentanaPrincipalVotante();
+				else{
+					
+					
+				}
+				
+			//	obtenerMesa
+				
+				//Mesa = Integer.parseInt((txtUser.getText()));
+				
+				//System.out.println("Mesa Seleccionada es: " + Mesa);
+				
+				//local = obtenerLocal(Mesa.toString());
+				
+				//idEvento = obtenerEvento(Integer.parseInt(local));
+				
+				
+				//SE OMITE
+				/*VentanaPrincipalVotante votantePrincipal = new VentanaPrincipalVotante();
         		votantePrincipal.setVisible(true);
-        		dispose();
+        		dispose();*/
+			}
+				else{
+					txtUser.setBackground(Color.RED);
+					
+					JOptionPane.showMessageDialog(null,
+	                          "VOTANTE - Ingrese usuario y contraseña",
+	                          "Campos Vacíos",
+	                          JOptionPane.INFORMATION_MESSAGE);
+					
+					txtUser.requestFocus();
+					
+				}
 			}
 		});
-		btnNewButton.setBounds(137, 160, 89, 23);
-		contentPane.add(btnNewButton);
+		btnAceptar.setBounds(89, 247, 89, 23);
+		contentPane.add(btnAceptar);
 		
-		JLabel lblNewLabel = new JLabel("Seleccione el Numero de Mesa:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblNewLabel.setBounds(51, 23, 278, 37);
-		contentPane.add(lblNewLabel);
+		JLabel lblContrasenha = new JLabel("Contraseña:");
+		lblContrasenha.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblContrasenha.setBounds(47, 128, 101, 37);
+		contentPane.add(lblContrasenha);
+		
+		lblCIN = new JLabel("C.I.N° / DNI:");
+		lblCIN.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblCIN.setBounds(49, 68, 117, 37);
+		contentPane.add(lblCIN);
+		
+		pfPass = new JPasswordField();
+		pfPass.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(pfPass.getText().trim().length() == 0){
+					pfPass.setBackground(Color.RED);
+				}
+				else{
+					pfPass.setBackground(Color.WHITE);
+				}
+			}
+		});
+		pfPass.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(pfPass.getText().trim().length() == 0){
+					pfPass.setBackground(Color.RED);
+				}
+				else{
+					pfPass.setBackground(Color.WHITE);
+				}
+			}
+		});
+		pfPass.setBounds(178, 138, 137, 23);
+		contentPane.add(pfPass);
+		
+		txtUser = new JTextField();
+		txtUser.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(txtUser.getText().trim().length() == 0){
+					txtUser.setBackground(Color.RED);
+				}
+				else{
+					txtUser.setBackground(Color.WHITE);
+				}
+			}
+		});
+		txtUser.addKeyListener(new KeyAdapter() {
+		
+			@Override
+			public void keyPressed(KeyEvent e) {
+			
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(txtUser.getText().trim().length() == 0){
+					txtUser.setBackground(Color.RED);
+				}
+				else{
+					txtUser.setBackground(Color.WHITE);
+				}
+			}
+		});
+		txtUser.setBounds(178, 79, 137, 20);
+		contentPane.add(txtUser);
+		txtUser.setColumns(10);
+		
+		JButton btnVolver = new JButton("Volver");
+		btnVolver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				PreLogin pre = new PreLogin();
+				pre.setVisible(true);
+				dispose();
+			}
+		});
+		btnVolver.setBounds(191, 247, 89, 23);
+		contentPane.add(btnVolver);
+		
+		getRootPane().setDefaultButton(btnAceptar);
 	}
 	
 	//Metodo para obtener el ID del evento
@@ -253,6 +376,143 @@ public class EleccionMesa extends JFrame {
 					return Integer.parseInt(result);
 
 				}
-		
-		
+				
+				private Vector recuperarDatosComboBoxPaisOrigen() {
+					Vector model = new Vector();
+					JSONArray filas = new JSONArray();
+					JSONArray fil = new JSONArray();
+
+					boolean existe = false;
+
+					// Statement estatuto = conex.getConnection().createStatement();
+
+					ApplicationContext ctx = SpringApplication
+							.run(WeatherConfiguration.class);
+
+					WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+					QueryGenericoRequest query = new QueryGenericoRequest();
+
+					// para registrar se inserta el codigo es 1
+					query.setTipoQueryGenerico(2);
+
+					// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+					// +
+					// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+					query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento =  " + VentanaBuscarEvento.evento
+							+ " order by nombre");
+
+					QueryGenericoResponse response = weatherClient
+							.getQueryGenericoResponse(query);
+					weatherClient.printQueryGenericoResponse(response);
+
+					String res = response.getQueryGenericoResponse();
+
+					if (res.compareTo("ERRORRRRRRR") == 0) {
+						JOptionPane.showMessageDialog(null, "algo salio mal",
+								"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+					}
+
+					else {
+						existe = true;
+
+						String generoAntesPartir = response.getQueryGenericoResponse();
+
+						JSONParser j = new JSONParser();
+						Object ob = null;
+						String part1, part2, part3;
+
+						try {
+							ob = j.parse(generoAntesPartir);
+						} catch (org.json.simple.parser.ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						filas = (JSONArray) ob;
+
+					}
+
+					int ite = 0;
+					String campo4, campo5 = "";
+					while (filas.size() > ite) {
+						fil = (JSONArray) filas.get(ite);
+
+						String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+						ciudades.add(fin);
+						model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+						ite++;
+					}
+					return model;
+
+				}
+				
+				
+				private static Boolean verificarDatos(String user, String pass) {
+					Boolean result = false;
+
+					JSONArray filas = new JSONArray();
+					JSONArray fil = new JSONArray();
+
+					Object ob = null;
+
+					ApplicationContext ctx = SpringApplication
+							.run(WeatherConfiguration.class);
+
+					WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+					QueryGenericoRequest query = new QueryGenericoRequest();
+
+					// para registrar se inserta el codigo es 1
+					query.setTipoQueryGenerico(2);
+					System.out.println(Login.userLogeado);
+					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+							+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
+					
+					
+					
+				 
+
+					QueryGenericoResponse response = weatherClient
+							.getQueryGenericoResponse(query);
+					weatherClient.printQueryGenericoResponse(response);
+
+					JSONParser j = new JSONParser();
+
+					String generoAntesPartir = response.getQueryGenericoResponse();
+					
+					if (generoAntesPartir.compareTo("[]") == 0){
+						   JOptionPane.showMessageDialog(null,
+			                          "VOTANTE - Inicio de sesion incorrecto",
+			                          "No Coinciden DAts",
+			                          JOptionPane.INFORMATION_MESSAGE);
+						   return result;
+					}
+					else{
+					try {
+						ob = j.parse(generoAntesPartir);
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					filas = (JSONArray) ob;
+
+					fil = (JSONArray) filas.get(0);
+					
+					//Mesa = (Integer) fil.get(1);
+					
+					Mesa = (int) (long)  fil.get(1);
+					
+					habilitado = (int) (long) fil.get(2);
+					
+					VentanaPrincipalVotante.idVotante = (int) (long) fil.get(3);
+
+					result = true;
+
+					return result;
+
+				}
+				}
 }
