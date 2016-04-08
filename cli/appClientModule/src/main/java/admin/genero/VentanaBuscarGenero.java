@@ -12,11 +12,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,10 +31,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -51,6 +58,10 @@ import src.main.java.login.Login;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.JComboBox;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	
@@ -61,9 +72,10 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo;
-	private JTextField txtBuscar;
+	private JTextField txtFiltro;
 	private JLabel lblBuscar;
 	private JButton botonCancelar, botonBuscar, botonEliminar, btnNewButton;
+	private JComboBox comboFiltro;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -74,6 +86,14 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	private DefaultTableModel dm;
+	
+	
+	
+	private TableRowSorter<TableModel> trsFiltro = new TableRowSorter<TableModel>(model);
+	
+	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -158,9 +178,19 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		lblBuscar.setBounds(20, 131, 64, 25);
 		getContentPane().add(lblBuscar);
 
-		txtBuscar = new JTextField();
-		txtBuscar.setBounds(86, 131, 319, 26);
-		getContentPane().add(txtBuscar);
+		txtFiltro = new JTextField();
+		txtFiltro.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				
+				String query =txtFiltro.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
+		
+		
+		txtFiltro.setBounds(86, 131, 319, 26);
+		getContentPane().add(txtFiltro);
 		botonEliminar.addActionListener(this);
 		botonBuscar.addActionListener(this);
 		botonCancelar.addActionListener(this);
@@ -226,7 +256,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(1));
+					txtFiltro.setText(selectedData.get(1));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -240,7 +270,8 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table_1.setModel(model);
+		recuperarDatos();
+		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE GENEROS");
@@ -289,8 +320,16 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(57, 167, 432, 14);
+		lblMensaje.setBounds(79, 188, 432, 14);
 		getContentPane().add(lblMensaje);
+		
+		String[] petStrings = { "Codigo", "Descripcion" };
+		comboFiltro = new JComboBox(petStrings);
+		comboFiltro.setBounds(133, 168, 110, 20);
+		getContentPane().add(comboFiltro);
+		
+
+        
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -329,14 +368,14 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == botonBuscar) {
-			String ge = txtBuscar.getText();
+			String ge = txtFiltro.getText();
 
 			GeneroDAO generoDAO = new GeneroDAO();
 
-			if (!(txtBuscar.getText().length() == 0)) {
+			if (!(txtFiltro.getText().length() == 0)) {
 
 				try {
-					miPersona = generoDAO.buscarGenero(txtBuscar.getText());
+					miPersona = generoDAO.buscarGenero(txtFiltro.getText());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -362,7 +401,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 					model = new GeneroJTableModel();
 					recuperarDatos();
-					table_1.setModel(model);
+					table_1.setModel(dm);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					model.fireTableDataChanged();
 				}
@@ -372,7 +411,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				lblMensaje
 						.setText("Por favor complete los campos para realizar la busqueda");
 				codTemporal = "";
-				txtBuscar.setText("");
+				txtFiltro.setText("");
 
 				Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -404,7 +443,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 					lblMensaje.setText("Excelente, se ha eliminado el Genero");
 					codTemporal = "";
-					txtBuscar.setText("");
+					txtFiltro.setText("");
 
 					Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -422,7 +461,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 					model = new GeneroJTableModel();
 
 					recuperarDatos();
-					table_1.setModel(model);
+					table_1.setModel(dm);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					// model.fireTableDataChanged();
 					// table_1.repaint();
@@ -462,7 +501,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	private void muestraPersona(JSONArray genero) {
 		JSONArray a = (JSONArray) genero.get(0);
 		// txtId.setText(Long.toString( (Long) a.get(0)) );
-		txtBuscar.setText((String) a.get(1));
+		txtFiltro.setText((String) a.get(1));
 		// textFecha.setText((String) a.get(2));
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
@@ -474,7 +513,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	 * Permite limpiar los componentes
 	 */
 	public void limpiar() {
-		txtBuscar.setText("");
+		txtFiltro.setText("");
 
 		// codTemporal.setText("");
 		habilita(true, false, false, false, false, true, false, true, true);
@@ -497,7 +536,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	public void habilita(boolean codigo, boolean nombre, boolean edad,
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
-		txtBuscar.setEditable(codigo);
+		txtFiltro.setEditable(codigo);
 		botonBuscar.setEnabled(bBuscar);
 		// botonModificar.setEnabled(true);
 		botonEliminar.setEnabled(bEliminar);
@@ -557,6 +596,11 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 			filas = (JSONArray) ob;
 
 		}
+		
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
 
 		int ite = 0;
 		String campo4, campo5 = "";
@@ -568,18 +612,112 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
 					fil.get(2).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < 4){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		 
+		
+		
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID", "Item",  "Codigo", "Descripcion"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
 	void LimpiarCampos() {
-		txtBuscar.setText("");
+		txtFiltro.setText("");
 		// textFecha.setText("");
 		// textUsu.setText("");
 		codTemporal = "";
 		// txtId.setText("");
 
 	}
+	
+	public void filtro() {
+        int columnaABuscar = 0;
+        if (comboFiltro.getSelectedItem() == "Codigo") {
+            columnaABuscar = 0;
+        }
+        if (comboFiltro.getSelectedItem().toString() == "Descripcion") {
+            columnaABuscar = 1;
+        }
+       try{
+        trsFiltro.setRowFilter(RowFilter.regexFilter(txtFiltro.getText(), columnaABuscar));
+       }
+       catch(Exception e){
+    	   System.out.println(e);
+       }
+       
+        
+        //table_1.set   setRowSorter(RowFilter.regexFilter(txtFiltro.getText(), columnaABuscar));
+    }
+	
+	
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table_1.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
+	}
+//	
+//	private void createColumns(){
+//	dm=(DefaultTableModel) table_1.getModel();
+//	
+//	
+//	}
+	
+	
+	public static DefaultTableModel buildTableModel(ResultSet rs)
+	        throws SQLException {
+
+	    ResultSetMetaData metaData = rs.getMetaData();
+
+	    // names of columns
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = metaData.getColumnCount();
+	    for (int column = 1; column <= columnCount; column++) {
+	        columnNames.add(metaData.getColumnName(column));
+	    }
+
+	    // data of the table
+	    Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+	    while (rs.next()) {
+	        Vector<Object> vector = new Vector<Object>();
+	        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+	            vector.add(rs.getObject(columnIndex));
+	        }
+	        data.add(vector);
+	    }
+
+	    return new DefaultTableModel(data, columnNames);
+
+	}
+	
+	
+	
+	
 }

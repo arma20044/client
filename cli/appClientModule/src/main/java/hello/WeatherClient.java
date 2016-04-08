@@ -17,10 +17,14 @@ import org.springframework.ws.soap.client.core.SoapActionCallback;
 
 public class WeatherClient extends WebServiceGatewaySupport {
 	
-	public final static String URL = "http://voto.ws:8080/";
+	//local
+	//public final static String URL = "http://voto.ws:8080/";
 	
 //	apunta a ubuntu maquina virtual
 //	public final static String URL = "http://192.168.1.103:8080/";
+	
+	public final static String URL = "http://169.168.0.151:8080/";
+	
 
 	public ConsultarResponse getConsultarResponse(ConsultarRequest consulta) {
 		ConsultarRequest request = new ConsultarRequest();

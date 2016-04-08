@@ -7,8 +7,8 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 @Configuration
 public class WeatherConfiguration {
-	
-	//public final static String URL = "https://ubuntu/"; con maquina virtual
+	//public final static String URL = "http://192.168.0.151:8080/"; sin https
+	//public final static String URL = "https://ubuntu/"; //con maquina virtual https
 	public final static String URL = "http://localhost:8080/"; //todo desde win
 	
 //	apunta a ubuntu maquina virtual
