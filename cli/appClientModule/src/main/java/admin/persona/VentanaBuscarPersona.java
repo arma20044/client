@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,10 +26,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -45,6 +48,8 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
@@ -65,6 +70,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	private DefaultTableModel dm;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -124,6 +131,14 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				
+				String query =txtBuscar.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
 		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
 		botonEliminar.addActionListener(this);
@@ -205,7 +220,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table_1.setModel(model);
+		recuperarDatos();
+		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE PERSONAS");
@@ -327,7 +343,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 					model = new PersonaJTableModel();
 					recuperarDatos();
-					table_1.setModel(model);
+					table_1.setModel(dm);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					model.fireTableDataChanged();
 				}
@@ -376,7 +392,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 					model = new PersonaJTableModel();
 
 					recuperarDatos();
-					table_1.setModel(model);
+					table_1.setModel(dm);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					// model.fireTableDataChanged();
 					// table_1.repaint();
@@ -512,6 +528,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 			filas = (JSONArray) ob;
 
 		}
+		
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
 		int ite = 0;
 		String campo4, campo5 = "";
@@ -527,9 +545,28 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 					fil.get(6).toString(), fil.get(7).toString(),
 					fil.get(8).toString(), fil.get(9).toString() };
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < 11){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		
+		  // names of columns
+		
+				String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular"};
+				
+			    Vector<String> columnNames = new Vector<String>();
+			    int columnCount = colNames.length;
+			    for (int column = 0; column < columnCount; column++) {
+			        columnNames.add(colNames[column]);
+			    }
+			    
+			    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -540,5 +577,20 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		codTemporal = "";
 		// txtId.setText("");
 
+	}
+	
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table_1.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
 	}
 }

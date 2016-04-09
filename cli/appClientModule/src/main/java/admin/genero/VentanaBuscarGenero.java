@@ -64,9 +64,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class VentanaBuscarGenero extends JFrame implements ActionListener {
-	
-	private JPanelOne panel;
-	private JPanel panelMain;
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -75,7 +72,6 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	private JTextField txtFiltro;
 	private JLabel lblBuscar;
 	private JButton botonCancelar, botonBuscar, botonEliminar, btnNewButton;
-	private JComboBox comboFiltro;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -141,24 +137,6 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonEliminar.setIcon(new ImageIcon(newimg4));
-		
-		/*
-		 * 
-		 * nuevo
-		 */
-		
-		  // creating main JPanel (white)
-        panelMain = new JPanel();
-        panelMain.setBackground(Color.WHITE);
-        panelMain.setBounds(34, 0, 619, 85);
-        //panelMain.setPreferredSize(new Dimension(619, 85));
-        getContentPane().add(panelMain);
-
-		   // creating new JPanelOne object from JPanelOne class containing black JPanel
-        panel = new JPanelOne();
-
-        // adding black JPanel to main JPanel (white)
-        panelMain.add(panel);
         
 			
         
@@ -170,7 +148,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE GENERO");
-		labelTitulo.setBounds(175, 96, 270, 30);
+		labelTitulo.setBounds(161, 49, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		lblBuscar = new JLabel();
@@ -324,9 +302,6 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		getContentPane().add(lblMensaje);
 		
 		String[] petStrings = { "Codigo", "Descripcion" };
-		comboFiltro = new JComboBox(petStrings);
-		comboFiltro.setBounds(133, 168, 110, 20);
-		getContentPane().add(comboFiltro);
 		
 
         
@@ -649,24 +624,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 	}
 	
-	public void filtro() {
-        int columnaABuscar = 0;
-        if (comboFiltro.getSelectedItem() == "Codigo") {
-            columnaABuscar = 0;
-        }
-        if (comboFiltro.getSelectedItem().toString() == "Descripcion") {
-            columnaABuscar = 1;
-        }
-       try{
-        trsFiltro.setRowFilter(RowFilter.regexFilter(txtFiltro.getText(), columnaABuscar));
-       }
-       catch(Exception e){
-    	   System.out.println(e);
-       }
-       
-        
-        //table_1.set   setRowSorter(RowFilter.regexFilter(txtFiltro.getText(), columnaABuscar));
-    }
+
 	
 	
 	public void filter(String query){

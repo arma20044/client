@@ -9,12 +9,15 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,9 +28,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -66,6 +71,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
+	
+	private DefaultTableModel dm;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -101,6 +108,14 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		getContentPane().add(lblBuscar);
 
 		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+				String query =txtBuscar.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
 		txtBuscar.setBounds(86, 52, 319, 25);
 		getContentPane().add(txtBuscar);
 		botonCancelar.addActionListener(this);
@@ -146,17 +161,38 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 				
 				List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table_1.getSelectedRows();
+				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+				
+				
+				//Object a = table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]), 0);
 				// int[] selectedColumns = table_1.getSelectedColumns();
+				//System.out.println(a);
 
-				for (int i = 0; i < selectedRow.length; i++) {
+				//if (selectedRow >= 0) {
+				int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+					System.out.println(selectedRow);
 					int col = 0;
-					while (table_1.getColumnCount() > col) {
-						System.out.println(table_1.getValueAt(selectedRow[i],
-								col));
+					while (col < table_1.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table_1.getValueAt(
-									selectedRow[i], col));
+							int row = table_1.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table_1.getModel().getValueAt(table_1.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							System.out.println(selectedData);
+							
+							
+							 
+							 //comentar despues
+							 int row1 = table_1.rowAtPoint(arg0.getPoint());
+							 String table_click01 = table_1.getModel().getValueAt(table_1.
+			                          convertRowIndexToModel(row1), 0).toString();
+			                //System.out.println(table_click01);
+			                //comentar despues
+			                
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -171,30 +207,24 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table_1.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal = selectedData.get(0);
 					
 					
-					ciVotante = Integer.parseInt(codTemporal);
+					ciVotante = Integer.parseInt(selectedData.get(2));
 					
-					tempCI = Integer.parseInt((String) table_1.getModel().getValueAt(
-							selectedRow[i], 2));
+					tempCI = Integer.parseInt(selectedData.get(2));
 					
-					tempNombre = (String) table_1.getModel().getValueAt(
-							selectedRow[i], 3);
+					tempNombre =selectedData.get(3);
 					
-					tempApellido = (String) table_1.getModel().getValueAt(
-							selectedRow[i], 4);
+					tempApellido = selectedData.get(4);
 					
-					tempIdMesa =  (String) table_1.getModel().getValueAt(
-							selectedRow[i], 8);
+					tempIdMesa =  selectedData.get(8);;
 					
 					mesa = tempIdMesa.substring(tempIdMesa.length()-1);
 					
-					tempHabilitado =  (String) table_1.getModel().getValueAt(
-							selectedRow[i], 5);
+					tempHabilitado = selectedData.get(5);
 
-				}
+				//}
 				System.out.println("Selected: " + selectedData);
 				
 				if(tempHabilitado.compareTo("SI")==0){
@@ -212,7 +242,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table_1.setModel(model);
+		recuperarDatos();
+		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE VOTANTES HABILITADOS\r\n");
@@ -412,6 +443,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			filas = (JSONArray) ob;
 
 		}
+		
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
 		int ite = 0;
 		String campo4, campo5 = "";
@@ -424,9 +457,28 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString(), fil.get(5).toString(), fil.get(6).toString(),fil.get(7).toString(),fil.get(8).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < 10){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		
+		// names of columns
+		
+				String[] colNames = new String[] {"ID","Item", "CI","Nombre", "Apellido","Habilitado?", "Sufrago?","Lugar de Votación","Mesa N°"};
+				
+			    Vector<String> columnNames = new Vector<String>();
+			    int columnCount = colNames.length;
+			    for (int column = 0; column < columnCount; column++) {
+			        columnNames.add(colNames[column]);
+			    }
+			    
+			    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -437,5 +489,20 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		codTemporal = "";
 		// txtId.setText("");
 
+	}
+	
+public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table_1.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
 	}
 }
