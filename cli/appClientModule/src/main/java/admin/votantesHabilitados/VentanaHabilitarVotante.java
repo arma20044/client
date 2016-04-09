@@ -169,7 +169,7 @@ public class VentanaHabilitarVotante extends JDialog {
 		query.setTipoQueryGenerico(3);
 
 		query.setQueryGenerico("UPDATE ucsaws_votante " +
-		" set habilitado = 1    where id_votante = " + VentanaBuscarVotantesHabilitados.ciVotante + " and  id_evento= " 
+		" set habilitado = 1    where id_votante = " + VentanaBuscarVotantesHabilitados.idVotante + " and  id_evento= " 
 				+ VentanaBuscarEvento.evento
 				 );
 

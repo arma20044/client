@@ -57,6 +57,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	
 	static Integer ciVotante;
 	
+	static Integer idVotante;
+	
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
@@ -187,9 +189,9 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 							
 							 
 							 //comentar despues
-							 int row1 = table_1.rowAtPoint(arg0.getPoint());
-							 String table_click01 = table_1.getModel().getValueAt(table_1.
-			                          convertRowIndexToModel(row1), 0).toString();
+							// int row1 = table_1.rowAtPoint(arg0.getPoint());
+							//String table_click01 = table_1.getModel().getValueAt(table_1.
+			                  //        convertRowIndexToModel(row1), 0).toString();
 			                //System.out.println(table_click01);
 			                //comentar despues
 			                
@@ -208,6 +210,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = selectedData.get(0);
+					
+					idVotante =Integer.parseInt(codTemporal);
 					
 					
 					ciVotante = Integer.parseInt(selectedData.get(2));
@@ -460,7 +464,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			//model.ciudades.add(fin);
 			int pos = 0;
 			 Vector<Object> vector = new Vector<Object>();
-			while(pos < 10){
+			while(pos < fin.length){
 			vector.add(fin[pos]);
 			pos++;
 			}
