@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,6 +28,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -162,17 +165,21 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent arg0) {
 				List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
+				int selectedRow = table.rowAtPoint(arg0.getPoint());
+					System.out.println(selectedRow);
 					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
+					while (col < table.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
+							int row = table.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							System.out.println(selectedData);
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -182,15 +189,75 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtNro.setText(selectedData.get(0));
-					txtNombre.setText(selectedData.get(1));
-					txtAnho.setText(selectedData.get(2));
+					txtNro.setText(selectedData.get(2));
+					txtNombre.setText(selectedData.get(3));
+					txtAnho.setText(selectedData.get(4));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal = selectedData.get(0);
+					
+				//	cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
+					//cmbTipoLista.removeAllItems();
+					
+//					//cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
+//					Item item = (Item) cmbTipoLista.getSelectedItem();
+//					Integer tipoListaSelected = item.getId();
+					
+					//cmbTipoLista.setSelectedItem(3);
+					System.out.println(cmbTipoLista.getSelectedItem());
+					
+				//	Item item = (Item) cmbTipoLista.getSelectedItem();
+				//	Integer tipoListaSelected = item.getId();
+					
+					
+					//cmbTipoLista.setSelectedItem(selectedData.get(5));
+					//test datamodel to array
+					DefaultComboBoxModel dtm = (DefaultComboBoxModel)  cmbTipoLista.getModel();
+					System.out.println(dtm.getSize());
+					int cont=0;
+					while(cont < dtm.getSize()){
+						if (dtm.getElementAt(cont).toString().compareToIgnoreCase(selectedData.get(5).toString())==0)
+						{
+							Item item = (Item) dtm.getElementAt(cont);
+							Integer tipoListaSelected = item.getId();
+							cmbTipoLista.setSelectedIndex(cont);
+							break;
+						}
+						
+							cont++;
+						
+						System.out.println(dtm.getElementAt(0));
+					}
+					
+					selectedData.get(5);
+				   // int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
+				   // Object[][] tableData = new Object[nRow][nCol];
+				  //  for (int i = 0 ; i < nRow ; i++)
+				  //      for (int j = 0 ; j < nCol ; j++)
+				          //  tableData[i][j] = dtm.getValueAt(i,j);
+					
+					
+					
+					
+					
+					//test
+					//cmbTipoLista.getModel();
+					
+					
+					//cmbTipoLista.setSelectedIndex(2);
+					
+					
+				//	cmbTipoLista.repaint();
+				//	//cmbTipoLista.updateUI();
+				//	System.out.println(cmbTipoLista.getSelectedItem().toString());
+				   
+				        
+				        
+					
+				//	cmbTipoLista.setSelectedItem(selectedData.get(2));
+					//repaint();
 
-				}
+				
 				System.out.println("Selected: " + selectedData);
 
 			}

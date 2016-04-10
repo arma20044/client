@@ -171,8 +171,8 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtCodigoPais.setText(selectedData.get(0));
-					txtDescripcion.setText(selectedData.get(1));
+					txtCodigoPais.setText(selectedData.get(1));
+					txtDescripcion.setText(selectedData.get(2));
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));

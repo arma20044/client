@@ -156,17 +156,29 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent arg0) {
 				List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table.getSelectedRows();
+				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+				
+				
+				//Object a = table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]), 0);
 				// int[] selectedColumns = table_1.getSelectedColumns();
+				//System.out.println(a);
 
-				for (int i = 0; i < selectedRow.length; i++) {
+				//if (selectedRow >= 0) {
+				int selectedRow = table.rowAtPoint(arg0.getPoint());
+					System.out.println(selectedRow);
 					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
+					while (col < table.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
+							int row = table.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							System.out.println(selectedData);
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -176,16 +188,15 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtNroZona.setText(selectedData.get(0));
-					txtDescripcion.setText(selectedData.get(1));
+					txtNroZona.setText(selectedData.get(2));
+					txtDescripcion.setText(selectedData.get(3));
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal = (selectedData.get(0));
 
-				}
-				System.out.println("Selected: " + selectedData);
+				
+			//	System.out.println("Selected: " + selectedData);
 
 			}
 		});

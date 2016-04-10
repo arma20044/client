@@ -14,7 +14,7 @@ public class TipoEventoJTableModel extends AbstractTableModel {
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 7;
+		return 3;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class TipoEventoJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID","Item", "Descripcion", "Fecha Ins.","Usuario Ins.", "Fecha Upd", "Usuario Upd"};
+	private String[] colNames = new String[] {"ID","Item", "Descripcion"};
 
 	@Override
 	public String getColumnName(int col) {
