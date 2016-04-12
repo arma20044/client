@@ -26,12 +26,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -83,6 +85,9 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	private JLabel lblAnho;
 	private JTextField txtAnho;
 	private JComboBox cmbTipoLista;
+	private JTextField txtFiltrar;
+	private DefaultTableModel dm;
+	private ListasDAO listaDAO = new ListasDAO();
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -263,7 +268,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
+		recuperarDatos();
+		table.setModel(dm);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -346,8 +352,39 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		getContentPane().add(lblTipoLista);
 
 		cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
+		cmbTipoLista.setSelectedIndex(-1);
 		cmbTipoLista.setBounds(213, 146, 340, 20);
 		getContentPane().add(cmbTipoLista);
+		
+		txtFiltrar = new JTextField();
+		txtFiltrar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String query =txtFiltrar.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
+		txtFiltrar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtFiltrar.setText("");
+				txtFiltrar.setForeground(Color.BLACK);
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(txtFiltrar.getText().length()== 0){
+					String query =txtFiltrar.getText().toUpperCase(); 
+					filter(query);
+					txtFiltrar.setText("Escriba para Filtrar");
+					txtFiltrar.setForeground(Color.LIGHT_GRAY);
+				}
+			}
+		});
+		txtFiltrar.setForeground(Color.LIGHT_GRAY);
+		txtFiltrar.setText("Escriba para filtrar...");
+		txtFiltrar.setEditable(true);
+		txtFiltrar.setBounds(174, 383, 319, 26);
+		getContentPane().add(txtFiltrar);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -394,6 +431,8 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
 
+						
+						if (codTemporal==""){
 						Calendar calendar = new GregorianCalendar();
 						int year = calendar.get(Calendar.YEAR);
 
@@ -425,7 +464,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 						model = new PaisJTableModel();
 						recuperarDatos();
-						table.setModel(model);
+						table.setModel(dm);
 						model.fireTableDataChanged();
 						table.removeColumn(table.getColumnModel().getColumn(0));
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
@@ -439,10 +478,11 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						});
 						t.setRepeats(false);
 						t.start();
-
+						cmbTipoLista.setSelectedIndex(-1);
 						txtNro.setText("");
 						txtNombre.setText("");
 						txtAnho.setText("");
+						codTemporal = "";
 						// this.dispose();
 						// } else {
 						// // JOptionPane.showMessageDialog(null,
@@ -461,7 +501,34 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						// t.setRepeats(false);
 						// t.start();
 						// }
-					} else {
+					}
+						else 
+							if(codTemporal!= "")
+							{
+								listaDAO.actualizarLista(txtNro.getText(), txtNombre.getText(), txtAnho.getText(), tipoListaSelected.toString(), codTemporal);
+								recuperarDatos();
+								table.setModel(dm);
+								model.fireTableDataChanged();
+								table.removeColumn(table.getColumnModel().getColumn(0));
+								// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+								lblMensaje
+										.setText("Excelente, se ha modificado la Lista.");
+								Timer t = new Timer(Login.timer, new ActionListener() {
+
+									public void actionPerformed(ActionEvent e) {
+										lblMensaje.setText(null);
+									}
+								});
+								t.setRepeats(false);
+								t.start();
+
+								txtNro.setText("");
+								txtNombre.setText("");
+								txtAnho.setText("");
+								cmbTipoLista.setSelectedIndex(-1);
+								codTemporal = "";
+							}
+						else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
@@ -477,6 +544,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						t.start();
 					}
 
+				}
 				}
 
 				else {
@@ -563,6 +631,11 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 		}
 
+Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
 		int contador = 0;
@@ -571,12 +644,33 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString() };
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < fin.length){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		 
+		
+		
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID","Item", "Nro", "Nombre","Año","Tipo Lista"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -650,5 +744,19 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		}
 		return model;
 
+	}
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
 	}
 }

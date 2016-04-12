@@ -3,12 +3,15 @@ package src.main.java.admin;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import src.main.java.admin.DefinicionesGenerales.MKeyListener;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.login.Login;
 
@@ -19,6 +22,8 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	private Coordinador miCoordinador; //objeto miCoordinador que permite la relacion entre esta clase y la clase coordinador
 	
 	public static boolean reporte;
+	
+	private JButton btnAdministracion ,btnReportes ;
 
 	/**
 	 * Establece la informacion que se presentara como introduccion del sistema
@@ -55,7 +60,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		//lblNombreDescripcion.setText();
 		getContentPane().add(lblNombreDescripcion);
 		
-		JButton btnAdministracion = new JButton("Administracion");
+		btnAdministracion = new JButton("Administracion");
 		btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAdministracion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -76,7 +81,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		lblTitulo.setBounds(24, 72, 503, 86);
 		getContentPane().add(lblTitulo);
 		
-		JButton btnReportes = new JButton("Reportes");
+		btnReportes = new JButton("Reportes");
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -95,6 +100,15 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		//lblNombreDescripcion.repaint();
 		
 		
+		btnAdministracion.addKeyListener(new MKeyListener());
+		btnReportes.addKeyListener(new MKeyListener());
+		
+		
+		
+		
+		
+		
+		
 		
 		
 
@@ -111,5 +125,28 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	class MKeyListener extends KeyAdapter {
+
+		@Override
+	        public void keyPressed(KeyEvent event) {
+
+	    
+
+	            if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+	            	
+	            	
+	            if(btnAdministracion.isFocusOwner()==true){
+	            	btnAdministracion.doClick();
+	                    System.out.println("the button is: " + btnAdministracion.getText()+ " btnAdministracion");
+	                }
+	            
+	            if(btnReportes.isFocusOwner()==true){
+	            	btnReportes.doClick();
+	                    System.out.println("the button is: " + btnReportes.getText()+ " btnReportes");
+	                }
+	            }
+		}
 	}
 }

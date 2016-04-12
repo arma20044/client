@@ -21,6 +21,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,10 +32,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -49,6 +53,7 @@ import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -92,6 +97,11 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	private JTextField txtMinDesde;
 	private JTextField txtHoraHasta;
 	private JTextField txtMinHasta;
+	private JTextField txtFiltrar;
+	
+	private DefaultTableModel dm;
+	
+	private EventoDAO eventoDAO = new EventoDAO();
 	
 
 	/**
@@ -151,20 +161,11 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		scrollPane.setBounds(0, 257, 1146, 160);
 		getContentPane().add(scrollPane);
 
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
+		table = new JTable()  {  
+		      public boolean isCellEditable(int row, int column){  
+			        return false;  
+			      }  
+			};
 		table.setToolTipText("Lista de Eventos");
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -172,43 +173,84 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
+List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
+				
+				int selectedRow = table.rowAtPoint(arg0.getPoint());
+					//System.out.println(selectedRow);
 					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
+					while (col < table.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
+							int row = table.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							//System.out.println(selectedData);
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
 
 						col++;
 					}
+					
+					//Selected: [1, 345343, TEST ANDE, 01/09/2015 07:00:00, 11/04/2016 23:30:00, ELECCIONES GENERALES]
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
+					txtNro.setText(selectedData.get(2));
+					 txtDescripcion.setText(selectedData.get(3));
+					 txtFchDesde.setText(selectedData.get(4).substring(0, 10));
+					 txtHoraDesde.setText(selectedData.get(4).substring(11, 13));
+					 txtMinDesde.setText(selectedData.get(4).substring(14, 16));
+					 
+					 txtFchHasta.setText( selectedData.get(5).substring(0, 10));
+					 txtHoraHasta.setText(selectedData.get(5).substring(11, 13));
+					 txtMinHasta.setText(selectedData.get(5).substring(14, 16));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal =selectedData.get(0);
+					
+					// actualizar combo persona
+					DefaultComboBoxModel dtm = (DefaultComboBoxModel)  cmbTipoEvento.getModel();
+					
+					//System.out.println(dtm.getSize());
+					int cont=0;
+					Boolean finded=false;
+					int tamanho = dtm.getSize();
+					while(cont < dtm.getSize()){
+						if (dtm.getElementAt(cont).toString().compareTo(selectedData.get(6).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbTipoEvento.setSelectedIndex(cont);
+							finded=true;
+							break;
+						}
+						
+							cont++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(finded==false){
+						String a = selectedData.get(6).toString();
+						cmbTipoEvento.addItem(a);
+						cmbTipoEvento.setSelectedIndex(tamanho);
+					}
+					// actualizar combo persona
 
-				}
+				
 				System.out.println("Selected: " + selectedData);
 
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
+		recuperarDatos();
+		table.setModel(dm);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -230,8 +272,8 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 		lblTipoEvento = new JLabel();
 		lblTipoEvento.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTipoEvento.setText("Genero:");
-		lblTipoEvento.setBounds(130, 206, 61, 25);
+		lblTipoEvento.setText("Tipo Evento:");
+		lblTipoEvento.setBounds(96, 206, 95, 25);
 		getContentPane().add(lblTipoEvento);
 
 		cmbTipoEvento = new JComboBox(recuperarDatosComboBoxTipoEvento());
@@ -463,6 +505,39 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
+		
+		cmbTipoEvento.setSelectedIndex(-1);
+		
+		txtFiltrar = new JTextField();
+		txtFiltrar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtFiltrar.setText("");
+				txtFiltrar.setForeground(Color.BLACK);
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(txtFiltrar.getText().length()== 0){
+					String query =txtFiltrar.getText().toUpperCase(); 
+					filter(query);
+					txtFiltrar.setText("Escriba para Filtrar");
+					txtFiltrar.setForeground(Color.LIGHT_GRAY);
+				}
+			}
+		});
+		txtFiltrar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String query =txtFiltrar.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
+		txtFiltrar.setText("");
+		txtFiltrar.setForeground(Color.LIGHT_GRAY);
+		txtFiltrar.setEditable(true);
+		txtFiltrar.setBounds(234, 415, 319, 25);
+		
+		getContentPane().add(txtFiltrar);
 
 	}
 
@@ -475,10 +550,15 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		Item item;
+		Integer tipoEventoSelected = null;
 		if (e.getSource() == botonGuardar) {
 			try {
-				Item item = (Item) cmbTipoEvento.getSelectedItem();
-				Integer tipoEventoSelected = item.getId();
+				
+				if(cmbTipoEvento.getSelectedIndex()!= -1){
+				item = (Item) cmbTipoEvento.getSelectedItem();
+				tipoEventoSelected = item.getId();
+				}
 
 				if (!(txtNro.getText().length() == 0) 
 						
@@ -504,7 +584,51 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						});
 						t.setRepeats(false);
 						t.start();
-					} else if
+					} else
+						
+						if(codTemporal!=""){
+						
+						eventoDAO.actualizarEvento(txtDescripcion.getText(),tipoEventoSelected.toString(), 
+								txtFchDesde.getText() + " " + txtHoraDesde.getText() + ":" + txtMinDesde.getText(),
+								txtFchHasta.getText() + " " + txtHoraHasta.getText() + ":" + txtMinHasta.getText(),
+								txtNro.getText(),codTemporal);
+						
+						recuperarDatos();
+						table.setModel(dm);
+						model.fireTableDataChanged();
+						table.removeColumn(table.getColumnModel().getColumn(0));
+						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+						lblMensaje
+								.setText("Excelente, se ha modificado el Evento.");
+						Timer t = new Timer(Login.timer, new ActionListener() {
+
+							public void actionPerformed(ActionEvent e) {
+								lblMensaje.setText(null);
+							}
+						});
+						t.setRepeats(false);
+						t.start();
+
+					//txt
+					//.setText("");
+						codTemporal="";
+						txtNro.setText("");
+						txtDescripcion.setText("");
+						txtFchDesde.setText(dateFormat.format(date));
+						txtFchHasta.setText(dateFormat.format(date));
+						txtHoraDesde.setText("");
+						txtHoraHasta.setText("");
+						txtMinDesde.setText("");
+						txtMinHasta.setText("");
+						cmbTipoEvento.setSelectedIndex(-1);
+					
+						
+					}
+					
+					
+					
+					if(codTemporal==""){
+					if
 
 					(eventoValidator.ValidarCodigo(txtNro.getText()) == false) {
 						// if (personaValidator.ValidarCodigo(txtCI.getText())
@@ -567,7 +691,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 						model = new EventoJTableModel();
 						recuperarDatos();
-						table.setModel(model);
+						table.setModel(dm);
 						model.fireTableDataChanged();
 						table.removeColumn(table.getColumnModel().getColumn(0));
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
@@ -582,7 +706,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						t.setRepeats(false);
 						t.start();
 
-						txtNro.setText("");
+						
 						
 						DateFormat dateFormat;
 						Date date;
@@ -590,10 +714,24 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						date = new Date();
 						System.out.println(dateFormat.format(date));
 						txtFchDesde.setText(dateFormat.format(date));
+						
+						cmbTipoEvento.setSelectedIndex(-1);
+						txtNro.setText("");
+						txtDescripcion.setText("");
+						txtFchDesde.setText(dateFormat.format(date));
+						txtFchHasta.setText(dateFormat.format(date));
+						txtHoraDesde.setText("");
+						txtHoraHasta.setText("");
+						txtMinDesde.setText("");
+						txtMinHasta.setText("");
+						txtFiltrar.setText("Escriba para Filtrar");
+						txtFiltrar.setForeground(Color.LIGHT_GRAY);
+						
 
 						// this.dispose();
 
-					} else {
+					
+					}else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
@@ -610,6 +748,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 						t.start();
 					}
 
+				}
 				}
 
 				else {
@@ -694,22 +833,47 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 		}
 
+Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
 		int contador = 0;
 		while (filas.size() > ite) {
-			
-			contador = contador + 1  ;
-			
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString() };
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
+					,fil.get(5).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < fin.length){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		 
+		
+		
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID","Item","Nro.", "Desc. Evento","Inicio","Fin","Desc. Tipo Evento"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -795,6 +959,20 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		
 		
 		return result;
+		
+	}
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
 		
 	}
 }

@@ -13,6 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -163,44 +164,44 @@ public class CandidatoDAO {
 						
 	}
 
-	public void modificarEvento(String codigoASetear, String codigoWhere) {
-		
-		
-		try{
-			
-		
-		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+	public Boolean actualizarCandidato(String codigo, String persona, String lista, String id) {
+		boolean actualizado = false;
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-		
-		
-		query.setTipoQueryGenerico(3);
-		
-		query.setQueryGenerico("update ucsaws_evento "
-				+ "set descripcion = upper('" +codigoASetear+"') , fch_upd = now() , usuario_upd = '" +  Login.userLogeado
-				+ "' where id_evento = "
-				
-				+ codigoWhere
-				+ "");
-		
-		
-		
-		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-	} catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-	}
-	//JOptionPane.showMessageDialog(null,"Excelente, se ha modificado el genero.");
-	
+		try {
 
-//			if(res.compareTo("ERRORRRRRRR")==0){
-//				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-//				return gen;
-//			}
+			ApplicationContext ctx = SpringApplication
+					.run(WeatherConfiguration.class);
+
+			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+			QueryGenericoRequest query = new QueryGenericoRequest();
+
+			query.setTipoQueryGenerico(3);
+
+			query.setQueryGenerico("UPDATE ucsaws_candidatos    SET codigo= '" + codigo
+					+ "', id_persona= " + persona + ", "
+					+ "fch_upd= now() , usuario_upd= " + Login.userLogeado + " , "
+					+ " id_lista= " + lista 
+					+ " WHERE id_candidatos =" + id + " and id_evento = "+ VentanaBuscarEvento.evento);
+
+			QueryGenericoResponse response = weatherClient
+					.getQueryGenericoResponse(query);
+			weatherClient.printQueryGenericoResponse(response);
+
+			String res = response.getQueryGenericoResponse();
+
+			if (res.compareTo("ERRORRRRRRR") == 0) {
+
+				actualizado = false;
+			} else {
+				actualizado = true;
+			}
+
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error al intentar actualizar el Candidato.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return actualizado;
 
 	}
 

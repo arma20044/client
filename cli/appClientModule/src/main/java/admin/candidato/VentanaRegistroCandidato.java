@@ -8,6 +8,10 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,10 +30,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -38,6 +46,7 @@ import org.springframework.context.ApplicationContext;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.CandidatoValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
@@ -50,7 +59,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
+	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
 	private CandidatoJTableModel model = new CandidatoJTableModel();
@@ -71,6 +80,10 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	private JComboBox cmbLista;
 	private JLabel lblCod;
 	private JTextField txtCod;
+	private JTextField txtFiltrar;
+	private DefaultTableModel dm;
+	
+	private CandidatoDAO candidatoDAO = new CandidatoDAO();
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -104,20 +117,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(381, 52, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("REGISTRO DE CANDIDATOS");
@@ -126,10 +126,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(812, 444);
@@ -167,17 +165,22 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent arg0) {
 				List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
+				
+				int selectedRow = table.rowAtPoint(arg0.getPoint());
+					//System.out.println(selectedRow);
 					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
+					while (col < table.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
+							int row = table.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							//System.out.println(selectedData);
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -187,21 +190,77 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
+					 txtCod.setText(selectedData.get(2));
 					// txtDesc.setText(selectedData.get(1));
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal = selectedData.get(0);
+					
+					
+					// actualizar combo persona
+					DefaultComboBoxModel dtm = (DefaultComboBoxModel)  cmbPersona.getModel();
+					
+					//System.out.println(dtm.getSize());
+					int cont=0;
+					Boolean finded=false;
+					int tamanho = dtm.getSize();
+					while(cont < dtm.getSize()){
+						if (dtm.getElementAt(cont).toString().compareTo(selectedData.get(3).toString() + " " +selectedData.get(4).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbPersona.setSelectedIndex(cont);
+							finded=true;
+							break;
+						}
+						
+							cont++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(finded==false){
+						String a = selectedData.get(3).toString() + " " +selectedData.get(4).toString();
+						cmbPersona.addItem(a);
+						cmbPersona.setSelectedIndex(tamanho);
+					}
+					// actualizar combo persona
+					
+					
+					// actualizar combo lista
+					DefaultComboBoxModel dtmlista = (DefaultComboBoxModel)  cmbLista.getModel();
+					//System.out.println(dtm.getSize());
+					int cont2=0;
+					Boolean findedlista=false;
+					int tamanho2 = dtmlista.getSize();
+					while(cont2 < dtmlista.getSize()){
+						if (dtmlista.getElementAt(cont2).toString().compareToIgnoreCase(selectedData.get(5).toString() + " - " +selectedData.get(6).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbLista.setSelectedIndex(cont2);
+							findedlista=true;
+							break;
+						}
+						
+							cont2++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(findedlista==false){
+						cmbLista.addItem(selectedData.get(5).toString() + " - " +selectedData.get(6).toString());
+						cmbLista.setSelectedIndex(tamanho2);
+					}
+					// actualizar combo lista
 
-				}
-				System.out.println("Selected: " + selectedData);
+				
+				//System.out.println("Selected: " + selectedData);
 
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
+		recuperarDatos();
+		table.setModel(dm);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -222,7 +281,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		getContentPane().add(btnHome);
 
 		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbPersona.setBounds(213, 90, 340, 20);
+		cmbPersona.setBounds(213, 90, 501, 20);
+		cmbPersona.setSelectedIndex(-1);
 		getContentPane().add(cmbPersona);
 
 		JLabel lblPersona = new JLabel();
@@ -238,7 +298,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		getContentPane().add(lblLista);
 
 		cmbLista = new JComboBox(recuperarDatosComboBoxLista());
-		cmbLista.setBounds(213, 123, 340, 20);
+		cmbLista.setBounds(213, 123, 501, 20);
+		cmbLista.setSelectedIndex(-1);
 		getContentPane().add(cmbLista);
 
 		lblCod = new JLabel();
@@ -248,7 +309,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		getContentPane().add(lblCod);
 
 		txtCod = new JTextField();
-		txtCod.setBounds(213, 54, 108, 20);
+		txtCod.setBounds(213, 54, 108, 25);
 		getContentPane().add(txtCod);
 		txtCod.setColumns(10);
 
@@ -256,6 +317,37 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(404, 154, 363, 14);
 		getContentPane().add(lblMensaje);
+		
+		txtFiltrar = new JTextField();
+		txtFiltrar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String query =txtFiltrar.getText().toUpperCase(); 
+				filter(query);
+			}
+		});
+		txtFiltrar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtFiltrar.setText("");
+				txtFiltrar.setForeground(Color.BLACK);
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(txtFiltrar.getText().length()== 0){
+					String query =txtFiltrar.getText().toUpperCase(); 
+					filter(query);
+					txtFiltrar.setText("Escriba para Filtrar");
+					txtFiltrar.setForeground(Color.LIGHT_GRAY);
+				}
+			}
+		});
+		txtFiltrar.setText("");
+		txtFiltrar.setEditable(true);
+		txtFiltrar.setBounds(269, 390, 319, 25);
+		txtFiltrar.setForeground(Color.LIGHT_GRAY);
+		txtFiltrar.setText("Escriba para filtrar...");
+		getContentPane().add(txtFiltrar);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -273,14 +365,10 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				Item item = (Item) cmbLista.getSelectedItem();
-				Integer listaSelected = item.getId();
-
-				Item item3 = (Item) cmbPersona.getSelectedItem();
-				Integer personaSelected = item3.getId();
+				
 				if (!(txtCod.getText().length() == 0)) {
-					if (txtCod.getText().length() > 3) {
-						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
+					if (!(txtCod.getText().length() == 3)) {
+						lblMensaje.setText("El codigo debe ser de 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -292,9 +380,18 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 					} else if
 
 					(candidatoValidator.ValidarCodigo(txtCod.getText()) == false) {
+						Item item = (Item) cmbLista.getSelectedItem();
+						Integer listaSelected = item.getId();
+
+						Item item3 = (Item) cmbPersona.getSelectedItem();
+						Integer personaSelected = item3.getId();
+						
+						if (codTemporal==""){
 						if (candidatoValidator.ValidarPersona(personaSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
+							
+							
 
 							Calendar calendar = new GregorianCalendar();
 							int year = calendar.get(Calendar.YEAR);
@@ -336,7 +433,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 							model = new CandidatoJTableModel();
 							recuperarDatos();
-							table.setModel(model);
+							table.setModel(dm);
 							model.fireTableDataChanged();
 							table.removeColumn(table.getColumnModel()
 									.getColumn(0));
@@ -362,25 +459,52 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 						VentanaRegistroCandidato can = new VentanaRegistroCandidato();
 						can.setVisible(true);
 						dispose();
+							}
 							
+							else 
+								// JOptionPane.showMessageDialog(null,
+								// "Ya existe el genero " + txtDesc.getText(),
+								// "Información",JOptionPane.WARNING_MESSAGE);
+								lblMensaje
+										.setText("La Persona no puede tener mas de una candidatura");
+								Timer t = new Timer(Login.timer,
+										new ActionListener() {
+
+											public void actionPerformed(
+													ActionEvent e) {
+												lblMensaje.setText(null);
+											}
+										});
+								t.setRepeats(false);
+								t.start();
 
 							// this.dispose();
 						} else {
-							// JOptionPane.showMessageDialog(null,
-							// "Ya existe el genero " + txtDesc.getText(),
-							// "Información",JOptionPane.WARNING_MESSAGE);
-							lblMensaje
-									.setText("La Persona no puede tener mas de una candidatura");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
+							if(codTemporal!= "")
+							{
+								
+								
+								candidatoDAO.actualizarCandidato(txtCod.getText(),personaSelected.toString(), listaSelected.toString(), codTemporal);
+								
+								recuperarDatos();
+								table.setModel(dm);
+								model.fireTableDataChanged();
+								table.removeColumn(table.getColumnModel().getColumn(0));
+								// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+								lblMensaje
+										.setText("Excelente, se ha modificado la Lista.");
+								Timer t = new Timer(Login.timer, new ActionListener() {
 
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
+									public void actionPerformed(ActionEvent e) {
+										lblMensaje.setText(null);
+									}
+								});
+								t.setRepeats(false);
+								t.start();
+
+							txtCod.setText("");
+							
+							}
 						}
 					} else {
 						// JOptionPane.showMessageDialog(null,
@@ -419,88 +543,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 				
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
-						"Error al intentar insertar", "Error",
+						"Error al intentar insertar : "+ ex, "Error",
 						JOptionPane.ERROR_MESSAGE);
-			}
-
-		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Candidato?",
-						"Confirmación", JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					CandidatoDAO candidatoDAO = new CandidatoDAO();
-
-					try {
-						candidatoDAO.eliminarCandidato(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (candidatoDAO.eliminarCandidato(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado el Candidato ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-
-						model = new CandidatoJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Candidato que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
 			}
 
 		}
@@ -570,6 +614,11 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 		}
 
+Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
 		int contador = 0;
@@ -577,13 +626,35 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(),  String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(),fil.get(5).toString(),fil.get(6).toString() };
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
+					,fil.get(5).toString(),fil.get(6).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < fin.length){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		 
+		
+		
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID", "Item",  "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -609,10 +680,9 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido  from ucsaws_persona "
-								+ "where id_persona not in (select id_persona from ucsaws_candidatos "
-								+ "where id_evento = " + VentanaBuscarEvento.evento + " ) "
-								+ " and  id_evento = " + VentanaBuscarEvento.evento + " order by apellido");
+		query.setQueryGenerico("SELECT id_persona, nombre || ' ' || apellido as nomap  from ucsaws_persona "
+								+ "where  "
+								+ "   id_evento = " + VentanaBuscarEvento.evento + " order by apellido");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -807,6 +877,21 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 	}
 	
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
+	}
+	
 //	public void borrarElementosComboPersona(){
 //		cmbPersona.removeAllItems();
 //	}
@@ -826,4 +911,10 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 //		
 //		
 //	}
+	private String patron(String s){
+		if (s.matches("\\d{4}/[a-zA-Z]{3}")) {
+			System.out.println("Found good SSN: " + s);
+		}
+		return "El formato es ####/abc - 4 Digitos / 3 Letras.";
+	}
 }

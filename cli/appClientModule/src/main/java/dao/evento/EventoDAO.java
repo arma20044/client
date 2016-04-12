@@ -13,6 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -204,5 +205,51 @@ public class EventoDAO {
 		}
 		return eliminado;
 		
+	}
+	
+	public Boolean actualizarEvento(String descripcion, String id_tipo_evento, String fch_desde, String fch_hasta,
+			 String nro_evento, String id_evento) {
+		
+		boolean actualizado = false;
+
+		try {
+
+			ApplicationContext ctx = SpringApplication
+					.run(WeatherConfiguration.class);
+
+			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+			QueryGenericoRequest query = new QueryGenericoRequest();
+
+			query.setTipoQueryGenerico(3);
+
+			query.setQueryGenerico("UPDATE ucsaws_evento    "
+					+ "SET descripcion= upper('" + descripcion
+					+ "'), id_tipo_evento= " + id_tipo_evento + ", "
+					+ "fch_upd= now() , usuario_upd= " + Login.userLogeado + " , "
+					+ " fch_hasta= '" + fch_hasta + 
+					"' , fch_desde= '" + fch_desde + 
+					"' ,nro_evento = " + nro_evento
+					+ " WHERE id_evento =" + id_evento );
+
+			QueryGenericoResponse response = weatherClient
+					.getQueryGenericoResponse(query);
+			weatherClient.printQueryGenericoResponse(response);
+
+			String res = response.getQueryGenericoResponse();
+
+			if (res.compareTo("ERRORRRRRRR") == 0) {
+
+				actualizado = false;
+			} else {
+				actualizado = true;
+			}
+
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null,
+					"Error al intentar actualizar el Evento.", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		return actualizado;
+
 	}
 }
