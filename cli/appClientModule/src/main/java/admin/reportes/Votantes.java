@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -65,7 +66,8 @@ public class Votantes {
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jdbcConnection);
  
             // view report to UI
-            JasperViewer.viewReport(jasperPrint, false);
+           // JasperViewer.viewReport(jasperPrint, false);
+            JasperExportManager.exportReportToPdf(jasperPrint);
  
         } catch (Exception e) {
             logger.error(e, e);
