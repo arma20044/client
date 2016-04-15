@@ -4,6 +4,7 @@ package src.main.java.hello;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.core.WebServiceTemplate;
 
 @Configuration
 public class WeatherConfiguration {
@@ -28,6 +29,10 @@ public class WeatherConfiguration {
 //		client.setDefaultUri("http://localhost:8080/VotoWS/votoService.wsdl");
 		client.setMarshaller(marshaller);
 		client.setUnmarshaller(marshaller);
+		
+		WebServiceTemplate template = client.getWebServiceTemplate();
+		template.setMessageSender(new WebServiceMessageSenderWithAuth());
+		
 		return client;
 	}
 
