@@ -384,7 +384,7 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 		
 		JLabel label_19 = new JLabel(lblGuglielmoMarconi.getText());
 		label_19.setFont(new Font("Tahoma", Font.BOLD, 12));
-		label_19.setBounds(0, 141, 111, 15);
+		label_19.setBounds(0, 141, 137, 15);
 		panel_6.add(label_19);
 		
 		JLabel lblPartidoDeAnalistas = new JLabel("Partido de Analistas");

@@ -53,12 +53,15 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+
 public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
-	private JLabel labelTitulo, lblMensaje;
+	private JLabel labelTitulo, lblMensaje,lblq;
 	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
@@ -68,6 +71,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	private CandidatoValidator candidatoValidator = new CandidatoValidator();
 
 	private String codTemporal = "";
+	private String esPresidenteOVice = "-";
+	
 	private JButton btnHome;
 
 	List<Object[]> ciudades = new ArrayList<Object[]>();
@@ -83,7 +88,11 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	private JTextField txtFiltrar;
 	private DefaultTableModel dm;
 	
+	private JComboBox combo;
+	
 	private CandidatoDAO candidatoDAO = new CandidatoDAO();
+	private JLabel lblObservacin;
+	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -139,7 +148,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 176, 806, 207);
+		scrollPane.setBounds(0, 208, 806, 175);
 		getContentPane().add(scrollPane);
 
 		table = new JTable() {
@@ -281,6 +290,25 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		getContentPane().add(btnHome);
 
 		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
+		cmbPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (cmbPersona.getSelectedIndex() != -1){
+					
+					Item item = (Item) cmbPersona.getSelectedItem();
+					String p = item.getDescription();
+					
+					String string = p; 
+					
+					//String string = "004-034556";
+					String[] parts = string.split(" ");
+					String part1 = parts[0]; // 004
+					String part2 = parts[1]; // 034556
+					
+					txtCod.setText(part1.substring(0, 1)+part2.substring(0,2));
+					System.out.println(txtCod.getText());
+				}
+			}
+		});
 		cmbPersona.setBounds(213, 90, 501, 20);
 		cmbPersona.setSelectedIndex(-1);
 		getContentPane().add(cmbPersona);
@@ -296,8 +324,50 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		lblLista.setText("Lista:");
 		lblLista.setBounds(130, 121, 61, 25);
 		getContentPane().add(lblLista);
+		
+		lblObservacin = new JLabel();
+		lblObservacin.setText("Observación:");
+		lblObservacin.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblObservacin.setBounds(103, 148, 88, 25);
+		getContentPane().add(lblObservacin);
+		
+		combo = new JComboBox();
+		combo.setBounds(213, 150, 501, 20);
+		combo.addItem("PRE");
+		combo.addItem("VICE");
+		combo.setSelectedIndex(-1);
+		getContentPane().add(combo);
+		
+		lblObservacin.setVisible(false);
+		combo.setVisible(false);
 
 		cmbLista = new JComboBox(recuperarDatosComboBoxLista());
+		cmbLista.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	if(cmbLista.getSelectedIndex()!= -1){
+		    	Item item = (Item) cmbLista.getSelectedItem();
+				String tipoListaSelected = item.getDescription();
+				//"Hello".toLowerCase().contains("He".toLowercase());
+				if (tipoListaSelected.toUpperCase().contains("PRESIDENTE - VICEPRESIDENTE".toUpperCase())){
+					
+					lblObservacin.setVisible(true);
+					combo.setSelectedIndex(-1);
+					combo.setVisible(true);
+					
+					
+				
+				}
+				else{
+					esPresidenteOVice="-";
+					lblObservacin.setVisible(false);
+					combo.setSelectedIndex(-1);
+					combo.setVisible(false);
+					
+				}
+				}
+		    }
+		});
+		
 		cmbLista.setBounds(213, 123, 501, 20);
 		cmbLista.setSelectedIndex(-1);
 		getContentPane().add(cmbLista);
@@ -312,10 +382,11 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		txtCod.setBounds(213, 54, 108, 25);
 		getContentPane().add(txtCod);
 		txtCod.setColumns(10);
+		txtCod.setEnabled(false);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(404, 154, 363, 14);
+		lblMensaje.setBounds(365, 183, 363, 14);
 		getContentPane().add(lblMensaje);
 		
 		txtFiltrar = new JTextField();
@@ -348,6 +419,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		txtFiltrar.setForeground(Color.LIGHT_GRAY);
 		txtFiltrar.setText("Escriba para filtrar...");
 		getContentPane().add(txtFiltrar);
+		
+		
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
@@ -407,12 +480,12 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
 							query.setQueryGenerico("INSERT INTO ucsaws_candidatos"
-									+ "( id_candidatos, id_persona, id_lista, codigo , id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+									+ "( id_candidatos, id_persona,descripcion, id_lista, codigo , id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
 									+ "nextval('ucsaws_candidatos_seq')"
 									+ " , "
 									+ personaSelected
-									+ " , "
+									+ " , '" + combo.getSelectedItem() + "',"
 									
 									+ listaSelected
 									+ ", '"

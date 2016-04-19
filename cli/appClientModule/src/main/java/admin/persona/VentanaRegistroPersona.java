@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,10 +33,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -45,11 +50,15 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.DateValidator;
 import src.main.java.admin.validator.PersonaValidator;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
@@ -91,6 +100,14 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private JTextField txtCelular;
 	private JTextField txtLineaBaja;
 	private JLabel lblNacionalidad;
+	
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	Date date = new Date();
+	
+	private DateValidator dateValidator;
+	private JTextField txtFiltrar;
+	
+	private DefaultTableModel dm;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -147,23 +164,14 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Personas\r\n");
-		scrollPane.setBounds(0, 261, 1146, 157);
+		scrollPane.setBounds(0, 261, 1146, 158);
 		getContentPane().add(scrollPane);
 
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
+		table = new JTable() {  
+		      public boolean isCellEditable(int row, int column){  
+			        return false;  
+			      }  
+			};
 		table.setToolTipText("");
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -173,17 +181,21 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			public void mouseClicked(MouseEvent arg0) {
 				List<String> selectedData = new ArrayList<String>();
 
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
+				int selectedRow = table.rowAtPoint(arg0.getPoint());
+					System.out.println(selectedRow);
 					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
+					while (col < table.getColumnCount()+1) {
+						//System.out.println(table_1.getValueAt(selectedRow,
+						//		col));
 						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
+							int row = table.rowAtPoint(arg0.getPoint());
+							 String table_click0 = table.getModel().getValueAt(table.
+			                          convertRowIndexToModel(row), col).toString();
+			                //System.out.println(table_click0);
+			                
+							selectedData.add(table_click0);
+							System.out.println(selectedData);
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -198,16 +210,131 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
+					codTemporal = selectedData.get(0);
+					txtCI.setText(selectedData.get(2));
+					txtNombres.setText(selectedData.get(3));
+					txtApellidos.setText(selectedData.get(4));
+					txtFechaNac.setText(selectedData.get(5));
+					
+					txtLineaBaja.setText(selectedData.get(9));
+					txtCelular.setText(selectedData.get(10));
+					
+					
+					// actualizar combo lista
+					DefaultComboBoxModel dtmlista = (DefaultComboBoxModel)  cmbGenero.getModel();
+					//System.out.println(dtm.getSize());
+					int cont=0;
+					Boolean findedlista=false;
+					int tamanho = dtmlista.getSize();
+					while(cont < dtmlista.getSize()){
+						if (dtmlista.getElementAt(cont).toString().compareToIgnoreCase(selectedData.get(8).toString() )==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbGenero.setSelectedIndex(cont);
+							findedlista=true;
+							break;
+						}
+						
+							cont++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(findedlista==false){
+						cmbGenero.addItem(selectedData.get(8));
+						cmbGenero.setSelectedIndex(tamanho);
+					}
+					// actualizar combo lista
+					
+					// actualizar combo pais origen
+					DefaultComboBoxModel dtmlista1 = (DefaultComboBoxModel)  cmbPaisOrigen .getModel();
+					//System.out.println(dtm.getSize());
+					int cont2=0;
+					Boolean findedlista1=false;
+					int tamanho2 = dtmlista1.getSize();
+					while(cont2 < dtmlista1.getSize()){
+						if (dtmlista1.getElementAt(cont2).toString().compareToIgnoreCase(selectedData.get(6).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbPaisOrigen.setSelectedIndex(cont2);
+							findedlista=true;
+							break;
+						}
+						
+							cont2++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(findedlista1==false){
+						cmbPaisOrigen.addItem(selectedData.get(6));
+						cmbPaisOrigen.setSelectedIndex(tamanho2);
+					}
+					// actualizar combo pais origen
+					
+					
+					// actualizar combo pais origen
+					DefaultComboBoxModel dtmlista3 = (DefaultComboBoxModel)  cmbPaisActual .getModel();
+					//System.out.println(dtm.getSize());
+					int cont3=0;
+					Boolean findedlista3=false;
+					int tamanho3 = dtmlista3.getSize();
+					while(cont3 < dtmlista3.getSize()){
+						if (dtmlista3.getElementAt(cont3).toString().compareToIgnoreCase(selectedData.get(7).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbPaisActual.setSelectedIndex(cont3);
+							findedlista3=true;
+							break;
+						}
+						
+							cont3++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(findedlista3==false){
+						cmbPaisActual.addItem(selectedData.get(7));
+						cmbPaisActual.setSelectedIndex(tamanho3);
+					}
+					// actualizar combo pais origen
+					
+					
+					// actualizar combo pais origen
+					DefaultComboBoxModel dtmlista4 = (DefaultComboBoxModel)  cmbNacionalidad .getModel();
+					//System.out.println(dtm.getSize());
+					int cont4=0;
+					Boolean findedlista4=false;
+					int tamanho4 = dtmlista4.getSize();
+					while(cont4 < dtmlista4.getSize()){
+						if (dtmlista4.getElementAt(cont4).toString().compareToIgnoreCase(selectedData.get(11).toString())==0)
+						{
+							//Item item = (Item) dtm.getElementAt(cont);
+							//Integer tipoListaSelected = item.getId();
+							cmbNacionalidad.setSelectedIndex(cont4);
+							findedlista4=true;
+							break;
+						}
+						
+							cont4++;
+						
+						//System.out.println(dtm.getElementAt(0));
+					}
+					if(findedlista4==false){
+						cmbNacionalidad.addItem(selectedData.get(11));
+						cmbNacionalidad.setSelectedIndex(tamanho4);
+					}
+					// actualizar combo pais origen
+					
 
-				}
+				
 				System.out.println("Selected: " + selectedData);
 
 			}
 		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
+		recuperarDatos();
+		table.setModel(dm);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -229,6 +356,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		cmbPaisOrigen = new JComboBox(recuperarDatosComboBoxPaisOrigen());
 		cmbPaisOrigen.setBounds(213, 151, 340, 20);
+		cmbPaisOrigen.setSelectedIndex(-1);
 		getContentPane().add(cmbPaisOrigen);
 
 		JLabel lblPaisOrigen = new JLabel();
@@ -245,6 +373,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		cmbPaisActual = new JComboBox(recuperarDatosComboBoxPaisActual());
 		cmbPaisActual.setBounds(213, 184, 340, 20);
+		cmbPaisActual.setSelectedIndex(-1);
 		getContentPane().add(cmbPaisActual);
 
 		lblGenero = new JLabel();
@@ -255,10 +384,12 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		cmbGenero = new JComboBox(recuperarDatosComboBoxGenero());
 		cmbGenero.setBounds(213, 217, 340, 20);
+		cmbGenero.setSelectedIndex(-1);
 		getContentPane().add(cmbGenero);
 		
 		cmbNacionalidad = new JComboBox(recuperarDatosComboBoxNacionalidad());
 		cmbNacionalidad.setBounds(705, 195, 158, 20);
+		cmbNacionalidad.setSelectedIndex(-1);
 		getContentPane().add(cmbNacionalidad);
 
 		lblCI = new JLabel();
@@ -346,7 +477,59 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		getContentPane().add(txtLineaBaja);
 
 		txtFechaNac = new JFormattedTextField();
-		txtFechaNac.setText("23/04/2015");
+		txtFechaNac.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				boolean s= true;
+
+
+				if(txtFechaNac.getText() == null){
+					s = false;
+				}
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				sdf.setLenient(false);
+				
+				try {
+					
+					//if not valid, it will throw ParseException
+					Date date = sdf.parse(txtFechaNac.getText());
+					System.out.println(date);
+				
+				} catch (ParseException e) {
+					
+					e.printStackTrace();
+					s =  false;
+					
+					lblMensaje
+					.setText("Ingrese formato de fecha correcto.");
+			Timer t = new Timer(Login.timer,
+					new ActionListener() {
+
+						public void actionPerformed(
+								ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+			t.setRepeats(false);
+			t.start();
+			
+			txtFechaNac.requestFocus();
+			txtFechaNac.selectAll();
+			
+					
+				}
+				
+				//s = true;
+			
+
+				
+			}
+		});
+		
+		
+		
+		txtFechaNac.setText(dateFormat.format(date));
 		txtFechaNac.setBounds(213, 115, 80, 26);
 		getContentPane().add(txtFechaNac);
 
@@ -377,6 +560,38 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		lblNacionalidad.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNacionalidad.setBounds(579, 193, 116, 25);
 		getContentPane().add(lblNacionalidad);
+		
+		txtFiltrar = new JTextField();
+		txtFiltrar.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtFiltrar.setText("");
+				txtFiltrar.setForeground(Color.BLACK);
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(txtFiltrar.getText().length()== 0){
+					String query =txtFiltrar.getText().toUpperCase(); 
+					filter(query);
+					txtFiltrar.setText("Escriba para Filtrar");
+					txtFiltrar.setForeground(Color.LIGHT_GRAY);
+				}
+			}
+		});
+		txtFiltrar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				
+				String query =txtFiltrar.getText().toUpperCase(); 
+				filter(query);
+				
+			}
+		});
+		txtFiltrar.setText("Escriba para filtrar...");
+		txtFiltrar.setForeground(Color.LIGHT_GRAY);
+		txtFiltrar.setEditable(true);
+		txtFiltrar.setBounds(209, 421, 319, 26);
+		getContentPane().add(txtFiltrar);
 		
 	
 
@@ -483,7 +698,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 							model = new PersonaJTableModel();
 							recuperarDatos();
-							table.setModel(model);
+							table.setModel(dm);
 							model.fireTableDataChanged();
 							table.removeColumn(table.getColumnModel()
 									.getColumn(0));
@@ -512,6 +727,12 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 							date = new Date();
 							   System.out.println(dateFormat.format(date));
 							   txtFechaNac.setText(dateFormat.format(date));
+							   
+							   
+							   cmbGenero.setSelectedIndex(-1);
+							   cmbPaisActual.setSelectedIndex(-1);
+							   cmbPaisOrigen.setSelectedIndex(-1);
+							   cmbNacionalidad.setSelectedIndex(-1);
 							   
 							
 							// this.dispose();
@@ -580,10 +801,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido, fecha_nacimiento, ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular"
+		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad"
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero)"
+				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
 				+ "where per.id_evento = " + VentanaBuscarEvento.evento
 				+ " order by per.apellido , per.nombre");
 
@@ -619,23 +840,48 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 		}
 
+Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
 		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			contador =  contador + 1 ;
-
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(),
-					fil.get(6).toString(), fil.get(7).toString(),
-					fil.get(8).toString(), fil.get(9).toString() };
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
+					,fil.get(5).toString(),fil.get(6).toString(),fil.get(7).toString()
+					,fil.get(8).toString(),fil.get(9).toString(),fil.get(10).toString()};
 
-			model.ciudades.add(fin);
+			//model.ciudades.add(fin);
+			int pos = 0;
+			 Vector<Object> vector = new Vector<Object>();
+			while(pos < fin.length){
+			vector.add(fin[pos]);
+			pos++;
+			}
 			ite++;
+			data.add(vector);
 		}
+		 
+		
+		
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","Nacionalidad"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -925,5 +1171,20 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		}
 		return model;
 
+	}
+	
+	public void filter(String query){
+		
+		
+		
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		
+		
+		
+		table.setRowSorter(tr);
+		
+	tr.setRowFilter(RowFilter.regexFilter(query));
+		
+		
 	}
 }
