@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -94,6 +95,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	private static String nombrecmb;
 	private JLabel lblLocal;
 	private JComboBox cmbLocal;
+	
+	private DefaultComboBoxModel dm, dmz, dml,dmm;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -312,12 +315,13 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		cmbDepartamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+
 
 				Item item = (Item) cmbDepartamento.getSelectedItem();
 				Integer idDepartamentoSelected = item.getId();
-
-				cmbDistrito = new JComboBox(
-						recuperarDatosComboBoxDistrito(idDepartamentoSelected));
+				recuperarDatosComboBoxDistrito(idDepartamentoSelected);
+				cmbDistrito.setModel(dm);
 				cmbDistrito.addActionListener(new ActionListener() {
 
 					@Override
@@ -327,8 +331,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 						Item item = (Item) cmbDistrito.getSelectedItem();
 						Integer idDistritoSelected = item.getId();
 
-						cmbZona = new JComboBox(
-								recuperarDatosComboBoxZona(idDistritoSelected));
+						
 						cmbZona.addActionListener(new ActionListener() {
 
 							@Override
@@ -338,8 +341,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 								Item item = (Item) cmbZona.getSelectedItem();
 								Integer idDistritoSelected = item.getId();
 
-								cmbLocal = new JComboBox(
-										recuperarDatosComboBoxLocal(idDistritoSelected));
+								
 								cmbLocal.addActionListener(new ActionListener() {
 
 									@Override
@@ -351,32 +353,21 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 										Integer idDistritoSelected = item
 												.getId();
 
-										cmbMesa = new JComboBox(recuperarDatosComboBoxMesa(idDistritoSelected));
-										cmbMesa.setBounds(209, 199, 169, 20);
-										getContentPane().add(cmbMesa);
+										
 									}
 								});
 
 								
 
-								cmbLocal.setBounds(209, 172, 289, 20);
-								getContentPane().add(cmbLocal);
+								
 
 							}
 						});
-						cmbZona.setBounds(209, 144, 289, 20);
-						getContentPane().add(cmbZona);
+						
 
 					}
 				});
-
-				cmbDistrito.setBounds(209, 111, 289, 20);
-				cmbDistrito.revalidate();
-
-				// repaint();
-				getContentPane().add(cmbDistrito);
-
-				cmbDistrito.paint(cmbDistrito.getGraphics());
+				
 			}
 		});
 
@@ -393,6 +384,59 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		cmbDepartamento.setBounds(209, 81, 289, 20);
 		getContentPane().add(cmbDepartamento);
+		
+		cmbDistrito = new JComboBox();
+		cmbDistrito.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Item item = (Item) cmbDistrito.getSelectedItem();
+				Integer idDepartamentoSelected = item.getId();
+				
+				recuperarDatosComboBoxZona(idDepartamentoSelected);
+				cmbZona.setModel(dmz);
+			}
+		});
+		cmbDistrito.setBounds(209, 111, 289, 20);
+		cmbDistrito.revalidate();
+		
+		cmbZona = new JComboBox();
+		cmbZona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Item item = (Item) cmbZona.getSelectedItem();
+				Integer idDepartamentoSelected = item.getId();
+				
+				recuperarDatosComboBoxLocal(idDepartamentoSelected);
+				cmbLocal.setModel(dml);
+			}
+		});
+		cmbZona.setBounds(209, 144, 289, 20);
+		getContentPane().add(cmbZona);
+
+		// repaint();
+		getContentPane().add(cmbDistrito);
+		
+		cmbLocal = new JComboBox();
+		cmbLocal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Item item = (Item) cmbLocal.getSelectedItem();
+				Integer idDepartamentoSelected = item.getId();
+				
+				recuperarDatosComboBoxMesa(idDepartamentoSelected);
+				cmbMesa.setModel(dmm);
+				
+			}
+		});
+		cmbLocal.setBounds(209, 172, 289, 20);
+		getContentPane().add(cmbLocal);
+		
+		
+		cmbMesa = new JComboBox();
+		cmbMesa.setBounds(209, 199, 169, 20);
+		getContentPane().add(cmbMesa);
+
+		//cmbDistrito.paint(cmbDistrito.getGraphics());
 
 		JLabel lblPersona = new JLabel();
 		lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -1239,7 +1283,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 	}
 
-	private Vector recuperarDatosComboBoxDistrito(Integer idDepartamento) {
+	private void recuperarDatosComboBoxDistrito(Integer idDepartamento) {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -1297,22 +1341,28 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		}
 
+Vector data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
+		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString()};
+	
+			data.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
 			ite++;
 		}
-		return model;
 
+	    dm = new DefaultComboBoxModel(data);
 	}
 
-	private Vector recuperarDatosComboBoxZona(Integer idZona) {
+	private void recuperarDatosComboBoxZona(Integer idZona) {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -1371,22 +1421,28 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		}
 
+Vector data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
+		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString()};
+	
+			data.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
 			ite++;
 		}
-		return model;
 
+	    dmz = new DefaultComboBoxModel(data);
 	}
 
-	private Vector recuperarDatosComboBoxLocal(Integer idZona) {
+	private void recuperarDatosComboBoxLocal(Integer idZona) {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -1445,22 +1501,28 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		}
 
+Vector data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
+		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString()};
+	
+			data.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
 			ite++;
 		}
-		return model;
 
+	    dml = new DefaultComboBoxModel(data);
 	}
 	
-	private Vector recuperarDatosComboBoxMesa(Integer idLocal) {
+	private void recuperarDatosComboBoxMesa(Integer idLocal) {
 		Vector model = new Vector();
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -1519,19 +1581,25 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		}
 
+Vector data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
+
 		int ite = 0;
 		String campo4, campo5 = "";
+		int contador = 0;
 		while (filas.size() > ite) {
+			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+			String[] fin = { fil.get(0).toString(), fil.get(1).toString()};
+	
+			data.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
 			ite++;
 		}
-		return model;
 
+	    dmm = new DefaultComboBoxModel(data);
 	}
 	
 	
