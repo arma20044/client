@@ -1,6 +1,8 @@
 package src.main.java.admin.reportes;
  
 import java.io.BufferedInputStream;
+
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -56,6 +59,8 @@ public class Candidatos {
  
             // view report to UI
             JasperViewer.viewReport(jasperPrint, false);
+            
+           // JasperExportManager.exportReportToPdfFile(jasperPrint, "C:/Users/Public/Documents");
  
         } catch (Exception e) {
             logger.error(e, e);
