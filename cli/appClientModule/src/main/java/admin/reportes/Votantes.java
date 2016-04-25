@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.login.Login;
  
 public class Votantes {
  
@@ -58,16 +59,20 @@ public class Votantes {
             
             HashMap<String, Object> parameters = new HashMap<String, Object>();  
            
-            //parameters.put("P_ID_Evento", Integer.parseInt(VentanaBuscarEvento.evento));
+           // parameters.put("P_ID_Evento", Integer.parseInt(VentanaBuscarEvento.evento));
             parameters.put("P_ID_EVENTO", Integer.parseInt(VentanaBuscarEvento.evento));
+            parameters.put("P_GENERADO_POR",Login.nombreApellidoUserLogeado);
+            parameters.put("P_FECHA", VentanaBuscarEvento.date );
+//            parameters.put("P_ID_EVENTO", 8);
+//            parameters.put("P_GENERADO_POR","HOLA");
             
             
             
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jdbcConnection);
  
             // view report to UI
-           // JasperViewer.viewReport(jasperPrint, false);
-            JasperExportManager.exportReportToPdf(jasperPrint);
+            JasperViewer.viewReport(jasperPrint, false);
+          //  JasperExportManager.exportReportToPdf(jasperPrint);
  
         } catch (Exception e) {
             logger.error(e, e);

@@ -1,24 +1,17 @@
-package src.main.java.admin.genero;
+package src.main.java.admin.buscadores;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +31,6 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
@@ -50,58 +42,54 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.dao.genero.GeneroDAO;
+import src.main.java.admin.persona.PersonaJTableModel;
+import src.main.java.admin.persona.VentanaRegistroPersona;
+import src.main.java.admin.votantesHabilitados.VentanaRegistroVotantesHabilitados;
+import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaBuscarGenero extends JFrame implements ActionListener {
+import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo;
-	private JTextField txtFiltro;
+	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonEliminar, btnNewButton;
+	private JButton botonCancelar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private GeneroJTableModel model = new GeneroJTableModel();
+	private PersonaJTableModel model = new PersonaJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
+	
 
 	private JLabel lblMensaje;
 	
 	private DefaultTableModel dm;
-	
-	
-	
-	private TableRowSorter<TableModel> trsFiltro = new TableRowSorter<TableModel>(model);
-	
-	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarGenero() {
-		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
-				txtFiltro.requestFocus();
-			}
-		});
-		
+	public VentanaBuscarPersona() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarGenero.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarPersona.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setBounds(589, 501, 45, 25);
+		botonCancelar.setBounds(1101, 422, 45, 25);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -109,86 +97,53 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-		
-
-		botonEliminar = new JButton();
-		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarGenero.class
-				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(457, 131, 32, 32);
-		botonEliminar.setOpaque(false);
-		botonEliminar.setContentAreaFilled(false);
-		botonEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) botonEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
+		Image newimg4 = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonEliminar.setIcon(new ImageIcon(newimg4));
-        
-			
-        
-			
-		
-		/*
-		 * nuevo
-		 */
-		
+
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE GENERO");
-		labelTitulo.setBounds(161, 49, 270, 30);
+		labelTitulo.setText("BUSCADOR DE PERSONA");
+		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		lblBuscar = new JLabel();
 		lblBuscar.setText("Buscar:");
-		lblBuscar.setBounds(20, 131, 64, 25);
+		lblBuscar.setBounds(20, 52, 64, 25);
 		getContentPane().add(lblBuscar);
 
-		txtFiltro = new JTextField();
-		txtFiltro.addKeyListener(new KeyAdapter() {
+		txtBuscar = new JTextField();
+		txtBuscar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				
-				String query =txtFiltro.getText().toUpperCase(); 
+				String query =txtBuscar.getText().toUpperCase(); 
 				filter(query);
 			}
 		});
-		
-		
-		txtFiltro.setBounds(86, 131, 319, 26);
-		getContentPane().add(txtFiltro);
-		botonEliminar.addActionListener(this);
+		txtBuscar.setBounds(86, 52, 319, 26);
+		getContentPane().add(txtBuscar);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
-		setSize(640, 554);
+		setSize(1152, 476);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 237, 634, 265);
+		scrollPane.setToolTipText("Lista de Personas");
+		scrollPane.setBounds(0, 158, 1146, 265);
 		getContentPane().add(scrollPane);
 
-		table_1 = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table_1.setToolTipText("Listado de Generos.");
+		table_1 = new JTable() {  
+		      public boolean isCellEditable(int row, int column){  
+			        return false;  
+			      }  
+			};
+		table_1.setToolTipText("Listado de Personas.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -196,6 +151,10 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				 
+	
+				
 				List<String> selectedData = new ArrayList<String>();
 
 				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
@@ -220,17 +179,43 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 			                
 							selectedData.add(table_click0);
 							System.out.println(selectedData);
-						
+							
+							
+							 
+							 //comentar despues
+							// int row1 = table_1.rowAtPoint(arg0.getPoint());
+							//String table_click01 = table_1.getModel().getValueAt(table_1.
+			                  //        convertRowIndexToModel(row1), 0).toString();
+			                //System.out.println(table_click01);
+			                //comentar despues
+			                
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
+							
+							
 						}
 
 						col++;
 					}
+					
+					if (arg0.getClickCount() == 2) {
+					    System.out.println("double clicked");
+					    
+					   VentanaRegistroVotantesHabilitados.personaSeleccionada = selectedData.get(3) + " " + selectedData.get(4);
+					   VentanaRegistroVotantesHabilitados.codTemporal = (selectedData.get(0));
+					    
+					    VentanaRegistroVotantesHabilitados.lblNombrePersona.setText( VentanaRegistroVotantesHabilitados.personaSeleccionada);
+					    
+					    
+					    dispose();
+				 }
+				 
+				 
+				 else{
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtFiltro.setText(selectedData.get(3));
+					txtBuscar.setText(selectedData.get(3)+ " " +selectedData.get(4) );
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -240,16 +225,16 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				
 				System.out.println("Selected: " + selectedData);
 
-			}
+			}}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
 		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE GENEROS");
+		lblListaDeGeneros.setText("LISTA DE PERSONAS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblListaDeGeneros.setBounds(147, 196, 325, 30);
+		lblListaDeGeneros.setBounds(147, 117, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
 
 		JButton btnHome = new JButton("");
@@ -261,45 +246,19 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarGenero.class
-				.getResource("/imgs/home.png")));
+		btnHome.setIcon(new ImageIcon(VentanaBuscarPersona.class.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
 		Image newimg5 = img5.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
-
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroGenero registro = new VentanaRegistroGenero();
-				registro.setVisible(true);
-				dispose();
-			}
-		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarGenero.class
-				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(415, 131, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
-		Image newimg2 = img2.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(79, 188, 432, 14);
+		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
-		
-		String[] petStrings = { "Codigo", "Descripcion" };
-		
-
-        
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -336,64 +295,6 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == botonEliminar) {
-			if (!codTemporal.equals("")) {
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Genero?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION) {
-					GeneroDAO generoDAO = new GeneroDAO();
-
-					try {
-						if(generoDAO.eliminarGenero(codTemporal)==false){
-							JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Genero",
-									"Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else{
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado el Genero ","Información", JOptionPane.INFORMATION_MESSAGE);
-							// modificarGenero(textCod.getText(),
-							// codTemporal.getText());
-							codTemporal = "";
-							limpiar();
-
-							model = new GeneroJTableModel();
-
-							recuperarDatos();
-							table_1.setModel(dm);
-							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
-							// model.fireTableDataChanged();
-							// table_1.repaint();
-						}
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-
-					
-				}
-			} else {
-				lblMensaje
-						.setText("Por favor seleccione que Genero desea Eliminar");
-
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			DefinicionesGenerales definiciones = new DefinicionesGenerales();
 			definiciones.setVisible(true);
@@ -410,7 +311,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	private void muestraPersona(JSONArray genero) {
 		JSONArray a = (JSONArray) genero.get(0);
 		// txtId.setText(Long.toString( (Long) a.get(0)) );
-		txtFiltro.setText((String) a.get(1));
+		txtBuscar.setText((String) a.get(1));
 		// textFecha.setText((String) a.get(2));
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
@@ -422,7 +323,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	 * Permite limpiar los componentes
 	 */
 	public void limpiar() {
-		txtFiltro.setText("");
+		txtBuscar.setText("");
 
 		// codTemporal.setText("");
 		habilita(true, false, false, false, false, true, false, true, true);
@@ -445,12 +346,8 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	public void habilita(boolean codigo, boolean nombre, boolean edad,
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
-		txtFiltro.setEditable(codigo);
-		// botonModificar.setEnabled(true);
-		botonEliminar.setEnabled(bEliminar);
+		txtBuscar.setEditable(codigo);
 	}
-
-
 
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
@@ -469,9 +366,12 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("SELECT  id_genero, codigo, descripcion "
-				+ "from  ucsaws_genero where id_evento = " + VentanaBuscarEvento.evento 
-				+ "order by codigo" + "");
+		query.setQueryGenerico("select id_persona,ci, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad"
+
+				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
+				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
+				+ "where per.id_evento = " + VentanaBuscarEvento.evento
+				+ " order by per.apellido , per.nombre");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -506,19 +406,19 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		}
 		
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
 
 		int ite = 0;
 		String campo4, campo5 = "";
 		int contador = 0;
 		while (filas.size() > ite) {
-			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
+			
+			contador =  contador + 1 ;
 
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString()};
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
+					,fil.get(5).toString(),fil.get(6).toString(),fil.get(7).toString()
+					,fil.get(8).toString(),fil.get(9).toString(),fil.get(10).toString()};
 
 			//model.ciudades.add(fin);
 			int pos = 0;
@@ -530,35 +430,29 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 			ite++;
 			data.add(vector);
 		}
-		 
-		
-		
 		
 		  // names of columns
 		
-		String[] colNames = new String[] {"ID", "Item",  "Codigo", "Descripcion"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
+		String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","Nacionalidad"};
+				
+			    Vector<String> columnNames = new Vector<String>();
+			    int columnCount = colNames.length;
+			    for (int column = 0; column < columnCount; column++) {
+			        columnNames.add(colNames[column]);
+			    }
+			    
+			    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
 	void LimpiarCampos() {
-		txtFiltro.setText("");
+		txtBuscar.setText("");
 		// textFecha.setText("");
 		// textUsu.setText("");
 		codTemporal = "";
 		// txtId.setText("");
 
 	}
-	
-
-	
 	
 	public void filter(String query){
 		
@@ -574,41 +468,4 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		
 		
 	}
-//	
-//	private void createColumns(){
-//	dm=(DefaultTableModel) table_1.getModel();
-//	
-//	
-//	}
-	
-	
-	public static DefaultTableModel buildTableModel(ResultSet rs)
-	        throws SQLException {
-
-	    ResultSetMetaData metaData = rs.getMetaData();
-
-	    // names of columns
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = metaData.getColumnCount();
-	    for (int column = 1; column <= columnCount; column++) {
-	        columnNames.add(metaData.getColumnName(column));
-	    }
-
-	    // data of the table
-	    Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-	    while (rs.next()) {
-	        Vector<Object> vector = new Vector<Object>();
-	        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-	            vector.add(rs.getObject(columnIndex));
-	        }
-	        data.add(vector);
-	    }
-
-	    return new DefaultTableModel(data, columnNames);
-
-	}
-	
-	
-	
-	
 }

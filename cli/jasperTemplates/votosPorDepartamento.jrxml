@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7ef0be9b-a5e8-4700-893b-f32bd0bdb4ca">
-	<property name="ireport.zoom" value="0.8264462809917359"/>
+	<property name="ireport.zoom" value="0.9090909090909097"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="P_Tipo_Candidato" class="java.lang.Integer"/>
-	<parameter name="P_Candidato_Desc" class="java.lang.String"/>
-	<parameter name="P_ID_Evento" class="java.lang.Integer"/>
+	<parameter name="P_ID_EVENTO" class="java.lang.Integer"/>
 	<parameter name="P_FECHA" class="java.util.Date"/>
 	<parameter name="P_GENERADO_POR" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select nombre || ' ' ||  apellido   as nom,nombre_lista ,count(vo.id_lista) , (select count(*)
-  FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
-			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
-where tlista.id_tipo_lista = $P{P_Tipo_Candidato} and li.id_evento = $P{P_ID_Evento} ) total
- FROM ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista)
-			join ucsaws_tipo_lista tlista on (tlista.id_tipo_lista = li.id_tipo_lista)
-			join ucsaws_candidatos can on (can.id_lista = li.id_lista)
-			join ucsaws_persona per on (per.id_persona = can.id_persona)
-
-where tlista.id_tipo_lista = $P{P_Tipo_Candidato}   and can.id_evento = $P{P_ID_Evento} and can.descripcion = 'PRE'
-group by nombre_lista, nombre || ' ' ||  apellido
-order by  1, 2]]>
+		<![CDATA[select count(*) cantidad, DE.desc_departamento , (select count(*) cantidad
+from ucsaws_votante v
+	join ucsaws_mesa m on (v.id_mesa = m.id_mesa)
+	join ucsaws_local l on (m.id_local = l.id_local)
+join ucsaws_zona z on (z.id_zona = l.id_zona)
+join ucsaws_distrito d on (d.id_distrito = z.id_distrito)
+JOIN UCSAWS_DEPARTAMENTO DE ON (D.ID_DEPARTAMENTO = DE.ID_DEPARTAMENTO)
+where v.id_evento = $P{P_ID_EVENTO} and sufrago = 1)total
+from ucsaws_votante v
+	join ucsaws_mesa m on (v.id_mesa = m.id_mesa)
+	join ucsaws_local l on (m.id_local = l.id_local)
+join ucsaws_zona z on (z.id_zona = l.id_zona)
+join ucsaws_distrito d on (d.id_distrito = z.id_distrito)
+JOIN UCSAWS_DEPARTAMENTO DE ON (D.ID_DEPARTAMENTO = DE.ID_DEPARTAMENTO)
+where v.id_evento = $P{P_ID_EVENTO} and sufrago = 1
+group by DE.desc_departamento]]>
 	</queryString>
-	<field name="nom" class="java.lang.String"/>
-	<field name="nombre_lista" class="java.lang.String"/>
-	<field name="count" class="java.lang.Long"/>
+	<field name="cantidad" class="java.lang.Long"/>
+	<field name="desc_departamento" class="java.lang.String"/>
 	<field name="total" class="java.lang.Long"/>
 	<variable name="variable1" class="java.lang.Long" calculation="Sum">
-		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="118" splitType="Stretch">
+		<band height="78" splitType="Stretch">
 			<staticText>
 				<reportElement x="179" y="38" width="220" height="19" uuid="a3279cc9-8605-4504-a652-7b23fd2bd6d4"/>
 				<textElement>
@@ -41,14 +42,6 @@ order by  1, 2]]>
 				</textElement>
 				<text><![CDATA[Resultados Oficiales de Votación]]></text>
 			</staticText>
-			<textField>
-				<reportElement mode="Transparent" x="75" y="57" width="427" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="dc4c8855-54b3-4e96-a4a2-968e1e318e57"/>
-				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
-					<font fontName="SansSerif" size="13" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{P_Candidato_Desc}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="204" y="0" width="170" height="18" uuid="9a090c0b-5b9d-4ce6-9f1a-8c0103608754"/>
 				<textElement textAlignment="Center">
@@ -70,23 +63,16 @@ order by  1, 2]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{P_FECHA}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="179" y="77" width="220" height="19" uuid="cf70b74f-5589-4d32-888a-cdea853b2ae9"/>
-				<textElement textAlignment="Center">
-					<font size="13" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Resumen Nacional]]></text>
-			</staticText>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="328" height="19" uuid="eed8d54b-7e3e-48ce-a610-1d5754130e38"/>
+				<reportElement x="148" y="0" width="328" height="19" uuid="eed8d54b-7e3e-48ce-a610-1d5754130e38"/>
 				<textElement textAlignment="Center">
 					<font size="13" isBold="true"/>
 				</textElement>
-				<text><![CDATA[VOTOS PARA PRESIDENTE/VICEPRESIDENTE]]></text>
+				<text><![CDATA[VOTOS POR DEPARTAMENTO]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -104,7 +90,7 @@ order by  1, 2]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Candidato]]></text>
+				<text><![CDATA[Departamento]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="0" width="100" height="22" uuid="b26744f7-d26b-4f81-84fe-e36587c1eba8"/>
@@ -120,20 +106,6 @@ order by  1, 2]]>
 				</textElement>
 				<text><![CDATA[VOTOS]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="37" y="0" width="228" height="22" uuid="934df627-0265-4939-a35b-c94cf220fa4a"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[PARTIDO/MOV/ALIANZA/CONCERTACION]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -148,19 +120,7 @@ order by  1, 2]]>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="37" y="0" width="228" height="20" uuid="db9c146f-1ce1-4582-b8c4-8a67738e8721"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{nombre_lista}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="265" y="0" width="190" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="484ac282-9528-4b42-81cd-6d82c76b9602"/>
@@ -175,12 +135,12 @@ order by  1, 2]]>
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nom}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{desc_departamento}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="281" splitType="Stretch">
+		<band height="263" splitType="Stretch">
 			<staticText>
 				<reportElement mode="Transparent" x="374" y="0" width="81" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="b8661df1-a906-49ce-8e73-dff7d0b6e90a"/>
 				<box>
@@ -196,23 +156,6 @@ order by  1, 2]]>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
-			<pie3DChart>
-				<chart>
-					<reportElement x="23" y="22" width="494" height="219" uuid="053efc75-7323-4952-8d41-8a62ff9f43df"/>
-					<chartTitle/>
-					<chartSubtitle/>
-					<chartLegend/>
-				</chart>
-				<pieDataset>
-					<keyExpression><![CDATA[$F{nombre_lista}]]></keyExpression>
-					<valueExpression><![CDATA[$F{count}]]></valueExpression>
-					<labelExpression><![CDATA[($F{count}*100)/$F{total}  + " %"]]></labelExpression>
-				</pieDataset>
-				<pie3DPlot>
-					<plot/>
-					<itemLabel/>
-				</pie3DPlot>
-			</pie3DChart>
 			<textField>
 				<reportElement mode="Transparent" x="455" y="0" width="100" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="d1cb7682-9c6e-4ea0-ae99-d79c538510ad"/>
 				<box>
@@ -228,27 +171,44 @@ order by  1, 2]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{variable1}]]></textFieldExpression>
 			</textField>
+			<pieChart>
+				<chart>
+					<reportElement x="66" y="30" width="389" height="186" uuid="7f2d950a-cf39-4552-8f31-36bb7e9cdae1"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{desc_departamento}]]></keyExpression>
+					<valueExpression><![CDATA[$F{cantidad}]]></valueExpression>
+					<labelExpression><![CDATA[($F{cantidad}*100)/$F{total} + " %"]]></labelExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="74" y="243" width="260" height="20" uuid="ca9e5d45-968c-40cb-9c29-e92e4ebce6e3"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_GENERADO_POR}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="1" y="261" width="74" height="20" uuid="7535d1f2-67c3-4914-8946-f40a08165e08"/>
+				<reportElement x="0" y="243" width="74" height="20" uuid="a91dce0c-2850-4b54-8690-babb6d758c51"/>
 				<textElement verticalAlignment="Bottom"/>
 				<text><![CDATA[Impreso por:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy HH:mm:ss">
-				<reportElement positionType="FixRelativeToBottom" x="456" y="261" width="100" height="20" uuid="5127fc16-4349-4d3c-a053-32b08d1c5bdb"/>
+				<reportElement positionType="FixRelativeToBottom" x="455" y="243" width="100" height="20" uuid="3d02fb5d-4e1a-4305-a3fa-26fbab0c6c46"/>
 				<textElement verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement positionType="FixRelativeToBottom" x="75" y="261" width="260" height="20" uuid="22a81703-53d4-45e8-a13a-4deb26365d66"/>
-				<textElement verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA[$P{P_GENERADO_POR}]]></textFieldExpression>
-			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="517" y="241" width="40" height="20" uuid="df3eaa5b-d58d-42c1-9ab8-13d72c61476b"/>
+				<reportElement x="513" y="223" width="40" height="20" uuid="144bbce6-053c-47d6-8246-e4c16dda671a"/>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="426" y="241" width="91" height="20" uuid="00e334dc-d028-420a-9c7f-8ff3d4c2a29e"/>
+				<reportElement x="422" y="223" width="91" height="20" uuid="06d99928-fcba-48a8-b79b-962021103010"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 			</textField>

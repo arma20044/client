@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="votantes" pageWidth="600" pageHeight="600" columnWidth="560" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0856439-ff87-4eb9-be47-42159bc6cc64">
+	<property name="ireport.zoom" value="0.9090909090909095"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_ID_EVENTO" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA" class="java.util.Date"/>
+	<parameter name="P_GENERADO_POR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select desc_distrito , count(desc_distrito) , (select count(*)  from ucsaws_votante v
+join ucsaws_mesa m on (v.id_mesa = m.id_mesa)
+join ucsaws_local l on (m.id_local = l.id_local)
+join ucsaws_zona z on (z.id_zona = l.id_zona)
+join ucsaws_distrito d on (d.id_distrito = z.id_distrito) where v.id_evento = $P{P_ID_EVENTO}
+) as total from ucsaws_votante v
+join ucsaws_mesa m on (v.id_mesa = m.id_mesa)
+join ucsaws_local l on (m.id_local = l.id_local)
+join ucsaws_zona z on (z.id_zona = l.id_zona)
+join ucsaws_distrito d on (d.id_distrito = z.id_distrito)
+ where v.id_evento = $P{P_ID_EVENTO}
+group by desc_distrito]]>
+	</queryString>
+	<field name="desc_distrito" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<field name="total" class="java.lang.Long"/>
+	<variable name="totalCount" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="107" splitType="Stretch">
+			<staticText>
+				<reportElement x="185" y="76" width="259" height="31" uuid="78455028-1d98-4850-ac9c-aabb6b4e726a"/>
+				<textElement>
+					<font size="22"/>
+				</textElement>
+				<text><![CDATA[Votos Por Distrito]]></text>
+			</staticText>
+			<textField pattern="dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement x="337" y="28" width="133" height="20" uuid="f9ae6cf0-5ef1-4d34-95bf-bea0a5b3eb4b"/>
+				<textElement textAlignment="Justified">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="157" y="28" width="180" height="20" uuid="66099ac5-cb71-4869-b3f3-fe332916c016"/>
+				<textElement textAlignment="Justified">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECCIONES GENERALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="10" width="170" height="18" uuid="e4f5ace3-a0c7-422d-b5a9-1595d4be716a"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUSTICIA ELECTORAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="48" width="220" height="19" uuid="c71efc31-7133-4362-9d73-54e6870fe9ce"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resultados Oficiales de Votación]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="234" y="0" width="124" height="23" uuid="9bdf25ed-26f3-4e31-85b1-0f1629fcb6e8"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISTRITO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="358" y="0" width="100" height="23" uuid="5bd8cae1-f120-434e-865d-2637581e8f7e"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Immediate">
+			<textField>
+				<reportElement x="234" y="0" width="124" height="24" uuid="71c94b02-26cb-4e9b-acc5-c91f80db7936"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{desc_distrito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="358" y="0" width="100" height="24" uuid="4b9cdddb-8fe0-4d57-8157-070de68c6d0b"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="246" splitType="Stretch">
+			<pie3DChart>
+				<chart>
+					<reportElement x="157" y="15" width="308" height="205" uuid="da61fbcb-ca22-4f7b-ac0b-0c361725eec0"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{desc_distrito}]]></keyExpression>
+					<valueExpression><![CDATA[$F{count}]]></valueExpression>
+					<labelExpression><![CDATA[($F{count}*100)/$F{total}  + " %"]]></labelExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+			<textField evaluationTime="Report">
+				<reportElement x="519" y="226" width="40" height="20" uuid="f4755726-400d-434d-a460-01c7ac71ef4f"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="428" y="226" width="91" height="20" uuid="c028a22e-8c06-4013-a892-002d04394ea5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement x="458" y="0" width="100" height="20" uuid="b6dc2c99-ed5a-43d4-ba07-4b52da5a7a50"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="0" width="260" height="20" uuid="06829883-7c17-481c-a552-2e19e6348f7e"/>
+				<textFieldExpression><![CDATA[$P{P_GENERADO_POR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="74" height="20" uuid="1a8d33dd-5d92-4d23-928c-46300d1084bd"/>
+				<text><![CDATA[Impreso por:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

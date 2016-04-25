@@ -73,6 +73,7 @@ public class EleccionMesa extends JFrame {
 	 * Create the frame.
 	 */
 	public EleccionMesa() {
+		
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 354, 301);
@@ -80,6 +81,8 @@ public class EleccionMesa extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
+		
+		this.setLocationRelativeTo(null);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.addActionListener(new ActionListener() {
@@ -468,7 +471,7 @@ public class EleccionMesa extends JFrame {
 					query.setTipoQueryGenerico(2);
 					System.out.println(Login.userLogeado);
 					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
-							+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
+							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
 					
 					
@@ -484,8 +487,8 @@ public class EleccionMesa extends JFrame {
 					
 					if (generoAntesPartir.compareTo("[]") == 0){
 						   JOptionPane.showMessageDialog(null,
-			                          "VOTANTE - Inicio de sesion incorrecto",
-			                          "No Coinciden DAts",
+			                          "No se puede continuar, Usted ya ha votado.",
+			                          "ERROR.",
 			                          JOptionPane.INFORMATION_MESSAGE);
 						   return result;
 					}

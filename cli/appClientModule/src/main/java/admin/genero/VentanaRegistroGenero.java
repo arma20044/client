@@ -12,6 +12,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -81,6 +83,12 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	 * ventana de registro
 	 */
 	public VentanaRegistroGenero() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtNroZona.requestFocus();
+			}
+		});
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");

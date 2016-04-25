@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,6 +71,13 @@ public class VentanaBuscarTipoCandidato extends JFrame implements ActionListener
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarTipoCandidato() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtBuscar.requestFocus();
+			}
+		});
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

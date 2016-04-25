@@ -8,15 +8,18 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -41,12 +44,9 @@ import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.NacionalidadValidator;
-import src.main.java.dao.nacionalidades.NacionalidadesDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class VentanaRegistroNacionalidad extends JFrame implements
 		ActionListener {
@@ -82,6 +82,13 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 	 * ventana de registro
 	 */
 	public VentanaRegistroNacionalidad() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtCod.requestFocus();
+			}
+		});
+		
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");

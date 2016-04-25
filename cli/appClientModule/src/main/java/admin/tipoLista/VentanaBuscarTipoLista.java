@@ -12,8 +12,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +75,13 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarTipoLista() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtBuscar.requestFocus();
+			}
+		});
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

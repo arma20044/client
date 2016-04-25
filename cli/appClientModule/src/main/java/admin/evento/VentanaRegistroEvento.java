@@ -12,6 +12,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -109,6 +111,12 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	 * ventana de registro
 	 */
 	public VentanaRegistroEvento() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtNro.requestFocus();
+			}
+		});
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");

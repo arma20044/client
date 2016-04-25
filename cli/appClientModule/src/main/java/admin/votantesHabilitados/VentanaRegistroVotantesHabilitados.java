@@ -10,13 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,10 +27,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -40,30 +41,18 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.buscadores.VentanaBuscarPerson;
 import src.main.java.admin.departamento.Item;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.evento.VentanaRegistroEvento;
-import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.validator.VotantesHabilitadosValidator;
-import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
-import src.main.java.login.PreLogin;
-import src.main.java.proceso.voto.VentanaVotoFinal;
-import src.main.java.votante.VentanaPrincipalVotante;
-import sun.awt.RepaintArea;
-
-import javax.swing.JCheckBox;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		ActionListener {
+	
+	private VentanaRegistroVotantesHabilitados a;
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -77,7 +66,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 	private VotantesHabilitadosValidator votantesHabilitadosValidator = new VotantesHabilitadosValidator();
 
-	private String codTemporal = "";
+	public static String codTemporal = "";
 	private JButton btnHome;
 
 	List<Object[]> ciudades = new ArrayList<Object[]>();
@@ -85,7 +74,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JComboBox cmbPersona, cmbDepartamento, cmbMesa, cmbZona;
+	private JComboBox cmbDepartamento, cmbMesa, cmbZona;
 	private JLabel lblDepartamento;
 	private JLabel lblZona;
 	private JComboBox comboBox;
@@ -97,19 +86,30 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	private JComboBox cmbLocal;
 
 	private DefaultComboBoxModel dm, dmz, dml, dmm;
+	private JButton btnSeleccionarPersona;
+
+	public static JLabel lblNombrePersona;
+
+	public static String personaSeleccionada = "";
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de registro
 	 */
 	public VentanaRegistroVotantesHabilitados() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				btnSeleccionarPersona.requestFocus();
+			}
+		});
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
 		botonGuardar.setIcon(new ImageIcon(
 				VentanaRegistroVotantesHabilitados.class
 						.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(499, 36, 32, 32);
+		botonGuardar.setBounds(550, 46, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -233,89 +233,13 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		cmbPersona = new JComboBox(recuperarDatosComboBoxPersona());
-		cmbPersona.setSelectedIndex(-1);
-		cmbPersona.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				// cmbMesa.setVisible(false);
-				// if(cmbMesa != null){
-				// if(cmbMesa.getModel().getSize() == 0){
-				//
-				// }
-				// }
-				// else
-				if (cmbZona != null) {
-					cmbZona.removeAllItems();
-
-					System.out.println(cmbZona.getItemCount());
-					// cmbMesa = null;
-
-					// cmbMesa.revalidate();
-					// cmbMesa.repaint();
-
-					Item item = (Item) cmbPersona.getSelectedItem();
-					Integer personaSelected = item.getId();
-
-					Integer pais = PaisDePersonaSeleccionada(personaSelected);
-
-					// recuperarDatosComboBoxMesaPorPais(pais);
-					Vector zonaXPais = recuperarDatosComboBoxZonaPorPais(pais);
-					if (zonaXPais.toString().compareTo("[]") != 0) {
-						cmbZona = new JComboBox(zonaXPais);
-						cmbZona.setBounds(209, 112, 289, 20);
-						cmbZona.revalidate();
-						getContentPane().add(cmbZona);
-						System.out.println(cmbZona.getItemCount());
-
-						// cmbMesa.repaint();
-
-						lblMesa.setVisible(true);
-						lblMesa.revalidate();
-
-						if (cmbZona.getItemCount() == 0) {
-							cmbZona.removeAllItems();
-							cmbZona.setVisible(false);
-							cmbZona.revalidate();
-						}
-					}
-
-				} else {
-					Item item = (Item) cmbPersona.getSelectedItem();
-					Integer personaSelected = item.getId();
-
-					Integer pais = PaisDePersonaSeleccionada(personaSelected);
-
-					// recuperarDatosComboBoxMesaPorPais(pais);
-					// cmbMesa.setModel( );
-
-					Vector zonaXPais = recuperarDatosComboBoxZonaPorPais(pais);
-
-					if (zonaXPais.toString().compareTo("[]") != 0) {
-						cmbZona = new JComboBox(zonaXPais);
-						cmbZona.setBounds(209, 112, 289, 20);
-						// cmbMesa.revalidate();
-						cmbZona.repaint();
-						getContentPane().add(cmbZona);
-
-					}
-					// lblMesa.setVisible(true);
-					// lblMesa.revalidate();
-
-					// pais = 0;
-
-				}
-			}
-		});
-
-		cmbPersona.setBounds(209, 48, 289, 20);
-		getContentPane().add(cmbPersona);
-
 		cmbDepartamento = new JComboBox(recuperarDatosComboBoxDepartamento());
 		cmbDepartamento.setSelectedIndex(-1);
 
 		cmbDepartamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				if(cmbDepartamento.getSelectedIndex()!=-1){
 
 				barrer();
 
@@ -370,7 +294,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 				// }
 				// }
 				// });
-
+			}
 			}
 		});
 
@@ -392,8 +316,6 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		cmbDistrito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (cmbDistrito.getSelectedIndex() != -1) {
-					
-					
 
 					Item item = (Item) cmbDistrito.getSelectedItem();
 					Integer idDepartamentoSelected = item.getId();
@@ -402,8 +324,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 					cmbZona.setModel(dmz);
 					cmbZona.setSelectedIndex(-1);
 					barrer2();
-				}
-				else
+				} else
 					barrer2();
 			}
 		});
@@ -414,8 +335,6 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		cmbZona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (cmbZona.getSelectedIndex() != -1) {
-					
-					
 
 					Item item = (Item) cmbZona.getSelectedItem();
 					Integer idDepartamentoSelected = item.getId();
@@ -423,8 +342,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 					recuperarDatosComboBoxLocal(idDepartamentoSelected);
 					cmbLocal.setModel(dml);
 					cmbLocal.setSelectedIndex(-1);
-				}
-				else
+				} else
 					barrer3();
 			}
 		});
@@ -438,8 +356,6 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		cmbLocal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (cmbLocal.getSelectedIndex() != -1) {
-					
-					
 
 					Item item = (Item) cmbLocal.getSelectedItem();
 					Integer idDepartamentoSelected = item.getId();
@@ -448,8 +364,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 					cmbMesa.setModel(dmm);
 					cmbMesa.setSelectedIndex(-1);
 				}
-				
-				else{
+
+				else {
 					barrer4();
 				}
 			}
@@ -502,91 +418,40 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		lblLocal.setBounds(174, 172, 28, 14);
 		getContentPane().add(lblLocal);
 
-		// cmbZona = new JComboBox();
-		// cmbZona.addFocusListener(new FocusAdapter() {
-		// @Override
-		// public void focusLost(FocusEvent arg0) {
-		// //cmbMesa.setVisible(false);
-		// // if(cmbMesa != null){
-		// // if(cmbMesa.getModel().getSize() == 0){
-		// //
-		// // }
-		// // }
-		// // else
-		// if (cmbMesa != null){
-		// cmbMesa.removeAllItems();
-		//
-		//
-		// System.out.println(cmbMesa.getItemCount());
-		// //cmbMesa = null;
-		//
-		// //cmbMesa.revalidate();
-		// //cmbMesa.repaint();
-		//
-		//
-		//
-		// Item item = (Item) cmbPersona.getSelectedItem();
-		// Integer personaSelected = item.getId();
-		//
-		// Integer pais = PaisDePersonaSeleccionada(personaSelected);
-		//
-		//
-		// //recuperarDatosComboBoxMesaPorPais(pais);
-		// Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
-		// if (mesaXPais.toString().compareTo("[]") != 0){
-		// cmbMesa = new JComboBox(mesaXPais);
-		// cmbMesa.setBounds(209, 143, 289, 20);
-		// cmbMesa.revalidate();
-		// getContentPane().add(cmbMesa);
-		// System.out.println(cmbMesa.getItemCount());
-		//
-		// //cmbMesa.repaint();
-		//
-		// lblMesa.setVisible(true);
-		// lblMesa.revalidate();
-		//
-		// if (cmbMesa.getItemCount() == 0){
-		// cmbMesa.removeAllItems();
-		// cmbMesa.setVisible(false);
-		// cmbMesa.revalidate();
-		// }
-		// }
-		//
-		// }
-		// else{
-		// Item item = (Item) cmbPersona.getSelectedItem();
-		// Integer personaSelected = item.getId();
-		//
-		// Integer pais = PaisDePersonaSeleccionada(personaSelected);
-		//
-		//
-		// //recuperarDatosComboBoxMesaPorPais(pais);
-		// //cmbMesa.setModel( );
-		//
-		// Vector mesaXPais = recuperarDatosComboBoxMesaPorPais(pais);
-		//
-		// if (mesaXPais.toString().compareTo("[]") != 0){
-		// cmbMesa = new JComboBox(mesaXPais);
-		// cmbMesa.setBounds(209, 143, 289, 20);
-		// //cmbMesa.revalidate();
-		// cmbMesa.repaint();
-		// getContentPane().add(cmbMesa);
-		//
-		// }
-		// // lblMesa.setVisible(true);
-		// // lblMesa.revalidate();
-		//
-		// //pais = 0;
-		//
-		// }
-		// }
-		// });
-		// cmbZona.setBounds(209, 112, 164, 20);
-		// getContentPane().add(cmbZona);
+		btnSeleccionarPersona = new JButton("");
+		btnSeleccionarPersona.setIcon(new ImageIcon(VentanaRegistroVotantesHabilitados.class.getResource("/imgs/hojas.png")));
+		btnSeleccionarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaBuscarPerson buscar = new VentanaBuscarPerson(a, true);
+				buscar.setVisible(true);
+
+			}
+		});
+		btnSeleccionarPersona.setToolTipText("Seleccionar Persona...");
+		btnSeleccionarPersona.setBounds(508, 42, 32, 32);
+		getContentPane().add(btnSeleccionarPersona);
+		
+		Border border = LineBorder.createGrayLineBorder();
+
+		lblNombrePersona = new JLabel(personaSeleccionada);
+		lblNombrePersona.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				VentanaBuscarPerson buscar = new VentanaBuscarPerson(a, true);
+				buscar.setVisible(true);
+			}
+		});
+		lblNombrePersona.setBounds(209, 46, 289, 25);
+		lblNombrePersona.setBorder(border);
+		getContentPane().add(lblNombrePersona);
+
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
 		recuperarDatos();
-
+		
+		
+		
+		
 	}
 
 	private void limpiar() {
@@ -600,14 +465,22 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
+				Integer personaSelected =0;
+				//Item item = (Item) cmbPersona.getSelectedItem();
+				if(codTemporal.compareTo("")!=0){
+				personaSelected = Integer.parseInt(codTemporal);
+				}
+				
 
-				Item item = (Item) cmbPersona.getSelectedItem();
-				Integer personaSelected = item.getId();
-
-				Item item2 = (Item) cmbDepartamento.getSelectedItem();
-				Integer habilitadoSelected = item2.getId();
-
-				// if (!(txtCod.getText().length() == 0)) {
+				 if (lblNombrePersona.getText().length() > 0 && 
+						 cmbDepartamento.getSelectedIndex()!=-1 &&
+						 cmbDistrito.getSelectedIndex()!=-1 &&
+						 cmbZona.getSelectedIndex()!=-1 && 
+						 cmbLocal.getSelectedIndex()!=-1 &&
+						 cmbMesa.getSelectedIndex()!=-1) {
+					 
+					 Item item2 = (Item) cmbDepartamento.getSelectedItem();
+						Integer habilitadoSelected = item2.getId();
 
 				if (votantesHabilitadosValidator.ValidarCedula(personaSelected) == false) {
 					// Genero genero = new Genero();
@@ -643,9 +516,31 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 							.getQueryGenericoResponse(query);
 					weatherClient.printQueryGenericoResponse(response);
 
-					VentanaBuscarVotantesHabilitados buscar = new VentanaBuscarVotantesHabilitados();
-					buscar.setVisible(true);
-					dispose();
+					//VentanaBuscarVotantesHabilitados buscar = new VentanaBuscarVotantesHabilitados();
+					//buscar.setVisible(true);
+					model = new VotantesHabilitadosJTableModel();
+					recuperarDatos();
+					table.setModel(model);
+					model.fireTableDataChanged();
+					table.removeColumn(table.getColumnModel().getColumn(0));
+					
+					barrerTodo();
+					// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+					lblMensaje
+							.setText("Excelente, se ha guardado el Votante.");
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+					
+					
+					
+					personaSeleccionada="";
+					//dispose();
 
 					/*
 					 * model = new VotantesHabilitadosJTableModel();
@@ -672,7 +567,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 					// "Información",JOptionPane.WARNING_MESSAGE);
 					lblMensaje
 							.setText("La persona ya esta habilitada con esa cedula: "
-									+ cmbPersona.getSelectedItem().toString());
+									+ personaSelected);
 					Timer t = new Timer(Login.timer, new ActionListener() {
 
 						public void actionPerformed(ActionEvent e) {
@@ -683,7 +578,19 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 					t.start();
 				}
 
-				// }
+				}
+				 else{
+					 lblMensaje
+						.setText("Por favor, ingrese todos los campos.");
+				Timer t = new Timer(Login.timer, new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						lblMensaje.setText(null);
+					}
+				});
+				t.setRepeats(false);
+				t.start();
+				 }
 
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
@@ -695,6 +602,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarVotantesHabilitados votante = new VentanaBuscarVotantesHabilitados();
 			votante.setVisible(true);
+			personaSeleccionada="";
 			this.dispose();
 
 		}
@@ -1638,43 +1546,53 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 
 		dmm = new DefaultComboBoxModel(data);
 	}
+	
+	void barrerTodo() {
+		
+		lblNombrePersona.setText("");
+		//cmbDepartamento.get // removeAllItems();
+		cmbDistrito.removeAllItems();
+		cmbZona.removeAllItems();
+		cmbLocal.removeAllItems();
+		cmbMesa.removeAllItems();
+		cmbDepartamento.setSelectedIndex(-1);
+		
+	}
 
 	void barrer() {
 
-	//	if (cmbDistrito.getSelectedIndex() != -1) {
-			cmbDistrito.removeAllItems();
-			cmbZona.removeAllItems();
-			cmbLocal.removeAllItems();
-			cmbMesa.removeAllItems();
-		//}
+		// if (cmbDistrito.getSelectedIndex() != -1) {
+		cmbDistrito.removeAllItems();
+		cmbZona.removeAllItems();
+		cmbLocal.removeAllItems();
+		cmbMesa.removeAllItems();
+		// }
 	}
 
 	void barrer2() {
 
-	//	if (cmbDistrito.getSelectedIndex() != -1) {
-			//cmbDistrito.removeAllItems();
-			//cmbZona.removeAllItems();
-			cmbLocal.removeAllItems();
-			cmbMesa.removeAllItems();
-		//}
-	}
-	
-void barrer3(){
-		
-	//	if(cmbDistrito.getSelectedIndex()!= -1){
-		
-		
-		//cmbLocal.removeAllItems();
+		// if (cmbDistrito.getSelectedIndex() != -1) {
+		// cmbDistrito.removeAllItems();
+		// cmbZona.removeAllItems();
+		cmbLocal.removeAllItems();
 		cmbMesa.removeAllItems();
-		//}
+		// }
 	}
 
-void barrer4(){
-	
-	//if(cmbDistrito.getSelectedIndex()!= -1){
+	void barrer3() {
 
-	cmbMesa.removeAllItems();
-	//}
-}
+		// if(cmbDistrito.getSelectedIndex()!= -1){
 
+		// cmbLocal.removeAllItems();
+		cmbMesa.removeAllItems();
+		// }
+	}
+
+	void barrer4() {
+
+		// if(cmbDistrito.getSelectedIndex()!= -1){
+
+		cmbMesa.removeAllItems();
+		// }
+	}
 }

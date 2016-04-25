@@ -4,14 +4,17 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,8 +40,6 @@ import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
@@ -52,13 +53,9 @@ import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.DateValidator;
 import src.main.java.admin.validator.PersonaValidator;
-import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
@@ -114,6 +111,12 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	 * ventana de registro
 	 */
 	public VentanaRegistroPersona() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtCI.requestFocus();
+			}
+		});
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");

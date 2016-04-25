@@ -10,11 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -38,7 +39,6 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.TipoEventoValidator;
-import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -74,6 +74,13 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 	 * ventana de registro
 	 */
 	public VentanaRegistroTipoEvento() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				txtDescripcion.requestFocus();
+			}
+		});
+		
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");

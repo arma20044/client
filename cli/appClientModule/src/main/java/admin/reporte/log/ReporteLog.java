@@ -37,7 +37,7 @@ public class ReporteLog extends JFrame {
 		
 
 		String query = "INSERT INTO ucsaws_crear_reporte_log(id_reporte_log, fch_ins, usuario_ins, nombre_reporte) "+
-		"     VALUES (   nextval('ucsaws_crear_reporte_sec'), now(), "+ Login.userLogeado  + ",'" + nombreReporte +"'   )";
+		"     VALUES (   nextval('ucsaws_crear_reporte_sec'), now(), "+ Login.userLogeado  + ",'" +  nombreReporte.toUpperCase() +"'   )";
 		
 		return c.createStatement().executeUpdate(query);
 	}

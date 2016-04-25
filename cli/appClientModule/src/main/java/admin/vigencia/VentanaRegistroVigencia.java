@@ -8,8 +8,14 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -19,6 +25,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,24 +42,13 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.lowagie.toolbox.plugins.Txt2Pdf;
-
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.VigenciaValidator;
-import src.main.java.dao.vigencia.VigenciaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import javax.swing.JFormattedTextField;
 
 public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 
@@ -98,6 +94,14 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 	 * ventana de registro
 	 */
 	public VentanaRegistroVigencia() {
+		
+		addWindowListener(new WindowAdapter() {
+			public void windowOpened(WindowEvent e){
+				cmbPais.requestFocus();
+			}
+		});
+		
+	
 		
 		recuperarDatosFechaRangoDelEvento();
 

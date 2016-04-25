@@ -76,6 +76,7 @@ public class PreLogin extends javax.swing.JFrame {
         initComponents();
         this.setBounds(0,0, 419, 190);
         this.setLocationRelativeTo(null);
+       // this.setLocation(0, 0);
         
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 

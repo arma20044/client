@@ -28,6 +28,7 @@ import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reporte.log.ReporteLog;
+import src.main.java.login.Login;
  
 public class CantidadVotosPresidente {
 	
@@ -80,6 +81,7 @@ public class CantidadVotosPresidente {
 //            parameters.put("P_Candidato_Desc","Presidente de la Republica del Paraguay");
             parameters.put("P_FECHA", VentanaBuscarEvento.date );
             parameters.put("P_ID_Evento", Integer.parseInt(VentanaBuscarEvento.evento));
+            parameters.put("P_GENERADO_POR",Login.nombreApellidoUserLogeado);
             
             
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parameters, jdbcConnection);
@@ -95,7 +97,7 @@ public class CantidadVotosPresidente {
             JasperViewer.viewReport(jasperPrint, false);
             ReporteLog log = new ReporteLog();
             
-            log.insert(a.getName().substring(0,42));
+            log.insert(a.getName().substring(0,a.getName().length()-7));
             }
  
         } catch (Exception e) {
