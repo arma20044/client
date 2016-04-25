@@ -60,6 +60,8 @@ public class EleccionMesa extends JFrame {
 	public static Integer idEvento;
 	private JLabel lblCIN;
 	
+	public static Integer idPersona = 0;
+	
 	List<Object[]> ciudades = new ArrayList<Object[]>();
 	private JPasswordField pfPass;
 	private JTextField txtUser;
@@ -90,8 +92,12 @@ public class EleccionMesa extends JFrame {
 				
 				if(!(txtUser.getText().isEmpty()) && !(pfPass.getText().isEmpty()) ){
 				
-				
-				if(verificarDatos(txtUser.getText(), pfPass.getText())== true){
+				if(verificarUsuPass(txtUser.getText(), pfPass.getText())== true){ //verificar usuario y contraseña
+				if(verificarDatos(idPersona)== true){  //verificar si ya voto
+					
+					if(verificarDatos2(txtUser.getText(), pfPass.getText())== true){
+						
+					
 					if (habilitado == 0){
 					VentanaPresidente main = new VentanaPresidente();
 					main.setVisible(true);
@@ -104,6 +110,8 @@ public class EleccionMesa extends JFrame {
 		                          "error",
 		                          JOptionPane.INFORMATION_MESSAGE);
 					}
+				}
+				}
 				}
 				
 				else{
@@ -453,7 +461,7 @@ public class EleccionMesa extends JFrame {
 				}
 				
 				
-				private static Boolean verificarDatos(String user, String pass) {
+				private static Boolean verificarDatos(Integer idPersona) {
 					Boolean result = false;
 
 					JSONArray filas = new JSONArray();
@@ -470,8 +478,80 @@ public class EleccionMesa extends JFrame {
 					// para registrar se inserta el codigo es 1
 					query.setTipoQueryGenerico(2);
 					System.out.println(Login.userLogeado);
-					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
-							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
+//					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+//							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
+					
+					query.setQueryGenerico("select id_votante, id_evento from ucsaws_votante v  "
+							+ "where habilitado = 1 and sufrago = 1 and v.id_persona = " + idPersona + " " );
+					
+					
+					
+				 
+
+					QueryGenericoResponse response = weatherClient
+							.getQueryGenericoResponse(query);
+					weatherClient.printQueryGenericoResponse(response);
+
+					JSONParser j = new JSONParser();
+
+					String generoAntesPartir = response.getQueryGenericoResponse();
+					
+					if (!(generoAntesPartir.compareTo("[]") == 0)){
+						   JOptionPane.showMessageDialog(null,
+			                          "El usuario ya ha votado.",
+			                          "ERROR.",
+			                          JOptionPane.INFORMATION_MESSAGE);
+						   return result;
+					}
+					else{
+//					try {
+//						ob = j.parse(generoAntesPartir);
+//					} catch (ParseException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//
+//					filas = (JSONArray) ob;
+//
+//					fil = (JSONArray) filas.get(0);
+//					
+//					//Mesa = (Integer) fil.get(1);
+//					
+//					Mesa = (int) (long)  fil.get(1);
+//					
+//					habilitado = (int) (long) fil.get(2);
+//					
+//					VentanaPrincipalVotante.idVotante = (int) (long) fil.get(3);
+
+					result = true;
+
+					return result;
+
+				}
+				}
+				
+				private static Boolean verificarUsuPass(String user, String pass) {
+					Boolean result = false;
+
+					JSONArray filas = new JSONArray();
+					JSONArray fil = new JSONArray();
+
+					Object ob = null;
+
+					ApplicationContext ctx = SpringApplication
+							.run(WeatherConfiguration.class);
+
+					WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+					QueryGenericoRequest query = new QueryGenericoRequest();
+
+					// para registrar se inserta el codigo es 1
+					query.setTipoQueryGenerico(2);
+					System.out.println(Login.userLogeado);
+//					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+//							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
+					
+					query.setQueryGenerico("select id_user, id_persona  from ucsaws_users u "
+							+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
 					
 					
 					
@@ -487,7 +567,77 @@ public class EleccionMesa extends JFrame {
 					
 					if (generoAntesPartir.compareTo("[]") == 0){
 						   JOptionPane.showMessageDialog(null,
-			                          "No se puede continuar, Usted ya ha votado.",
+			                          "El usuario y la constraseña no coinciden, revise sus datos.",
+			                          "ERROR.",
+			                          JOptionPane.INFORMATION_MESSAGE);
+						   return result;
+					}
+					else{
+						
+						try {
+							ob = j.parse(generoAntesPartir);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						filas = (JSONArray) ob;
+
+						fil = (JSONArray) filas.get(0);
+						
+						//Mesa = (Integer) fil.get(1);
+						
+					//	Mesa = (int) (long)  fil.get(1);
+						
+						
+						idPersona =  (int) (long)  fil.get(1);
+
+					result = true;
+
+					return result;
+
+				}
+				}
+				
+				private static Boolean verificarDatos2(String user, String pass) {
+					Boolean result = false;
+
+					JSONArray filas = new JSONArray();
+					JSONArray fil = new JSONArray();
+
+					Object ob = null;
+
+					ApplicationContext ctx = SpringApplication
+							.run(WeatherConfiguration.class);
+
+					WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+					QueryGenericoRequest query = new QueryGenericoRequest();
+
+					// para registrar se inserta el codigo es 1
+					query.setTipoQueryGenerico(2);
+					System.out.println(Login.userLogeado);
+//					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+//							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
+					
+					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u "
+							+ "join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+							+ "where habilitado = 1 and sufrago = 0 and v.id_persona  = " + idPersona +"");
+					
+					
+					
+				 
+
+					QueryGenericoResponse response = weatherClient
+							.getQueryGenericoResponse(query);
+					weatherClient.printQueryGenericoResponse(response);
+
+					JSONParser j = new JSONParser();
+
+					String generoAntesPartir = response.getQueryGenericoResponse();
+					
+					if ((generoAntesPartir.compareTo("[]") == 0)){
+						   JOptionPane.showMessageDialog(null,
+			                          "no datos.",
 			                          "ERROR.",
 			                          JOptionPane.INFORMATION_MESSAGE);
 						   return result;
