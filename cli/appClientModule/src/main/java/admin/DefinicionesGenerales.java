@@ -33,6 +33,7 @@ import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.tipoLista.VentanaBuscarTipoLista;
+import src.main.java.admin.users.VentanaBuscarUsers;
 import src.main.java.admin.vigencia.VentanaBuscarVigencia;
 import src.main.java.admin.votantesHabilitados.VentanaBuscarVotantesHabilitados;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -338,6 +339,17 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		
 		//btnGenero.requestFocus();
 		getRootPane().setDefaultButton(btnHome);
+		
+		JButton bntUsers = new JButton("Usuarios");
+		bntUsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaBuscarUsers u = new VentanaBuscarUsers();
+				u.setVisible(true);
+				dispose();
+			}
+		});
+		bntUsers.setBounds(513, 314, 101, 23);
+		getContentPane().add(bntUsers);
 
 	}
 

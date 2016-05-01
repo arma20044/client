@@ -484,6 +484,13 @@ public class VentanaPresidente extends JFrame implements ActionListener{
 	getContentPane().add(botonCambiar);
 	
 	JButton btnNewButton_1 = new JButton("Votar BLANCO");
+	btnNewButton_1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			presidente="BLANCO";
+			dispose();
+			VentanaConfirmacionPresidente miVentanaConfirmacion=new VentanaConfirmacionPresidente(miVentanaPrincipal,true);
+		}
+	});
 	btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
 	btnNewButton_1.setBounds(639, 537, 179, 37);
 	getContentPane().add(btnNewButton_1);

@@ -583,6 +583,13 @@ public class VentanaDiputados extends JFrame implements ActionListener{
 	getContentPane().add(botonCambiar);
 	
 	JButton btnNewButton_1 = new JButton("Votar BLANCO");
+	btnNewButton_1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			diputados="BLANCO";
+			dispose();
+			VentanaConfirmacionDiputados miVentanaConfirmacion=new VentanaConfirmacionDiputados(miVentanaPrincipal,true);
+		}
+	});
 	btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
 	btnNewButton_1.setBounds(639, 686, 179, 37);
 	getContentPane().add(btnNewButton_1);

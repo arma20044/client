@@ -68,25 +68,29 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				//idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento, Integer.parseInt(EleccionMesa.local));
 				idMesa = EleccionMesa.Mesa;
 				
-				
+				if(!(VentanaPresidente.presidente.compareTo("BLANCO")==0)){
 				Integer idListaPresidete = obtenerLista(1,
 						Integer.parseInt(VentanaPresidente.presidente));
 				
 				votar(idListaPresidete, idMesa);
 				System.out.println("Se voto presidente");
+				}
 				
+				if(!(VentanaSenadores.senadores.compareTo("BLANCO")==0)){
 				Integer idListaSenador = obtenerLista(8,
 						Integer.parseInt(VentanaSenadores.senadores));
 				
 				votar(idListaSenador, idMesa);
 				System.out.println("Se voto Senador");
+				}
 				
+				if(!(VentanaDiputados.diputados.compareTo("BLANCO")==0)){
 				Integer idListaDiputado = obtenerLista(7,
 						Integer.parseInt(VentanaDiputados.diputados));
 				
 				votar(idListaDiputado, idMesa);
 				System.out.println("Se voto Diputado");
-				
+				}
 				
 				actualizarVotante();
 				//eliminarVotanteHabilitado();

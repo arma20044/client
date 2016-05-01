@@ -7,8 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import javax.swing.JButton;
+
+import src.main.java.login.PreLogin;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -45,7 +50,12 @@ public class VentanaVotoFinal extends JFrame {
 		JButton btnNewButton = new JButton("SALIR");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
+				
+				//System.exit(0);
+				PreLogin p = new PreLogin();
+				p.setVisible(true);
+				dispose();
+				//System.
 			}
 		});
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 18));

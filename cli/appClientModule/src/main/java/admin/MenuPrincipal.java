@@ -64,8 +64,8 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAdministracion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Administracion administracion = new Administracion();
-				administracion.setVisible(true);
+				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
+				ventanaBuscarEvento.setVisible(true);
 				dispose();
 			}
 		});
