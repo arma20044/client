@@ -42,12 +42,13 @@ import java.awt.Color;
 public class VentanaConfirmacionDiputados extends JDialog {
 	private Container contenedor;
 	JLabel labelTitulo;
-	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado,lblMensaje;
-	
-	//public static Integer idLocal;
-	
+	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado,
+			lblMensaje;
+
+	// public static Integer idLocal;
+
 	public static Integer idEvento;
-	
+
 	public static Integer idMesa;
 
 	public VentanaConfirmacionDiputados(
@@ -62,43 +63,54 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		JButton button = new JButton("SI");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				
-				
-				//idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento, Integer.parseInt(EleccionMesa.local));
-				idMesa = EleccionMesa.Mesa;
-				
-				if(!(VentanaPresidente.presidente.compareTo("BLANCO")==0)){
-				Integer idListaPresidete = obtenerLista(1,
-						Integer.parseInt(VentanaPresidente.presidente));
-				
-				votar(idListaPresidete, idMesa);
-				System.out.println("Se voto presidente");
-				}
-				
-				if(!(VentanaSenadores.senadores.compareTo("BLANCO")==0)){
-				Integer idListaSenador = obtenerLista(8,
-						Integer.parseInt(VentanaSenadores.senadores));
-				
-				votar(idListaSenador, idMesa);
-				System.out.println("Se voto Senador");
-				}
-				
-				if(!(VentanaDiputados.diputados.compareTo("BLANCO")==0)){
-				Integer idListaDiputado = obtenerLista(7,
-						Integer.parseInt(VentanaDiputados.diputados));
-				
-				votar(idListaDiputado, idMesa);
-				System.out.println("Se voto Diputado");
-				}
-				
-				actualizarVotante();
-				//eliminarVotanteHabilitado();
-				
-				
-				
 
-				
+				// idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento,
+				// Integer.parseInt(EleccionMesa.local));
+				idMesa = EleccionMesa.Mesa;
+
+				if (!(VentanaPresidente.presidente.compareTo("BLANCO") == 0)) {
+					Integer idListaPresidete = obtenerLista(1,
+							Integer.parseInt(VentanaPresidente.presidente));
+
+					votar(idListaPresidete, idMesa);
+					System.out.println("Se voto presidente");
+				} else {
+
+					Integer idTipoLista = 1; // para presidente
+
+					votarBlanco(idTipoLista, idMesa);
+					System.out.println("Se voto presidente en blanco");
+				}
+
+				if (!(VentanaSenadores.senadores.compareTo("BLANCO") == 0)) {
+					Integer idListaSenador = obtenerLista(8,
+							Integer.parseInt(VentanaSenadores.senadores));
+
+					votar(idListaSenador, idMesa);
+					System.out.println("Se voto Senador");
+				} else {
+					Integer idTipoLista = 8; // para senador
+
+					votarBlanco(idTipoLista, idMesa);
+					System.out.println("Se voto senador en blanco");
+				}
+
+				if (!(VentanaDiputados.diputados.compareTo("BLANCO") == 0)) {
+					Integer idListaDiputado = obtenerLista(7,
+							Integer.parseInt(VentanaDiputados.diputados));
+
+					votar(idListaDiputado, idMesa);
+					System.out.println("Se voto Diputado");
+				}
+				else {
+					Integer idTipoLista = 7; // para diputado
+
+					votarBlanco(idTipoLista, idMesa);
+					System.out.println("Se voto diputado en blanco");
+				}
+
+				actualizarVotante();
+				// eliminarVotanteHabilitado();
 
 				VentanaVotoFinal end = new VentanaVotoFinal();
 				end.setVisible(true);
@@ -173,8 +185,6 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-			
-
 			}
 		});
 
@@ -193,7 +203,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		getContentPane().add(lblListaPresidente);
 		getContentPane().add(lblListaSenador);
 		getContentPane().add(lblListaDiputado);
-		
+
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setFont(UIManager.getFont("Label.font"));
@@ -234,7 +244,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		weatherClient.printVotoResponse(response);
 	}
 
-	//Metodo para obtener el ID de lista que fue seleccionado
+	// Metodo para obtener el ID de lista que fue seleccionado
 	private Integer obtenerLista(int tipoLista, Integer lista) {
 
 		JSONArray filas = new JSONArray();
@@ -262,22 +272,22 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		JSONParser j = new JSONParser();
 
 		String generoAntesPartir = response.getQueryGenericoResponse();
-		
-		if (generoAntesPartir.compareTo("[]")==0){
-			
-			//JOptionPane.showMessageDialog(null, "LA consulta arrojo vacio!!!.");;
-			lblMensaje
-			.setText("Lista: LA consulta arrojo vacio!!!.");
+
+		if (generoAntesPartir.compareTo("[]") == 0) {
+
+			// JOptionPane.showMessageDialog(null,
+			// "LA consulta arrojo vacio!!!.");;
+			lblMensaje.setText("Lista: LA consulta arrojo vacio!!!.");
 		}
-		
+
 		else
 
-		try {
-			ob = j.parse(generoAntesPartir);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				ob = j.parse(generoAntesPartir);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		filas = (JSONArray) ob;
 
@@ -288,8 +298,8 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		return Integer.parseInt(result);
 
 	}
-	
-	//Metodo para obtener el ID de la Mesa en donde se voto
+
+	// Metodo para obtener el ID de la Mesa en donde se voto
 	private Integer obtenerMesa(int nroMesa, Integer idEvento, Integer idLocal) {
 
 		JSONArray filas = new JSONArray();
@@ -308,8 +318,8 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		System.out.println(Login.userLogeado);
 		query.setQueryGenerico("select id_mesa, desc_mesa, id_local, id_evento"
 				+ " from ucsaws_mesa" + " where nro_mesa = " + nroMesa
-				+ " and id_evento = " + idEvento
-				+ " and  id_local = " + idLocal);
+				+ " and id_evento = " + idEvento + " and  id_local = "
+				+ idLocal);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -329,20 +339,19 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		filas = (JSONArray) ob;
 
 		fil = (JSONArray) filas.get(0);
-		
-		idLocal =  Integer.parseInt(fil.get(2).toString());
-		
+
+		idLocal = Integer.parseInt(fil.get(2).toString());
+
 		idEvento = Integer.parseInt(fil.get(3).toString());
-		
+
 		String result = fil.get(0).toString();
 
 		return Integer.parseInt(result);
 
 	}
-	
-	
-	private void votar(Integer idLista, Integer idMesa){
-		
+
+	private void votar(Integer idLista, Integer idMesa) {
+
 		// insertar voto inicioS
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
@@ -356,46 +365,86 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(1);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico(
-				"INSERT INTO ucsaws_votos ( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-				+ "VALUES (nextval('ucsaws_votos_seq') , " + idLista + "," +  idMesa + " , '" + Login.userLogeado + "' , now(), '"
-						+ Login.userLogeado + "' , now())");
+		query.setQueryGenerico("INSERT INTO ucsaws_votos ( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+				+ "VALUES (nextval('ucsaws_votos_seq') , "
+				+ idLista
+				+ ","
+				+ idMesa
+				+ " , '"
+				+ Login.userLogeado
+				+ "' , now(), '"
+				+ Login.userLogeado + "' , now())");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		// insertar votoS fin
-		
+
 	}
-	
-	private void actualizarVotante(){
-		
+
+	private void votarBlanco(Integer idTipoLista, Integer idMesa) {
+
+		// insertar voto inicioS
+		Calendar calendar = new GregorianCalendar();
+		int year = calendar.get(Calendar.YEAR);
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(1);
+		System.out.println(Login.userLogeado);
+		query.setQueryGenerico("INSERT INTO ucsaws_votos_blanco ( id_voto_blanco, id_tipo_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd, id_evento) "
+				+ "VALUES (nextval('ucsaws_voto_blanco') , "
+				+ idTipoLista
+				+ ","
+				+ idMesa
+				+ " , '"
+				+ Login.userLogeado
+				+ "' , now(), '"
+				+ Login.userLogeado
+				+ "' , now(),"
+				+ VentanaBuscarEvento.evento
+				+ ")");
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		// insertar votoS fin
+
+	}
+
+	private void actualizarVotante() {
+
 		// actualizar situacion votante inicio
-				Calendar calendar = new GregorianCalendar();
-				int year = calendar.get(Calendar.YEAR);
+		Calendar calendar = new GregorianCalendar();
+		int year = calendar.get(Calendar.YEAR);
 
-				ApplicationContext ctx = SpringApplication
-						.run(WeatherConfiguration.class);
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
 
-				WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-				QueryGenericoRequest query = new QueryGenericoRequest();
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
 
-				// para registrar se inserta el codigo es 1
-				// by default sufrago es 0 cuando no votó, al votar cambia a 1
-				query.setTipoQueryGenerico(3);
-				System.out.println(Login.userLogeado);
-				query.setQueryGenerico(
-						"UPDATE ucsaws_votante"
-						+ " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' "
-						+ " WHERE  id_votante = " + VentanaPrincipalVotante.idVotante
-						+ " and id_mesa = "  + idMesa);
+		// para registrar se inserta el codigo es 1
+		// by default sufrago es 0 cuando no votó, al votar cambia a 1
+		query.setTipoQueryGenerico(3);
+		System.out.println(Login.userLogeado);
+		query.setQueryGenerico("UPDATE ucsaws_votante"
+				+ " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' "
+				+ " WHERE  id_votante = " + VentanaPrincipalVotante.idVotante
+				+ " and id_mesa = " + idMesa);
 
-				QueryGenericoResponse response = weatherClient
-						.getQueryGenericoResponse(query);
-				weatherClient.printQueryGenericoResponse(response);
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
 
-				// actualizar situacion votante fin
-				
+		// actualizar situacion votante fin
+
 	}
 }

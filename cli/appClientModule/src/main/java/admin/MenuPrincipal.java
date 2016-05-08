@@ -6,16 +6,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import src.main.java.admin.DefinicionesGenerales.MKeyListener;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.login.Login;
-
-import javax.swing.ImageIcon;
 
 public class MenuPrincipal extends JFrame implements ActionListener{
 	
@@ -64,6 +62,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAdministracion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				VentanaBuscarEvento.evento="";
 				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
 				ventanaBuscarEvento.setVisible(true);
 				dispose();
@@ -84,6 +83,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		btnReportes = new JButton("Reportes");
 		btnReportes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				VentanaBuscarEvento.evento="";
 				
 				reporte = true;
 				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();

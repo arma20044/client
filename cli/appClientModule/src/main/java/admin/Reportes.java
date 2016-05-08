@@ -14,8 +14,10 @@ import javax.swing.SwingConstants;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reportes.Candidatos;
 import src.main.java.admin.reportes.CantidadVotosElegir;
+import src.main.java.admin.reportes.Participacion;
 import src.main.java.admin.reportes.ReporteDymmy;
 import src.main.java.admin.reportes.Votantes;
+import src.main.java.admin.reportes.VotoBlancoElegir;
 import src.main.java.admin.reportes.VotosPorDepartamento;
 import src.main.java.admin.reportes.VotosPorDistrito;
 import src.main.java.admin.reportes.VotosPorLocal;
@@ -91,7 +93,7 @@ public class Reportes extends JFrame implements ActionListener{
 					}
 				});
 			
-				btnPersonas.setBounds(163, 133, 173, 23);
+				btnPersonas.setBounds(133, 133, 227, 23);
 				getContentPane().add(btnPersonas);
 				
 				JButton btnVotantesXDep = new JButton("Cantidad Votantes por Departamento");
@@ -101,7 +103,7 @@ public class Reportes extends JFrame implements ActionListener{
 						votoDepartamento.start();
 					}
 				});
-				btnVotantesXDep.setBounds(391, 167, 227, 23);
+				btnVotantesXDep.setBounds(391, 133, 227, 23);
 				getContentPane().add(btnVotantesXDep);
 				
 				JButton btnCantVotantesXDistrito = new JButton("Cantidad Votantes por Distrito");
@@ -111,7 +113,7 @@ public class Reportes extends JFrame implements ActionListener{
 						votoDistrito.start();
 					}
 				});
-				btnCantVotantesXDistrito.setBounds(391, 205, 227, 23);
+				btnCantVotantesXDistrito.setBounds(391, 167, 227, 23);
 				getContentPane().add(btnCantVotantesXDistrito);
 				
 				JButton btnCantidadVotantesPorZona = new JButton("Cantidad Votantes por Zona");
@@ -121,7 +123,7 @@ public class Reportes extends JFrame implements ActionListener{
 						votoZona.start();
 					}
 				});
-				btnCantidadVotantesPorZona.setBounds(391, 239, 227, 23);
+				btnCantidadVotantesPorZona.setBounds(391, 201, 227, 23);
 				getContentPane().add(btnCantidadVotantesPorZona);
 				
 				JButton btnCantidadVotantesPorLocal = new JButton("Cantidad Votantes por Local");
@@ -131,19 +133,28 @@ public class Reportes extends JFrame implements ActionListener{
 						votoLocal.start();
 					}
 				});
-				btnCantidadVotantesPorLocal.setBounds(391, 273, 227, 23);
+				btnCantidadVotantesPorLocal.setBounds(391, 239, 227, 23);
 				getContentPane().add(btnCantidadVotantesPorLocal);
 				
 				JButton btnTotalParticipacion = new JButton("Participacion");
-				btnTotalParticipacion.setBounds(391, 133, 227, 23);
+				btnTotalParticipacion.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Participacion p = new Participacion();
+						p.start();
+					}
+				});
+				btnTotalParticipacion.setBounds(133, 201, 227, 23);
 				getContentPane().add(btnTotalParticipacion);
 				
-				JButton btnCantidadVotosNulos = new JButton("Cantidad Votos Nulos");
-				btnCantidadVotosNulos.setBounds(163, 205, 173, 23);
-				getContentPane().add(btnCantidadVotosNulos);
-				
 				JButton btnCantidadVotosBlancos = new JButton("Cantidad Votos Blancos");
-				btnCantidadVotosBlancos.setBounds(163, 239, 173, 23);
+				btnCantidadVotosBlancos.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						VotoBlancoElegir v = new VotoBlancoElegir();
+						v.setVisible(true);
+						dispose();
+					}
+				});
+				btnCantidadVotosBlancos.setBounds(133, 239, 227, 23);
 				getContentPane().add(btnCantidadVotosBlancos);
 				
 				JButton btnListaCandidatos = new JButton("Lista de Candidatos");
@@ -153,7 +164,7 @@ public class Reportes extends JFrame implements ActionListener{
 						can.start();
 					}
 				});
-				btnListaCandidatos.setBounds(163, 167, 173, 23);
+				btnListaCandidatos.setBounds(133, 167, 227, 23);
 				getContentPane().add(btnListaCandidatos);
 				
 				JButton btnVotosXCandidatura = new JButton("Votos por Candidatura");
@@ -165,7 +176,7 @@ public class Reportes extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnVotosXCandidatura.setBounds(163, 273, 173, 23);
+				btnVotosXCandidatura.setBounds(133, 276, 227, 23);
 				getContentPane().add(btnVotosXCandidatura);
 				
 				JButton btnHome = new JButton("");

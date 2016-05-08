@@ -184,7 +184,7 @@ public class EleccionMesa extends JFrame {
 				}
 			}
 		});
-		pfPass.setBounds(178, 138, 137, 23);
+		pfPass.setBounds(178, 138, 137, 25);
 		contentPane.add(pfPass);
 		
 		txtUser = new JTextField();
@@ -215,7 +215,7 @@ public class EleccionMesa extends JFrame {
 				}
 			}
 		});
-		txtUser.setBounds(178, 79, 137, 20);
+		txtUser.setBounds(178, 79, 137, 25);
 		contentPane.add(txtUser);
 		txtUser.setColumns(10);
 		
@@ -637,7 +637,7 @@ public class EleccionMesa extends JFrame {
 					
 					if ((generoAntesPartir.compareTo("[]") == 0)){
 						   JOptionPane.showMessageDialog(null,
-			                          "no datos.",
+			                          "El Votante no Esta Habilitado.",
 			                          "ERROR.",
 			                          JOptionPane.INFORMATION_MESSAGE);
 						   return result;

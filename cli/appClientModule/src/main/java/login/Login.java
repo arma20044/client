@@ -110,10 +110,10 @@ public class Login extends javax.swing.JFrame implements KeyListener {
         else
         	if(logroAutenticarse.compareTo("54321")==0){
         		  autenticado=true;
-                  JOptionPane.showMessageDialog(this,
-                          "VOTANTE - Inicio de sesion correcto",
-                          "Correcto",
-                          JOptionPane.INFORMATION_MESSAGE);
+//                  JOptionPane.showMessageDialog(this,
+//                          "VOTANTE - Inicio de sesion correcto",
+//                          "Correcto",
+//                          JOptionPane.INFORMATION_MESSAGE);
                   // clases.utilidades.Global.usuario=campoUsuario.getText();
                
         		return 54321;
@@ -266,7 +266,10 @@ public class Login extends javax.swing.JFrame implements KeyListener {
         campoContrasena.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 try {
+                	if(campoUsuario.getText().length()>0 && campoContrasena.getPassword().length > 0){
+               
 					campoContrasenaKeyPressed(evt);
+                	 }
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -410,15 +413,19 @@ public class Login extends javax.swing.JFrame implements KeyListener {
        
        else
     	   if(autenticado == 54321){ //votante
-    		   VentanaPrincipal miVentanaPrincipal;
-         		/*Instanciamos el objeto*/
-         		miVentanaPrincipal= new VentanaPrincipal();
-         		/*Enviamos el objeto como parametro para que sea unico
-         		 * en toda la aplicaci�n*/
-         		miVentanaPrincipal.setVentanaPrincipal(miVentanaPrincipal);
-         		/*Hacemos que se cargue la ventana*/
-         		miVentanaPrincipal.setVisible(true);
-                 this.dispose();
+//    		   VentanaPrincipal miVentanaPrincipal;
+//         		/*Instanciamos el objeto*/
+//         		miVentanaPrincipal= new VentanaPrincipal();
+//         		/*Enviamos el objeto como parametro para que sea unico
+//         		 * en toda la aplicaci�n*/
+//         		miVentanaPrincipal.setVentanaPrincipal(miVentanaPrincipal);
+//         		/*Hacemos que se cargue la ventana*/
+//         		miVentanaPrincipal.setVisible(true);
+//                 this.dispose();
+    		   JOptionPane.showMessageDialog(null,
+                       "Solo pueden acceder a ésta área los Administradores.",
+                       "ERROR.",
+                       JOptionPane.INFORMATION_MESSAGE);
     		   
     	   }
     		   //)
@@ -511,15 +518,19 @@ public class Login extends javax.swing.JFrame implements KeyListener {
     	       
     	       else
     	    	   if(autenticado == 54321){ //votante
-    	    		   VentanaPrincipal miVentanaPrincipal;
-    	         		/*Instanciamos el objeto*/
-    	         		miVentanaPrincipal= new VentanaPrincipal();
-    	         		/*Enviamos el objeto como parametro para que sea unico
-    	         		 * en toda la aplicaci�n*/
-    	         		miVentanaPrincipal.setVentanaPrincipal(miVentanaPrincipal);
-    	         		/*Hacemos que se cargue la ventana*/
-    	         		miVentanaPrincipal.setVisible(true);
-    	                 this.dispose();
+//    	    		   VentanaPrincipal miVentanaPrincipal;
+//    	         		/*Instanciamos el objeto*/
+//    	         		miVentanaPrincipal= new VentanaPrincipal();
+//    	         		/*Enviamos el objeto como parametro para que sea unico
+//    	         		 * en toda la aplicaci�n*/
+//    	         		miVentanaPrincipal.setVentanaPrincipal(miVentanaPrincipal);
+//    	         		/*Hacemos que se cargue la ventana*/
+//    	         		miVentanaPrincipal.setVisible(true);
+//    	                 this.dispose();
+    	    		   JOptionPane.showMessageDialog(null,
+    	                       "Solo pueden acceder a ésta área los Administradores.",
+    	                       "ERROR.",
+    	                       JOptionPane.INFORMATION_MESSAGE);
     	    		   
     	    	   }
         }
