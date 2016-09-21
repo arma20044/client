@@ -39,10 +39,12 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Nacionalidad;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaModificarEvento;
 import src.main.java.dao.nacionalidades.NacionalidadesDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -69,6 +71,9 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 	private JLabel lblMensaje;
 	
 	private DefaultTableModel dm;
+	private JButton btnModificar;
+	
+	Nacionalidad nacionalidad = new Nacionalidad();
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -196,6 +201,11 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = selectedData.get(0);
+					
+					nacionalidad.setId_nacionalidad(selectedData.get(0));
+					nacionalidad.setCod_nacionalidad(selectedData.get(2));
+					nacionalidad.setDesc_nacionalidad(selectedData.get(3));
+					nacionalidad.setId_pais(selectedData.get(4));
 
 				
 				//System.out.println("Selected: " + selectedData);
@@ -255,6 +265,44 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
+		
+		btnModificar = new JButton("");
+		btnModificar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (!codTemporal.equals("")) {
+					
+					
+					VentanaModificarNacionalidad modificar = new VentanaModificarNacionalidad(nacionalidad);
+					modificar.setVisible(true);
+					dispose();
+				}
+				else{
+					lblMensaje
+					.setText("Por favor seleccione que Nacionalidad desea Modificar.");
+
+			Timer t = new Timer(Login.timer, new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					lblMensaje.setText(null);
+				}
+			});
+			t.setRepeats(false);
+			t.start();
+				}
+			}
+		});
+		btnModificar.setIcon(new ImageIcon(VentanaBuscarNacionalidad.class.getResource("/imgs/def.png")));
+		btnModificar.setToolTipText("Nuevo");
+		btnModificar.setOpaque(false);
+		btnModificar.setContentAreaFilled(false);
+		btnModificar.setBorderPainted(false);
+		btnModificar.setBounds(506, 52, 32, 32);
+		Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
+		Image newimg6 = img6.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnModificar.setIcon(new ImageIcon(newimg6));
+		getContentPane().add(btnModificar);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 

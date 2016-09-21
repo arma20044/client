@@ -20,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -39,6 +40,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Nacionalidad;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -48,7 +50,7 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaRegistroNacionalidad extends JFrame implements
+public class VentanaModificarNacionalidad extends JFrame implements
 		ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
@@ -77,22 +79,25 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 	private JTextField txtDescripcion;
 	private JLabel lblDescripcion;
 
+	private Nacionalidad nac;
+
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de registro
 	 */
-	public VentanaRegistroNacionalidad() {
-		
+	public VentanaModificarNacionalidad(Nacionalidad n) {
+
 		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
+			public void windowOpened(WindowEvent e) {
 				txtCod.requestFocus();
 			}
 		});
-		
+
+		nac = n;
 
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Registrar");
-		botonGuardar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
+		botonGuardar.setIcon(new ImageIcon(VentanaModificarNacionalidad.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(331, 45, 32, 32);
 		botonGuardar.setOpaque(false);
@@ -106,7 +111,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		botonCancelar = new JButton();
 		botonCancelar.setBackground(Color.WHITE);
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
+		botonCancelar.setIcon(new ImageIcon(VentanaModificarNacionalidad.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setBounds(774, 383, 32, 32);
 		botonCancelar.setOpaque(false);
@@ -160,44 +165,44 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
+		// table.addMouseListener(new MouseAdapter() {
+		// @Override
+		// public void mouseClicked(MouseEvent arg0) {
+		// List<String> selectedData = new ArrayList<String>();
+		//
+		// int[] selectedRow = table.getSelectedRows();
+		// // int[] selectedColumns = table_1.getSelectedColumns();
+		//
+		// for (int i = 0; i < selectedRow.length; i++) {
+		// int col = 0;
+		// while (table.getColumnCount() > col) {
+		// System.out.println(table
+		// .getValueAt(selectedRow[i], col));
+		// try {
+		// selectedData.add((String) table.getValueAt(
+		// selectedRow[i], col));
+		// } catch (Exception e) {
+		// System.out.println(e.getMessage());
+		// }
+		//
+		// col++;
+		// }
+		// // selectedData.ad table_1.getValueAt(selectedRow[i],
+		// // selectedColumns[0]);
+		// // txtId.setText(selectedData.get(0));
+		// // txtCod.setText(selectedData.get(0));
+		// // txtDesc.setText(selectedData.get(1));
+		// // textFecha.setText(selectedData.get(2));
+		// // textUsu.setText(selectedData.get(4));
+		// // codTemporal.setText(selectedData.get(1));
+		// codTemporal = (String) (table.getModel().getValueAt(
+		// selectedRow[i], 0));
+		//
+		// }
+		// System.out.println("Selected: " + selectedData);
+		//
+		// }
+		// });
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setModel(model);
 
@@ -210,7 +215,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
+		btnHome.setIcon(new ImageIcon(VentanaModificarNacionalidad.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -221,7 +226,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 		cmbPais = new JComboBox(recuperarDatosComboBoxPaisActual());
 		cmbPais.setBounds(213, 119, 340, 20);
-		cmbPais.setSelectedIndex(-1);
+		filtrarComboNacionalidad();
 		getContentPane().add(cmbPais);
 
 		JLabel lblPais = new JLabel();
@@ -237,6 +242,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		getContentPane().add(lblCod);
 
 		txtCod = new JTextField();
+		txtCod.setText(nac.getCod_nacionalidad());
 		txtCod.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
@@ -257,6 +263,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		txtDescripcion = new JTextField();
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(213, 86, 340, 26);
+		txtDescripcion.setText(nac.getDesc_nacionalidad());
 		getContentPane().add(txtDescripcion);
 
 		lblDescripcion = new JLabel();
@@ -281,12 +288,10 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
-				Integer paisSelected =null;
-				if (!(cmbPais.getSelectedIndex()== -1)){
+
 				Item item3 = (Item) cmbPais.getSelectedItem();
-				paisSelected = item3.getId();}
-				
-				if ((txtCod.getText().length() > 0) && (txtDescripcion.getText().length() > 0) && cmbPais.getSelectedIndex() != -1) {
+				Integer paisSelected = item3.getId();
+				if (!(txtCod.getText().length() == 0)) {
 					if (txtCod.getText().length() > 3) {
 						lblMensaje
 								.setText("El codigo debe ser de maximo 3 caracteres.");
@@ -298,11 +303,11 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 						});
 						t.setRepeats(false);
 						t.start();
-					} else if
+					} //else if
 
-					(nacionalidadValidator.ValidarCodigo(txtCod.getText(),
-							txtDescripcion.getText()) == false) {
-						if (nacionalidadValidator.ValidarPais(paisSelected) == false) {
+				//	(nacionalidadValidator.ValidarCodigo(txtCod.getText(),
+						//	txtDescripcion.getText()) == false) {
+						//if (nacionalidadValidator.ValidarPais(paisSelected) == false) {
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
 
@@ -316,27 +321,16 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 									.getBean(WeatherClient.class);
 							QueryGenericoRequest query = new QueryGenericoRequest();
 
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
+							// para UPDATE se inserta el codigo es 3
+							query.setTipoQueryGenerico(3);
 							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_nacionalidad"
-									+ "( id_nacionalidad,id_pais, cod_nacionalidad, desc_nacionalidad , id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_nacionalidad_seq')"
-									+ " , "
-									+ paisSelected
-
-									+ ", upper('"
-									+ txtCod.getText()
-									+ "'), upper('"
-									+ txtDescripcion.getText()
-									+ "'),"
-
-									+ VentanaBuscarEvento.evento
-									+ ",'"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado + "' , now())");
+							query.setQueryGenerico("UPDATE ucsaws_nacionalidad"
+									+ " SET cod_nacionalidad = upper('" + txtCod.getText() + "'),"
+									+ " desc_nacionalidad = upper('" + txtDescripcion.getText() + "'),"
+									+ " id_pais = " +paisSelected + ","
+									+ " usuario_upd = " + Login.userLogeado + ","
+									+ " fch_upd = now()"
+									+ " WHERE id_nacionalidad = " + nac.getId_nacionalidad());
 
 							QueryGenericoResponse response = weatherClient
 									.getQueryGenericoResponse(query);
@@ -350,7 +344,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 									.getColumn(0));
 							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 							lblMensaje
-									.setText("Excelente, se ha guardado el genero.");
+									.setText("Excelente, se ha Modificado la Nacionalidad.");
 							Timer t = new Timer(Login.timer,
 									new ActionListener() {
 
@@ -364,9 +358,13 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 							txtCod.setText("");
 							txtDescripcion.setText("");
-							cmbPais.setSelectedIndex(-1);
+							
+							VentanaBuscarNacionalidad buscar = new VentanaBuscarNacionalidad();
+							buscar.setVisible(true);
+							dispose();
+
 							// this.dispose();
-						} else {
+						/*} else {
 							// JOptionPane.showMessageDialog(null,
 							// "Ya existe el genero " + txtDesc.getText(),
 							// "Información",JOptionPane.WARNING_MESSAGE);
@@ -389,8 +387,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 							// cmbPais.removeAllItems();
 
-						}
-					} else {
+						}*/
+					/*} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
@@ -404,7 +402,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 						});
 						t.setRepeats(false);
 						t.start();
-					}
+					}*/
 
 				}
 
@@ -496,8 +494,9 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString() };
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),
+					fil.get(1).toString(), fil.get(2).toString(),
+					fil.get(3).toString() };
 
 			model.ciudades.add(fin);
 			ite++;
@@ -577,4 +576,34 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		return model;
 
 	}
+
+	// filtrar tipo evento
+	public void filtrarComboNacionalidad() {
+		DefaultComboBoxModel dtm = (DefaultComboBoxModel) cmbPais.getModel();
+
+		// System.out.println(dtm.getSize());
+		int cont = 0;
+		Boolean finded = false;
+		int tamanho = dtm.getSize();
+		while (cont < dtm.getSize()) {
+			if (dtm.getElementAt(cont).toString()
+					.compareTo(nac.getId_pais().toString()) == 0) {
+				// Item item = (Item) dtm.getElementAt(cont);
+				// Integer tipoListaSelected = item.getId();
+				cmbPais.setSelectedIndex(cont);
+				finded = true;
+				break;
+			}
+
+			cont++;
+
+			// System.out.println(dtm.getElementAt(0));
+		}
+		if (finded == false) {
+			String a = nac.getId_nacionalidad().toString();
+			cmbPais.addItem(a);
+			cmbPais.setSelectedIndex(tamanho);
+		}
+	}
+	// filtrar tipo evento
 }
