@@ -39,10 +39,12 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.TipoLista;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaModificarEvento;
 import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -67,21 +69,26 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
-	
+
 	private DefaultTableModel dm;
+	private JButton btnModificar;
+	
+	TipoLista tl;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarTipoLista() {
-		
+
 		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
+			public void windowOpened(WindowEvent e) {
 				txtBuscar.requestFocus();
 			}
 		});
 		
+		tl = new TipoLista();
+
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -97,7 +104,6 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-		
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
@@ -126,7 +132,7 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		txtBuscar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				String query =txtBuscar.getText().toUpperCase(); 
+				String query = txtBuscar.getText().toUpperCase();
 				filter(query);
 			}
 		});
@@ -151,11 +157,11 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 
-		table_1 = new JTable()  {  
-		      public boolean isCellEditable(int row, int column){  
-			        return false;  
-			      }  
-			};
+		table_1 = new JTable() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		table_1.setToolTipText("Listado de Generos.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -164,41 +170,45 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-	List<String> selectedData = new ArrayList<String>();
+				List<String> selectedData = new ArrayList<String>();
 
-				
 				int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-					//System.out.println(selectedRow);
-					int col = 0;
-					while (col < table_1.getColumnCount()+1) {
-						
-						try {
-							int row = table_1.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table_1.getModel().getValueAt(table_1.
-			                          convertRowIndexToModel(row), col).toString();
-			                
-			                
-							selectedData.add(table_click0);
-							//System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
+				// System.out.println(selectedRow);
+				int col = 0;
+				while (col < table_1.getColumnCount() + 1) {
 
-						col++;
+					try {
+						int row = table_1.rowAtPoint(arg0.getPoint());
+						String table_click0 = table_1
+								.getModel()
+								.getValueAt(
+										table_1.convertRowIndexToModel(row),
+										col).toString();
+
+						selectedData.add(table_click0);
+						// System.out.println(selectedData);
+
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
 					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(3));
 
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
+					col++;
+				}
+				// selectedData.ad table_1.getValueAt(selectedRow[i],
+				// selectedColumns[0]);
+				// txtId.setText(selectedData.get(0));
+				txtBuscar.setText(selectedData.get(3));
 
+				// textFecha.setText(selectedData.get(2));
+				// textUsu.setText(selectedData.get(4));
+				// codTemporal.setText(selectedData.get(1));
+				codTemporal = selectedData.get(0);
 				
-				//System.out.println("Selected: " + selectedData);
+				tl.setId(selectedData.get(0));
+				tl.setCodigo(selectedData.get(2));
+				tl.setDescripcion(selectedData.get(3));
+
+				// System.out.println("Selected: " + selectedData);
 
 			}
 		});
@@ -256,6 +266,43 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
 
+		btnModificar = new JButton();
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!codTemporal.equals("")) {
+
+					VentanaModificarTipoLista modificar = new VentanaModificarTipoLista(tl);
+					modificar.setVisible(true);
+					dispose();
+				} else {
+					lblMensaje
+							.setText("Por favor seleccione que Evento desea Modificar.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+				}
+			}
+		});
+		btnModificar.setIcon(new ImageIcon(VentanaBuscarTipoLista.class
+				.getResource("/imgs/def.png")));
+		btnModificar.setToolTipText("Modificar");
+		btnModificar.setOpaque(false);
+		btnModificar.setEnabled(true);
+		btnModificar.setContentAreaFilled(false);
+		btnModificar.setBorderPainted(false);
+		btnModificar.setBounds(499, 45, 32, 32);
+		Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
+		Image newimg6 = img6.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnModificar.setIcon(new ImageIcon(newimg6));
+		getContentPane().add(btnModificar);
+
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
 		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
@@ -295,32 +342,36 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		if (e.getSource() == botonEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Tipo Lista?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
+						"¿Esta seguro de eliminar el Tipo Lista?",
+						"Confirmación", JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
 					TipoListaDAO tipoListaDAO = new TipoListaDAO();
 
 					try {
-						if(tipoListaDAO.eliminarTipoLista(codTemporal)==false){
-							JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Tipo Lista",
+						if (tipoListaDAO.eliminarTipoLista(codTemporal) == false) {
+							JOptionPane.showMessageDialog(null,
+									"Error al intentar Borrar el Tipo Lista",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}
-						
-						else{
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado el Tipo Lista ","Información", JOptionPane.INFORMATION_MESSAGE);
+
+						else {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Excelente, se ha eliminado el Tipo Lista ",
+											"Información",
+											JOptionPane.INFORMATION_MESSAGE);
 							codTemporal = "";
 							txtBuscar.setText("");
 
-							
-							
 							limpiar();
 
 							model = new TipoListaJTableModel();
 
 							recuperarDatos();
 							table_1.setModel(dm);
-							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+							table_1.removeColumn(table_1.getColumnModel()
+									.getColumn(0));
 						}
 
 					} catch (Exception e2) {
@@ -329,9 +380,6 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
 
-					
-					
-					
 				}
 			} else {
 				lblMensaje
@@ -408,8 +456,6 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		botonEliminar.setEnabled(bEliminar);
 	}
 
-
-
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -428,8 +474,8 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT  id_tipo_lista, codigo, descripcion "
-				+ "from  ucsaws_tipo_lista where id_evento = " + VentanaBuscarEvento.evento
-				+ "order by codigo" + "");
+				+ "from  ucsaws_tipo_lista where id_evento = "
+				+ VentanaBuscarEvento.evento + "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -462,10 +508,9 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 			filas = (JSONArray) ob;
 
 		}
-Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+
+		// Vector<Object> vector = new Vector<Object>();
 
 		int ite = 0;
 		String campo4, campo5 = "";
@@ -474,33 +519,32 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(), fil.get(2).toString()};
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),
+					fil.get(1).toString(), fil.get(2).toString() };
 
-			//model.ciudades.add(fin);
+			// model.ciudades.add(fin);
 			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
+			Vector<Object> vector = new Vector<Object>();
+			while (pos < fin.length) {
+				vector.add(fin[pos]);
+				pos++;
 			}
 			ite++;
 			data.add(vector);
 		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID","Item", "Codigo", "Descripcion"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
+
+		// names of columns
+
+		String[] colNames = new String[] { "ID", "Item", "Codigo",
+				"Descripcion" };
+
+		Vector<String> columnNames = new Vector<String>();
+		int columnCount = colNames.length;
+		for (int column = 0; column < columnCount; column++) {
+			columnNames.add(colNames[column]);
+		}
+
+		dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -512,19 +556,15 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		// txtId.setText("");
 
 	}
-	
-	public void filter(String query){
-		
-		
-		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
-		
-		
-		
+
+	public void filter(String query) {
+
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
+				dm);
+
 		table_1.setRowSorter(tr);
-		
-	tr.setRowFilter(RowFilter.regexFilter(query));
-		
-		
+
+		tr.setRowFilter(RowFilter.regexFilter(query));
+
 	}
 }

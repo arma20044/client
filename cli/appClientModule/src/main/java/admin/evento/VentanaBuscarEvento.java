@@ -41,6 +41,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Evento;
 import src.main.java.admin.Administracion;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
@@ -73,7 +74,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonEliminar, btnNewButton;
+	private JButton botonCancelar, botonEliminar, btnNewButton, btnModificarEvento;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -86,6 +87,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	private JLabel lblMensaje;
 	
 	boolean eliminado;
+	
+	Evento e;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -98,6 +101,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 				txtBuscar.requestFocus();
 			}
 		});
+		
+		e = new Evento();
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -319,6 +324,16 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 						 }	 
 					 txtBuscar.setText(selectedData.get(3));
 					 System.out.println(txtBuscar.getText());
+					 
+					 
+						
+						e.setId_evento(selectedData.get(0));
+						e.setNro_evento(selectedData.get(2));
+						e.setDescripcion(selectedData.get(3));
+						e.setFch_desde(selectedData.get(4));
+						e.setFch_hasta(selectedData.get(5));
+						e.setId_tipo_evento(selectedData.get(6));
+						
 				 }
 
 			}
@@ -376,6 +391,49 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
+		
+		//btnModificarEvento = new JButton("");
+		btnModificarEvento = new JButton("");
+		btnModificarEvento.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (!codTemporal.equals("")) {
+					
+					
+					VentanaModificarEvento modificar = new VentanaModificarEvento(e);
+					modificar.setVisible(true);
+					dispose();
+				}
+				else{
+					lblMensaje
+					.setText("Por favor seleccione que Evento desea Modificar.");
+
+			Timer t = new Timer(Login.timer, new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					lblMensaje.setText(null);
+				}
+			});
+			t.setRepeats(false);
+			t.start();
+				}
+			}
+		});
+		btnModificarEvento.setToolTipText("Modificar");
+		btnModificarEvento.setOpaque(false);
+		btnModificarEvento.setContentAreaFilled(false);
+		btnModificarEvento.setBorderPainted(false);
+		btnModificarEvento.setIcon(new ImageIcon(VentanaBuscarEvento.class.getResource("/imgs/def.png")));
+		btnModificarEvento.setToolTipText("Nuevo");
+		btnModificarEvento.setOpaque(false);
+		btnModificarEvento.setContentAreaFilled(false);
+		btnModificarEvento.setBorderPainted(false);
+		btnModificarEvento.setBounds(502, 53, 32, 32);
+		getContentPane().add(btnModificarEvento);
+		Image img6 = ((ImageIcon) btnModificarEvento.getIcon()).getImage();
+		Image newimg6 = img6.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnModificarEvento.setIcon(new ImageIcon(newimg6));
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -680,5 +738,4 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		
 	}
-	
 }

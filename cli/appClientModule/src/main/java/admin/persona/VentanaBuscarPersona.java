@@ -215,7 +215,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (selectedData.get(0));
+					codTemporal = (selectedData.get(2));
 
 				
 				System.out.println("Selected: " + selectedData);

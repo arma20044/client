@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.swing.JOptionPane;
+
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -24,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.reporte.log.ReporteLog;
 import src.main.java.login.Login;
  
 public class Votantes {
@@ -70,9 +73,22 @@ public class Votantes {
             
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, jdbcConnection);
  
+            if (jasperPrint.getPages().toString().compareTo("[]")==0){
+            	JOptionPane.showMessageDialog(null, "El reporte no contiene datos.",
+						"Información", JOptionPane.WARNING_MESSAGE);
+            }
+            else{
             // view report to UI
             JasperViewer.viewReport(jasperPrint, false);
-          //  JasperExportManager.exportReportToPdf(jasperPrint);
+            ReporteLog log = new ReporteLog();
+            
+            log.insert(a.getName().substring(0,a.getName().length()-7));
+            
+            if ((jdbcConnection != null) && (!jdbcConnection.isClosed())) {
+            	jdbcConnection.close();
+             }
+            
+            }
  
         } catch (Exception e) {
             logger.error(e, e);

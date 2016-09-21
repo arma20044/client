@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JPasswordField;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -99,6 +100,8 @@ public class EleccionMesa extends JFrame {
 						
 					
 					if (habilitado == 0){
+						
+						
 					VentanaPresidente main = new VentanaPresidente();
 					main.setVisible(true);
 					
@@ -619,7 +622,7 @@ public class EleccionMesa extends JFrame {
 //					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
 //							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u "
+					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante , email from ucsaws_users u "
 							+ "join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
 							+ "where habilitado = 1 and sufrago = 0 and v.id_persona  = " + idPersona +"");
 					
@@ -660,6 +663,8 @@ public class EleccionMesa extends JFrame {
 					
 					habilitado = (int) (long) fil.get(2);
 					
+					Login.email = (String) fil.get(4);
+					
 					VentanaPrincipalVotante.idVotante = (int) (long) fil.get(3);
 
 					result = true;
@@ -668,4 +673,6 @@ public class EleccionMesa extends JFrame {
 
 				}
 				}
+				
+			
 }

@@ -25,6 +25,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -105,6 +107,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	private JTextField txtFiltrar;
 	
 	private DefaultTableModel dm;
+	private JTextField txtEmail;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -450,7 +453,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		lblLineaBaja = new JLabel();
 		lblLineaBaja.setText("Linea Baja:");
 		lblLineaBaja.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblLineaBaja.setBounds(579, 142, 116, 25);
+		lblLineaBaja.setBounds(579, 119, 116, 25);
 		getContentPane().add(lblLineaBaja);
 
 		txtCelular = new JTextField();
@@ -476,7 +479,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 		txtLineaBaja.setColumns(10);
-		txtLineaBaja.setBounds(705, 144, 158, 26);
+		txtLineaBaja.setBounds(705, 121, 158, 26);
 		getContentPane().add(txtLineaBaja);
 
 		txtFechaNac = new JFormattedTextField();
@@ -596,6 +599,41 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		txtFiltrar.setBounds(209, 421, 319, 26);
 		getContentPane().add(txtFiltrar);
 		
+		txtEmail = new JTextField();
+		txtEmail.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				if(!(txtEmail.getText().compareTo("-")==0)){
+				if (isValidEmailAddress(txtEmail.getText())==false){
+					lblMensaje
+					.setText("Ingrese formato de Email correcto.");
+			Timer t = new Timer(Login.timer,
+					new ActionListener() {
+
+						public void actionPerformed(
+								ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+			t.setRepeats(false);
+			t.start();
+			
+			txtEmail.requestFocus();
+			txtEmail.selectAll();
+				}
+				}
+			}
+		});
+		txtEmail.setColumns(10);
+		txtEmail.setBounds(705, 157, 158, 26);
+		getContentPane().add(txtEmail);
+		
+		JLabel lblEmail = new JLabel();
+		lblEmail.setText("Email:");
+		lblEmail.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblEmail.setBounds(579, 155, 116, 25);
+		getContentPane().add(lblEmail);
+		
 	
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
@@ -664,10 +702,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 							query.setTipoQueryGenerico(1);
 							System.out.println(Login.userLogeado);
 							query.setQueryGenerico("INSERT INTO ucsaws_persona"
-									+ "( id_persona,id_evento, id_nacionalidad, nombre, apellido, fecha_nacimiento, id_pais_origen,id_pais_actual,id_genero,ci, tel_linea_baja,tel_celular,"
+									+ "( id_persona,email,id_evento, id_nacionalidad, nombre, apellido, fecha_nacimiento, id_pais_origen,id_pais_actual,id_genero,ci, tel_linea_baja,tel_celular,"
 									+ " usuario_ins,fch_ins, usuario_upd, fch_upd) "
 									+ "VALUES ("
-									+ "nextval('ucsaws_persona_seq')," + VentanaBuscarEvento.evento + "," + nacionalidadSelected +  " , "
+									+ "nextval('ucsaws_persona_seq'),lower ('" + txtEmail.getText() + "'),"  + VentanaBuscarEvento.evento + "," + nacionalidadSelected +  " , "
 									+ " upper('"
 									+ txtNombres.getText()
 									+ "'), "
@@ -1190,4 +1228,16 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		
 		
 	}
+	
+	
+	public static boolean isValidEmailAddress(String email) {
+		   boolean result = true;
+		   try {
+		      InternetAddress emailAddr = new InternetAddress(email);
+		      emailAddr.validate();
+		   } catch (AddressException ex) {
+		      result = false;
+		   }
+		   return result;
+		}
 }

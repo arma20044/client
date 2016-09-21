@@ -92,6 +92,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 	private CandidatoDAO candidatoDAO = new CandidatoDAO();
 	private JLabel lblObservacin;
 	
+	private String obs = "";
+	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -480,6 +482,14 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 							WeatherClient weatherClient = ctx
 									.getBean(WeatherClient.class);
 							QueryGenericoRequest query = new QueryGenericoRequest();
+							
+							if(combo.getSelectedIndex() == -1){
+								obs = "-";
+							}
+							else
+							{
+								obs = combo.getSelectedItem().toString();
+							}
 
 							// para registrar se inserta el codigo es 1
 							query.setTipoQueryGenerico(1);
@@ -490,7 +500,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 									+ "nextval('ucsaws_candidatos_seq')"
 									+ " , "
 									+ personaSelected
-									+ " , '" + combo.getSelectedItem() + "',"
+									+ " , '" + obs + "',"
 									
 									+ listaSelected
 									+ ", '"

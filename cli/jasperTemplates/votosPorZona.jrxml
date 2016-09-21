@@ -18,7 +18,7 @@ join ucsaws_distrito d on (d.id_distrito = z.id_distrito) where v.id_evento = $P
 join ucsaws_mesa m on (v.id_mesa = m.id_mesa)
 join ucsaws_local l on (m.id_local = l.id_local)
 join ucsaws_zona z on (z.id_zona = l.id_zona)
-join ucsaws_distrito d on (d.id_distrito = z.id_distrito)  where v.id_evento = $P{P_ID_EVENTO}
+join ucsaws_distrito d on (d.id_distrito = z.id_distrito)  where v.id_evento = $P{P_ID_EVENTO} AND SUFRAGO = 1
 group by desc_zona]]>
 	</queryString>
 	<field name="desc_zona" class="java.lang.String"/>

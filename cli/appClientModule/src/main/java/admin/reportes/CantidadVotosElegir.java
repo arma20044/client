@@ -108,7 +108,7 @@ public class CantidadVotosElegir extends JFrame {
 				}
 				
 				else 
-					if (tipoSelected == 8 || tipoSelected == 7){
+					if (tipoSelected == 2 || tipoSelected == 3){
 						CantidadVotosSenadorDiputado votos = new CantidadVotosSenadorDiputado(tipoSelected);
 						System.out.println(idTipo);
 						votos.start();

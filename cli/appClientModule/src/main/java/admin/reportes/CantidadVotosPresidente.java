@@ -98,6 +98,10 @@ public class CantidadVotosPresidente {
             ReporteLog log = new ReporteLog();
             
             log.insert(a.getName().substring(0,a.getName().length()-7));
+            
+            if ((jdbcConnection != null) && (!jdbcConnection.isClosed())) {
+            	jdbcConnection.close();
+             }
             }
  
         } catch (Exception e) {

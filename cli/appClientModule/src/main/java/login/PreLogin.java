@@ -143,11 +143,13 @@ public class PreLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema E-vote: Paraguay Elecciones 2015");
-        btnAdmin.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/admin.png")));
         btnAdmin.setText("ADMINISTRADOR");
+        btnAdmin.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/admin.png")));
+		
         Image img2 = ((ImageIcon) btnAdmin.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
+		
 		btnAdmin.setIcon(new ImageIcon(newimg2));
 		
         btnAdmin.addActionListener(new java.awt.event.ActionListener() {

@@ -8,9 +8,9 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 
 @Configuration
 public class WeatherConfiguration {
-	//public final static String URL = "http://192.168.0.151:8080/"; sin https
+	public final static String URL = "http://voto.ws:8080/"; //sin https
 	//public final static String URL = "https://ubuntu/"; //con maquina virtual https
-	public final static String URL = "http://voto.ws:8080/"; //todo desde win
+	
 	
 //	apunta a ubuntu maquina virtual
 //	public final static String URL = "http://192.168.1.103:8080/";

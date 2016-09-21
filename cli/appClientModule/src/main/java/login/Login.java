@@ -49,6 +49,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 	
 	 public static String userLogeado;
 	 public static String nombreApellidoUserLogeado;
+	 public static String email;
 	 
 	 public static final Integer timer = 3000;
 	 
@@ -356,7 +357,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
    		//para registrar se inserta el codigo es 1
    		query.setTipoQueryGenerico(2);
    		
-   		query.setQueryGenerico("select nombre , apellido "
+   		query.setQueryGenerico("select nombre , apellido, email "
    								+ "from ucsaws_persona per join ucsaws_users us on (per.id_persona = us.id_persona)"
    								+ "where usuario = '" + userLogeado + "'");
    		
@@ -378,7 +379,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 				JSONArray a = (JSONArray) filas.get(0);
 				
 				nombreApellidoUserLogeado = (String) a.get(0)+ " " + a.get(1);
-				
+				email = (String) a.get(2);
     	   /*VentanaBuscar miVentanaPrincipal;
      		Instanciamos el objeto
      		miVentanaPrincipal= new VentanaBuscar();
@@ -464,7 +465,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
    	    		//para registrar se inserta el codigo es 1
    	    		query.setTipoQueryGenerico(2);
    	    		
-   	    		query.setQueryGenerico("select nombre , apellido "
+   	    		query.setQueryGenerico("select nombre , apellido, email "
    	    								+ "from ucsaws_persona per join ucsaws_users us on (per.id_persona = us.id_persona)"
    	    								+ "where usuario = '" + userLogeado + "'");
    	    		
@@ -486,6 +487,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
    					JSONArray a = (JSONArray) filas.get(0);
    					
    					nombreApellidoUserLogeado = (String) a.get(0)+ " " + a.get(1);
+   					email = (String) a.get(2);
 //    	    	   VentanaBuscar miVentanaPrincipal;
 //    	     		/*Instanciamos el objeto*/
 //    	     		miVentanaPrincipal= new VentanaBuscar();

@@ -30,13 +30,16 @@ import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import scr.main.java.admin.mail.SendEmailGenerico;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
+
 import javax.swing.UIManager;
+
 import java.awt.Color;
 
 public class VentanaConfirmacionDiputados extends JDialog {
@@ -83,7 +86,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				}
 
 				if (!(VentanaSenadores.senadores.compareTo("BLANCO") == 0)) {
-					Integer idListaSenador = obtenerLista(8,
+					Integer idListaSenador = obtenerLista(3,
 							Integer.parseInt(VentanaSenadores.senadores));
 
 					votar(idListaSenador, idMesa);
@@ -96,7 +99,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				}
 
 				if (!(VentanaDiputados.diputados.compareTo("BLANCO") == 0)) {
-					Integer idListaDiputado = obtenerLista(7,
+					Integer idListaDiputado = obtenerLista(2,
 							Integer.parseInt(VentanaDiputados.diputados));
 
 					votar(idListaDiputado, idMesa);
@@ -111,6 +114,10 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 				actualizarVotante();
 				// eliminarVotanteHabilitado();
+				
+				//enviar notifiacion
+				SendEmailGenerico enviarNotificacion = new SendEmailGenerico();
+				enviarNotificacion.enviarNotificacion(Login.email);
 
 				VentanaVotoFinal end = new VentanaVotoFinal();
 				end.setVisible(true);

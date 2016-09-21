@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.login.Login;
+import java.awt.Toolkit;
 
 public class MenuPrincipal extends JFrame implements ActionListener{
 	
@@ -29,6 +30,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	public String textoIntroduccion = "";
 	
 	public MenuPrincipal() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imgs/paraguay.png")));
 		
 		reporte = false;
 		
