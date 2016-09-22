@@ -346,8 +346,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements
 		getContentPane().add(btnEliminar);
 
 		btnEliminar.addActionListener(this);
-		Image newimg3 = img3.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
+		//Image newimg3 = img3.getScaledInstance(32, 32,
+			//	java.awt.Image.SCALE_SMOOTH);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 

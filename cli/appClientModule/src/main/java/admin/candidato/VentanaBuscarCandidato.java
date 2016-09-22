@@ -42,10 +42,12 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Candidato;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaModificarEvento;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -70,21 +72,24 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
-	
+
 	private DefaultTableModel dm;
+	private JButton btnModificar;
+	
+	private Candidato candidato;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarCandidato() {
-		
+
 		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
+			public void windowOpened(WindowEvent e) {
 				txtBuscar.requestFocus();
 			}
 		});
-		
+
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -100,7 +105,6 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-		
 
 		botonEliminar = new JButton();
 		botonEliminar.setToolTipText("Eliminar");
@@ -129,11 +133,11 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		txtBuscar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				String query =txtBuscar.getText().toUpperCase(); 
+				String query = txtBuscar.getText().toUpperCase();
 				filter(query);
-				
-				if(txtBuscar.getText().length()==0){
-					codTemporal="";
+
+				if (txtBuscar.getText().length() == 0) {
+					codTemporal = "";
 				}
 			}
 		});
@@ -180,42 +184,53 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-		List<String> selectedData = new ArrayList<String>();
+				List<String> selectedData = new ArrayList<String>();
 
-				
 				int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-					//System.out.println(selectedRow);
-					int col = 0;
-					while (col < table_1.getColumnCount()+1) {
-						//System.out.println(table_1.getValueAt(selectedRow,
-						//		col));
-						try {
-							int row = table_1.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table_1.getModel().getValueAt(table_1.
-			                          convertRowIndexToModel(row), col).toString();
-			                //System.out.println(table_click0);
-			                
-							selectedData.add(table_click0);
-							//System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
+				// System.out.println(selectedRow);
+				int col = 0;
+				while (col < table_1.getColumnCount() + 1) {
+					// System.out.println(table_1.getValueAt(selectedRow,
+					// col));
+					try {
+						int row = table_1.rowAtPoint(arg0.getPoint());
+						String table_click0 = table_1
+								.getModel()
+								.getValueAt(
+										table_1.convertRowIndexToModel(row),
+										col).toString();
+						// System.out.println(table_click0);
 
-						col++;
+						selectedData.add(table_click0);
+						// System.out.println(selectedData);
+
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
 					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista " + selectedData.get(4));
 
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
+					col++;
+				}
+				// selectedData.ad table_1.getValueAt(selectedRow[i],
+				// selectedColumns[0]);
+				// txtId.setText(selectedData.get(0));
+				txtBuscar.setText(selectedData.get(2) + " "
+						+ selectedData.get(3) + " Lista " + selectedData.get(4));
 
-				
+				// textFecha.setText(selectedData.get(2));
+				// textUsu.setText(selectedData.get(4));
+				// codTemporal.setText(selectedData.get(1));
+				codTemporal = selectedData.get(0);
+
 				System.out.println("Selected: " + selectedData);
+				
+				candidato = new Candidato();
+				candidato.setId_candidato(codTemporal);
+				candidato.setId_persona(selectedData.get(3) + " " + selectedData.get(4));
+				candidato.setId_lista(selectedData.get(5) + " - " + selectedData.get(6) );
+				candidato.setDescripcion(selectedData.get(6));
+				candidato.setCodigo(selectedData.get(2));
+				//candidato.setId_evento(selectedData.get(8));
+				candidato.setDescripcion(selectedData.get(7));
 
 			}
 		});
@@ -272,6 +287,43 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
+
+		btnModificar = new JButton();
+		btnModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!codTemporal.equals("")) {
+
+					VentanaModificarCandidato modificar = new VentanaModificarCandidato(candidato);
+					modificar.setVisible(true);
+					dispose();
+				} else {
+					lblMensaje
+							.setText("Por favor seleccione que Candidato desea Modificar.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+				}
+			}
+		});
+		btnModificar.setIcon(new ImageIcon(VentanaBuscarCandidato.class
+				.getResource("/imgs/def.png")));
+		btnModificar.setToolTipText("Eliminar");
+		btnModificar.setOpaque(false);
+		btnModificar.setEnabled(true);
+		btnModificar.setContentAreaFilled(false);
+		btnModificar.setBorderPainted(false);
+		btnModificar.setBounds(499, 45, 32, 32);
+		Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
+		Image newimg6 = img6.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnModificar.setIcon(new ImageIcon(newimg6));
+		getContentPane().add(btnModificar);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -415,8 +467,6 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		botonEliminar.setEnabled(bEliminar);
 	}
 
-
-
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -435,11 +485,11 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT ca.id_candidatos, ca.codigo, nombre, apellido , li.nro_lista || ' - ' ||  li.nombre_lista "
-				+ " , tl.descripcion, ca.descripcion  as obs" +
-								" from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) " +  
-								" join ucsaws_listas li on (ca.id_lista = li.id_lista)"
-								+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)"
-								+ " where ca.id_evento = " + VentanaBuscarEvento.evento );
+				+ " , tl.descripcion, ca.descripcion  as obs"
+				+ " from ucsaws_candidatos  ca join ucsaws_persona per on (ca.id_persona = per.id_persona) "
+				+ " join ucsaws_listas li on (ca.id_lista = li.id_lista)"
+				+ " join ucsaws_tipo_lista tl on (li.id_tipo_lista = tl.id_tipo_lista)"
+				+ " where ca.id_evento = " + VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -472,47 +522,45 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 			filas = (JSONArray) ob;
 		}
 
-	Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-			
-			//Vector<Object> vector = new Vector<Object>();
-			
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
-			int ite = 0;
-			String campo4, campo5 = "";
-			int contador = 0;
-			while (filas.size() > ite) {
-				contador = contador + 1;
-				fil = (JSONArray) filas.get(ite);
+		// Vector<Object> vector = new Vector<Object>();
 
-				String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-						fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
-						,fil.get(5).toString(),fil.get(6).toString()};
+		int ite = 0;
+		String campo4, campo5 = "";
+		int contador = 0;
+		while (filas.size() > ite) {
+			contador = contador + 1;
+			fil = (JSONArray) filas.get(ite);
 
-				//model.ciudades.add(fin);
-				int pos = 0;
-				 Vector<Object> vector = new Vector<Object>();
-				while(pos < fin.length){
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),
+					fil.get(1).toString(), fil.get(2).toString(),
+					fil.get(3).toString(), fil.get(4).toString(),
+					fil.get(5).toString(), fil.get(6).toString() };
+
+			// model.ciudades.add(fin);
+			int pos = 0;
+			Vector<Object> vector = new Vector<Object>();
+			while (pos < fin.length) {
 				vector.add(fin[pos]);
 				pos++;
-				}
-				ite++;
-				data.add(vector);
 			}
-			 
-			
-			
-			
-			  // names of columns
-			
-			String[] colNames = new String[] {"ID", "Item",  "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
-			
-		    Vector<String> columnNames = new Vector<String>();
-		    int columnCount = colNames.length;
-		    for (int column = 0; column < columnCount; column++) {
-		        columnNames.add(colNames[column]);
-		    }
-		    
-		    dm = new DefaultTableModel(data, columnNames);
+			ite++;
+			data.add(vector);
+		}
+
+		// names of columns
+
+		String[] colNames = new String[] { "ID", "Item", "codigo", "nombre",
+				"apellido", "Lista", "Tipo", "Observacion" };
+
+		Vector<String> columnNames = new Vector<String>();
+		int columnCount = colNames.length;
+		for (int column = 0; column < columnCount; column++) {
+			columnNames.add(colNames[column]);
+		}
+
+		dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -524,19 +572,15 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		// txtId.setText("");
 
 	}
-	
-	public void filter(String query){
-		
-		
-		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
-		
-		
-		
+
+	public void filter(String query) {
+
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
+				dm);
+
 		table_1.setRowSorter(tr);
-		
-	tr.setRowFilter(RowFilter.regexFilter(query));
-		
-		
+
+		tr.setRowFilter(RowFilter.regexFilter(query));
+
 	}
 }
