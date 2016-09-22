@@ -4,7 +4,6 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -31,9 +30,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
@@ -41,30 +39,36 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Votante;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.evento.VentanaModificarEvento;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.login.Login;
 
-public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionListener {
+public class VentanaBuscarVotantesHabilitados extends JFrame implements
+		ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
-	
-	String tempNombre, tempApellido,tempIdMesa,mesa,tempHabilitado;
-	Integer tempCI ;
-	
+
+	String tempNombre, tempApellido, tempIdMesa, mesa, tempHabilitado, sufrago;
+	Integer tempCI;
+
 	static Integer ciVotante;
-	
+
 	static Integer idVotante;
-	
+
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, btnNewButton;
+	private JButton botonCancelar, btnNuevo, btnEliminar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -75,27 +79,32 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 	private String codTemporal = "";
 
 	private JLabel lblMensaje;
-	
+
 	private DefaultTableModel dm;
+
+	boolean eliminado;
+
+	Votante votante;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarVotantesHabilitados() {
-		
+
 		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
+			public void windowOpened(WindowEvent e) {
 				txtBuscar.requestFocus();
 			}
 		});
-		
+
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
-				.getResource("/imgs/back2.png")));
+		botonCancelar.setIcon(new ImageIcon(
+				VentanaBuscarVotantesHabilitados.class
+						.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setBounds(589, 422, 45, 25);
 		botonCancelar.setOpaque(false);
@@ -105,8 +114,6 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		Image newimg = img.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
-		
-	
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE VOTANTES HABILITADOS");
@@ -123,7 +130,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			@Override
 			public void keyReleased(KeyEvent e) {
 
-				String query =txtBuscar.getText().toUpperCase(); 
+				String query = txtBuscar.getText().toUpperCase();
 				filter(query);
 			}
 		});
@@ -147,17 +154,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		getContentPane().add(scrollPane);
 
 		table_1 = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
+			public boolean isCellEditable(int row, int column) {
+				return false;
 			}
 		};
 		table_1.setToolTipText("Listado de Votantes Habilitados.");
@@ -168,90 +166,117 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
-				
+
 				List<String> selectedData = new ArrayList<String>();
 
-				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-				
-				
-				//Object a = table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]), 0);
+				// int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+
+				// Object a =
+				// table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]),
+				// 0);
 				// int[] selectedColumns = table_1.getSelectedColumns();
-				//System.out.println(a);
+				// System.out.println(a);
 
-				//if (selectedRow >= 0) {
+				// if (selectedRow >= 0) {
 				int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-					System.out.println(selectedRow);
-					int col = 0;
-					while (col < table_1.getColumnCount()+1) {
-						//System.out.println(table_1.getValueAt(selectedRow,
-						//		col));
-						try {
-							int row = table_1.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table_1.getModel().getValueAt(table_1.
-			                          convertRowIndexToModel(row), col).toString();
-			                //System.out.println(table_click0);
-			                
-							selectedData.add(table_click0);
-							System.out.println(selectedData);
-							
-							
-							 
-							 //comentar despues
-							// int row1 = table_1.rowAtPoint(arg0.getPoint());
-							//String table_click01 = table_1.getModel().getValueAt(table_1.
-			                  //        convertRowIndexToModel(row1), 0).toString();
-			                //System.out.println(table_click01);
-			                //comentar despues
-			                
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
+				System.out.println(selectedRow);
+				int col = 0;
+				while (col < table_1.getColumnCount() + 1) {
+					// System.out.println(table_1.getValueAt(selectedRow,
+					// col));
+					try {
+						int row = table_1.rowAtPoint(arg0.getPoint());
+						String table_click0 = table_1
+								.getModel()
+								.getValueAt(
+										table_1.convertRowIndexToModel(row),
+										col).toString();
+						// System.out.println(table_click0);
 
-						col++;
+						selectedData.add(table_click0);
+						System.out.println(selectedData);
+
+						// comentar despues
+						// int row1 = table_1.rowAtPoint(arg0.getPoint());
+						// String table_click01 =
+						// table_1.getModel().getValueAt(table_1.
+						// convertRowIndexToModel(row1), 0).toString();
+						// System.out.println(table_click01);
+						// comentar despues
+
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
 					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(0));
 
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
-					
-					idVotante =Integer.parseInt(codTemporal);
-					
-					
-					ciVotante = Integer.parseInt(selectedData.get(2));
-					
-					tempCI = Integer.parseInt(selectedData.get(2));
-					
-					tempNombre =selectedData.get(3);
-					
-					tempApellido = selectedData.get(4);
-					
-					tempIdMesa =  selectedData.get(8);;
-					
-					mesa = tempIdMesa.substring(tempIdMesa.length()-1);
-					
-					tempHabilitado = selectedData.get(5);
-
-				//}
-				System.out.println("Selected: " + selectedData);
-				
-				if(tempHabilitado.compareTo("SI")==0){
-					JOptionPane.showMessageDialog(null, "Ya esta habilitado",
-							"Información", JOptionPane.WARNING_MESSAGE);
+					col++;
 				}
-				
-				else{
-					if(tempHabilitado.compareTo("NO")==0){
-				VentanaHabilitarVotante habilitar = new VentanaHabilitarVotante(tempCI,tempNombre,tempApellido, Integer.parseInt(mesa));
-				habilitar.setVisible(true);
-				dispose();
-				}}
+				// selectedData.ad table_1.getValueAt(selectedRow[i],
+				// selectedColumns[0]);
+				// txtId.setText(selectedData.get(0));
+				txtBuscar.setText(selectedData.get(0));
 
+				// textFecha.setText(selectedData.get(2));
+				// textUsu.setText(selectedData.get(4));
+				// codTemporal.setText(selectedData.get(1));
+				codTemporal = selectedData.get(0);
+
+				idVotante = Integer.parseInt(codTemporal);
+
+				ciVotante = Integer.parseInt(selectedData.get(2));
+
+				tempCI = Integer.parseInt(selectedData.get(2));
+
+				tempNombre = selectedData.get(3);
+
+				tempApellido = selectedData.get(4);
+
+				tempIdMesa = selectedData.get(8);
+				;
+
+				mesa = tempIdMesa.substring(tempIdMesa.length() - 1);
+
+				tempHabilitado = selectedData.get(5);
+
+				sufrago = selectedData.get(6);
+
+				votante = new Votante();
+				votante.setNombre(tempNombre);
+				votante.setApellido(tempApellido);
+				votante.setCi(tempCI.toString());
+				votante.setHabilitado(tempHabilitado);
+				votante.setSufrago(sufrago);
+				votante.setPaisActual(selectedData.get(7));
+				votante.setId_mesa(tempIdMesa);
+
+				// }
+				System.out.println("Selected: " + selectedData);
+
+				if (arg0.getClickCount() == 2) {
+
+					if (tempHabilitado.compareTo("SI") == 0) {
+						JOptionPane.showMessageDialog(null,
+								"Ya esta habilitado", "Información",
+								JOptionPane.WARNING_MESSAGE);
+					}
+
+					else {
+						if (tempHabilitado.compareTo("NO") == 0) {
+							VentanaHabilitarVotante habilitar = new VentanaHabilitarVotante(
+									tempCI, tempNombre, tempApellido, Integer
+											.parseInt(mesa));
+							habilitar.setVisible(true);
+							dispose();
+						}
+					}
+
+				}
+
+				else {
+					if (arg0.getClickCount() == 1) {
+
+					}
+
+				}
 			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -282,31 +307,47 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaRegistroVotantesHabilitados registro = new VentanaRegistroVotantesHabilitados();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarVotantesHabilitados.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(415, 52, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(415, 52, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		getContentPane().add(btnNuevo);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
+
+		btnEliminar = new JButton();
+		btnEliminar.setIcon(new ImageIcon(
+				VentanaBuscarVotantesHabilitados.class
+						.getResource("/imgs/borrar.png")));
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setOpaque(false);
+		btnEliminar.setEnabled(true);
+		btnEliminar.setContentAreaFilled(false);
+		btnEliminar.setBorderPainted(false);
+		btnEliminar.setBounds(457, 53, 32, 32);
+		getContentPane().add(btnEliminar);
+
+		btnEliminar.addActionListener(this);
+		Image newimg3 = img3.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -347,6 +388,104 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			DefinicionesGenerales definiciones = new DefinicionesGenerales();
 			definiciones.setVisible(true);
 			this.dispose();
+		}
+
+		if (e.getSource() == btnEliminar) {
+			if (!codTemporal.equals("")) {
+				if (sufrago.compareTo("0") == 0) {
+					int respuesta = JOptionPane.showConfirmDialog(this,
+							"¿Esta seguro de eliminar el Votante?",
+							"Confirmación", JOptionPane.YES_NO_OPTION);
+					if (respuesta == JOptionPane.YES_NO_OPTION) {
+						VotantesHabilitadosDAO votanteDAO = new VotantesHabilitadosDAO();
+
+						try {
+							eliminado = votanteDAO.eliminarVotante(codTemporal);
+
+						} catch (Exception e2) {
+							// TODO: handle exception
+							JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
+									"Información", JOptionPane.WARNING_MESSAGE);
+						}
+
+						if (eliminado == false) {
+
+							lblMensaje
+									.setText("No se ha podido Eliminar - Existen referencias a éste registro.");
+							codTemporal = "";
+							txtBuscar.setText("");
+
+							Timer t = new Timer(Login.timer,
+									new ActionListener() {
+
+										public void actionPerformed(
+												ActionEvent e) {
+											lblMensaje.setText(null);
+										}
+									});
+						}
+
+						else {
+
+							lblMensaje
+									.setText("Excelente, se ha eliminado el Votante.");
+							codTemporal = "";
+							txtBuscar.setText("");
+
+							Timer t = new Timer(Login.timer,
+									new ActionListener() {
+
+										public void actionPerformed(
+												ActionEvent e) {
+											lblMensaje.setText(null);
+										}
+									});
+
+							codTemporal = "";
+							limpiar();
+
+							model = new VotantesHabilitadosJTableModel();
+
+							recuperarDatos();
+							table_1.setModel(dm);
+							table_1.removeColumn(table_1.getColumnModel()
+									.getColumn(0));
+							// model.fireTableDataChanged();
+							// table_1.repaint();
+						}
+					}
+				} else {
+					lblMensaje
+							.setText("Ésta persona ha votado por ende no puede ser eliminada del Sistema.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+				}
+			}
+
+			else {
+				lblMensaje
+						.setText("Por favor seleccione que Evento desea Eliminar");
+
+				Timer t = new Timer(Login.timer, new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						lblMensaje.setText(null);
+					}
+				});
+				t.setRepeats(false);
+				t.start();
+
+				// JOptionPane.showMessageDialog(null,
+				// "Por favor seleccione que Genero desea Eliminar",
+				// "Información",JOptionPane.WARNING_MESSAGE);
+			}
 		}
 
 	}
@@ -397,8 +536,6 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		txtBuscar.setEditable(codigo);
 	}
 
-
-
 	private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -417,13 +554,15 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT vo.id_votante,ci,per.nombre, apellido, hab.cod_habilitado ,sufrago, pActual.nombre as PaisActual, desc_mesa, m.id_mesa "
-				
-				 + "from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona) "
-				// + " join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen) "
-				 + " join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual) "
-				 + " join ucsaws_habilitado hab on (hab.id_habilitado = habilitado) "
-				 + " join ucsaws_mesa m on (vo.id_mesa = m.id_mesa) where vo.id_evento= " + VentanaBuscarEvento.evento
-				 + " and sufrago = 0");
+
+				+ "from ucsaws_votante vo join ucsaws_persona per on (vo.id_persona = per.id_persona) "
+				// +
+				// " join ucsaws_pais pOrigen on (pOrigen.id_pais = per.id_pais_origen) "
+				+ " join ucsaws_pais pActual on (pActual.id_pais = per.id_pais_actual) "
+				+ " join ucsaws_habilitado hab on (hab.id_habilitado = habilitado) "
+				+ " join ucsaws_mesa m on (vo.id_mesa = m.id_mesa) where vo.id_evento= "
+				+ VentanaBuscarEvento.evento);
+		// + " and sufrago = 0");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -456,7 +595,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			filas = (JSONArray) ob;
 
 		}
-		
+
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
 		int ite = 0;
@@ -466,32 +605,36 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(),String.valueOf(contador), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString(), fil.get(5).toString(), fil.get(6).toString(),fil.get(7).toString(),fil.get(8).toString()};
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),
+					fil.get(1).toString(), fil.get(2).toString(),
+					fil.get(3).toString(), fil.get(4).toString(),
+					fil.get(5).toString(), fil.get(6).toString(),
+					fil.get(7).toString(), fil.get(8).toString() };
 
-			//model.ciudades.add(fin);
+			// model.ciudades.add(fin);
 			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
+			Vector<Object> vector = new Vector<Object>();
+			while (pos < fin.length) {
+				vector.add(fin[pos]);
+				pos++;
 			}
 			ite++;
 			data.add(vector);
 		}
-		
+
 		// names of columns
-		
-				String[] colNames = new String[] {"ID","Item", "CI","Nombre", "Apellido","Habilitado?", "Sufrago?","Lugar de Votación","Mesa N°"};
-				
-			    Vector<String> columnNames = new Vector<String>();
-			    int columnCount = colNames.length;
-			    for (int column = 0; column < columnCount; column++) {
-			        columnNames.add(colNames[column]);
-			    }
-			    
-			    dm = new DefaultTableModel(data, columnNames);
+
+		String[] colNames = new String[] { "ID", "Item", "CI", "Nombre",
+				"Apellido", "Habilitado?", "Sufrago?", "Lugar de Votación",
+				"Mesa N°" };
+
+		Vector<String> columnNames = new Vector<String>();
+		int columnCount = colNames.length;
+		for (int column = 0; column < columnCount; column++) {
+			columnNames.add(colNames[column]);
+		}
+
+		dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -503,19 +646,15 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
 		// txtId.setText("");
 
 	}
-	
-public void filter(String query){
-		
-		
-		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
-		
-		
-		
+
+	public void filter(String query) {
+
+		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
+				dm);
+
 		table_1.setRowSorter(tr);
-		
-	tr.setRowFilter(RowFilter.regexFilter(query));
-		
-		
+
+		tr.setRowFilter(RowFilter.regexFilter(query));
+
 	}
 }

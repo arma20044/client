@@ -37,7 +37,7 @@ import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.PersonaJTableModel;
-import src.main.java.admin.votantesHabilitados.VentanaRegistroVotantesHabilitados;
+import src.main.java.admin.votantesHabilitados.VentanaModificarVotantesHabilitados;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.proceso.voto.VentanaDiputados;
@@ -51,7 +51,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-public class VentanaBuscarPerson extends JDialog  implements ActionListener {
+public class VentanaBuscarPersonModificar extends JDialog  implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 	// relacion entre esta clase y la clase
@@ -76,7 +76,7 @@ private DefaultTableModel dm;
 	/**
 	 * Create the panel.
 	 */
-	public VentanaBuscarPerson(final VentanaRegistroVotantesHabilitados miVentanaPrincipal, boolean modal) {
+	public VentanaBuscarPersonModificar(final VentanaModificarVotantesHabilitados miVentanaPrincipal, boolean modal) {
 		
 		
 
@@ -211,10 +211,10 @@ private DefaultTableModel dm;
 					if (arg0.getClickCount() == 2) {
 					    System.out.println("double clicked");
 					    
-					   VentanaRegistroVotantesHabilitados.personaSeleccionada = selectedData.get(3) + " " + selectedData.get(4);
-					   VentanaRegistroVotantesHabilitados.codTemporal = (selectedData.get(0));
+					   VentanaModificarVotantesHabilitados.personaSeleccionada = selectedData.get(3) + " " + selectedData.get(4);
+					   VentanaModificarVotantesHabilitados.codTemporal = (selectedData.get(0));
 					    
-					    VentanaRegistroVotantesHabilitados.lblNombrePersona.setText( VentanaRegistroVotantesHabilitados.personaSeleccionada);
+					   VentanaModificarVotantesHabilitados.lblNombrePersona.setText( VentanaModificarVotantesHabilitados.personaSeleccionada);
 					    
 					    
 					    dispose();
