@@ -842,7 +842,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad"
+		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad , email"
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
 				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
@@ -896,7 +896,7 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
 					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
 					,fil.get(5).toString(),fil.get(6).toString(),fil.get(7).toString()
-					,fil.get(8).toString(),fil.get(9).toString(),fil.get(10).toString()};
+					,fil.get(8).toString(),fil.get(9).toString(),fil.get(10).toString(),fil.get(11).toString()};
 
 			//model.ciudades.add(fin);
 			int pos = 0;
@@ -914,7 +914,7 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		
 		  // names of columns
 		
-		String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","Nacionalidad"};
+		String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","Nacionalidad","E-mail"};
 		
 	    Vector<String> columnNames = new Vector<String>();
 	    int columnCount = colNames.length;
