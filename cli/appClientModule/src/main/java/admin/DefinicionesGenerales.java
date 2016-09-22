@@ -30,6 +30,7 @@ import src.main.java.admin.mesa.VentanaBuscarMesa;
 import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
 import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
+import src.main.java.admin.roles.VentanaBuscarRoles;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.tipoLista.VentanaBuscarTipoLista;
@@ -64,6 +65,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 	 * Establece la informacion que se presentara como introduccion del sistema
 	 */
 	public String textoIntroduccion = "";
+	private JButton btnRoles;
 
 	public DefinicionesGenerales() {
 		setResizable(false);
@@ -350,6 +352,17 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		});
 		bntUsers.setBounds(513, 314, 101, 23);
 		getContentPane().add(bntUsers);
+		
+		btnRoles = new JButton("Roles");
+		btnRoles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaBuscarRoles roles = new VentanaBuscarRoles();
+				roles.setVisible(true);
+				dispose();
+			}
+		});
+		btnRoles.setBounds(513, 348, 101, 23);
+		getContentPane().add(btnRoles);
 
 	}
 

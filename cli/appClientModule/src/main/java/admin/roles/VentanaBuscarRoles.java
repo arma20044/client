@@ -1,4 +1,4 @@
-package src.main.java.admin.users;
+package src.main.java.admin.roles;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
@@ -15,6 +15,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
@@ -46,34 +50,25 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.genero.GeneroJTableModel;
-import src.main.java.dao.user.UserDAO;
+import src.main.java.dao.rol.RolDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-public class VentanaBuscarUsers extends JFrame implements ActionListener {
+public class VentanaBuscarRoles extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
-	
-	String tempNombre, tempApellido;
-	//Integer tempCI ;
-	
-	//static Integer ciVotante;
-	
-	//static Integer idVotante;
-	
 	private JLabel labelTitulo;
-	private JTextField txtBuscar;
+	private JTextField txtFiltro;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, btnNewButton,btnEliminar;
+	private JButton botonCancelar, btnEliminar, btnNuevo;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
 	private JTable table_1;
-	private UsersJTableModel model = new UsersJTableModel();
+	private RolesJTableModel model = new RolesJTableModel();
 	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
@@ -81,16 +76,21 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	private JLabel lblMensaje;
 	
 	private DefaultTableModel dm;
+	
+	
+	
+	private TableRowSorter<TableModel> trsFiltro = new TableRowSorter<TableModel>(model);
+	
+	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
-	public VentanaBuscarUsers() {
-		
+	public VentanaBuscarRoles() {
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
-				txtBuscar.requestFocus();
+				txtFiltro.requestFocus();
 			}
 		});
 		
@@ -98,10 +98,10 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
-		botonCancelar.setIcon(new ImageIcon(VentanaBuscarUsers.class
+		botonCancelar.setIcon(new ImageIcon(VentanaBuscarRoles.class
 				.getResource("/imgs/back2.png")));
 		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setBounds(589, 422, 45, 25);
+		botonCancelar.setBounds(589, 501, 45, 25);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -110,44 +110,68 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
 		
-	
 
+		btnEliminar = new JButton();
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(VentanaBuscarRoles.class
+				.getResource("/imgs/borrar.png")));
+		btnEliminar.setBounds(457, 131, 32, 32);
+		btnEliminar.setOpaque(false);
+		btnEliminar.setContentAreaFilled(false);
+		btnEliminar.setBorderPainted(false);
+		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
+		Image newimg4 = img4.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnEliminar.setIcon(new ImageIcon(newimg4));
+        
+			
+        
+			
+		
+		/*
+		 * nuevo
+		 */
+		
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE USERS");
-		labelTitulo.setBounds(131, 11, 387, 30);
+		labelTitulo.setText("ABM DE ROLES");
+		labelTitulo.setBounds(161, 49, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		lblBuscar = new JLabel();
 		lblBuscar.setText("Buscar:");
-		lblBuscar.setBounds(20, 52, 64, 25);
+		lblBuscar.setBounds(20, 131, 64, 25);
 		getContentPane().add(lblBuscar);
 
-		txtBuscar = new JTextField();
-		txtBuscar.addKeyListener(new KeyAdapter() {
+		txtFiltro = new JTextField();
+		txtFiltro.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-
-				String query =txtBuscar.getText().toUpperCase(); 
+			public void keyReleased(KeyEvent arg0) {
+				
+				String query =txtFiltro.getText().toUpperCase(); 
 				filter(query);
 			}
 		});
-		txtBuscar.setBounds(86, 52, 319, 23);
-		getContentPane().add(txtBuscar);
+		
+		
+		txtFiltro.setBounds(86, 131, 319, 26);
+		getContentPane().add(txtFiltro);
+		btnEliminar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
+		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
-		setSize(640, 476);
+		setSize(640, 554);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Votantes Habilitados");
-		scrollPane.setBounds(0, 171, 634, 265);
+		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setBounds(0, 237, 634, 265);
 		getContentPane().add(scrollPane);
 
 		table_1 = new JTable() {
@@ -164,7 +188,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 				return component;
 			}
 		};
-		table_1.setToolTipText("Listado de Votantes Habilitados.");
+		table_1.setToolTipText("Listado de Roles.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
@@ -172,8 +196,6 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
-				
 				List<String> selectedData = new ArrayList<String>();
 
 				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
@@ -198,16 +220,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 			                
 							selectedData.add(table_click0);
 							System.out.println(selectedData);
-							
-							
-							 
-							 //comentar despues
-							// int row1 = table_1.rowAtPoint(arg0.getPoint());
-							//String table_click01 = table_1.getModel().getValueAt(table_1.
-			                  //        convertRowIndexToModel(row1), 0).toString();
-			                //System.out.println(table_click01);
-			                //comentar despues
-			                
+						
 						} catch (Exception e) {
 							System.out.println(e.getMessage());
 						}
@@ -217,44 +230,15 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(3));
+					txtFiltro.setText(selectedData.get(3));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
-					
-					//idVotante =Integer.parseInt(codTemporal);
-					
-					
-					//ciVotante = Integer.parseInt(selectedData.get(2));
-					
-				//	tempCI = Integer.parseInt(selectedData.get(2));
-					
-					tempNombre =selectedData.get(3);
-					
-					tempApellido = selectedData.get(4);
-					
-					//tempIdMesa =  selectedData.get(8);;
-					
-					//mesa = tempIdMesa.substring(tempIdMesa.length()-1);
-					
-					//tempHabilitado = selectedData.get(5);
+					codTemporal = (selectedData.get(0));
 
-				//}
-				System.out.println("Selected: " + selectedData);
 				
-//				if(tempHabilitado.compareTo("SI")==0){
-//					JOptionPane.showMessageDialog(null, "Ya esta habilitado",
-//							"Información", JOptionPane.WARNING_MESSAGE);
-//				}
-//				
-//				else{
-//					if(tempHabilitado.compareTo("NO")==0){
-//				//VentanaHabilitarVotante habilitar = new VentanaHabilitarVotante(tempCI,tempNombre,tempApellido, Integer.parseInt(mesa));
-//				//habilitar.setVisible(true);
-//				dispose();
-//				}}
+				System.out.println("Selected: " + selectedData);
 
 			}
 		});
@@ -263,9 +247,9 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE USERS");
+		lblListaDeGeneros.setText("LISTA DE ROLES");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblListaDeGeneros.setBounds(117, 117, 372, 30);
+		lblListaDeGeneros.setBounds(147, 196, 325, 30);
 		getContentPane().add(lblListaDeGeneros);
 
 		JButton btnHome = new JButton("");
@@ -277,7 +261,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnHome.setIcon(new ImageIcon(VentanaBuscarUsers.class
+		btnHome.setIcon(new ImageIcon(VentanaBuscarRoles.class
 				.getResource("/imgs/home.png")));
 		btnHome.setBounds(0, 0, 32, 32);
 		Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
@@ -286,103 +270,36 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaRegistroUsers registro = new VentanaRegistroUsers();
+				VentanaRegistroRoles registro = new VentanaRegistroRoles();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarUsers.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarRoles.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(415, 52, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(415, 131, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		getContentPane().add(btnNuevo);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(57, 88, 432, 14);
+		lblMensaje.setBounds(79, 188, 432, 14);
 		getContentPane().add(lblMensaje);
 		
-		btnEliminar = new JButton();
-		btnEliminar.setIcon(new ImageIcon(VentanaBuscarUsers.class.getResource("/imgs/borrar.png")));
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == btnEliminar) {
-					if (!codTemporal.equals("")) {
-						int respuesta = JOptionPane.showConfirmDialog(null,
-								"¿Esta seguro de eliminar el Usuario?", "Confirmación",
-								JOptionPane.YES_NO_OPTION);
-						if (respuesta == JOptionPane.YES_NO_OPTION) {
-							UserDAO userDAO = new UserDAO();
+		String[] petStrings = { "Codigo", "Descripcion" };
+		
 
-							try {
-								if(userDAO.eliminarUser(codTemporal)==false){
-									JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Usuario",
-											"Error", JOptionPane.ERROR_MESSAGE);
-								}
-								else{
-									JOptionPane.showMessageDialog(null,
-											"Excelente, se ha eliminado el Usuario ","Información", JOptionPane.INFORMATION_MESSAGE);
-									// modificarGenero(textCod.getText(),
-									// codTemporal.getText());
-									codTemporal = "";
-									limpiar();
-
-									//model = new GeneroJTableModel();
-
-									recuperarDatos();
-									table_1.setModel(dm);
-									table_1.removeColumn(table_1.getColumnModel().getColumn(0));
-									// model.fireTableDataChanged();
-									// table_1.repaint();
-								}
-
-							} catch (Exception e2) {
-								// TODO: handle exception
-								JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-										"Información", JOptionPane.WARNING_MESSAGE);
-							}
-
-							
-						}
-					} else {
-						lblMensaje
-								.setText("Por favor seleccione que Usuario desea Eliminar");
-
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-
-						// JOptionPane.showMessageDialog(null,
-						// "Por favor seleccione que Genero desea Eliminar",
-						// "Información",JOptionPane.WARNING_MESSAGE);
-					}
-
-				}
-			}
-		});
-	
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setOpaque(false);
-		btnEliminar.setEnabled(true);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		btnEliminar.setBounds(457, 53, 32, 32);
-		getContentPane().add(btnEliminar);
+        
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -419,6 +336,64 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+
+		if (e.getSource() == btnEliminar) {
+			if (!codTemporal.equals("")) {
+				int respuesta = JOptionPane.showConfirmDialog(this,
+						"¿Esta seguro de eliminar el Rol?", "Confirmación",
+						JOptionPane.YES_NO_OPTION);
+				if (respuesta == JOptionPane.YES_NO_OPTION) {
+					RolDAO rolDAO = new RolDAO();
+
+					try {
+						if(rolDAO.eliminarRol(codTemporal)==false){
+							JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Rol",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}
+						else{
+							JOptionPane.showMessageDialog(null,
+									"Excelente, se ha eliminado el Rol ","Información", JOptionPane.INFORMATION_MESSAGE);
+							// modificarGenero(textCod.getText(),
+							// codTemporal.getText());
+							codTemporal = "";
+							limpiar();
+
+							model = new RolesJTableModel();
+
+							recuperarDatos();
+							table_1.setModel(dm);
+							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+							// model.fireTableDataChanged();
+							// table_1.repaint();
+						}
+
+					} catch (Exception e2) {
+						// TODO: handle exception
+						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
+								"Información", JOptionPane.WARNING_MESSAGE);
+					}
+
+					
+				}
+			} else {
+				lblMensaje
+						.setText("Por favor seleccione que Rol desea Eliminar");
+
+				Timer t = new Timer(Login.timer, new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						lblMensaje.setText(null);
+					}
+				});
+				t.setRepeats(false);
+				t.start();
+
+				// JOptionPane.showMessageDialog(null,
+				// "Por favor seleccione que Genero desea Eliminar",
+				// "Información",JOptionPane.WARNING_MESSAGE);
+			}
+
+		}
 		if (e.getSource() == botonCancelar) {
 			DefinicionesGenerales definiciones = new DefinicionesGenerales();
 			definiciones.setVisible(true);
@@ -435,7 +410,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	private void muestraPersona(JSONArray genero) {
 		JSONArray a = (JSONArray) genero.get(0);
 		// txtId.setText(Long.toString( (Long) a.get(0)) );
-		txtBuscar.setText((String) a.get(1));
+		txtFiltro.setText((String) a.get(1));
 		// textFecha.setText((String) a.get(2));
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
@@ -447,7 +422,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	 * Permite limpiar los componentes
 	 */
 	public void limpiar() {
-		txtBuscar.setText("");
+		txtFiltro.setText("");
 
 		// codTemporal.setText("");
 		habilita(true, false, false, false, false, true, false, true, true);
@@ -470,7 +445,9 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	public void habilita(boolean codigo, boolean nombre, boolean edad,
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
-		txtBuscar.setEditable(codigo);
+		txtFiltro.setEditable(codigo);
+		// botonModificar.setEnabled(true);
+		btnEliminar.setEnabled(bEliminar);
 	}
 
 
@@ -491,18 +468,10 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
-		
-		
-		
-		
-	
 
-		query.setQueryGenerico("SELECT Id_user, usuario, NOMBRE, APELLIDO, r.descripcion "
-				
-				 + " FROM ucsaws_users U JOIN ucsaws_persona P ON (U.ID_PERSONA = P.ID_PERSONA) "
-				 + " join ucsaws_roles r on (r.id_rol = u.id_rol)"
-				 + "   where U.id_evento= " + VentanaBuscarEvento.evento
-				 + "  ");
+		query.setQueryGenerico("SELECT  id_rol, codigo, descripcion "
+				+ "from  ucsaws_roles where id_evento = " + VentanaBuscarEvento.evento 
+				+ "order by codigo" + "");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -537,6 +506,9 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		}
 		
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		
+		//Vector<Object> vector = new Vector<Object>();
+		
 
 		int ite = 0;
 		String campo4, campo5 = "";
@@ -545,9 +517,8 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 			contador = contador + 1;
 			fil = (JSONArray) filas.get(ite);
 
-			String[] fin = { fil.get(0).toString(),String.valueOf(contador), fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
-					};
+			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
+					fil.get(2).toString()};
 
 			//model.ciudades.add(fin);
 			int pos = 0;
@@ -559,23 +530,26 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 			ite++;
 			data.add(vector);
 		}
+		 
 		
-		// names of columns
 		
-				String[] colNames = new String[] {"ID","Item", "User","Nombre", "Apellido", "Rol"};
-				
-			    Vector<String> columnNames = new Vector<String>();
-			    int columnCount = colNames.length;
-			    for (int column = 0; column < columnCount; column++) {
-			        columnNames.add(colNames[column]);
-			    }
-			    
-			    dm = new DefaultTableModel(data, columnNames);
+		
+		  // names of columns
+		
+		String[] colNames = new String[] {"ID", "Item",  "Codigo", "Descripcion"};
+		
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = colNames.length;
+	    for (int column = 0; column < columnCount; column++) {
+	        columnNames.add(colNames[column]);
+	    }
+	    
+	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
 	void LimpiarCampos() {
-		txtBuscar.setText("");
+		txtFiltro.setText("");
 		// textFecha.setText("");
 		// textUsu.setText("");
 		codTemporal = "";
@@ -583,7 +557,10 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
 	}
 	
-public void filter(String query){
+
+	
+	
+	public void filter(String query){
 		
 		
 		
@@ -597,4 +574,41 @@ public void filter(String query){
 		
 		
 	}
+//	
+//	private void createColumns(){
+//	dm=(DefaultTableModel) table_1.getModel();
+//	
+//	
+//	}
+	
+	
+	public static DefaultTableModel buildTableModel(ResultSet rs)
+	        throws SQLException {
+
+	    ResultSetMetaData metaData = rs.getMetaData();
+
+	    // names of columns
+	    Vector<String> columnNames = new Vector<String>();
+	    int columnCount = metaData.getColumnCount();
+	    for (int column = 1; column <= columnCount; column++) {
+	        columnNames.add(metaData.getColumnName(column));
+	    }
+
+	    // data of the table
+	    Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+	    while (rs.next()) {
+	        Vector<Object> vector = new Vector<Object>();
+	        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+	            vector.add(rs.getObject(columnIndex));
+	        }
+	        data.add(vector);
+	    }
+
+	    return new DefaultTableModel(data, columnNames);
+
+	}
+	
+	
+	
+	
 }

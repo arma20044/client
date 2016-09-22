@@ -42,6 +42,8 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import com.sun.org.apache.xerces.internal.impl.dtd.models.CMBinOp;
+
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -55,6 +57,7 @@ import src.main.java.login.Login;
 
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -96,14 +99,14 @@ public class VentanaRegistroUsers extends JFrame implements
 
 	public static String personaSeleccionada = "";
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	
-	JRadioButton rdbtNo, rdbtSi;
 	private JLabel lblUsuario;
 	private JLabel lblPass;
 	private JTextField txtUser;
 	private JPasswordField txtPass;
 	private JLabel lblRepetirPass;
 	private JPasswordField txtRepPass;
+	
+	private JComboBox cmbRol;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -147,7 +150,7 @@ public class VentanaRegistroUsers extends JFrame implements
 		botonCancelar.setIcon(new ImageIcon(newimg2));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE VOTANTES HABILITADOS");
+		labelTitulo.setText("AMB USERS");
 		labelTitulo.setBounds(163, 11, 486, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -291,22 +294,11 @@ public class VentanaRegistroUsers extends JFrame implements
 		recuperarDatos();
 		table.setModel(dm2);
 		
-		rdbtNo = new JRadioButton("NO");
-		rdbtNo.setSelected(true);
-		buttonGroup.add(rdbtNo);
-		rdbtNo.setBounds(221, 95, 50, 23);
-		getContentPane().add(rdbtNo);
-		
-		rdbtSi = new JRadioButton("SI");
-		buttonGroup.add(rdbtSi);
-		rdbtSi.setBounds(273, 95, 50, 23);
-		getContentPane().add(rdbtSi);
-		
-		JLabel lblEsAdministrador = new JLabel();
-		lblEsAdministrador.setText("Es Administrador?:");
-		lblEsAdministrador.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblEsAdministrador.setBounds(93, 99, 109, 25);
-		getContentPane().add(lblEsAdministrador);
+		JLabel lblRol = new JLabel();
+		lblRol.setText("Rol:");
+		lblRol.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRol.setBounds(93, 99, 109, 25);
+		getContentPane().add(lblRol);
 		
 		lblUsuario = new JLabel();
 		lblUsuario.setText("Usuario:");
@@ -362,6 +354,12 @@ public class VentanaRegistroUsers extends JFrame implements
 		});
 		txtRepPass.setBounds(211, 207, 150, 23);
 		getContentPane().add(txtRepPass);
+		
+		cmbRol = new JComboBox(recuperarDatosComboBoxRol());
+		cmbRol.setSelectedIndex(-1);
+		cmbRol.setBounds(212, 101, 217, 20);
+		cmbRol.setSelectedIndex(-1);
+		getContentPane().add(cmbRol);
 		
 		
 		
@@ -544,9 +542,10 @@ public class VentanaRegistroUsers extends JFrame implements
 		
 	
 
-		query.setQueryGenerico("SELECT Id_user, usuario, NOMBRE, APELLIDO "
+		query.setQueryGenerico("SELECT Id_user, usuario, NOMBRE, APELLIDO, r.descripcion "
 				
-				 + "FROM ucsaws_users U JOIN ucsaws_persona P ON (U.ID_PERSONA = P.ID_PERSONA) "
+				 + " FROM ucsaws_users U JOIN ucsaws_persona P ON (U.ID_PERSONA = P.ID_PERSONA) "
+				 + " join ucsaws_roles r on (r.id_rol = u.id_rol)"
 				 + "   where U.id_evento= " + VentanaBuscarEvento.evento
 				 + "  ");
 
@@ -592,7 +591,7 @@ public class VentanaRegistroUsers extends JFrame implements
 			fil = (JSONArray) filas.get(ite);
 
 			String[] fin = { fil.get(0).toString(),String.valueOf(contador), fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString()
+					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
 					};
 
 			//model.ciudades.add(fin);
@@ -608,7 +607,7 @@ public class VentanaRegistroUsers extends JFrame implements
 		
 		// names of columns
 		
-				String[] colNames = new String[] {"ID","Item", "User","Nombre", "Apellido"};
+				String[] colNames = new String[] {"ID","Item", "User","Nombre", "Apellido", "Rol"};
 				
 			    Vector<String> columnNames = new Vector<String>();
 			    int columnCount = colNames.length;
@@ -703,6 +702,13 @@ public class VentanaRegistroUsers extends JFrame implements
 		if (arg0.getSource() == btnGuardar) {
 		try {
 			Integer personaSelected =0;
+			Item item = null;
+			Integer rolSelected = null;
+			if (cmbRol.getSelectedIndex()!= -1){
+			item = (Item) cmbRol.getSelectedItem();
+			 rolSelected = item.getId();
+			}
+			
 			//Item item = (Item) cmbPersona.getSelectedItem();
 			if(codTemporal.compareTo("")!=0){
 			personaSelected = Integer.parseInt(codTemporal);
@@ -713,6 +719,7 @@ public class VentanaRegistroUsers extends JFrame implements
 					 && String.valueOf(txtPass.getPassword()).length()  >0
 					 && txtUser.getText().length() >0
 					 &&  String.valueOf(txtRepPass.getPassword()).length() > 0
+					 && cmbRol.getSelectedIndex()!=-1
 					 
 					 ){// && 
 					// cmbDepartamento.getSelectedIndex()!=-1 &&
@@ -746,17 +753,17 @@ public class VentanaRegistroUsers extends JFrame implements
 				//System.out.println(idMesa);
 				
 				boolean esAdmin = false;
-				if (rdbtNo.isSelected()){
+				/*if (rdbtNo.isSelected()){
 					esAdmin = false;
 				}
 				else{
 					esAdmin = true;
-				}
+				}*/
 				query.setTipoQueryGenerico(1);
 				System.out.println(Login.userLogeado);
 				query.setQueryGenerico("INSERT INTO ucsaws_users"
-	+ "( id_user, id_persona, es_admin,usuario, pass, id_evento,  usuario_ins,fch_ins, usuario_upd, fch_upd) "
-+ "VALUES (" + "nextval('ucsaws_users_seq')" + " , " + codTemporal + ", "+ esAdmin +" ,'" + txtUser.getText() + "', '"
+	+ "( id_user, id_persona, id_rol,usuario, pass, id_evento,  usuario_ins,fch_ins, usuario_upd, fch_upd) "
++ "VALUES (" + "nextval('ucsaws_users_seq')" + " , " + codTemporal + ", "+ rolSelected +" ,'" + txtUser.getText() + "', '"
 						+ String.valueOf(txtPass.getPassword()) + "'," + VentanaBuscarEvento.evento + ", '"
 						+ Login.userLogeado + "' , now(), '"
 						+ Login.userLogeado + "' , now())");
@@ -791,7 +798,7 @@ public class VentanaRegistroUsers extends JFrame implements
 				personaSeleccionada="";
 				codTemporal="";
 				barrerTodo();
-				rdbtNo.setSelected(true);
+				//rdbtNo.setSelected(true);
 				//dispose();
 
 				/*
@@ -884,4 +891,77 @@ public class VentanaRegistroUsers extends JFrame implements
 			
 			
 		}
+		
+		private Vector recuperarDatosComboBoxRol() {
+			Vector model = new Vector();
+			JSONArray filas = new JSONArray();
+			JSONArray fil = new JSONArray();
+
+			boolean existe = false;
+
+			// Statement estatuto = conex.getConnection().createStatement();
+
+			ApplicationContext ctx = SpringApplication
+					.run(WeatherConfiguration.class);
+
+			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+			QueryGenericoRequest query = new QueryGenericoRequest();
+
+			// para registrar se inserta el codigo es 1
+			query.setTipoQueryGenerico(2);
+
+			// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
+			// +
+			// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+
+			query.setQueryGenerico("SELECT id_rol, descripcion"
+					+ " from ucsaws_roles where id_evento = " + VentanaBuscarEvento.evento + "order by codigo");
+
+			QueryGenericoResponse response = weatherClient
+					.getQueryGenericoResponse(query);
+			weatherClient.printQueryGenericoResponse(response);
+
+			String res = response.getQueryGenericoResponse();
+
+			if (res.compareTo("ERRORRRRRRR") == 0) {
+				JOptionPane.showMessageDialog(null, "algo salio mal",
+						"Advertencia", JOptionPane.WARNING_MESSAGE);
+
+			}
+
+			else {
+				existe = true;
+
+				String generoAntesPartir = response.getQueryGenericoResponse();
+
+				JSONParser j = new JSONParser();
+				Object ob = null;
+				String part1, part2, part3;
+
+				try {
+					ob = j.parse(generoAntesPartir);
+				} catch (org.json.simple.parser.ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				filas = (JSONArray) ob;
+
+			}
+
+			int ite = 0;
+			String campo4, campo5 = "";
+			while (filas.size() > ite) {
+				fil = (JSONArray) filas.get(ite);
+
+				String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+
+				listas.add(fin);
+				model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
+				ite++;
+			}
+			return model;
+
+		}
+		
 }

@@ -1,4 +1,4 @@
-package src.main.java.admin.users;
+package src.main.java.admin.roles;
 
 import java.awt.geom.Area;
 import java.util.ArrayList;
@@ -8,13 +8,13 @@ import javax.swing.table.AbstractTableModel;
 
 import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
-public class UsersJTableModel extends AbstractTableModel {
+public class RolesJTableModel extends AbstractTableModel {
 
 	List<Object[]> ciudades = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 6;
+		return 4;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class UsersJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID","Item", "User","Nombre", "Apellido","Rol"};
+	private String[] colNames = new String[] {"ID", "Item",  "Codigo", "Descripcion"};
 
 	@Override
 	public String getColumnName(int col) {
