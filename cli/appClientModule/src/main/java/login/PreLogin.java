@@ -293,7 +293,7 @@ public class PreLogin extends javax.swing.JFrame {
 			this.dispose();
 	}
 	
-	private static Integer eventoVigente() {
+	public static Integer eventoVigente() {
 
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -309,8 +309,14 @@ public class PreLogin extends javax.swing.JFrame {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) >= cast (now() as timestamp)");
+		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
 		
+		
+		query.setQueryGenerico("select id_evento, descripcion "
+				+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
+				+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(now(), 'DD/MM/YYYY HH24:MI') )"
+				+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
+				);
 		
 		
 	 

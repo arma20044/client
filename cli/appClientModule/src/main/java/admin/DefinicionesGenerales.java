@@ -48,6 +48,8 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DefinicionesGenerales extends JFrame implements ActionListener {
 
@@ -78,9 +80,9 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		btnAtras.setBounds(683, 474, 83, 51);
 
 		labelSeleccion = new JLabel();
-		labelSeleccion.setFont(new Font("Tahoma", Font.ITALIC, 11));
-		labelSeleccion.setText("Escoja que operacion desea realizar");
-		labelSeleccion.setBounds(272, 318, 172, 14);
+		labelSeleccion.setFont(new Font("Tahoma", Font.BOLD, 19));
+		labelSeleccion.setText("Escoja que operacion desea realizar.");
+		labelSeleccion.setBounds(93, 433, 580, 61);
 
 		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
 				+ "de dise�o MVC.\n\n"
@@ -97,6 +99,18 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 
 		btnGenero = new JButton("Generos");
+		btnGenero.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				labelSeleccion.setText("Aquí puede Gestionar los Generos del Sistema.");
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				//labelSeleccion.setText("Escoja que operacion desea realizar");
+				cambiarEtiqueta();
+			}
+		});
 		btnGenero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarGenero genero = new VentanaBuscarGenero();
@@ -104,10 +118,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnGenero.setBounds(105, 182, 155, 23);
+		btnGenero.setBounds(105, 182, 176, 23);
 		getContentPane().add(btnGenero);
 
 		btnPais = new JButton("Paises");
+		btnPais.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Paises del Sistema.");
+			}
+		});
 		btnPais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarPais pais = new VentanaBuscarPais();
@@ -115,10 +139,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnPais.setBounds(105, 250, 155, 23);
+		btnPais.setBounds(105, 250, 176, 23);
 		getContentPane().add(btnPais);
 
 		btnListas = new JButton("Listas");
+		btnListas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar las Listas del Sistema.");
+			}
+		});
 		btnListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarLista lista = new VentanaBuscarLista();
@@ -126,10 +160,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnListas.setBounds(105, 284, 155, 23);
+		btnListas.setBounds(105, 284, 176, 23);
 		getContentPane().add(btnListas);
 
 		btnPersonas = new JButton("Personas");
+		btnPersonas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar las Personas del Sistema.");
+			}
+		});
 		btnPersonas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VentanaBuscarPersona persona = new VentanaBuscarPersona();
@@ -138,10 +182,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 
 			}
 		});
-		btnPersonas.setBounds(320, 178, 146, 23);
+		btnPersonas.setBounds(320, 182, 146, 23);
 		getContentPane().add(btnPersonas);
 
 		btnDepartamentos = new JButton("Departamentos");
+		btnDepartamentos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Departamentos del Sistema.");
+			}
+		});
 		btnDepartamentos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarDepartamento departamento = new VentanaBuscarDepartamento();
@@ -162,6 +216,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().add(labelTitulo);
 
 		btnCandidatos = new JButton("Candidatos");
+		btnCandidatos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Candidatos del Sistema.");
+			}
+		});
 		btnCandidatos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarCandidato candidato;
@@ -175,6 +239,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().add(btnCandidatos);
 
 		btnVotantesHabilitados = new JButton("Votantes Habilitados");
+		btnVotantesHabilitados.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Votantes Habilitados del Sistema.");
+			}
+		});
 		btnVotantesHabilitados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarVotantesHabilitados votantesHabilitados = new VentanaBuscarVotantesHabilitados();
@@ -182,10 +256,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnVotantesHabilitados.setBounds(492, 182, 176, 23);
+		btnVotantesHabilitados.setBounds(497, 182, 176, 23);
 		getContentPane().add(btnVotantesHabilitados);
 
 		btnTipoEvento = new JButton("Tipo Evento");
+		btnTipoEvento.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Tipos de Evento del Sistema.");
+			}
+		});
 		btnTipoEvento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarTipoEvento tevento;
@@ -198,6 +282,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().add(btnTipoEvento);
 
 		btnVigenciaHorarioXPais = new JButton("Vigencia Horario por Pais");
+		btnVigenciaHorarioXPais.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Horarios por Paises del Sistema.");
+			}
+		});
 		btnVigenciaHorarioXPais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarVigencia vigencia = new VentanaBuscarVigencia();
@@ -205,10 +299,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnVigenciaHorarioXPais.setBounds(105, 216, 155, 23);
+		btnVigenciaHorarioXPais.setBounds(105, 216, 176, 23);
 		getContentPane().add(btnVigenciaHorarioXPais);
 
 		btnNacionalidades = new JButton("Nacionalidades\r\n");
+		btnNacionalidades.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar las Nacionalidades del Sistema.");
+			}
+		});
 		btnNacionalidades.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarNacionalidad nacionalidad = new VentanaBuscarNacionalidad();
@@ -216,7 +320,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnNacionalidades.setBounds(492, 216, 176, 23);
+		btnNacionalidades.setBounds(497, 216, 176, 23);
 		getContentPane().add(btnNacionalidades);
 
 		btnHome = new JButton("");
@@ -301,6 +405,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		label_9.setForeground(Color.BLACK);
 
 		btnEscrutinio = new JButton("Escrutinio");
+		btnEscrutinio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar el Escrutinio del Sistema.");
+			}
+		});
 		btnEscrutinio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Escrutinio escru = new Escrutinio();
@@ -308,10 +422,20 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnEscrutinio.setBounds(513, 284, 101, 23);
+		btnEscrutinio.setBounds(105, 363, 176, 23);
 		getContentPane().add(btnEscrutinio);
 
 		btnTipoLista = new JButton("Tipo Lista");
+		btnTipoLista.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Tipo de Lista del Sistema.");
+			}
+		});
 		btnTipoLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaBuscarTipoLista tLista = new VentanaBuscarTipoLista();
@@ -319,7 +443,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnTipoLista.setBounds(492, 250, 146, 23);
+		btnTipoLista.setBounds(497, 250, 176, 23);
 		getContentPane().add(btnTipoLista);
 		// lblNombreDescripcion.repaint();
 
@@ -343,6 +467,16 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getRootPane().setDefaultButton(btnHome);
 		
 		JButton bntUsers = new JButton("Usuarios");
+		bntUsers.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Usuarios del Sistema.");
+			}
+		});
 		bntUsers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VentanaBuscarUsers u = new VentanaBuscarUsers();
@@ -350,10 +484,21 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		bntUsers.setBounds(513, 314, 101, 23);
+		bntUsers.setBounds(320, 363, 146, 23);
 		getContentPane().add(bntUsers);
 		
 		btnRoles = new JButton("Roles");
+		btnRoles.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				//labelSeleccion.setText("Escoja que operacion desea realizar");
+				cambiarEtiqueta();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelSeleccion.setText("Aquí puede Gestionar los Roles del Sistema.");
+			}
+		});
 		btnRoles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VentanaBuscarRoles roles = new VentanaBuscarRoles();
@@ -361,7 +506,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 				dispose();
 			}
 		});
-		btnRoles.setBounds(513, 348, 101, 23);
+		btnRoles.setBounds(497, 363, 176, 23);
 		getContentPane().add(btnRoles);
 
 	}
@@ -465,4 +610,10 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 	            }
 	        }
 	}
+	
+	private void cambiarEtiqueta(){
+		labelSeleccion.setText("Escoja que operacion desea realizar.");
+		
+	}
+	
 }

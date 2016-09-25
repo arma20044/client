@@ -329,6 +329,15 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		if(VentanaBuscarEvento.readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			btnModificar.setEnabled(false);
+			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 	}
 

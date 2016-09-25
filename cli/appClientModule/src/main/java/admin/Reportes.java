@@ -73,7 +73,7 @@ public class Reportes extends JFrame implements ActionListener{
 		getContentPane().add(lblNombre);
 		
 		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
-		lblNombreDescripcion.setBounds(73, 36, 278, 14);
+		lblNombreDescripcion.setBounds(101, 36, 250, 14);
 		//lblNombreDescripcion.setText();
 		getContentPane().add(lblNombreDescripcion);
 		

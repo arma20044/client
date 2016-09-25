@@ -68,7 +68,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, btnNewButton,btnEliminar;
+	private JButton botonCancelar, btnNuevo,btnEliminar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -286,26 +286,26 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaRegistroUsers registro = new VentanaRegistroUsers();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarUsers.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarUsers.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(415, 52, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(415, 52, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		getContentPane().add(btnNuevo);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -411,6 +411,15 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		if(VentanaBuscarEvento.readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			//btnModificar.setEnabled(false);
+			//btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 	}
 

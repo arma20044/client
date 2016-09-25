@@ -61,7 +61,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonEliminar, btnNewButton;
+	private JButton botonCancelar, btnEliminar, btnNuevo;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -106,18 +106,18 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
 
-		botonEliminar = new JButton();
-		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarCandidato.class
+		btnEliminar = new JButton();
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(VentanaBuscarCandidato.class
 				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(457, 45, 32, 32);
-		botonEliminar.setOpaque(false);
-		botonEliminar.setContentAreaFilled(false);
-		botonEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) botonEliminar.getIcon()).getImage();
+		btnEliminar.setBounds(457, 45, 32, 32);
+		btnEliminar.setOpaque(false);
+		btnEliminar.setContentAreaFilled(false);
+		btnEliminar.setBorderPainted(false);
+		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonEliminar.setIcon(new ImageIcon(newimg4));
+		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE CANDIDATOS");
@@ -143,11 +143,11 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		});
 		txtBuscar.setBounds(86, 52, 319, 25);
 		getContentPane().add(txtBuscar);
-		botonEliminar.addActionListener(this);
+		btnEliminar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonEliminar);
+		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -262,26 +262,26 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaRegistroCandidato registro = new VentanaRegistroCandidato();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarCandidato.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarCandidato.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(415, 45, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(415, 45, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		getContentPane().add(btnNuevo);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -352,6 +352,15 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		if(VentanaBuscarEvento.readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			btnModificar.setEnabled(false);
+			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 	}
 
@@ -361,7 +370,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == botonEliminar) {
+		if (e.getSource() == btnEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
 						"¿Esta seguro de eliminar el Candidato?",
@@ -464,7 +473,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 			boolean bModificar, boolean bEliminar) {
 		txtBuscar.setEditable(codigo);
 		// botonModificar.setEnabled(true);
-		botonEliminar.setEnabled(bEliminar);
+		btnEliminar.setEnabled(bEliminar);
 	}
 
 	private void recuperarDatos() {

@@ -166,6 +166,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements
 		table_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				if(VentanaBuscarEvento.readOnly==false){
 
 				List<String> selectedData = new ArrayList<String>();
 
@@ -278,6 +279,11 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements
 
 				}
 			}
+				else{
+					JOptionPane.showMessageDialog(null, "Ya No se puede habilitar votantes durante ni despues la votacion","Aviso", JOptionPane.WARNING_MESSAGE);
+					
+				}
+			}
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
@@ -376,6 +382,15 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		if(VentanaBuscarEvento.readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			//btnModificar.setEnabled(false);
+			//btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 	}
 

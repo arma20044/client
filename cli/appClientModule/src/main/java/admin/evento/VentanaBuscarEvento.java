@@ -51,6 +51,7 @@ import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import src.main.java.login.PreLogin;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
@@ -74,7 +75,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonEliminar, btnNewButton, btnModificarEvento;
+	private JButton botonCancelar, btnEliminar, btnNuevo, btnModificar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -87,6 +88,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	private JLabel lblMensaje;
 	
 	boolean eliminado;
+	
+	public static boolean readOnly= false;
 	
 	Evento e;
 
@@ -101,6 +104,13 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 				txtBuscar.requestFocus();
 			}
 		});
+		
+		if(PreLogin.eventoVigente() == 0){
+			readOnly=false;
+		}
+		else{
+			readOnly=true;
+		}
 		
 		e = new Evento();
 		
@@ -121,18 +131,25 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		botonCancelar.setIcon(new ImageIcon(newimg));
 	
 
-		botonEliminar = new JButton();
-		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarEvento.class
+		btnEliminar = new JButton();
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(460, 52, 32, 32);
-		botonEliminar.setOpaque(false);
-		botonEliminar.setContentAreaFilled(false);
-		botonEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) botonEliminar.getIcon()).getImage();
+		btnEliminar.setBounds(460, 52, 32, 32);
+		btnEliminar.setOpaque(false);
+		btnEliminar.setContentAreaFilled(false);
+		btnEliminar.setBorderPainted(false);
+		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonEliminar.setIcon(new ImageIcon(newimg4));
+		btnEliminar.setIcon(new ImageIcon(newimg4));
+		if (MenuPrincipal.reporte){
+			btnEliminar.setVisible(false);
+		}
+		
+		else{		
+			btnEliminar.setVisible(true);
+		}
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE EVENTO");
@@ -154,11 +171,11 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		});
 		txtBuscar.setBounds(86, 52, 319, 25);
 		getContentPane().add(txtBuscar);
-		botonEliminar.addActionListener(this);
+		btnEliminar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonEliminar);
+		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -366,74 +383,99 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaRegistroEvento registro = new VentanaRegistroEvento();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarEvento.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(418, 52, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(418, 52, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		if (MenuPrincipal.reporte){
+			btnNuevo.setVisible(false);
+		}
+		
+		else{		
+			btnNuevo.setVisible(true);
+		}
+		getContentPane().add(btnNuevo);
+		
+		//btnModificarEvento = new JButton("");
+				btnModificar = new JButton("");
+				btnModificar.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						if (!codTemporal.equals("")) {
+							
+							
+							VentanaModificarEvento modificar = new VentanaModificarEvento(e);
+							modificar.setVisible(true);
+							dispose();
+						}
+						else{
+							lblMensaje
+							.setText("Por favor seleccione que Evento desea Modificar.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+						}
+					}
+				});
+				btnModificar.setToolTipText("Modificar");
+				btnModificar.setOpaque(false);
+				btnModificar.setContentAreaFilled(false);
+				btnModificar.setBorderPainted(false);
+				btnModificar.setIcon(new ImageIcon(VentanaBuscarEvento.class.getResource("/imgs/def.png")));
+				//btnModificar.setToolTipText("Nuevo");
+				btnModificar.setOpaque(false);
+				btnModificar.setContentAreaFilled(false);
+				btnModificar.setBorderPainted(false);
+				btnModificar.setBounds(502, 53, 32, 32);
+				getContentPane().add(btnModificar);
+				Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
+				Image newimg6 = img6.getScaledInstance(32, 32,
+						java.awt.Image.SCALE_SMOOTH);
+				btnModificar.setIcon(new ImageIcon(newimg6));
+				if (MenuPrincipal.reporte){
+					btnModificar.setVisible(false);
+				}
+				
+				else{		
+					btnModificar.setVisible(true);
+				}
+		
+		if(readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			btnModificar.setEnabled(false);
+			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
 		
-		//btnModificarEvento = new JButton("");
-		btnModificarEvento = new JButton("");
-		btnModificarEvento.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if (!codTemporal.equals("")) {
-					
-					
-					VentanaModificarEvento modificar = new VentanaModificarEvento(e);
-					modificar.setVisible(true);
-					dispose();
-				}
-				else{
-					lblMensaje
-					.setText("Por favor seleccione que Evento desea Modificar.");
-
-			Timer t = new Timer(Login.timer, new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					lblMensaje.setText(null);
-				}
-			});
-			t.setRepeats(false);
-			t.start();
-				}
-			}
-		});
-		btnModificarEvento.setToolTipText("Modificar");
-		btnModificarEvento.setOpaque(false);
-		btnModificarEvento.setContentAreaFilled(false);
-		btnModificarEvento.setBorderPainted(false);
-		btnModificarEvento.setIcon(new ImageIcon(VentanaBuscarEvento.class.getResource("/imgs/def.png")));
-		btnModificarEvento.setToolTipText("Nuevo");
-		btnModificarEvento.setOpaque(false);
-		btnModificarEvento.setContentAreaFilled(false);
-		btnModificarEvento.setBorderPainted(false);
-		btnModificarEvento.setBounds(502, 53, 32, 32);
-		getContentPane().add(btnModificarEvento);
-		Image img6 = ((ImageIcon) btnModificarEvento.getIcon()).getImage();
-		Image newimg6 = img6.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnModificarEvento.setIcon(new ImageIcon(newimg6));
+		
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -471,7 +513,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == botonEliminar) {
+		if (e.getSource() == btnEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
 						"¿Esta seguro de eliminar el Evento?", "Confirmación",
@@ -615,7 +657,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			boolean bModificar, boolean bEliminar) {
 		txtBuscar.setEditable(codigo);
 		// botonModificar.setEnabled(true);
-		botonEliminar.setEnabled(bEliminar);
+		btnEliminar.setEnabled(bEliminar);
 	}
 
 	private void recuperarDatos() {

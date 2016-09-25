@@ -55,7 +55,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
-	private JButton botonCancelar, botonBuscar, botonEliminar, btnNewButton;
+	private JButton botonCancelar, btnBuscar, btnEliminar, btnNuevo;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
@@ -94,31 +94,31 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg));
 
-		botonBuscar = new JButton();
-		botonBuscar.setToolTipText("Buscar");
-		botonBuscar.setIcon(new ImageIcon(VentanaBuscarVigencia.class
+		btnBuscar = new JButton();
+		btnBuscar.setToolTipText("Buscar");
+		btnBuscar.setIcon(new ImageIcon(VentanaBuscarVigencia.class
 				.getResource("/imgs/search.png")));
-		botonBuscar.setBounds(415, 52, 32, 32);
-		botonBuscar.setOpaque(false);
-		botonBuscar.setContentAreaFilled(false);
-		botonBuscar.setBorderPainted(false);
-		Image img3 = ((ImageIcon) botonBuscar.getIcon()).getImage();
+		btnBuscar.setBounds(415, 52, 32, 32);
+		btnBuscar.setOpaque(false);
+		btnBuscar.setContentAreaFilled(false);
+		btnBuscar.setBorderPainted(false);
+		Image img3 = ((ImageIcon) btnBuscar.getIcon()).getImage();
 		Image newimg3 = img3.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonBuscar.setIcon(new ImageIcon(newimg3));
+		btnBuscar.setIcon(new ImageIcon(newimg3));
 
-		botonEliminar = new JButton();
-		botonEliminar.setToolTipText("Eliminar");
-		botonEliminar.setIcon(new ImageIcon(VentanaBuscarVigencia.class
+		btnEliminar = new JButton();
+		btnEliminar.setToolTipText("Eliminar");
+		btnEliminar.setIcon(new ImageIcon(VentanaBuscarVigencia.class
 				.getResource("/imgs/borrar.png")));
-		botonEliminar.setBounds(499, 52, 32, 32);
-		botonEliminar.setOpaque(false);
-		botonEliminar.setContentAreaFilled(false);
-		botonEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) botonEliminar.getIcon()).getImage();
+		btnEliminar.setBounds(499, 52, 32, 32);
+		btnEliminar.setOpaque(false);
+		btnEliminar.setContentAreaFilled(false);
+		btnEliminar.setBorderPainted(false);
+		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonEliminar.setIcon(new ImageIcon(newimg4));
+		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("ABM DE VIGENCIA");
@@ -133,13 +133,13 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		txtBuscar = new JTextField();
 		txtBuscar.setBounds(86, 52, 319, 26);
 		getContentPane().add(txtBuscar);
-		botonEliminar.addActionListener(this);
-		botonBuscar.addActionListener(this);
+		btnEliminar.addActionListener(this);
+		btnBuscar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonBuscar);
-		getContentPane().add(botonEliminar);
+		getContentPane().add(btnBuscar);
+		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 
@@ -237,26 +237,26 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg5));
 		getContentPane().add(btnHome);
 
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnNuevo = new JButton("");
+		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaRegistroVigencia registro = new VentanaRegistroVigencia();
 				registro.setVisible(true);
 				dispose();
 			}
 		});
-		btnNewButton.setToolTipText("Nuevo");
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setIcon(new ImageIcon(VentanaBuscarVigencia.class
+		btnNuevo.setToolTipText("Nuevo");
+		btnNuevo.setOpaque(false);
+		btnNuevo.setContentAreaFilled(false);
+		btnNuevo.setBorderPainted(false);
+		btnNuevo.setIcon(new ImageIcon(VentanaBuscarVigencia.class
 				.getResource("/imgs/add.png")));
-		btnNewButton.setBounds(457, 52, 32, 32);
-		Image img2 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+		btnNuevo.setBounds(457, 52, 32, 32);
+		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		btnNewButton.setIcon(new ImageIcon(newimg2));
-		getContentPane().add(btnNewButton);
+		btnNuevo.setIcon(new ImageIcon(newimg2));
+		getContentPane().add(btnNuevo);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -290,6 +290,15 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		// });
 
 		DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+		
+		if(VentanaBuscarEvento.readOnly==true){
+			btnNuevo.setEnabled(false);
+			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+			btnEliminar.setEnabled(false);
+			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+			//btnModificar.setEnabled(false);
+			//btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+		}
 
 	}
 
@@ -299,7 +308,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 
-		if (e.getSource() == botonBuscar) {
+		if (e.getSource() == btnBuscar) {
 			String ge = txtBuscar.getText();
 
 			VigenciaDAO vigenciaDAO = new VigenciaDAO();
@@ -356,7 +365,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 			}
 		}
 
-		if (e.getSource() == botonEliminar) {
+		if (e.getSource() == btnEliminar) {
 			if (!codTemporal.equals("")) {
 				int respuesta = JOptionPane.showConfirmDialog(this,
 						"¿Esta seguro de eliminar la Vigencia?", "Confirmación",
@@ -470,9 +479,9 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
 		txtBuscar.setEditable(codigo);
-		botonBuscar.setEnabled(bBuscar);
+		btnBuscar.setEnabled(bBuscar);
 		// botonModificar.setEnabled(true);
-		botonEliminar.setEnabled(bEliminar);
+		btnEliminar.setEnabled(bEliminar);
 	}
 
 
