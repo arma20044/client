@@ -66,7 +66,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnFecha;
+	private JButton btnGuardar, botonCancelar, btnFecha;
 	private JTable table;
 	private VentanaModificarEvento ventanaRegistroPersona;
 	private EventoJTableModel model = new EventoJTableModel();
@@ -123,18 +123,18 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 		
 		ev = e;
 
-		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Guardar Cambios");
-		botonGuardar.setIcon(new ImageIcon(VentanaModificarEvento.class
+		btnGuardar = new JButton();
+		btnGuardar.setToolTipText("Guardar Cambios");
+		btnGuardar.setIcon(new ImageIcon(VentanaModificarEvento.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
-		botonGuardar.setOpaque(false);
-		botonGuardar.setContentAreaFilled(false);
-		botonGuardar.setBorderPainted(false);
-		Image img3 = ((ImageIcon) botonGuardar.getIcon()).getImage();
+		btnGuardar.setBounds(339, 52, 32, 32);
+		btnGuardar.setOpaque(false);
+		btnGuardar.setContentAreaFilled(false);
+		btnGuardar.setBorderPainted(false);
+		Image img3 = ((ImageIcon) btnGuardar.getIcon()).getImage();
 		Image newimg3 = img3.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
-		botonGuardar.setIcon(new ImageIcon(newimg3));
+		btnGuardar.setIcon(new ImageIcon(newimg3));
 
 		botonCancelar = new JButton();
 		botonCancelar.setBackground(Color.WHITE);
@@ -156,10 +156,10 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
-		botonGuardar.addActionListener(this);
+		btnGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 		getContentPane().add(botonCancelar);
-		getContentPane().add(botonGuardar);
+		getContentPane().add(btnGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
 		setSize(1152, 476);
@@ -365,7 +365,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 		btnFchDesde.setOpaque(false);
 		btnFchDesde.setContentAreaFilled(false);
 		btnFchDesde.setBorderPainted(false);
-		Image img5 = ((ImageIcon) botonGuardar.getIcon()).getImage();
+		Image img5 = ((ImageIcon) btnGuardar.getIcon()).getImage();
 		Image newimg5 = img5.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		btnFchDesde.setIcon(new ImageIcon(VentanaModificarEvento.class
@@ -567,6 +567,15 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 		txtFiltrar.setBounds(234, 415, 319, 25);
 		
 		getContentPane().add(txtFiltrar);
+		
+		if(VentanaBuscarEvento.readOnly==true){
+		btnGuardar.setEnabled(false);
+		btnGuardar.setToolTipText("Ya No se puede Guardar datos durante ni despues la votacion");
+		/*btnEliminar.setEnabled(false);
+		btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+		btnModificar.setEnabled(false);
+		btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");*/
+	}
 
 	}
 
@@ -581,7 +590,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Item item;
 		Integer tipoEventoSelected = null;
-		if (e.getSource() == botonGuardar) {
+		if (e.getSource() == btnGuardar) {
 			try {
 				
 				if(cmbTipoEvento.getSelectedIndex()!= -1){

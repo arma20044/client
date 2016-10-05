@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -62,7 +63,11 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	public static String fechaDesde;
 	public static String fechaHasta;
 	public static String tipoEventoDescripcon;
-
+	//public static String idEveto;
+	
+	public static Date fechaDesdeDate;
+	public static Date fechaHastaDate;
+	
 	public static String evento;
 	
 	public static Date date;
@@ -339,6 +344,36 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 								
 						 codTemporal = selectedData.get(0);
 						 }	 
+								fechaDesde  = selectedData.get(4);
+								//fechaDesdeDate = new Date();
+								
+								String string = fechaDesde;
+								DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+								try {
+									fechaDesdeDate = format.parse(string);
+								} catch (ParseException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+								//fechaDesdeDate = fechaDesde;
+								
+								fechaHasta  = selectedData.get(5);
+								
+								
+								String string2 = fechaHasta;
+								DateFormat format2 = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+								try {
+									fechaHastaDate = format2.parse(string2);
+								} catch (ParseException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+								
+								
+								
+								
 					 txtBuscar.setText(selectedData.get(3));
 					 System.out.println(txtBuscar.getText());
 					 
@@ -461,14 +496,14 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					btnModificar.setVisible(true);
 				}
 		
-		if(readOnly==true){
+		/*if(readOnly==true){
 			btnNuevo.setEnabled(false);
 			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
 			btnEliminar.setEnabled(false);
 			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
 			btnModificar.setEnabled(false);
 			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
-		}
+		}*/
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
@@ -514,7 +549,9 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == btnEliminar) {
+			
 			if (!codTemporal.equals("")) {
+				if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta, codTemporal)==0){
 				int respuesta = JOptionPane.showConfirmDialog(this,
 						"¿Esta seguro de eliminar el Evento?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
@@ -569,23 +606,27 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					// table_1.repaint();
 				}}
 			} else {
-				lblMensaje
-						.setText("Por favor seleccione que Evento desea Eliminar");
-
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Ya No se puede Eliminar el Evento durante ni despues la votacion","Aviso", JOptionPane.WARNING_MESSAGE);
+				
 			}
+		}
+			else{
+				lblMensaje
+				.setText("Por favor seleccione que Evento desea Eliminar");
 
+		Timer t = new Timer(Login.timer, new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				lblMensaje.setText(null);
+			}
+		});
+		t.setRepeats(false);
+		t.start();
+
+		// JOptionPane.showMessageDialog(null,
+		// "Por favor seleccione que Genero desea Eliminar",
+		// "Información",JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		if (e.getSource() == botonCancelar) {
 			/*Administracion administracion = new Administracion();
@@ -600,8 +641,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			}
 			
 			else{		
-				Administracion administracion1 = new Administracion();
-				administracion1.setVisible(true);
+				MenuPrincipal menuPrincipal = new MenuPrincipal();
+				menuPrincipal.setVisible(true);
 				this.dispose();
 			}
 			

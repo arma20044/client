@@ -4,13 +4,20 @@ import hello.wsdl.AutenticarResponse;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.Date;
+
 import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -21,29 +28,10 @@ import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.proceso.voto.VentanaSenadores;
-import src.main.java.votante.VentanaPrincipalVotante;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-
-import javax.swing.UIManager;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class PreLogin extends javax.swing.JFrame {
 	
@@ -315,7 +303,7 @@ public class PreLogin extends javax.swing.JFrame {
 		query.setQueryGenerico("select id_evento, descripcion "
 				+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
 				+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(now(), 'DD/MM/YYYY HH24:MI') )"
-				+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
+				//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
 				);
 		
 		
@@ -359,7 +347,71 @@ public class PreLogin extends javax.swing.JFrame {
 
 	}
 	
-	
+	public static Integer eventoVigenteConParametros(String fechaDesde , String fechaHasta, String idEvento) {
+
+		JSONArray filas = new JSONArray();
+		JSONArray fil = new JSONArray();
+
+		Object ob = null;
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		// para registrar se inserta el codigo es 1
+		query.setTipoQueryGenerico(2);
+		System.out.println(Login.userLogeado);
+		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
+		
+		
+		query.setQueryGenerico("select id_evento, descripcion "
+				+ " from ucsaws_evento where (  '" + fechaDesde + "'   <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
+				+ " and '" + fechaHasta + "'  >= to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + ")"
+				+ " or ( '" + fechaHasta + "'  < to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + " )"
+				);
+		
+		
+	 
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		JSONParser j = new JSONParser();
+
+		String generoAntesPartir = response.getQueryGenericoResponse();
+		
+		if (generoAntesPartir.compareTo("[]")==0){
+			return 0;
+		}
+		
+		else{
+			
+			
+		
+
+		try {
+			ob = j.parse(generoAntesPartir);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		filas = (JSONArray) ob;
+
+		fil = (JSONArray) filas.get(0);
+
+		String result = fil.get(0).toString();
+		
+		VentanaBuscarEvento.evento = result;
+
+		return 1;
+		
+		}
+
+	}
 	
 	
 }
