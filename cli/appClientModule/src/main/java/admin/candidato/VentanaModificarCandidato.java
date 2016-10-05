@@ -113,7 +113,7 @@ public class VentanaModificarCandidato extends JFrame implements ActionListener 
 		c = can;
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Modificar");
+		botonGuardar.setToolTipText("Guardar Cambios");
 		botonGuardar.setIcon(new ImageIcon(VentanaModificarCandidato.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(339, 52, 32, 32);

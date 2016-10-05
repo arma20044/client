@@ -121,7 +121,7 @@ public class VentanaRegistroUsers extends JFrame implements
 		});
 
 		btnGuardar = new JButton();
-		btnGuardar.setToolTipText("Registrar");
+		btnGuardar.setToolTipText("Guardar");
 		btnGuardar.setIcon(new ImageIcon(
 				VentanaRegistroUsers.class
 						.getResource("/imgs/save.png")));
@@ -150,7 +150,7 @@ public class VentanaRegistroUsers extends JFrame implements
 		botonCancelar.setIcon(new ImageIcon(newimg2));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("AMB USERS");
+		labelTitulo.setText("NUEVO USUARIO");
 		labelTitulo.setBounds(163, 11, 486, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

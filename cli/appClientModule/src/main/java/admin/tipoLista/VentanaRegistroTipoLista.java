@@ -85,7 +85,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroTipoLista.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(298, 45, 32, 32);
@@ -113,7 +113,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE TIPO LISTA");
+		labelTitulo.setText("NUEVA TIPO LISTA");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

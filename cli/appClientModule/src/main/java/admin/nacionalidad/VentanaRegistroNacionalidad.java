@@ -91,7 +91,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(331, 45, 32, 32);
@@ -120,7 +120,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE NACIONALIDADES");
+		labelTitulo.setText("NUEVA NACIONALIDAD");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

@@ -106,7 +106,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 		recuperarDatosFechaRangoDelEvento();
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroVigencia.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(410, 56, 32, 32);
@@ -135,7 +135,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 			//	java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE VIGENCIA POR PAIS");
+		labelTitulo.setText("NUEVA VIGENCIA");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -153,7 +153,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Vigencias");
 		scrollPane.setBounds(0, 190, 806, 193);
 		getContentPane().add(scrollPane);
 

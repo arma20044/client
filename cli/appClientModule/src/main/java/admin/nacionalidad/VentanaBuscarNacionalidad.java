@@ -118,7 +118,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE NACIONALIDADES");
+		labelTitulo.setText("VER NACIONALIDADES");
 		labelTitulo.setBounds(199, 11, 319, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -293,7 +293,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 			}
 		});
 		btnModificar.setIcon(new ImageIcon(VentanaBuscarNacionalidad.class.getResource("/imgs/def.png")));
-		btnModificar.setToolTipText("Nuevo");
+		btnModificar.setToolTipText("Modificar");
 		btnModificar.setOpaque(false);
 		btnModificar.setContentAreaFilled(false);
 		btnModificar.setBorderPainted(false);

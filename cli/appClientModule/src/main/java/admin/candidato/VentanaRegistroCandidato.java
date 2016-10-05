@@ -108,7 +108,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(339, 52, 32, 32);
@@ -136,7 +136,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE CANDIDATOS");
+		labelTitulo.setText("NUEVO CANDIDATO");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

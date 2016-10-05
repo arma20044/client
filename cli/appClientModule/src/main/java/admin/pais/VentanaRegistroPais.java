@@ -84,7 +84,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroPais.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(311, 52, 32, 32);
@@ -113,7 +113,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE PAIS");
+		labelTitulo.setText("NUEVO PAIS");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

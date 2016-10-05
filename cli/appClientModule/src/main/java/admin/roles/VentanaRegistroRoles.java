@@ -91,7 +91,7 @@ public class VentanaRegistroRoles extends JFrame implements ActionListener {
 		});
 
 		btnGuardar = new JButton();
-		btnGuardar.setToolTipText("Registrar");
+		btnGuardar.setToolTipText("Guardar");
 		btnGuardar.setIcon(new ImageIcon(VentanaRegistroRoles.class.getResource("/imgs/save.png")));
 		btnGuardar.setBounds(339, 52, 32, 32);
 		btnGuardar.setOpaque(false);
@@ -118,7 +118,7 @@ public class VentanaRegistroRoles extends JFrame implements ActionListener {
 	
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE ROLES");
+		labelTitulo.setText("NUEVO ROL");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -136,7 +136,7 @@ public class VentanaRegistroRoles extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Roles");
 		scrollPane.setBounds(0, 153, 806, 230);
 		getContentPane().add(scrollPane);
 

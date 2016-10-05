@@ -91,10 +91,10 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroGenero.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(339, 52, 32, 32);
+		botonGuardar.setBounds(298, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -119,7 +119,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE GENERO");
+		labelTitulo.setText("NUEVO GENERO");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

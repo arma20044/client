@@ -117,7 +117,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE TIPO DE EVENTOS");
+		labelTitulo.setText("VER TIPO DE EVENTOS");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -290,7 +290,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 			}
 		});
 		btnModificar.setIcon(new ImageIcon(VentanaBuscarTipoEvento.class.getResource("/imgs/def.png")));
-		btnModificar.setToolTipText("Eliminar");
+		btnModificar.setToolTipText("Modificar");
 		btnModificar.setOpaque(false);
 		btnModificar.setEnabled(true);
 		btnModificar.setContentAreaFilled(false);

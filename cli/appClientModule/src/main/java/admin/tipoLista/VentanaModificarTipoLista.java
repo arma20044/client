@@ -90,7 +90,7 @@ public class VentanaModificarTipoLista extends JFrame implements
 		tLista = tl;
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Modificar");
+		botonGuardar.setToolTipText("Guardar Cambios");
 		botonGuardar.setIcon(new ImageIcon(VentanaModificarTipoLista.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(298, 45, 32, 32);

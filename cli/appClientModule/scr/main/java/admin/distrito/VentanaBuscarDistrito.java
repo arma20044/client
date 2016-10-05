@@ -116,7 +116,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE DISTRITO");
+		labelTitulo.setText("VER DISTRITO");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -150,7 +150,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Distritos");
 		scrollPane.setBounds(0, 158, 634, 265);
 		getContentPane().add(scrollPane);
 

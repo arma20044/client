@@ -83,7 +83,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(578, 52, 32, 32);
@@ -111,7 +111,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE TIPO DE EVENTOS");
+		labelTitulo.setText("NUEVO TIPO DE EVENTOS");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

@@ -88,10 +88,10 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(447, 52, 32, 32);
+		botonGuardar.setBounds(298, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -116,7 +116,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE LOCAL");
+		labelTitulo.setText("NUEVO LOCAL");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -134,7 +134,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Locales");
 		scrollPane.setBounds(0, 190, 806, 193);
 		getContentPane().add(scrollPane);
 

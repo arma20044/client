@@ -110,7 +110,7 @@ public class VentanaModificarVotantesHabilitados extends JFrame implements
 		votante = v;
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(
 				VentanaModificarVotantesHabilitados.class
 						.getResource("/imgs/save.png")));

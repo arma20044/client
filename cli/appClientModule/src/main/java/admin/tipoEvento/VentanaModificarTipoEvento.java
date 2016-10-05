@@ -87,7 +87,7 @@ public class VentanaModificarTipoEvento extends JFrame implements ActionListener
 		tipoE = tipoEvento;
 		
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Modificar");
+		botonGuardar.setToolTipText("Guardar Cambios");
 		botonGuardar.setIcon(new ImageIcon(VentanaModificarTipoEvento.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(578, 52, 32, 32);

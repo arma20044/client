@@ -121,7 +121,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE VIGENCIA");
+		labelTitulo.setText("VER VIGENCIAS");
 		labelTitulo.setBounds(194, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

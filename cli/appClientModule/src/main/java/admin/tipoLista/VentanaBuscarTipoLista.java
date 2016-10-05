@@ -119,7 +119,7 @@ public class VentanaBuscarTipoLista extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE TIPO LISTA");
+		labelTitulo.setText("VER TIPO LISTA");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

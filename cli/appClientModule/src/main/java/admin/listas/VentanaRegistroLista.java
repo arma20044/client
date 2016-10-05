@@ -101,7 +101,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroLista.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(298, 48, 32, 32);
@@ -130,7 +130,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		// java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE LISTAS");
+		labelTitulo.setText("NUEVA LISTA");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

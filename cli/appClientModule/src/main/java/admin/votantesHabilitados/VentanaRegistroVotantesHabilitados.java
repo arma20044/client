@@ -105,7 +105,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(
 				VentanaRegistroVotantesHabilitados.class
 						.getResource("/imgs/save.png")));
@@ -134,7 +134,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		botonCancelar.setIcon(new ImageIcon(newimg2));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE VOTANTES HABILITADOS");
+		labelTitulo.setText("NUEVO VOTANTE HABILITADO");
 		labelTitulo.setBounds(163, 11, 486, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

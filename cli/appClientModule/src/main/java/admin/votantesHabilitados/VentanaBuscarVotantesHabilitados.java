@@ -116,7 +116,7 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements
 		botonCancelar.setIcon(new ImageIcon(newimg));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE VOTANTES HABILITADOS");
+		labelTitulo.setText("VER VOTANTES HABILITADOS");
 		labelTitulo.setBounds(131, 11, 387, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

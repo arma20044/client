@@ -111,7 +111,7 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE PAIS");
+		labelTitulo.setText("VER PAIS");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

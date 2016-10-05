@@ -157,7 +157,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		}
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE EVENTO");
+		labelTitulo.setText("VER EVENTOS");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 

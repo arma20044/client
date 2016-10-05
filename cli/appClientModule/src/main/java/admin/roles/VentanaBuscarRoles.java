@@ -133,7 +133,7 @@ public class VentanaBuscarRoles extends JFrame implements ActionListener {
 		 */
 		
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE ROLES");
+		labelTitulo.setText("VER ROLES");
 		labelTitulo.setBounds(161, 49, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -170,7 +170,7 @@ public class VentanaBuscarRoles extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Roles");
 		scrollPane.setBounds(0, 237, 634, 265);
 		getContentPane().add(scrollPane);
 

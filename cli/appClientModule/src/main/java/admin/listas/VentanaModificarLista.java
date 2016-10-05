@@ -105,7 +105,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		lista = l;
 		
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Modificar");
+		botonGuardar.setToolTipText("Guardar Cambios");
 		botonGuardar.setIcon(new ImageIcon(VentanaModificarLista.class
 				.getResource("/imgs/save.png")));
 		botonGuardar.setBounds(298, 48, 32, 32);
@@ -152,7 +152,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Listas");
 		scrollPane.setBounds(0, 200, 806, 183);
 		getContentPane().add(scrollPane);
 

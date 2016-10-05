@@ -88,10 +88,10 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		});
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(448, 52, 32, 32);
+		botonGuardar.setBounds(298, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -119,7 +119,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
 				.getResource("/imgs/borrar.png")));
 		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(490, 52, 32, 32);
+		btnEliminar.setBounds(340, 52, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -129,7 +129,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		btnEliminar.setIcon(new ImageIcon(newimg4));
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE DISTRITO");
+		labelTitulo.setText("NUEVO DISTRITO");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -149,7 +149,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Distritos");
 		scrollPane.setBounds(0, 190, 806, 193);
 		getContentPane().add(scrollPane);
 

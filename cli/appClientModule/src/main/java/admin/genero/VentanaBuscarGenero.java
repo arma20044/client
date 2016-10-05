@@ -133,7 +133,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		 */
 		
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE GENERO");
+		labelTitulo.setText("VER GENEROS");
 		labelTitulo.setBounds(161, 49, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -170,7 +170,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Generos");
 		scrollPane.setBounds(0, 237, 634, 265);
 		getContentPane().add(scrollPane);
 

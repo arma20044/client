@@ -113,7 +113,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 	
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("ABM DE USERS");
+		labelTitulo.setText("VER USUARIOS");
 		labelTitulo.setBounds(131, 11, 387, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -146,7 +146,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Votantes Habilitados");
+		scrollPane.setToolTipText("Lista de Usuarios");
 		scrollPane.setBounds(0, 171, 634, 265);
 		getContentPane().add(scrollPane);
 
@@ -263,7 +263,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
-		lblListaDeGeneros.setText("LISTA DE USERS");
+		lblListaDeGeneros.setText("LISTA DE USUARIOS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
 		lblListaDeGeneros.setBounds(117, 117, 372, 30);
 		getContentPane().add(lblListaDeGeneros);

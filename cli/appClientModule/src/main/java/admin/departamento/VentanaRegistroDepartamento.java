@@ -90,10 +90,10 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonGuardar = new JButton();
-		botonGuardar.setToolTipText("Registrar");
+		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroDepartamento.class
 				.getResource("/imgs/save.png")));
-		botonGuardar.setBounds(385, 52, 32, 32);
+		botonGuardar.setBounds(298, 52, 32, 32);
 		botonGuardar.setOpaque(false);
 		botonGuardar.setContentAreaFilled(false);
 		botonGuardar.setBorderPainted(false);
@@ -118,7 +118,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("REGISTRO DE DEPARTAMENTO");
+		labelTitulo.setText("NUEVO DEPARTAMENTO");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -136,7 +136,7 @@ public class VentanaRegistroDepartamento extends JFrame implements
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
+		scrollPane.setToolTipText("Lista de Departamentos");
 		scrollPane.setBounds(0, 141, 634, 273);
 		getContentPane().add(scrollPane);
 
