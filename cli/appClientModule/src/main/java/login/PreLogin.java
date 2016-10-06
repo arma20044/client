@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -29,6 +30,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.DeQuePais;
+import src.main.java.admin.utils.FechaDeOtroPaisParametrizado;
+import src.main.java.admin.utils.Ip;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -280,8 +284,34 @@ public class PreLogin extends javax.swing.JFrame {
 			l.setVisible(true);
 			this.dispose();
 	}
-	
+
+	//se adapta para que verifique el pais desde donde se esta accediendo
 	public static Integer eventoVigente() {
+		
+		
+		//obtener pais desde donde se quiere votar
+		DeQuePais ip = new DeQuePais();
+		String MiPais = ip.main().toUpperCase();
+		System.out.println(MiPais);
+		//
+		String fechaHusoHora= "";
+		
+		if(!(MiPais.compareTo("PARAGUAY")==0)){
+		//obtener huso horario
+		FechaDeOtroPaisParametrizado fechaDeOtroPaisParametrizado = new FechaDeOtroPaisParametrizado();
+		DateTime huso = fechaDeOtroPaisParametrizado.main(MiPais);
+		//obtener huso horario
+		
+		 System.out.println(huso.getZone());
+		 fechaHusoHora =   huso.getDayOfMonth() + "/" + huso.getMonthOfYear() + "/" + huso.getYear() + " " + huso.getHourOfDay() + ":" + huso.getMinuteOfHour() + ":" + huso.getSecondOfMinute();
+		
+		//armar fecha hora
+		
+		
+		}
+		else{
+			fechaHusoHora = "now()";
+		}
 
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -300,12 +330,19 @@ public class PreLogin extends javax.swing.JFrame {
 		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
 		
 		
+		if((MiPais.compareTo("PARAGUAY")==0)){
 		query.setQueryGenerico("select id_evento, descripcion "
-				+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
-				+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(now(), 'DD/MM/YYYY HH24:MI') )"
+				+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') "
+				+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') )"
 				//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
 				);
-		
+		}else{
+			query.setQueryGenerico("select id_evento, descripcion "
+					+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')  "
+					+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')) "
+					//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
+					);
+		}
 		
 	 
 

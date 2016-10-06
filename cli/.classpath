@@ -45,5 +45,6 @@
 	<classpathentry kind="lib" path="lib/org.apache.httpcomponents.httpcore_4.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail-1.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/ip2c.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
