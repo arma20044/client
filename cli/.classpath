@@ -8,8 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry exported="true" kind="lib" path="ImportedClasses"/>
-	<classpathentry kind="lib" path="lib/com.springsource.org.joda.time-1.6.0.jar"/>
-	<classpathentry kind="lib" path="lib/com.springsource.org.joda.time-sources-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/json-20140107.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple.jar"/>
@@ -46,5 +44,6 @@
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail-1.5.0.jar"/>
 	<classpathentry kind="lib" path="lib/ip2c.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

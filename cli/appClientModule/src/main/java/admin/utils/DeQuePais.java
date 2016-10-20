@@ -35,7 +35,8 @@ public class DeQuePais {
 		String iptest = ip;
 		
 		//para testear comentar despues huso usa
-		//iptest = "168.63.24.174";
+		iptest = //"168.63.24.174"; ip usa
+		"193.110.128.109"; // ip españa
 		//para testear comentar despues
 		
 		int caching1 = IP2Country.MEMORY_CACHE;

@@ -10,11 +10,15 @@ public class FechaDeOtroPaisParametrizado {
 	    DateTime dt = new DateTime();
 	    // translate to New York local time
 	    // DateTime dtNewYork = dt.withZone(DateTimeZone.forID("EST5EDT")); // huso new jersey
-	    
-	    DateTime DateResult = dt.withZone(DateTimeZone.forID("America/New_York")); // huso eeuu
+	    DateTime DateResult= null;
+	    //DateTime DateResult = dt.withZone(DateTimeZone.forID("America/New_York")); // huso eeuu
 	    // DateTime dtNewYork = dt.withZone(DateTimeZone.forID("America/Argentina/Buenos_Aires")); // huso argetina
 	  //  DateTime dtNewYork = dt.withZone(DateTimeZone.forID("Europe/Madrid")); // huso españa
+	    if (Pais.compareTo("SPAIN")==0){
+	    	DateResult = dt.withZone(DateTimeZone.forID("Europe/Madrid")); 
+	    }
 	    
+	   // if (Pais.compareTo(""))
 	    
 	    System.out.println(DateResult.getZone());
 	    System.out.println(DateResult.getDayOfMonth() + "/" + DateResult.getMonthOfYear() + "/" + DateResult.getYear());

@@ -444,7 +444,7 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 //					} 
 					//else
 						if   (vigenciaValidator.ValidarCodigo( distritoSelected) == false) {
-						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+						
 							// Genero genero = new Genero();
 							// genero.setDescripcion(textGenero.getText());
 							
@@ -456,6 +456,8 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 
 							Calendar calendar = new GregorianCalendar();
 							int year = calendar.get(Calendar.YEAR);
+							
+							if (vigenciaValidator.ValidarRango(fechaDesdeFinal,fechaHastaFinal) == false) {
 
 							ApplicationContext ctx = SpringApplication
 									.run(WeatherConfiguration.class);
@@ -506,23 +508,23 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 							
 
 							// this.dispose();
-//						} else {
-//							// JOptionPane.showMessageDialog(null,
-//							// "Ya existe el genero " + txtDesc.getText(),
-//							// "Información",JOptionPane.WARNING_MESSAGE);
-//							lblMensaje
-//									.setText("La Persona no puede tener mas de una candidatura");
-//							Timer t = new Timer(Login.timer,
-//									new ActionListener() {
-//
-//										public void actionPerformed(
-//												ActionEvent e) {
-//											lblMensaje.setText(null);
-//										}
-//									});
-//							t.setRepeats(false);
-//							t.start();
-//						}
+						} else {
+							// JOptionPane.showMessageDialog(null,
+							// "Ya existe el genero " + txtDesc.getText(),
+							// "Información",JOptionPane.WARNING_MESSAGE);
+							lblMensaje
+									.setText("Fuera de Rango.");
+							Timer t = new Timer(Login.timer,
+									new ActionListener() {
+
+										public void actionPerformed(
+												ActionEvent e) {
+											lblMensaje.setText(null);
+										}
+									});
+							t.setRepeats(false);
+							t.start();
+						}
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),

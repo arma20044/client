@@ -116,8 +116,9 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				// eliminarVotanteHabilitado();
 				
 				//enviar notifiacion
-				SendEmailGenerico enviarNotificacion = new SendEmailGenerico();
-				enviarNotificacion.enviarNotificacion(Login.email);
+				//SendEmailGenerico enviarNotificacion = new SendEmailGenerico();
+				//enviarNotificacion.enviarNotificacion(Login.email);
+				SendEmailGenerico.NewEnviar(Login.email);
 
 				VentanaVotoFinal end = new VentanaVotoFinal();
 				end.setVisible(true);

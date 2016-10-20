@@ -432,6 +432,8 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements
 		getContentPane().add(btnSeleccionarPersona);
 		
 		Border border = LineBorder.createGrayLineBorder();
+		
+		personaSeleccionada= "";
 
 		lblNombrePersona = new JLabel(personaSeleccionada);
 		lblNombrePersona.addMouseListener(new MouseAdapter() {

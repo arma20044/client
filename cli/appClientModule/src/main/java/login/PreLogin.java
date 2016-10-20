@@ -337,11 +337,13 @@ public class PreLogin extends javax.swing.JFrame {
 				//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
 				);
 		}else{
-			query.setQueryGenerico("select id_evento, descripcion "
-					+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')  "
-					+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')) "
+			query.setQueryGenerico("select id_vigencia, id_pais "
+					+ " from ucsaws_vigencia_horario_x_pais where to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')  "
+					+ " and (to_char(fch_vigencia_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')) "
 					//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
 					);
+			
+			
 		}
 		
 	 
