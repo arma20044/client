@@ -12,8 +12,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -45,9 +43,8 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Listas;
 import src.main.java.admin.Coordinador;
-import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.ListasValidator;
@@ -55,6 +52,7 @@ import src.main.java.dao.listas.ListasDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import entity.Listas;
 
 public class VentanaModificarLista extends JFrame implements ActionListener {
 
@@ -284,7 +282,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}

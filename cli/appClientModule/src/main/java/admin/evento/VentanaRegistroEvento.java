@@ -55,6 +55,7 @@ import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import src.main.java.login.PreLogin;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -579,6 +580,8 @@ List<String> selectedData = new ArrayList<String>();
 				&&  !(txtMinHasta.getText().length() == 0)
 
 				&& !(txtFchDesde.getText().length() == 0)
+				
+				&& (cmbTipoEvento.getSelectedIndex()!= -1)
 
 				&& !(txtDescripcion.getText().length() == 0)) {
 					if (txtNro.getText().length() > 7) {
@@ -636,6 +639,8 @@ List<String> selectedData = new ArrayList<String>();
 					
 					
 					if(codTemporal==""){
+						if (EventoValidator.eventoVigente( txtFchDesde.getText().substring(6, 10)  , txtFchHasta.getText()
+								+  " 23:59", tipoEventoSelected) == false){
 					if
 
 					(eventoValidator.ValidarCodigo(txtNro.getText()) == false) {
@@ -755,6 +760,16 @@ List<String> selectedData = new ArrayList<String>();
 						t.setRepeats(false);
 						t.start();
 					}
+						}else{
+							lblMensaje
+							.setText("Error. Ya existe un evento de ese tipo para ese año. ");
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+						}
 
 				}
 				}

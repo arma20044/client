@@ -4,6 +4,7 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
@@ -49,6 +52,10 @@ import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import src.main.java.proceso.voto.VentanaPresidente;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.WindowFocusListener;
 
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
@@ -74,12 +81,32 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	private JButton btnModificar;
 	
 	private Persona persona;
+	private JButton btnImportar;
+	private VentanaBuscarPersona ventanaBuscarPersona;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarPersona() {
+		addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent arg0) {
+				//model = new PersonaJTableModel();
+
+				recuperarDatos();
+				table_1.setModel(dm);
+				table_1.removeColumn(table_1.getColumnModel()
+						.getColumn(0));
+			}
+			public void windowLostFocus(WindowEvent arg0) {
+			}
+		});
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				table_1.repaint();
+			}
+		});
 
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e) {
@@ -161,6 +188,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				return false;
 			}
 		};
+		//table_1.getTableHeader().setReorderingAllowed(false);
+		
 		table_1.setToolTipText("Listado de Personas.");
 		table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -222,7 +251,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				// textFecha.setText(selectedData.get(2));
 				// textUsu.setText(selectedData.get(4));
 				// codTemporal.setText(selectedData.get(1));
-				codTemporal = (selectedData.get(2));
+				codTemporal = (selectedData.get(0));
 
 				System.out.println("Selected: " + selectedData);
 				
@@ -250,6 +279,12 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		recuperarDatos();
 		table_1.setModel(dm);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+		
+		resizeColumnWidth(table_1);
+		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		
+		
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE PERSONAS");
 		lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
@@ -260,7 +295,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}
@@ -340,6 +375,28 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		btnModificar.setIcon(new ImageIcon(newimg6));
 
 		getContentPane().add(btnModificar);
+		
+		btnImportar = new JButton();
+		btnImportar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ImportarPersona  persona = new ImportarPersona(ventanaBuscarPersona, true);
+				persona.setVisible(true);
+			}
+		});
+		btnImportar.setIcon(new ImageIcon(VentanaBuscarPersona.class.getResource("/imgs/caja.png")));
+		btnImportar.setToolTipText("Importar XLS");
+		btnImportar.setOpaque(false);
+		btnImportar.setEnabled(true);
+		btnImportar.setContentAreaFilled(false);
+		btnImportar.setBorderPainted(false);
+		btnImportar.setBounds(548, 52, 32, 32);
+		Image img7 = ((ImageIcon) btnImportar.getIcon()).getImage();
+		Image newimg7 = img7.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		btnImportar.setIcon(new ImageIcon(newimg7));
+		
+		
+		getContentPane().add(btnImportar);
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -376,6 +433,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
 			btnModificar.setEnabled(false);
 			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+			btnImportar.setEnabled(false);
+			btnImportar.setToolTipText("Ya No se puede Importar datos durante ni despues la votacion");
 		}
 
 	}
@@ -383,6 +442,8 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	public void setCoordinador(Coordinador miCoordinador) {
 		this.miCoordinador = miCoordinador;
 	}
+	
+
 
 	public void actionPerformed(ActionEvent e) {
 
@@ -402,10 +463,22 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 						}
 
 						else {
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado la Persona ",
-									"Información",
-									JOptionPane.INFORMATION_MESSAGE);
+//							JOptionPane.showMessageDialog(null,
+//									"Excelente, se ha eliminado la Persona ",
+//									"Información",
+//									JOptionPane.INFORMATION_MESSAGE);
+							
+							lblMensaje
+							.setText("Se ha eliminado la persona.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+							
+							
 							// modificarGenero(textCod.getText(),
 							// codTemporal.getText());
 							codTemporal = "";
@@ -520,7 +593,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(2);
 
-		query.setQueryGenerico("select ci,id_persona, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad, email"
+		query.setQueryGenerico("select id_persona,ci, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad, email"
 
 				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
 				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
@@ -623,4 +696,19 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		tr.setRowFilter(RowFilter.regexFilter(query));
 
 	}
+	
+    public void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 15; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width +1 , width);
+            }
+            if(width > 300)
+                width=300;
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
+    }
 }

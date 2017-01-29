@@ -11,11 +11,7 @@
 (((SELECT COUNT(*) FROM ucsaws_votante u WHERE HABILITADO = 1 AND SUFRAGO = 1 AND ID_EVENTO = $P{P_ID_EVENTO})*100 )
 /(SELECT COUNT(*) FROM ucsaws_votante WHERE HABILITADO = 1 AND ID_EVENTO = $P{P_ID_EVENTO}))
  AS participacion
-UNION
-SELECT (select count(*) from ucsaws_votante where   habilitado = 1 and id_evento = $P{P_ID_EVENTO}) total, (select count(*) from ucsaws_votante where sufrago = 0 and id_evento = $P{P_ID_EVENTO}) NOvotantes,
-(((SELECT COUNT(*) FROM ucsaws_votante u WHERE HABILITADO = 1 AND SUFRAGO = 0 AND ID_EVENTO = $P{P_ID_EVENTO})*100 )
-/(SELECT COUNT(*) FROM ucsaws_votante WHERE HABILITADO = 1 AND ID_EVENTO = $P{P_ID_EVENTO}))
- AS NOparticipacion]]>
+]]>
 	</queryString>
 	<field name="total" class="java.lang.Long"/>
 	<field name="votantes" class="java.lang.Long"/>

@@ -17,6 +17,8 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class PaisDAO {
 	
+	public static Long idPais;
+	
 	
 //	public void registrarPersona(PersonaVo miPersona)
 //	{
@@ -60,7 +62,7 @@ public class PaisDAO {
 			
 			query.setQueryGenerico("SELECT id_pais, nombre "
 					+ " from ucsaws_pais "
-				  + "where upper(nombre) like upper('%"+codigo+"%')  ");
+				  + "where  upper(nombre) like upper('%"+codigo+"%')  ");
 			
 			
 			
@@ -91,9 +93,9 @@ public class PaisDAO {
 					
 					
 					
-				//	JSONArray fila		= (JSONArray) filas.get(0);
+					JSONArray fila		= (JSONArray) filas.get(0);
 					//JSONArray fila1		= (JSONArray) filas.get(1);
-							
+					//idPais = fila1;	
 //					System.out.print(filas);
 //					System.out.print("\\n");
 //				//	System.out.print(fila);
@@ -102,7 +104,7 @@ public class PaisDAO {
 					
 					
 					
-//					 part1 = (String) array1.get(0);
+					idPais =  (Long) fila.get(0);
 //					 part2 = (String) array1.get(1);
 //					 part3 = (String) array1.get(2);
 					 

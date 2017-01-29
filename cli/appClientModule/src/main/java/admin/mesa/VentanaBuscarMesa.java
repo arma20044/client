@@ -40,7 +40,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
-import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.dao.mesa.MesaDAO;
@@ -216,7 +216,7 @@ public class VentanaBuscarMesa extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}

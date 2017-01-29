@@ -8,8 +8,8 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,17 +38,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
-import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.evento.VentanaMainEvento;
 import src.main.java.admin.validator.GeneroValidator;
-import src.main.java.dao.genero.GeneroDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class VentanaRegistroRoles extends JFrame implements ActionListener {
 
@@ -214,7 +207,7 @@ public class VentanaRegistroRoles extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}

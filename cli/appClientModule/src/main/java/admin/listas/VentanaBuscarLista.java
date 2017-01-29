@@ -240,7 +240,7 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}

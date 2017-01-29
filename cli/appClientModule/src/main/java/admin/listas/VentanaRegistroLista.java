@@ -46,7 +46,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
-import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.ListasValidator;
@@ -86,6 +86,9 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	private JTextField txtFiltrar;
 	private DefaultTableModel dm;
 	private ListasDAO listaDAO = new ListasDAO();
+	
+	Item item;
+	Integer tipoListaSelected;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -280,7 +283,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}
@@ -405,14 +408,19 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		
 		if (e.getSource() == botonGuardar) {
 			try {
-				Item item = (Item) cmbTipoLista.getSelectedItem();
-				Integer tipoListaSelected = item.getId();
+				
+				if (cmbTipoLista.getSelectedIndex() != -1){
+				item = (Item) cmbTipoLista.getSelectedItem();
+				tipoListaSelected = item.getId();
+				}
 
 				if (!(txtNro.getText().length() == 0)
 						&& !(txtAnho.getText().length() == 0)
 						&& !(txtNombre.getText().length() == 0)
+						&& cmbTipoLista.getSelectedIndex() != -1
 						&& !(txtNombre.getText().length() == 0)) {
 					if (txtNro.getText().length() > 3) {
 						lblMensaje
@@ -429,7 +437,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 
 					(listasValidator.ValidarCodigo(txtNro.getText(),
 							tipoListaSelected, txtNombre.getText(),
-							txtAnho.getText()) == false) {
+							txtNro.getText()) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
@@ -549,6 +557,16 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 						t.start();
 					}
 
+				}else{
+					lblMensaje.setText("Ya existe Lista con el Codigo o Nombre. Favor Verificar.");
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
 				}
 				}
 

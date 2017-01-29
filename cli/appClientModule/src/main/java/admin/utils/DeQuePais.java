@@ -35,15 +35,16 @@ public class DeQuePais {
 		String iptest = ip;
 		
 		//para testear comentar despues huso usa
-		iptest = //"168.63.24.174"; ip usa
-		"193.110.128.109"; // ip españa
+		//iptest = "168.63.24.174"; //ip usa
+		//iptest = "193.110.128.109"; // ip españa
+		//iptest = "186.192.81.5";
 		//para testear comentar despues
 		
 		int caching1 = IP2Country.MEMORY_CACHE;
 		IP2Country ip2c = new IP2Country(caching1);
 		
 		Country c = ip2c.getCountry(iptest);
-		if(iptest.compareTo("181.122.212.64")==0){
+		if(iptest.contains("181.122.")){
 			result = "Paraguay";
 			
 		}

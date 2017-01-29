@@ -18,10 +18,13 @@ import java.util.GregorianCalendar;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.json.simple.JSONArray;
@@ -38,6 +41,7 @@ import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
 
+
 import javax.swing.UIManager;
 
 import java.awt.Color;
@@ -46,7 +50,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 	private Container contenedor;
 	JLabel labelTitulo;
 	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado,
-			lblMensaje;
+			lblMensaje , lblCargar;
 
 	// public static Integer idLocal;
 
@@ -66,6 +70,36 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		JButton button = new JButton("SI");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				final SwingWorker worker = new SwingWorker(){
+					
+					@Override
+					protected Object doInBackground() throws Exception {
+						
+						int ite = 0;
+						//JFrame frame = new JFrame("Test");
+						//new JLabel("Aguarde... ", new ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")), JLabel.CENTER);
+						//JLabel lblCargar = new JLabel();
+						lblCargar.setVisible(true);
+						//lblCargar.setBounds(80, 120, 141, 14);
+						//lblCargar.setText("Senador Lista: " + VentanaSenadores.senadores);
+						//getContentPane().add(lblCargar);
+					    //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					   // frame.setSize(200, 200);
+					   //frame.setLocationRelativeTo(getParent());
+					   // frame.setLocationRelativeTo(null);
+					    //frame.setLocation(x, y);
+					   // frame.setUndecorated(true);
+						//while (ite < 10000){
+							//ite = ite + 1;
+							//ejemploFrame.getTextField().setText("" + ite);
+							
+						    
+
+						    
+						    
+						  //  frame.setVisible(true);
+						//}	
+						
 
 				// idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento,
 				// Integer.parseInt(EleccionMesa.local));
@@ -123,6 +157,12 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				VentanaVotoFinal end = new VentanaVotoFinal();
 				end.setVisible(true);
 				dispose();
+				//frame.setVisible(false);
+				lblCargar.setVisible(false);
+				return null;
+			}	
+		};
+		worker.execute();
 			}
 		});
 		button.setBounds(127, 227, 43, 23);
@@ -217,6 +257,13 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		lblMensaje.setFont(UIManager.getFont("Label.font"));
 		lblMensaje.setBounds(80, 172, 199, 32);
 		getContentPane().add(lblMensaje);
+		
+		lblCargar = new JLabel("");
+		lblCargar.setIcon(new ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")));
+		lblCargar.setBounds(29, 68, 264, 147);
+		getContentPane().add(lblCargar);
+		lblCargar.setVisible(false);
+		
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -416,7 +463,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 				+ "' , now(), '"
 				+ Login.userLogeado
 				+ "' , now(),"
-				+ VentanaBuscarEvento.evento
+				+ EleccionMesa.idEvento
 				+ ")");
 
 		QueryGenericoResponse response = weatherClient

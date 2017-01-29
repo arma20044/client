@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import org.apache.log4j.BasicConfigurator;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -223,6 +224,7 @@ public class PreLogin extends javax.swing.JFrame {
   
     public static void main(String args[]) {
     	try {   
+    		BasicConfigurator.configure();
     		  javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");               
     		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
     		  java.util.logging.Logger.getLogger(PreLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -332,10 +334,13 @@ public class PreLogin extends javax.swing.JFrame {
 		
 		if((MiPais.compareTo("PARAGUAY")==0)){
 		query.setQueryGenerico("select id_evento, descripcion "
-				+ " from ucsaws_evento where to_char(fch_desde, 'DD/MM/YYYY HH24:MI')  <= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') "
-				+ " and (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  >= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') )"
-				//+ " or (to_char(fch_hasta, 'DD/MM/YYYY HH24:MI')  < to_char(now(), 'DD/MM/YYYY HH24:MI')  )"
+				+ " from ucsaws_evento where ( to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') between to_char(fch_desde, 'DD/MM/YYYY HH24:MI')   "
+				+ " and to_char(fch_hasta, 'DD/MM/YYYY HH24:MI'))  "
+				//+ ">= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI')"
+					//	+ " )"
+				//+ " or (fch_hasta  < now()  )"
 				);
+
 		}else{
 			query.setQueryGenerico("select id_vigencia, id_pais "
 					+ " from ucsaws_vigencia_horario_x_pais where to_char(fch_vigencia_desde, 'DD/MM/YYYY HH24:MI')  <= to_char(to_timestamp('"+ fechaHusoHora +"', 'DD/MM/YYYY HH24:MI'),'DD/MM/YYYY HH24:MI')  "
@@ -405,10 +410,17 @@ public class PreLogin extends javax.swing.JFrame {
 		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
 		
 		
-		query.setQueryGenerico("select id_evento, descripcion "
-				+ " from ucsaws_evento where (  '" + fechaDesde + "'   <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
-				+ " and '" + fechaHasta + "'  >= to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + ")"
-				+ " or ( '" + fechaHasta + "'  < to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + " )"
+		query.setQueryGenerico
+//		("select id_evento, descripcion "
+//				+ " from ucsaws_evento where (  '" + fechaDesde + "'   <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
+//				+ " and '" + fechaHasta + "'  >= to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + ")"
+//				+ " or ( '" + fechaHasta + "'  < to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + " )"
+//				);
+		
+		("select id_evento, descripcion "
+				+ " from ucsaws_evento where (  fch_desde   <= now() "
+				+ " and fch_hasta  >= now() and id_evento = " + idEvento + ")"
+				+ " or ( fch_hasta  <  now() and id_evento = " + idEvento + " )"
 				);
 		
 		

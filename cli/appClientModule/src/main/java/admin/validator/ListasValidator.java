@@ -19,7 +19,7 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class ListasValidator {
 
-	public Boolean ValidarCodigo(String nro, Integer tipoLista, String nombre, String anho)
+	public Boolean ValidarCodigo(String nro, Integer tipoLista, String nombre, String nroLista)
 			throws ParseException, org.json.simple.parser.ParseException {
 
 		boolean existe = false;
@@ -36,9 +36,10 @@ public class ListasValidator {
 		query.setTipoQueryGenerico(2);
 
 		query.setQueryGenerico("SELECT id_lista, nro_lista "
-				+ "from ucsaws_listas " + "where nro_lista = " + nro
-				+ " and id_tipo_lista = " + tipoLista  + " and id_evento = " + VentanaBuscarEvento.evento
-				+ " and upper(nombre_lista) = upper('" + nombre + "') and anho = " +anho);
+				+ "from ucsaws_listas " + "where "
+				+ "   id_tipo_lista = " + tipoLista  + " and id_evento = " + VentanaBuscarEvento.evento
+				+ " and (upper(nombre_lista) = upper('" + nombre + "') "
+						+ "or nro_lista = " +nroLista+")");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

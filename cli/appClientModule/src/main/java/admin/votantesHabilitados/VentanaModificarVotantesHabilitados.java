@@ -10,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -39,10 +37,8 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Votante;
 import src.main.java.admin.Coordinador;
-import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.buscadores.VentanaBuscarPerson;
+import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.buscadores.VentanaBuscarPersonModificar;
 import src.main.java.admin.departamento.Item;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -50,6 +46,7 @@ import src.main.java.admin.validator.VotantesHabilitadosValidator;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import entity.Votante;
 
 public class VentanaModificarVotantesHabilitados extends JFrame implements
 		ActionListener {
@@ -224,7 +221,7 @@ public class VentanaModificarVotantesHabilitados extends JFrame implements
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MenuPrincipal menuprincipal = new MenuPrincipal();
+				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
 				menuprincipal.setVisible(true);
 				dispose();
 			}

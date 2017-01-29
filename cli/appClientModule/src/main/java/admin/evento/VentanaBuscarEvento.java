@@ -110,12 +110,13 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			}
 		});
 		
-		if(PreLogin.eventoVigente() == 0){
-			readOnly=false;
-		}
-		else{
-			readOnly=true;
-		}
+//		if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta, evento) == 0){
+//			readOnly=false;
+//		}
+//		else{
+//			readOnly=true;
+//		}
+		readOnly=false;
 		
 		e = new Evento();
 		
@@ -290,6 +291,13 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					
 					System.out.println();
 					
+					if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta, evento) == 0){
+						readOnly=false;
+					}
+					else{
+						readOnly=true;
+					}
+					
 					if (MenuPrincipal.reporte){
 						Reportes reportes = new Reportes();
 						reportes.setVisible(true);
@@ -303,7 +311,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					}
 
 				}
-				//System.out.println("Selected: " + selectedData);
+				//System.out.println("Selected: " + selectedData);5
 				
 				
 
@@ -496,14 +504,14 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					btnModificar.setVisible(true);
 				}
 		
-		/*if(readOnly==true){
+		if(readOnly==true){
 			btnNuevo.setEnabled(false);
 			btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
 			btnEliminar.setEnabled(false);
 			btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
 			btnModificar.setEnabled(false);
 			btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
-		}*/
+		}
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);

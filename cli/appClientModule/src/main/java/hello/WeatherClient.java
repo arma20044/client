@@ -1,6 +1,12 @@
 package src.main.java.hello;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+
 import hello.wsdl.AutenticarRequest;
 import hello.wsdl.AutenticarResponse;
 import hello.wsdl.ConsultarRequest;
@@ -23,8 +29,14 @@ public class WeatherClient extends WebServiceGatewaySupport {
 //	apunta a ubuntu maquina virtual
 //	public final static String URL = "http://192.168.1.103:8080/";
 	
-	public final static String URL = "http://169.168.0.151:8080/";
+//3 enero 2017	public final static String URL = "http://169.168.0.151:8080/";
 	
+	///test tcpmon
+	//public final static String URL = "https://localhost/";
+	///test tcpmon
+	
+	public final static String URL = "https://ubuntu/";  //con maquina virtual https
+	//public final static String URL = "http://localhost:8080/";  //sin maquina virtual http
 
 	public ConsultarResponse getConsultarResponse(ConsultarRequest consulta) {
 		ConsultarRequest request = new ConsultarRequest();
@@ -87,6 +99,19 @@ public class WeatherClient extends WebServiceGatewaySupport {
 
 		System.out.println();
 		System.out.println("Requesting script  " + queryGenerico.getTipoQueryGenerico());
+		
+		/*try {
+			java.net.URL url=new java.net.URL("http://localhost:8080");
+			HttpURLConnection httpURLConnection=(HttpURLConnection) url.openConnection();
+			InputStream inputStream=httpURLConnection.getInputStream();
+			System.out.println(inputStream);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 
 		QueryGenericoResponse response = (QueryGenericoResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request,

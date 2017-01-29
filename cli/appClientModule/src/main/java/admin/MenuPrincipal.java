@@ -29,10 +29,14 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	 */
 	public String textoIntroduccion = "";
 	
+	
+	
 	public MenuPrincipal() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imgs/paraguay.png")));
 		
 		reporte = false;
+		
+		VentanaBuscarEvento.readOnly = false;
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

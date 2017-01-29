@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Reportes;
 import src.main.java.admin.candidato.Item;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.genero.VentanaRegistroGenero;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -167,7 +168,9 @@ public class CantidadVotosElegir extends JFrame {
 		// +
 		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
 
-		query.setQueryGenerico("select id_tipo_lista, descripcion from ucsaws_tipo_lista order by descripcion");
+		query.setQueryGenerico("select id_tipo_lista, descripcion from ucsaws_tipo_lista "
+				+ " where id_evento = "+ VentanaBuscarEvento.evento +
+				" order by descripcion");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);

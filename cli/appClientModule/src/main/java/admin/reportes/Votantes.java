@@ -3,6 +3,7 @@ package src.main.java.admin.reportes;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -13,17 +14,21 @@ import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRMapCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.joda.time.DateTime;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reporte.log.ReporteLog;
@@ -37,7 +42,9 @@ public class Votantes {
     }
  
     public void start() {
-        try {                                           
+        try {                      
+        	
+        	String reportName = "ListadoVotantes";
             // load report location
         	
         	File a = new File("jasperTemplates/votantes.jasper");
@@ -80,6 +87,18 @@ public class Votantes {
             else{
             // view report to UI
             JasperViewer.viewReport(jasperPrint, false);
+            
+         // exports report to pdf
+            	//C:\Users\arma2\Desktop
+            	
+            /*	DateTime s = new org.joda.time.DateTime(); 
+            	String o = String.valueOf(s.getDayOfMonth())+String.valueOf(s.getMonthOfYear())+String.valueOf(s.getYear())
+            			+String.valueOf(s.getHourOfDay())+String.valueOf(s.getMinuteOfHour())+String.valueOf(s.getSecondOfMinute());
+            
+         			
+         			JasperExportManager.exportReportToPdfFile(jasperPrint, "c:/Users/arma2/Desktop/ExportPDF/"+reportName+o+".pdf"); 
+
+         	*/		
             ReporteLog log = new ReporteLog();
             
             log.insert(a.getName().substring(0,a.getName().length()-7));

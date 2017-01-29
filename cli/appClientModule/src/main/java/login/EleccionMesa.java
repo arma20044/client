@@ -553,7 +553,7 @@ public class EleccionMesa extends JFrame {
 //					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
 //							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					query.setQueryGenerico("select id_user, id_persona  from ucsaws_users u "
+					query.setQueryGenerico("select id_user, id_persona, id_evento  from ucsaws_users u "
 							+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
 					
 					
@@ -594,6 +594,8 @@ public class EleccionMesa extends JFrame {
 						
 						
 						idPersona =  (int) (long)  fil.get(1);
+						
+						idEvento = (int) (long)  fil.get(2);
 
 					result = true;
 

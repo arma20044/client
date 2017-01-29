@@ -18,6 +18,11 @@ public class FechaDeOtroPaisParametrizado {
 	    	DateResult = dt.withZone(DateTimeZone.forID("Europe/Madrid")); 
 	    }
 	    
+	    if (Pais.compareTo("BRAZIL")==0){
+	    	DateResult = dt.withZone(DateTimeZone.forID("America/Sao_Paulo"));
+	    }
+	    	
+	    
 	   // if (Pais.compareTo(""))
 	    
 	    System.out.println(DateResult.getZone());
