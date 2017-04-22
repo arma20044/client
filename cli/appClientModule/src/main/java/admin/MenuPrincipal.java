@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,7 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.Close;
 import src.main.java.login.Login;
+
 import java.awt.Toolkit;
 
 public class MenuPrincipal extends JFrame implements ActionListener{
@@ -32,6 +36,16 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 	
 	
 	public MenuPrincipal() {
+		
+		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent we)
+		    { 
+		    	Close close = new Close();
+		    	close.cerrarAplicacion(we);
+		    }
+		});
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imgs/paraguay.png")));
 		
 		reporte = false;
@@ -39,7 +53,7 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		VentanaBuscarEvento.readOnly = false;
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
 				+ "de dise�o MVC.\n\n"
