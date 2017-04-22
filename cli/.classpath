@@ -47,5 +47,10 @@
 	<classpathentry kind="lib" path="lib/joda-time-2.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/arma2/Desktop/jxl-2.6.12.jar"/>
 	<classpathentry kind="lib" path="C:/Users/arma2/Desktop/swing-layout-1.0.4.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/seaglasslookandfeel-0.1.6.1.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/napkinlaf-1.2.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/jgoodies-common-1.8.1.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/jgoodies-looks-2.7.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

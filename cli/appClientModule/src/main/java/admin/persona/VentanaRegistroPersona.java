@@ -49,6 +49,9 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -109,6 +112,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	
 	private DefaultTableModel dm;
 	private JTextField txtEmail;
+	
+	JDateChooser j = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -122,6 +127,11 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 		});
 
+		JTextFieldDateEditor editor = (JTextFieldDateEditor) j.getDateEditor();
+	    editor.setEditable(false);
+	    j.setBounds(343, 114, 100, 26);
+	    getContentPane().add(j);
+	    
 		botonGuardar = new JButton();
 		botonGuardar.setToolTipText("Guardar");
 		botonGuardar.setIcon(new ImageIcon(VentanaRegistroPersona.class

@@ -10,17 +10,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.joda.time.DateTime;
@@ -222,16 +228,37 @@ public class PreLogin extends javax.swing.JFrame {
 
 
   
-    public static void main(String args[]) {
+    public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
     	try {   
+    		
     		BasicConfigurator.configure();
-    		  javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");               
+    		  javax.swing.UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");               
     		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
     		  java.util.logging.Logger.getLogger(PreLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     		}
+    	
+    	
+    	//UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PreLogin().setVisible(true);
+                //new PreLogin().setVisible(true);
+                PreLogin frame = new PreLogin();
+                frame.setVisible(true);
+            	frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				frame.addWindowListener(new WindowAdapter() {
+				    @Override
+				    public void windowClosing(WindowEvent we)
+				    { 
+				        String ObjButtons[] = {"Sí","No"};
+				         
+				       
+				        int PromptResult = JOptionPane.showOptionDialog(null,"Desea Salir?","Sistema E-vote: Paraguay Elecciones 2015.",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,ObjButtons,ObjButtons[1]);
+				        if(PromptResult==JOptionPane.YES_OPTION)
+				        {
+				            System.exit(0);
+				        }
+				    }
+				});
             }
         });
     }

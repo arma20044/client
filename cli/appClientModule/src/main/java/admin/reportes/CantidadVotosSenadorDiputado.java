@@ -41,11 +41,11 @@ public class CantidadVotosSenadorDiputado {
     	if (idTipo == 1){
     		P_Candidato_Desc_String = "Presidente de la Republica del Paraguay";
     	}
-    	else if (idTipo == 7 ){
+    	else if (idTipo == 3 ){
     		
     		P_Candidato_Desc_String =  "DIPUTADO";
     	}
-    	else if (idTipo == 8){
+    	else if (idTipo == 2){
     		P_Candidato_Desc_String =  "SENADOR";
     	}
     }

@@ -158,8 +158,8 @@ public class ImportarPersona extends JDialog {
         			//loop from 0 row to 4
         			for(int i=1;i<rows;i++) 
         			 {
-        			 nombres=jTable1.getValueAt(i,0).toString(); // it get value from 0 row and 0 column
-        			 apellidos=jTable1.getValueAt(i,1).toString();  // it get value from 0 row and 1 column
+        			 nombres=jTable1.getValueAt(i,0).toString().toUpperCase(); // it get value from 0 row and 0 column
+        			 apellidos=jTable1.getValueAt(i,1).toString().toUpperCase();  // it get value from 0 row and 1 column
         			 fecha_nacimiento= jTable1.getValueAt(i,2).toString();  
         			 id_pais_origen= jTable1.getValueAt(i,3).toString();  
         			 id_pais_actual = jTable1.getValueAt(i,4).toString();
@@ -169,14 +169,14 @@ public class ImportarPersona extends JDialog {
         			 id_nacionalidad = jTable1.getValueAt(i,8).toString();
         			 //id_evento = jTable1.getValueAt(i,9).toString();
         			 ci = jTable1.getValueAt(i,10).toString();
-        			 email = jTable1.getValueAt(i,11).toString(); 
+        			 email = jTable1.getValueAt(i,11).toString().toLowerCase(); 
         			 
         			 //validar//
         			 PersonaValidator pv = new PersonaValidator();
         			 try {
 						if (pv.ValidarCodigo(ci) == true){
 							JOptionPane.showMessageDialog(null,
-									 "Ya existe el genero " + ci,
+									 "Ya existe una Persona con la Cédula Nro.:  " + ci,
 									"Información",JOptionPane.WARNING_MESSAGE);
 							break;
 						}
