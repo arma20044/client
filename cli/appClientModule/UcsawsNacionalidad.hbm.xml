@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/04/2017 03:26:34 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsNacionalidad" table="ucsaws_nacionalidad" schema="public" optimistic-lock="version">
+        <id name="idNacionalidad" type="integer">
+            <column name="id_nacionalidad" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ucsawsPais" class="entity.UcsawsPais" fetch="select">
+            <column name="id_pais" not-null="true" />
+        </many-to-one>
+        <property name="codNacionalidad" type="string">
+            <column name="cod_nacionalidad" length="3" />
+        </property>
+        <property name="descNacionalidad" type="string">
+            <column name="desc_nacionalidad" length="100" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="fchIns" type="timestamp">
+            <column name="fch_ins" length="29" />
+        </property>
+        <property name="fchUpd" type="timestamp">
+            <column name="fch_upd" length="29" />
+        </property>
+        
+         <many-to-one name="ucsawsEvento" class="entity.UcsawsEvento" fetch="select">
+            <column name="idEvento" not-null="true" />
+        </many-to-one>
+       
+    </class>
+</hibernate-mapping>

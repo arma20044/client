@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/04/2017 08:25:44 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Users" table="users" schema="public" optimistic-lock="version">
+        <id name="userid" type="int">
+            <column name="userid" />
+            <generator class="assigned" />
+        </id>
+        <property name="firstname" type="string">
+            <column name="firstname" not-null="true" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" />
+        </property>
+        <property name="dob" type="timestamp">
+            <column name="dob" length="29" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" />
+        </property>
+    </class>
+</hibernate-mapping>

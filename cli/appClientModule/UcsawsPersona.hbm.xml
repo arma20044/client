@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/04/2017 03:26:34 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsPersona" table="ucsaws_persona" schema="public" optimistic-lock="version">
+        <id name="idPersona" type="integer">
+            <column name="id_persona" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ucsawsGenero" class="entity.UcsawsGenero" fetch="select" lazy="proxy">
+            <column name="id_genero" not-null="true" />
+        </many-to-one>
+        <many-to-one name="ucsawsNacionalidad" class="entity.UcsawsNacionalidad" fetch="select" lazy="proxy">
+            <column name="id_nacionalidad" not-null="true" />
+        </many-to-one>
+        <many-to-one name="ucsawsPaisByIdPaisActual" class="entity.UcsawsPais" fetch="select" lazy="proxy">
+            <column name="id_pais_actual" not-null="true" />
+        </many-to-one>
+        <many-to-one name="ucsawsPaisByIdPaisOrigen" class="entity.UcsawsPais" fetch="select" lazy="proxy">
+            <column name="id_pais_origen" not-null="true" />
+        </many-to-one>
+        <property name="nombre" type="string">
+            <column name="nombre" length="50" not-null="true" />
+        </property>
+        <property name="apellido" type="string">
+            <column name="apellido" length="50" not-null="true" />
+        </property>
+        <property name="fechaNacimiento" type="timestamp">
+            <column name="fecha_nacimiento" length="29" not-null="true" />
+        </property>
+        <property name="fchIns" type="timestamp">
+            <column name="fch_ins" length="29" not-null="true" />
+        </property>
+        <property name="fchUpd" type="timestamp">
+            <column name="fch_upd" length="29" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" not-null="true" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="telLineaBaja" type="string">
+            <column name="tel_linea_baja" length="20" />
+        </property>
+        <property name="telCelular" type="string">
+            <column name="tel_celular" length="20" />
+        </property>
+         <many-to-one name="ucsawsEvento" class="entity.UcsawsEvento" fetch="select"  lazy="proxy">
+            <column name="id_evento" not-null="true" />
+        </many-to-one>
+        <property name="ci" type="big_decimal">
+            <column name="ci" precision="131089" scale="0" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="30" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

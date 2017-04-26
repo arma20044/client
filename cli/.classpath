@@ -52,5 +52,15 @@
 	<classpathentry kind="lib" path="appClientModule/lib/napkinlaf-1.2.jar"/>
 	<classpathentry kind="lib" path="appClientModule/lib/jgoodies-common-1.8.1.jar"/>
 	<classpathentry kind="lib" path="appClientModule/lib/jgoodies-looks-2.7.0.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/javax.transaction.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/antlr.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/javassist-3.12.1.GA.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/slf4j-api-2.0.99.jar"/>
+	<classpathentry kind="lib" path="appClientModule/lib/slf4j-simple-1.6.99.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

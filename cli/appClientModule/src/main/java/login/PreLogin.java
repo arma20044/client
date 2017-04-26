@@ -12,6 +12,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.AbstractAction;
@@ -29,6 +31,10 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.log4j.BasicConfigurator;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.jfree.date.DateUtilities;
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
@@ -36,6 +42,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsEvento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.DeQuePais;
 import src.main.java.admin.utils.FechaDeOtroPaisParametrizado;
@@ -316,7 +323,7 @@ public class PreLogin extends javax.swing.JFrame {
 
 	//se adapta para que verifique el pais desde donde se esta accediendo
 	public static Integer eventoVigente() {
-		
+		String result ="";
 		
 		//obtener pais desde donde se quiere votar
 		DeQuePais ip = new DeQuePais();
@@ -324,6 +331,7 @@ public class PreLogin extends javax.swing.JFrame {
 		System.out.println(MiPais);
 		//
 		String fechaHusoHora= "";
+		Date fechaHusoHoraDate;
 		
 		if(!(MiPais.compareTo("PARAGUAY")==0)){
 		//obtener huso horario
@@ -339,7 +347,35 @@ public class PreLogin extends javax.swing.JFrame {
 		
 		}
 		else{
-			fechaHusoHora = "now()";
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+	        String dateInString = fechaHusoHora;
+
+	        
+
+	            Date date = new Date();
+				try {
+					date = formatter.parse(dateInString);
+				} catch (java.text.ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            System.out.println(date);
+	            System.out.println(formatter.format(date));
+
+	        
+
+	       
+			fechaHusoHora = "current_date";
+			
+			ObjectMapper mapperObj = new ObjectMapper();
+			String jsonStr = "";
+			try {
+				// get Employee object as a json string
+				jsonStr = mapperObj.writeValueAsString(date);
+				System.out.println(jsonStr);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 		}
 
 		JSONArray filas = new JSONArray();
@@ -354,19 +390,13 @@ public class PreLogin extends javax.swing.JFrame {
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
 		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(1);
 		System.out.println(Login.userLogeado);
 		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
 		
 		
 		if((MiPais.compareTo("PARAGUAY")==0)){
-		query.setQueryGenerico("select id_evento, descripcion "
-				+ " from ucsaws_evento where ( to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI') between to_char(fch_desde, 'DD/MM/YYYY HH24:MI')   "
-				+ " and to_char(fch_hasta, 'DD/MM/YYYY HH24:MI'))  "
-				//+ ">= to_char("+ fechaHusoHora +", 'DD/MM/YYYY HH24:MI')"
-					//	+ " )"
-				//+ " or (fch_hasta  < now()  )"
-				);
+		query.setQueryGenerico(jsonStr);
 
 		}else{
 			query.setQueryGenerico("select id_vigencia, id_pais "
@@ -388,35 +418,47 @@ public class PreLogin extends javax.swing.JFrame {
 
 		String generoAntesPartir = response.getQueryGenericoResponse();
 		
-		if (generoAntesPartir.compareTo("[]")==0){
+		if (generoAntesPartir.compareTo("NO")==0){
 			return 0;
 		}
 		
 		else{
 			
-			
+			//json string to java object;
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonInString  =response.getQueryGenericoResponse();
+			try {
+				UcsawsEvento fecha = mapper.readValue(jsonInString, UcsawsEvento.class);
+				result = fecha.getIdEvento().toString();
+			} catch (JsonParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (JsonMappingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		
 
-		try {
-			ob = j.parse(generoAntesPartir);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
-		filas = (JSONArray) ob;
-
-		fil = (JSONArray) filas.get(0);
-
-		String result = fil.get(0).toString();
+		 
 		
 		VentanaBuscarEvento.evento = result;
-
+		
 		return Integer.parseInt(result);
 		
 		}
+		}
+		return null;
+		
+		}
+		
+	
+	
 
-	}
 	
 	public static Integer eventoVigenteConParametros(String fechaDesde , String fechaHasta, String idEvento) {
 

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/04/2017 03:26:34 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsUsers" table="ucsaws_users" schema="public" optimistic-lock="version">
+        <id name="idUser" type="integer">
+            <column name="id_user" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ucsawsPersona" class="entity.UcsawsPersona" fetch="select" lazy="proxy">
+            <column name="id_persona" not-null="true" />
+        </many-to-one>
+        <property name="fchIns" type="timestamp">
+            <column name="fch_ins" length="29" not-null="true" />
+        </property>
+        <property name="fchUpd" type="timestamp">
+            <column name="fch_upd" length="29" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" not-null="true" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="pass" type="string">
+            <column name="pass" length="15" />
+        </property>
+        <property name="esAdmin" type="java.lang.Boolean">
+            <column name="es_admin" />
+        </property>
+        <property name="usuario" type="string">
+            <column name="usuario" length="15" />
+        </property>
+   
+        
+        <property name="idEvento" type="integer">
+            <column name="id_evento" length="20" />
+        </property>
+        
+        <property name="idRol" type="integer">
+            <column name="id_rol" length="20" />
+        </property>
+        
+        
+    </class>
+</hibernate-mapping>

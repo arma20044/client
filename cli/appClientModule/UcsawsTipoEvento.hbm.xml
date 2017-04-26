@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/04/2017 10:29:02 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsTipoEvento" table="ucsaws_tipo_evento" schema="public" optimistic-lock="version">
+        <id name="idTipoEvento" type="integer">
+            <column name="id_tipo_evento" />
+            <generator class="assigned" />
+        </id>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="1000" />
+        </property>
+        <property name="fchIns" type="timestamp">
+            <column name="fch_ins" length="29" not-null="true" />
+        </property>
+        <property name="fchUpd" type="timestamp">
+            <column name="fch_upd" length="29" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" not-null="true" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="idEvento" type="integer">
+            <column name="id_evento" length="20" />
+        </property>
+    </class>
+</hibernate-mapping>

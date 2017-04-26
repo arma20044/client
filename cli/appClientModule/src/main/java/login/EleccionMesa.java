@@ -15,12 +15,18 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsEvento;
+import entity.UcsawsUsers;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -45,12 +51,14 @@ import javax.swing.JPasswordField;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
 
 public class EleccionMesa extends JFrame {
 
 	private JPanel contentPane;
 	
-	public static Integer evento = obtenerEventoVigente();
+	public static Integer evento = //obtenerEventoVigente();
+			Integer.parseInt(VentanaBuscarEvento.evento);
 	
 	public static Integer Mesa = 0;
 	
@@ -534,6 +542,24 @@ public class EleccionMesa extends JFrame {
 				}
 				
 				private static Boolean verificarUsuPass(String user, String pass) {
+					
+					UcsawsUsers users = new UcsawsUsers();
+					users.setUsuario(user);
+					users.setPass(pass);
+					//parseo json
+					ObjectMapper mapperObj = new ObjectMapper();
+					String jsonStr = "";
+					try {
+						// get Employee object as a json string
+						jsonStr = mapperObj.writeValueAsString(users);
+						System.out.println(jsonStr);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				}
+					
+					
+					
 					Boolean result = false;
 
 					JSONArray filas = new JSONArray();
@@ -548,15 +574,15 @@ public class EleccionMesa extends JFrame {
 					QueryGenericoRequest query = new QueryGenericoRequest();
 
 					// para registrar se inserta el codigo es 1
-					query.setTipoQueryGenerico(2);
+					query.setTipoQueryGenerico(5);
 					System.out.println(Login.userLogeado);
 //					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
 //							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					query.setQueryGenerico("select id_user, id_persona, id_evento  from ucsaws_users u "
-							+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
+					//query.setQueryGenerico("select id_user, id_persona, id_evento  from ucsaws_users u "
+					//		+ "where usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					
+					query.setQueryGenerico(jsonStr);
 					
 				 
 
@@ -568,7 +594,7 @@ public class EleccionMesa extends JFrame {
 
 					String generoAntesPartir = response.getQueryGenericoResponse();
 					
-					if (generoAntesPartir.compareTo("[]") == 0){
+					if (generoAntesPartir.compareTo("NO") == 0){
 						   JOptionPane.showMessageDialog(null,
 			                          "El usuario y la constraseña no coinciden, revise sus datos.",
 			                          "ERROR.",
@@ -576,28 +602,46 @@ public class EleccionMesa extends JFrame {
 						   return result;
 					}
 					else{
-						
+						//json string to obj
+						ObjectMapper mapper = new ObjectMapper();
+						String jsonInString  =response.getQueryGenericoResponse();
+
 						try {
-							ob = j.parse(generoAntesPartir);
-						} catch (ParseException e) {
+							System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonInString));
+						} catch (JsonGenerationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JsonMappingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						
+						try {
+							UcsawsUsers u = mapper.readValue(jsonInString, UcsawsUsers.class);
+							//result = u.getIdEvento().toString();
+							idPersona = u.getUcsawsPersona().getIdPersona();
+							idEvento = u.getIdEvento();
+							result = true;
+						} catch (JsonParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (JsonMappingException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						
+						//idPersona =  (int) (long)  fil.get(1);
+						
+						//idEvento = (int) (long)  fil.get(2);
 
-						filas = (JSONArray) ob;
-
-						fil = (JSONArray) filas.get(0);
-						
-						//Mesa = (Integer) fil.get(1);
-						
-					//	Mesa = (int) (long)  fil.get(1);
-						
-						
-						idPersona =  (int) (long)  fil.get(1);
-						
-						idEvento = (int) (long)  fil.get(2);
-
-					result = true;
+					
 
 					return result;
 

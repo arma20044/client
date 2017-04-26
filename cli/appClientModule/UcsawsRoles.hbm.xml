@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/04/2017 08:46:05 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsRoles" table="ucsaws_roles" schema="public" optimistic-lock="version">
+        <id name="idRol" type="integer">
+            <column name="id_rol" />
+           
+            <generator class="sequence">
+        <param name="sequence">ucsaws_roles_seq</param>
+    </generator>
+        </id>
+        <many-to-one name="ucsawsEvento" class="entity.UcsawsEvento" lazy="false" fetch="select">
+            <column name="id_evento" not-null="true" />
+        </many-to-one>
+        <property name="codigo" type="string">
+            <column name="codigo" length="3" />
+        </property>
+        <property name="descripcion" type="string">
+            <column name="descripcion" length="20" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="fchIns" type="time">
+            <column name="fch_ins" length="15" />
+        </property>
+        <property name="fchUpd" type="time">
+            <column name="fch_upd" length="15" />
+        </property>
+    </class>
+</hibernate-mapping>
