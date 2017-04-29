@@ -20,7 +20,6 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 @Repository
-@Transacional()
 public class EventoDAO {
 	
 	

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/04/2017 09:24:27 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="entity.UcsawsDistrito" table="ucsaws_distrito" schema="public" optimistic-lock="version">
+        <id name="idDistrito" type="int">
+            <column name="id_distrito" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ucsawsDepartamento" class="entity.UcsawsDepartamento" fetch="select">
+            <column name="id_departamento" not-null="true" />
+        </many-to-one>
+        <property name="descDistrito" type="string">
+            <column name="desc_distrito" length="100" />
+        </property>
+        <property name="nroDistrito" type="string">
+            <column name="nro_distrito" length="2" />
+        </property>
+        <property name="usuarioIns" type="string">
+            <column name="usuario_ins" length="20" />
+        </property>
+        <property name="usuarioUpd" type="string">
+            <column name="usuario_upd" length="20" />
+        </property>
+        <property name="fchIns" type="timestamp">
+            <column name="fch_ins" length="29" />
+        </property>
+        <property name="fchUpd" type="timestamp">
+            <column name="fch_upd" length="29" />
+        </property>
+         <many-to-one name="ucsawsEvento" class="entity.UcsawsEvento" fetch="select"  lazy="proxy">
+            <column name="id_evento" not-null="true" />
+        </many-to-one>
+        
+    </class>
+</hibernate-mapping>

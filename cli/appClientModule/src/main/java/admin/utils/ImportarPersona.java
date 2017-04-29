@@ -27,6 +27,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.persona.VentanaBuscarPersona;
 import src.main.java.login.Login;
 import src.main.java.proceso.voto.VentanaDiputados;
 import src.main.java.proceso.voto.VentanaPresidente;

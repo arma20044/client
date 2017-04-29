@@ -1,56 +1,54 @@
 package src.main.java.proceso.voto;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-import hello.wsdl.Voto;
 import hello.wsdl.ConsultarRequest;
 import hello.wsdl.ConsultarResponse;
+import hello.wsdl.QueryGenericoRequest;
+import hello.wsdl.QueryGenericoResponse;
 import hello.wsdl.VotarRequest;
 import hello.wsdl.VotarResponse;
+import hello.wsdl.Voto;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsListas;
+import entity.UcsawsTipoLista;
 import scr.main.java.admin.mail.SendEmailGenerico;
-import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
 
-
-import javax.swing.UIManager;
-
-import java.awt.Color;
-
 public class VentanaConfirmacionDiputados extends JDialog {
 	private Container contenedor;
 	JLabel labelTitulo;
 	private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado,
-			lblMensaje , lblCargar;
+			lblMensaje, lblCargar;
 
 	// public static Integer idLocal;
 
@@ -70,99 +68,149 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		JButton button = new JButton("SI");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				final SwingWorker worker = new SwingWorker(){
-					
+				final SwingWorker worker = new SwingWorker() {
+
 					@Override
 					protected Object doInBackground() throws Exception {
-						
+
 						int ite = 0;
-						//JFrame frame = new JFrame("Test");
-						//new JLabel("Aguarde... ", new ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")), JLabel.CENTER);
-						//JLabel lblCargar = new JLabel();
+						// JFrame frame = new JFrame("Test");
+						// new JLabel("Aguarde... ", new
+						// ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")),
+						// JLabel.CENTER);
+						// JLabel lblCargar = new JLabel();
 						lblCargar.setVisible(true);
-						//lblCargar.setBounds(80, 120, 141, 14);
-						//lblCargar.setText("Senador Lista: " + VentanaSenadores.senadores);
-						//getContentPane().add(lblCargar);
-					    //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					   // frame.setSize(200, 200);
-					   //frame.setLocationRelativeTo(getParent());
-					   // frame.setLocationRelativeTo(null);
-					    //frame.setLocation(x, y);
-					   // frame.setUndecorated(true);
-						//while (ite < 10000){
-							//ite = ite + 1;
-							//ejemploFrame.getTextField().setText("" + ite);
-							
-						    
+						// lblCargar.setBounds(80, 120, 141, 14);
+						// lblCargar.setText("Senador Lista: " +
+						// VentanaSenadores.senadores);
+						// getContentPane().add(lblCargar);
+						// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						// frame.setSize(200, 200);
+						// frame.setLocationRelativeTo(getParent());
+						// frame.setLocationRelativeTo(null);
+						// frame.setLocation(x, y);
+						// frame.setUndecorated(true);
+						// while (ite < 10000){
+						// ite = ite + 1;
+						// ejemploFrame.getTextField().setText("" + ite);
 
-						    
-						    
-						  //  frame.setVisible(true);
-						//}	
-						
+						// frame.setVisible(true);
+						// }
 
-				// idMesa = obtenerMesa(EleccionMesa.Mesa, EleccionMesa.evento,
-				// Integer.parseInt(EleccionMesa.local));
-				idMesa = EleccionMesa.Mesa;
+						// idMesa = obtenerMesa(EleccionMesa.Mesa,
+						// EleccionMesa.evento,
+						// Integer.parseInt(EleccionMesa.local));
 
-				if (!(VentanaPresidente.presidente.compareTo("BLANCO") == 0)) {
-					Integer idListaPresidete = obtenerLista(1,
-							Integer.parseInt(VentanaPresidente.presidente));
+						idMesa = EleccionMesa.Mesa;
 
-					votar(idListaPresidete, idMesa);
-					System.out.println("Se voto presidente");
-				} else {
+						System.out
+								.println("Presidente Seleccionado Lista N° : "
+										+ VentanaPresidente.presidente);
+						System.out.println("Senador Seleccionado Lista N° : "
+								+ VentanaSenadores.senadores);
+						System.out
+								.println("Presidente Seleccionado Lista N° : "
+										+ VentanaDiputados.diputados);
 
-					Integer idTipoLista = 1; // para presidente
+						Integer idTipoListaPresidente = obtenerTipoListaPorCodigo(
+								"PRE", VentanaPresidente.presidente)
+								.getIdTipoLista();
+						Integer idTipoListaSenador = obtenerTipoListaPorCodigo(
+								"SEN", VentanaSenadores.senadores)
+								.getIdTipoLista();
+						Integer idTipoListaDiputado = obtenerTipoListaPorCodigo(
+								"DIP", VentanaDiputados.diputados)
+								.getIdTipoLista();
 
-					votarBlanco(idTipoLista, idMesa);
-					System.out.println("Se voto presidente en blanco");
-				}
+						if (!(VentanaPresidente.presidente.compareTo("BLANCO") == 0)) {
+							// Integer idListaPresidete = obtenerLista(1,
+							// Integer
+							// .parseInt(VentanaPresidente.presidente));
+							try {
+								votar(idTipoListaPresidente, idMesa);
+								System.out.println("Se voto presidente");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						} else {
 
-				if (!(VentanaSenadores.senadores.compareTo("BLANCO") == 0)) {
-					Integer idListaSenador = obtenerLista(3,
-							Integer.parseInt(VentanaSenadores.senadores));
+							// Integer idTipoLista =
+							// obtenerTipoListaPorCodigo("PRE").getIdTipoLista();
+							// // para presidente
+							try {
+								votarBlanco(idTipoListaPresidente, idMesa);
+								System.out
+										.println("Se voto presidente en blanco");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						}
 
-					votar(idListaSenador, idMesa);
-					System.out.println("Se voto Senador");
-				} else {
-					Integer idTipoLista = 8; // para senador
+						if (!(VentanaSenadores.senadores.compareTo("BLANCO") == 0)) {
+							// Integer idListaSenador = obtenerLista(3, Integer
+							// .parseInt(VentanaSenadores.senadores));
+							try {
+								votar(idTipoListaSenador, idMesa);
+								System.out.println("Se voto Senador");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						} else {
+							// Integer idTipoLista =
+							// obtenerTipoListaPorCodigo("SEN").getIdTipoLista();
+							// // para senador
+							try {
+								votarBlanco(idTipoListaSenador, idMesa);
+								System.out.println("Se voto senador en blanco");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						}
 
-					votarBlanco(idTipoLista, idMesa);
-					System.out.println("Se voto senador en blanco");
-				}
+						if (!(VentanaDiputados.diputados.compareTo("BLANCO") == 0)) {
+							// Integer idListaDiputado = obtenerLista(2, Integer
+							// .parseInt(VentanaDiputados.diputados));
+							try {
+								votar(idTipoListaDiputado, idMesa);
+								System.out.println("Se voto Diputado");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						} else {
+							// Integer idTipoLista =
+							// obtenerTipoListaPorCodigo("DIP").getIdTipoLista();
+							// // para diputado
+							try {
+								votarBlanco(idTipoListaDiputado, idMesa);
+								System.out
+										.println("Se voto diputado en blanco");
+							} catch (Exception e) {
+								System.out.println(e);
+							}
+						}
 
-				if (!(VentanaDiputados.diputados.compareTo("BLANCO") == 0)) {
-					Integer idListaDiputado = obtenerLista(2,
-							Integer.parseInt(VentanaDiputados.diputados));
+						try {
+							actualizarVotante(VentanaPrincipalVotante.idVotante);
+							// eliminarVotanteHabilitado();
 
-					votar(idListaDiputado, idMesa);
-					System.out.println("Se voto Diputado");
-				}
-				else {
-					Integer idTipoLista = 7; // para diputado
+							// enviar notifiacion
+							// SendEmailGenerico enviarNotificacion = new
+							// SendEmailGenerico();
+							// enviarNotificacion.enviarNotificacion(Login.email);
+							SendEmailGenerico.NewEnviar(Login.email);
+						} catch (Exception e) {
+							System.out.println(e);
+						}
+						VentanaVotoFinal end = new VentanaVotoFinal();
+						end.setVisible(true);
+						dispose();
+						// frame.setVisible(false);
+						lblCargar.setVisible(false);
+						return null;
 
-					votarBlanco(idTipoLista, idMesa);
-					System.out.println("Se voto diputado en blanco");
-				}
-
-				actualizarVotante();
-				// eliminarVotanteHabilitado();
-				
-				//enviar notifiacion
-				//SendEmailGenerico enviarNotificacion = new SendEmailGenerico();
-				//enviarNotificacion.enviarNotificacion(Login.email);
-				SendEmailGenerico.NewEnviar(Login.email);
-
-				VentanaVotoFinal end = new VentanaVotoFinal();
-				end.setVisible(true);
-				dispose();
-				//frame.setVisible(false);
-				lblCargar.setVisible(false);
-				return null;
-			}	
-		};
-		worker.execute();
+					}
+				};
+				worker.execute();
 			}
 		});
 		button.setBounds(127, 227, 43, 23);
@@ -257,13 +305,13 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		lblMensaje.setFont(UIManager.getFont("Label.font"));
 		lblMensaje.setBounds(80, 172, 199, 32);
 		getContentPane().add(lblMensaje);
-		
+
 		lblCargar = new JLabel("");
-		lblCargar.setIcon(new ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")));
+		lblCargar.setIcon(new ImageIcon(VentanaConfirmacionDiputados.class
+				.getResource("/imgs/hourglass.gif")));
 		lblCargar.setBounds(29, 68, 264, 147);
 		getContentPane().add(lblCargar);
 		lblCargar.setVisible(false);
-		
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -301,6 +349,23 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 	// Metodo para obtener el ID de lista que fue seleccionado
 	private Integer obtenerLista(int tipoLista, Integer lista) {
+		String result = "";
+		List<Integer> l = new ArrayList();
+		l.add(tipoLista);
+		l.add(lista);
+		l.add(EleccionMesa.evento);
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(l);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -314,11 +379,14 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
 		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(13);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico("select id_lista, nombre_lista"
-				+ " from ucsaws_listas" + " where nro_lista = " + lista
-				+ " and id_tipo_lista = " + tipoLista);
+
+		// query.setQueryGenerico("select id_lista, nombre_lista"
+		// + " from ucsaws_listas" + " where nro_lista = " + lista
+		// + " and id_tipo_lista = " + tipoLista);
+
+		query.setQueryGenerico(jsonStr);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -328,28 +396,35 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 		String generoAntesPartir = response.getQueryGenericoResponse();
 
-		if (generoAntesPartir.compareTo("[]") == 0) {
+		if (generoAntesPartir.compareTo("NO") == 0) {
 
 			// JOptionPane.showMessageDialog(null,
 			// "LA consulta arrojo vacio!!!.");;
 			lblMensaje.setText("Lista: LA consulta arrojo vacio!!!.");
 		}
 
-		else
-
+		else {
+			// json string to java object;
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonInString = generoAntesPartir;
+			// UcsawsListas listar = new UcsawsListas();
 			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (ParseException e) {
+				UcsawsListas listar = mapper.readValue(jsonInString,
+						UcsawsListas.class);
+				result = listar.getIdLista().toString();
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			// return result;
 
-		filas = (JSONArray) ob;
-
-		fil = (JSONArray) filas.get(0);
-
-		String result = fil.get(0).toString();
-
+		}
 		return Integer.parseInt(result);
 
 	}
@@ -407,6 +482,23 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 	private void votar(Integer idLista, Integer idMesa) {
 
+		List<Integer> v = new ArrayList<Integer>();
+		v.add(idLista);
+		v.add(idMesa);
+		v.add(EleccionMesa.evento);
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(v);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		// insertar voto inicioS
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
@@ -418,17 +510,17 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
 		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(1);
+		query.setTipoQueryGenerico(17);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico("INSERT INTO ucsaws_votos ( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-				+ "VALUES (nextval('ucsaws_votos_seq') , "
-				+ idLista
-				+ ","
-				+ idMesa
-				+ " , '"
-				+ Login.userLogeado
-				+ "' , now(), '"
-				+ Login.userLogeado + "' , now())");
+
+		query.setQueryGenerico(jsonStr);
+		/*
+		 * query.setQueryGenerico(
+		 * "INSERT INTO ucsaws_votos ( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
+		 * + "VALUES (nextval('ucsaws_votos_seq') , " + idLista + "," + idMesa +
+		 * " , '" + Login.userLogeado + "' , now(), '" + Login.userLogeado +
+		 * "' , now())");
+		 */
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
@@ -440,6 +532,24 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 	private void votarBlanco(Integer idTipoLista, Integer idMesa) {
 
+		List<Integer> l = new ArrayList<Integer>();
+
+		l.add(idTipoLista);
+		l.add(idMesa);
+		l.add(EleccionMesa.evento);
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(l);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		// insertar voto inicioS
 		Calendar calendar = new GregorianCalendar();
 		int year = calendar.get(Calendar.YEAR);
@@ -453,28 +563,44 @@ public class VentanaConfirmacionDiputados extends JDialog {
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(1);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico("INSERT INTO ucsaws_votos_blanco ( id_voto_blanco, id_tipo_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd, id_evento) "
-				+ "VALUES (nextval('ucsaws_voto_blanco') , "
-				+ idTipoLista
-				+ ","
-				+ idMesa
-				+ " , '"
-				+ Login.userLogeado
-				+ "' , now(), '"
-				+ Login.userLogeado
-				+ "' , now(),"
-				+ EleccionMesa.idEvento
-				+ ")");
+
+		query.setQueryGenerico(jsonStr);
+
+		/*
+		 * query.setQueryGenerico(
+		 * "INSERT INTO ucsaws_votos_blanco ( id_voto_blanco, id_tipo_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd, id_evento) "
+		 * + "VALUES (nextval('ucsaws_voto_blanco') , " + idTipoLista + "," +
+		 * idMesa + " , '" + Login.userLogeado + "' , now(), '" +
+		 * Login.userLogeado + "' , now()," + EleccionMesa.idEvento + ")");
+		 */
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		// insertar votoS fin
+		if (response.getQueryGenericoResponse().compareToIgnoreCase("NO") == 0) {
+
+		} else if (response.getQueryGenericoResponse()
+				.compareToIgnoreCase("SI") == 0) {
+
+		}
 
 	}
 
-	private void actualizarVotante() {
+	private void actualizarVotante(Integer idVotante) {
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(idVotante);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// actualizar situacion votante inicio
 		Calendar calendar = new GregorianCalendar();
@@ -488,18 +614,92 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
 		// para registrar se inserta el codigo es 1
 		// by default sufrago es 0 cuando no votó, al votar cambia a 1
-		query.setTipoQueryGenerico(3);
+		query.setTipoQueryGenerico(29);
 		System.out.println(Login.userLogeado);
-		query.setQueryGenerico("UPDATE ucsaws_votante"
-				+ " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' "
-				+ " WHERE  id_votante = " + VentanaPrincipalVotante.idVotante
-				+ " and id_mesa = " + idMesa);
+
+		query.setQueryGenerico(jsonStr);
+
+		/*
+		 * query.setQueryGenerico("UPDATE ucsaws_votante" +
+		 * " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' " +
+		 * " WHERE  id_votante = " + VentanaPrincipalVotante.idVotante +
+		 * " and id_mesa = " + idMesa);
+		 */
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
+		if (response.getQueryGenericoResponse().compareToIgnoreCase("SI") == 0) {
+
+		} else if (response.getQueryGenericoResponse()
+				.compareToIgnoreCase("SI") == 0) {
+
+		}
+
 		// actualizar situacion votante fin
+
+	}
+
+	private UcsawsTipoLista obtenerTipoListaPorCodigo(String codigo,
+			String nroListaSeleccionada) {
+
+		List<String> l = new ArrayList<String>();
+		l.add(codigo);
+		l.add(nroListaSeleccionada);
+		l.add(EleccionMesa.evento.toString());
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(l);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		query.setTipoQueryGenerico(21);
+		System.out.println(Login.userLogeado);
+
+		query.setQueryGenerico(jsonStr);
+
+		/*
+		 * query.setQueryGenerico("UPDATE ucsaws_votante" +
+		 * " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' " +
+		 * " WHERE  id_votante = " + VentanaPrincipalVotante.idVotante +
+		 * " and id_mesa = " + idMesa);
+		 */
+
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		UcsawsTipoLista tipoLista = new UcsawsTipoLista();
+		try {
+			tipoLista = mapper.readValue(jsonInString, UcsawsTipoLista.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return tipoLista;
 
 	}
 }

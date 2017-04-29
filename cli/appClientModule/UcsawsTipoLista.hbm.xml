@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/04/2017 09:41:38 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+	<class name="UcsawsTipoLista" table="ucsaws_tipo_lista" schema="public"
+		optimistic-lock="version">
+		<id name="idTipoLista" type="integer">
+			<column name="id_tipo_lista" />
+			<generator class="assigned" />
+		</id>
+		<property name="descripcion" type="string">
+			<column name="descripcion" length="500" not-null="true" />
+		</property>
+		<property name="fchIns" type="timestamp">
+			<column name="fch_ins" length="29" not-null="true" />
+		</property>
+		<property name="fchUpd" type="timestamp">
+			<column name="fch_upd" length="29" />
+		</property>
+		<property name="usuarioIns" type="string">
+			<column name="usuario_ins" length="20" not-null="true" />
+		</property>
+		<property name="usuarioUpd" type="string">
+			<column name="usuario_upd" length="20" />
+		</property>
+		<property name="codigo" type="string">
+			<column name="codigo" length="3" not-null="true" />
+		</property>
+		<many-to-one name="ucsawsEvento" class="entity.UcsawsEvento"
+			fetch="select" lazy="proxy">
+			<column name="id_evento" not-null="true" />
+		</many-to-one>
+
+	</class>
+</hibernate-mapping>

@@ -2,10 +2,5 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
 
 <hibernate-reverse-engineering>
-	<table-filter match-schema="public" match-name="ucsaws_votante" />
-	<table-filter match-schema="public" match-name="ucsaws_departamento" />
-	<table-filter match-schema="public" match-name="ucsaws_distrito" />
-	<table-filter match-schema="public" match-name="ucsaws_zona" />
-	<table-filter match-schema="public" match-name="ucsaws_local" />
-	<table-filter match-schema="public" match-name="ucsaws_mesa" />
+<!-- <table-filter match-schema="public" match-name="ucsaws_votos_blanco" /> -->
 </hibernate-reverse-engineering>

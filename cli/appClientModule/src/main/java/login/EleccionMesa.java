@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 
 import entity.UcsawsEvento;
 import entity.UcsawsUsers;
+import entity.UcsawsVotante;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -102,12 +103,12 @@ public class EleccionMesa extends JFrame {
 				if(!(txtUser.getText().isEmpty()) && !(pfPass.getText().isEmpty()) ){
 				
 				if(verificarUsuPass(txtUser.getText(), pfPass.getText())== true){ //verificar usuario y contraseña
-				if(verificarDatos(idPersona)== true){  //verificar si ya voto
+				if(verificarDatos(idPersona)== false){  //verificar si ya voto
 					
 					if(verificarDatos2(txtUser.getText(), pfPass.getText())== true){
 						
 					
-					if (habilitado == 0){
+					if (habilitado == 1){
 						
 						
 					VentanaPresidente main = new VentanaPresidente();
@@ -117,11 +118,17 @@ public class EleccionMesa extends JFrame {
 					}
 					else{
 						JOptionPane.showMessageDialog(null,
-		                          "VOTANTE - Ud. ya ha votado",
+		                          "VOTANTE - Ud. No está habilitado para votar.",
 		                          "error",
 		                          JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
+				}
+				else{
+					JOptionPane.showMessageDialog(null,
+	                          "revisar",
+	                          "error",
+	                          JOptionPane.INFORMATION_MESSAGE);
 				}
 				}
 				
@@ -473,7 +480,10 @@ public class EleccionMesa extends JFrame {
 				
 				
 				private static Boolean verificarDatos(Integer idPersona) {
+					
 					Boolean result = false;
+					
+					
 
 					JSONArray filas = new JSONArray();
 					JSONArray fil = new JSONArray();
@@ -487,15 +497,13 @@ public class EleccionMesa extends JFrame {
 					QueryGenericoRequest query = new QueryGenericoRequest();
 
 					// para registrar se inserta el codigo es 1
-					query.setTipoQueryGenerico(2);
+					query.setTipoQueryGenerico(6);
 					System.out.println(Login.userLogeado);
-//					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
-//							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					query.setQueryGenerico("select id_votante, id_evento from ucsaws_votante v  "
-							+ "where habilitado = 1 and sufrago = 1 and v.id_persona = " + idPersona + " " );
+//					query.setQueryGenerico("select id_votante, id_evento from ucsaws_votante v  "
+//							+ "where habilitado = 1 and sufrago = 1 and v.id_persona = " + idPersona + " " );
 					
-					
+					query.setQueryGenerico(idPersona.toString());
 					
 				 
 
@@ -507,11 +515,12 @@ public class EleccionMesa extends JFrame {
 
 					String generoAntesPartir = response.getQueryGenericoResponse();
 					
-					if (!(generoAntesPartir.compareTo("[]") == 0)){
+					if ((generoAntesPartir.compareTo("SI") == 0)){
 						   JOptionPane.showMessageDialog(null,
 			                          "El usuario ya ha votado.",
 			                          "ERROR.",
 			                          JOptionPane.INFORMATION_MESSAGE);
+						   result = true;
 						   return result;
 					}
 					else{
@@ -534,7 +543,7 @@ public class EleccionMesa extends JFrame {
 //					
 //					VentanaPrincipalVotante.idVotante = (int) (long) fil.get(3);
 
-					result = true;
+					//result = true;
 
 					return result;
 
@@ -650,6 +659,24 @@ public class EleccionMesa extends JFrame {
 				
 				private static Boolean verificarDatos2(String user, String pass) {
 					Boolean result = false;
+					
+					List<String> l = new ArrayList<String>();
+					//l.add(user);
+					//l.add(pass);
+					l.add(idPersona.toString());
+					
+					
+					//parseo json
+					ObjectMapper mapperObj = new ObjectMapper();
+					String jsonStr = "";
+					try {
+						// get Employee object as a json string
+						jsonStr = mapperObj.writeValueAsString(l);
+						System.out.println(jsonStr);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+				}
 
 					JSONArray filas = new JSONArray();
 					JSONArray fil = new JSONArray();
@@ -663,17 +690,17 @@ public class EleccionMesa extends JFrame {
 					QueryGenericoRequest query = new QueryGenericoRequest();
 
 					// para registrar se inserta el codigo es 1
-					query.setTipoQueryGenerico(2);
+					query.setTipoQueryGenerico(9);
 					System.out.println(Login.userLogeado);
 //					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante  from ucsaws_users u join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
 //							+ "where habilitado = 1 and sufrago = 0 and usuario = '" + user + "' and pass = '" + pass + "'" );
 					
-					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante , email from ucsaws_users u "
-							+ "join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
-							+ "where habilitado = 1 and sufrago = 0 and v.id_persona  = " + idPersona +"");
+//					query.setQueryGenerico("select id_user, id_mesa, sufrago, v.id_votante , email from ucsaws_users u "
+//							+ "join ucsaws_persona p on (u.id_persona = p.id_persona) join ucsaws_votante v on (v.id_persona = p.id_persona) "
+//							+ "where habilitado = 1 and sufrago = 0 and v.id_persona  = " + idPersona +"");
+//					
 					
-					
-					
+					query.setQueryGenerico(idPersona.toString());
 				 
 
 					QueryGenericoResponse response = weatherClient
@@ -684,7 +711,7 @@ public class EleccionMesa extends JFrame {
 
 					String generoAntesPartir = response.getQueryGenericoResponse();
 					
-					if ((generoAntesPartir.compareTo("[]") == 0)){
+					if ((generoAntesPartir.compareTo("NO") == 0)){
 						   JOptionPane.showMessageDialog(null,
 			                          "El Votante no Esta Habilitado.",
 			                          "ERROR.",
@@ -692,32 +719,55 @@ public class EleccionMesa extends JFrame {
 						   return result;
 					}
 					else{
+					
+					
+					ObjectMapper mapper = new ObjectMapper();
+					String jsonInString  =response.getQueryGenericoResponse();
+
 					try {
-						ob = j.parse(generoAntesPartir);
-					} catch (ParseException e) {
+						System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonInString));
+					} catch (JsonGenerationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonMappingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					filas = (JSONArray) ob;
-
-					fil = (JSONArray) filas.get(0);
 					
-					//Mesa = (Integer) fil.get(1);
 					
-					Mesa = (int) (long)  fil.get(1);
-					
-					habilitado = (int) (long) fil.get(2);
-					
-					Login.email = (String) fil.get(4);
-					
-					VentanaPrincipalVotante.idVotante = (int) (long) fil.get(3);
+						UcsawsVotante u = new UcsawsVotante();
+						try {
+							u = mapper.readValue(jsonInString, UcsawsVotante.class);
+						} catch (JsonParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JsonMappingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//result = u.getIdEvento().toString();
+						Mesa = u.getUcsawsMesa().getIdMesa();
+						habilitado = u.getHabilitado();
+						Login.email = u.getIdPersona().getEmail();
+						VentanaPrincipalVotante.idVotante = u.getIdVotante();
+						result = true;
+				
 
-					result = true;
+					
 
-					return result;
+					//result = true;
 
+					
+					
+					
 				}
+					return result;
 				}
 				
 			
