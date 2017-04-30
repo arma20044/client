@@ -3,18 +3,25 @@ package src.main.java.dao.evento;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Repository;
 
+import entity.Generic;
+import entity.UcsawsEvento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.ArmarFecha;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -166,7 +173,7 @@ public class EventoDAO {
 	}
 
 	
-	public Boolean eliminarEvento(String codigo)
+	public Boolean eliminarEvento(Integer idEvento)
 	{
 		boolean eliminado = false;
 		
@@ -179,12 +186,9 @@ public class EventoDAO {
 			QueryGenericoRequest query = new QueryGenericoRequest();
 			
 			
-			query.setTipoQueryGenerico(4);
+			query.setTipoQueryGenerico(3);
 			
-			query.setQueryGenerico("DELETE FROM ucsaws_evento WHERE"
-					+ " id_evento = "
-					+ codigo 
-					 );
+			query.setQueryGenerico(idEvento.toString());
 			
 			
 			
@@ -193,7 +197,7 @@ public class EventoDAO {
 			
 			String res = response.getQueryGenericoResponse();
 			
-			if (res.compareTo("ERRORRRRRRR")== 0){
+			if (res.compareTo("NO")== 0){
 				
 				
 				eliminado = false;
@@ -253,5 +257,85 @@ public class EventoDAO {
 		}
 		return actualizado;
 
+	}
+	
+	public UcsawsEvento obtenerEventoByCodigo(String codigoEvento){
+		
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx
+				.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		
+		query.setTipoQueryGenerico(33);
+		query.setQueryGenerico(codigoEvento);
+		
+		
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+		
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString  =response.getQueryGenericoResponse();
+
+		UcsawsEvento evento = new UcsawsEvento();
+		try{
+			evento = mapper.readValue(jsonInString, UcsawsEvento.class);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		return evento;
+	}
+	
+	public UcsawsEvento obtenerEventoByRangoFechaTipoEvento(Generic g){
+		
+		
+		
+		//parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(g);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	}
+		
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx
+				.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		
+		query.setTipoQueryGenerico(34);
+		query.setQueryGenerico(jsonStr);
+		
+		
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+		
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString  =response.getQueryGenericoResponse();
+
+		UcsawsEvento evento = new UcsawsEvento();
+		try{
+			evento = mapper.readValue(jsonInString, UcsawsEvento.class);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		return evento;
 	}
 }

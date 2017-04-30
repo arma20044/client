@@ -15,10 +15,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -34,20 +36,26 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import pruebas.Employee;
 import entity.Evento;
+import entity.UcsawsEvento;
 import src.main.java.admin.Administracion;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.Reportes;
+import src.main.java.admin.utils.ArmarFecha;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -56,12 +64,14 @@ import src.main.java.login.PreLogin;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
+	ArmarFecha armarFecha = new ArmarFecha();
 	
+	private static final DecimalFormat formatter = new DecimalFormat( "#,##0.00" );
 	//public static Integer evento; // 0
 	public static String nroEvento; // 1
 	public static String descripcionEvento; // 2
-	public static String fechaDesde;
-	public static String fechaHasta;
+	public static Date fechaDesde;
+	public static Date fechaHasta;
 	public static String tipoEventoDescripcon;
 	//public static String idEveto;
 	
@@ -249,8 +259,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					System.out.println(selectedData);
 					nroEvento = selectedData.get(2);
 					descripcionEvento = selectedData.get(3);
-					fechaDesde  = selectedData.get(4);
-					fechaHasta  = selectedData.get(5);
+					fechaDesde  = armarFecha.armarFecha( selectedData.get(4));
+					fechaHasta  = armarFecha.armarFecha( selectedData.get(5));
 					tipoEventoDescripcon = selectedData.get(6);
 					
 					//seteo del encabezado final 
@@ -291,7 +301,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					
 					System.out.println();
 					
-					if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta, evento) == 0){
+					if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta,Integer.parseInt(evento)) == 0){
 						readOnly=false;
 					}
 					else{
@@ -352,31 +362,11 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 								
 						 codTemporal = selectedData.get(0);
 						 }	 
-								fechaDesde  = selectedData.get(4);
+								fechaDesde  = armarFecha.armarFecha( selectedData.get(4));
+								fechaHasta  = armarFecha.armarFecha( selectedData.get(5));
 								//fechaDesdeDate = new Date();
 								
-								String string = fechaDesde;
-								DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-								try {
-									fechaDesdeDate = format.parse(string);
-								} catch (ParseException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
 								
-								//fechaDesdeDate = fechaDesde;
-								
-								fechaHasta  = selectedData.get(5);
-								
-								
-								String string2 = fechaHasta;
-								DateFormat format2 = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-								try {
-									fechaHastaDate = format2.parse(string2);
-								} catch (ParseException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
 								
 								
 								
@@ -400,7 +390,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table_1.setModel(dm);
+		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE EVENTOS");
@@ -523,7 +513,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
 		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
-		recuperarDatos();
+		//recuperarDatos();
 		cellSelectionModel
 				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
@@ -559,7 +549,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		if (e.getSource() == btnEliminar) {
 			
 			if (!codTemporal.equals("")) {
-				if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta, codTemporal)==0){
+				if(PreLogin.eventoVigenteConParametros(fechaDesde, fechaHasta,Integer.parseInt(codTemporal))==0){
 				int respuesta = JOptionPane.showConfirmDialog(this,
 						"¿Esta seguro de eliminar el Evento?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
@@ -567,7 +557,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					EventoDAO eventoDAO = new EventoDAO();
 
 					try {
-						eliminado = eventoDAO.eliminarEvento(codTemporal);
+						eliminado = eventoDAO.eliminarEvento(Integer.parseInt(codTemporal));
 
 					} catch (Exception e2) {
 						// TODO: handle exception
@@ -608,7 +598,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					model = new EventoJTableModel();
 
 					recuperarDatos();
-					table_1.setModel(dm);
+					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 					// model.fireTableDataChanged();
 					// table_1.repaint();
@@ -723,86 +713,40 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		
+		query.setTipoQueryGenerico(30);
 
-		query.setQueryGenerico("select ev.id_evento, nro_evento,ev.descripcion, to_char(fch_desde, 'DD/MM/YYYY HH24:MI') as desde, to_char(fch_hasta, 'DD/MM/YYYY HH24:MI') as hasta , tev.descripcion as Tdescripcion "
-
-				+ " from ucsaws_evento ev join ucsaws_tipo_evento tev on (ev.id_tipo_evento = tev.id_tipo_evento)"
-				+ "order by nro_evento");
+		query.setQueryGenerico("consultarEvento");
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
+		
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsEvento> lista = new ArrayList<UcsawsEvento>();
+		try{
+		lista = mapper.readValue(jsonInString,new TypeReference<List<UcsawsEvento>>(){});
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
+		if (lista.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "algo salio mal",
 					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
+			//return lista;
 		}
 
 		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
+			obtenerModeloA(table_1,lista );
+			
+	    // return lista;
 		}
 
-	Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString(),fil.get(5).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID","Item","Nro.", "Desc. Evento","Inicio","Fin","Desc. Tipo Evento"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -829,4 +773,73 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		
 	}
+	
+	public DefaultTableModel obtenerModelo(JTable tabla, List<UcsawsEvento> evento){
+		
+		
+		DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+		Iterator<UcsawsEvento> ite = evento.iterator();
+
+		String header[] = new String[] { "ID","Item","Nro.", "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
+		model.setColumnIdentifiers(header);
+
+		UcsawsEvento aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+			aux = ite.next();
+
+			Object[] row = { aux.getIdEvento(), cont , aux.getNroEvento() , aux.getDescripcion(), 
+					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchDesde())),
+					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchHasta())), aux.getUcsawsTipoEvento().getDescripcion() };
+					
+
+ 
+					//new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+					
+					
+			model.addRow(row);
+			cont++;
+		
+		
+		
+
+
+		
+	}
+		return model;
+	}
+	
+	public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsEvento> evento){
+		
+		
+		//AbstractTableModel model = (DefaultTableModel) tabla.getModel();
+		Iterator<UcsawsEvento> ite = evento.iterator();
+
+		//String header[] = new String[] { "ID","Item","Nro.", "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
+		//model.setColumnIdentifiers(header);
+
+		UcsawsEvento aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+			aux = ite.next();
+
+			Object[] row = { aux.getIdEvento(), cont , aux.getNroEvento() , aux.getDescripcion(), 
+					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchDesde())),
+					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchHasta())), aux.getUcsawsTipoEvento().getDescripcion() };
+					
+
+
+					//new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+				model.eventos.add(row);
+					
+			
+			cont++;
+		
+		
+		
+	}
+		
+		return model;
+	}
+	
 }

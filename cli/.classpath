@@ -62,5 +62,6 @@
 	<classpathentry kind="lib" path="appClientModule/lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="appClientModule/lib/slf4j-api-2.0.99.jar"/>
 	<classpathentry kind="lib" path="appClientModule/lib/slf4j-simple-1.6.99.jar"/>
+	<classpathentry kind="lib" path="lib/balloontip-1.2.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

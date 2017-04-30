@@ -8,16 +8,61 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsTipoEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 public class TipoEventoDAO {
+	
+	
+	public UcsawsTipoEvento buscarTipoEventoById(Integer idTipoEvento){
+		
+		ApplicationContext ctx = SpringApplication
+				.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx
+				.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		
+		query.setTipoQueryGenerico(32);
+		query.setQueryGenerico(idTipoEvento.toString());
+		
+		
+		QueryGenericoResponse response = weatherClient
+				.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+		
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString  =response.getQueryGenericoResponse();
+
+		UcsawsTipoEvento tipoEvento = new UcsawsTipoEvento();
+		try{
+		tipoEvento = mapper.readValue(jsonInString, UcsawsTipoEvento.class);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		
+		if (tipoEvento.getIdEvento()!= null){
+			return tipoEvento;
+		}
+		else{
+			return tipoEvento;
+		}
+		
+		//return null;
+		
+	}
 	
 	
 //	public void registrarPersona(PersonaVo miPersona)

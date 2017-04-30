@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,6 +43,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.Generic;
 import entity.UcsawsEvento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.DeQuePais;
@@ -460,7 +462,7 @@ public class PreLogin extends javax.swing.JFrame {
 	
 
 	
-	public static Integer eventoVigenteConParametros(String fechaDesde , String fechaHasta, String idEvento) {
+	public static Integer eventoVigenteConParametros(Date fechaDesde , Date fechaHasta, Integer idEvento) {
 
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
@@ -474,23 +476,39 @@ public class PreLogin extends javax.swing.JFrame {
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
 		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(35);
 		System.out.println(Login.userLogeado);
 		//query.setQueryGenerico("select id_evento, descripcion from ucsaws_evento where cast(fch_hasta as timestamp) <= cast (now() as timestamp)");
 		
 		
-		query.setQueryGenerico
+		Generic g = new Generic();
+		g.setDesde(fechaDesde);
+		g.setHasta(fechaHasta);
+		g.setId(idEvento);
+		//parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(g);
+			System.out.println(jsonStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	}
+		
+		query.setQueryGenerico(jsonStr);
 //		("select id_evento, descripcion "
 //				+ " from ucsaws_evento where (  '" + fechaDesde + "'   <= to_char(now(), 'DD/MM/YYYY HH24:MI') "
 //				+ " and '" + fechaHasta + "'  >= to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + ")"
 //				+ " or ( '" + fechaHasta + "'  < to_char(now(), 'DD/MM/YYYY HH24:MI') and id_evento = " + idEvento + " )"
 //				);
 		
-		("select id_evento, descripcion "
-				+ " from ucsaws_evento where (  fch_desde   <= now() "
-				+ " and fch_hasta  >= now() and id_evento = " + idEvento + ")"
-				+ " or ( fch_hasta  <  now() and id_evento = " + idEvento + " )"
-				);
+//		("select id_evento, descripcion "
+//				+ " from ucsaws_evento where (  fch_desde   <= now() "
+//				+ " and fch_hasta  >= now() and id_evento = " + idEvento + ")"
+//				+ " or ( fch_hasta  <  now() and id_evento = " + idEvento + " )"
+//				);
 		
 		
 	 
@@ -498,34 +516,35 @@ public class PreLogin extends javax.swing.JFrame {
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
-
-		JSONParser j = new JSONParser();
-
-		String generoAntesPartir = response.getQueryGenericoResponse();
 		
-		if (generoAntesPartir.compareTo("[]")==0){
+		
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		mapper.setDateFormat(df);
+		String jsonInString = response.getQueryGenericoResponse();
+		
+		UcsawsEvento evento  = new UcsawsEvento();
+		
+		try{
+		evento = mapper.readValue(jsonInString, UcsawsEvento.class);
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
+		
+		
+		
+		
+		if (evento.getIdEvento() == null){
 			return 0;
 		}
 		
 		else{
 			
-			
+		 
 		
-
-		try {
-			ob = j.parse(generoAntesPartir);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		filas = (JSONArray) ob;
-
-		fil = (JSONArray) filas.get(0);
-
-		String result = fil.get(0).toString();
-		
-		VentanaBuscarEvento.evento = result;
+		VentanaBuscarEvento.evento = evento.getIdEvento().toString();
 
 		return 1;
 		
