@@ -106,7 +106,9 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
 	public static boolean readOnly= false;
 	
-	Evento e;
+	UcsawsEvento e;
+	
+	EventoDAO eventoDAO = new EventoDAO();
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -128,7 +130,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 //		}
 		readOnly=false;
 		
-		e = new Evento();
+		e = new UcsawsEvento();
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -282,7 +284,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					String fechaEvento = selectedData.get(4);
 					
 					
-					DateFormat fechaEventoFormated = new SimpleDateFormat("dd/MM/yyyy");
+					DateFormat fechaEventoFormated = new SimpleDateFormat("dd-MM-yyyy");
 					
 					String str = fechaEvento.substring(0, 10);
 
@@ -377,12 +379,12 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					 
 					 
 						
-						e.setId_evento(selectedData.get(0));
-						e.setNro_evento(selectedData.get(2));
-						e.setDescripcion(selectedData.get(3));
-						e.setFch_desde(selectedData.get(4));
-						e.setFch_hasta(selectedData.get(5));
-						e.setId_tipo_evento(selectedData.get(6));
+						/*e.setIdEvento(Integer.parseInt(selectedData.get(0)));
+						e.setNroEvento((selectedData.get(2)));
+						e.setDescripcion (selectedData.get(3));
+						e.setFchDesde(armarFecha.armarFecha(selectedData.get(4)));
+						e.setFchHasta(armarFecha.armarFecha(selectedData.get(5)));
+						e.setId_tipo_evento(    selectedData.get(6));*/
 						
 				 }
 
@@ -446,13 +448,17 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		//btnModificarEvento = new JButton("");
 				btnModificar = new JButton("");
+				btnModificar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+					}
+				});
 				btnModificar.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
 						if (!codTemporal.equals("")) {
+							UcsawsEvento eventoModificar = eventoDAO.obtenerEventoById(codTemporal);
 							
-							
-							VentanaModificarEvento modificar = new VentanaModificarEvento(e);
+							VentanaModificarEvento modificar = new VentanaModificarEvento(eventoModificar);
 							modificar.setVisible(true);
 							dispose();
 						}
@@ -841,5 +847,13 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		return model;
 	}
+	
+	  
+	    public String horadeDate(Date fecha) {
+	        SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm");
+	        String time = localDateFormat.format(fecha);
+	        System.out.println(time);
+		return time;
+	    }
 	
 }

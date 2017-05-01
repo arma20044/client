@@ -381,7 +381,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		label_4.setBounds(317, 25, 83, 14);
 		panel.add(label_4);
 
-		JLabel label_5 = new JLabel(VentanaBuscarEvento.fechaDesde);
+		JLabel label_5 = new JLabel(VentanaBuscarEvento.fechaDesde.toString());
 		label_5.setBounds(410, 25, 191, 14);
 		panel.add(label_5);
 		label_5.setForeground(Color.BLACK);
@@ -390,7 +390,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		lblFechaHasta.setBounds(317, 37, 83, 14);
 		panel.add(lblFechaHasta);
 
-		JLabel label_7 = new JLabel(VentanaBuscarEvento.fechaHasta);
+		JLabel label_7 = new JLabel(VentanaBuscarEvento.fechaHasta.toString());
 		label_7.setBounds(410, 37, 191, 14);
 		panel.add(label_7);
 		label_7.setForeground(Color.BLACK);

@@ -46,7 +46,7 @@ public class ArmarFecha {
 	return fechaOut;}
 	
 	public Date armarFecha(String fecha){
-	SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	SimpleDateFormat formatoDelTexto = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 	//String fechaIn = fecha;
 	Date fechaOut = null;
 	try {

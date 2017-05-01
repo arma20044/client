@@ -580,16 +580,10 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 			t.start();
 		    } else
 
-		    if (codTemporal != "") {
+		   /* if (codTemporal != "") {
 
 			eventoDAO.actualizarEvento(
-				txtDescripcion.getText(),
-				tipoEventoSelected.toString(),
-				dateChooserDesde.getDate() + " "
-					+ horaMinutoDesde.getText(),
-				dateChooserHasta.getDate() + " "
-					+ horaMinutoHasta.getText(),
-				txtNro.getText(), codTemporal);
+				e);
 
 			recuperarDatos();
 			table.setModel(model);
@@ -618,7 +612,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 			horaMinutoHasta.setText("");
 			cmbTipoEvento.setSelectedIndex(-1);
 
-		    }
+		    }*/
 
 		    if (codTemporal == "") {
 			// no deben haber dos eventos del mismo tipo dentro del

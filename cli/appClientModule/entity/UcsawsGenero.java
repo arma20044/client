@@ -18,7 +18,7 @@ public class UcsawsGenero implements java.io.Serializable {
 	private String usuarioUpd;
 	private String codigo;
 	private Integer idEvento;
-	private Integer ucsawsPersonas;
+	 
 	//private Set ucsawsPersonas = new HashSet(0);
 
 	public UcsawsGenero() {
@@ -111,13 +111,7 @@ public class UcsawsGenero implements java.io.Serializable {
 		this.idEvento = idEvento;
 	}
 
-	public Integer getUcsawsPersonas() {
-		return ucsawsPersonas;
-	}
-
-	public void setUcsawsPersonas(Integer ucsawsPersonas) {
-		this.ucsawsPersonas = ucsawsPersonas;
-	}
+ 
 
 
 }

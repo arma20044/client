@@ -288,4 +288,31 @@ public class TipoEventoDAO {
 		return eliminado;
 		
 	}
+	
+	    public UcsawsTipoEvento obtenerTipoEventoById(Integer idTipoEvento) {
+
+		ApplicationContext ctx = SpringApplication
+			.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		query.setTipoQueryGenerico(32);
+		query.setQueryGenerico(idTipoEvento.toString());
+
+		QueryGenericoResponse response = weatherClient
+			.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+
+		UcsawsTipoEvento tipoEvento = new UcsawsTipoEvento();
+		try {
+		    tipoEvento = mapper.readValue(jsonInString, UcsawsTipoEvento.class);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+		return tipoEvento;
+	    }
 }
