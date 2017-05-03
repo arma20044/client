@@ -16,8 +16,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -32,17 +34,22 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import entity.Persona;
+import entity.UcsawsEvento;
+import entity.UcsawsPersona;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -53,11 +60,14 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import src.main.java.proceso.voto.VentanaPresidente;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowFocusListener;
 
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
+    
+    private static final DecimalFormat formatter = new DecimalFormat( "###,###,###" );
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -89,18 +99,18 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarPersona() {
-		addWindowFocusListener(new WindowFocusListener() {
-			public void windowGainedFocus(WindowEvent arg0) {
-				//model = new PersonaJTableModel();
-
-				recuperarDatos();
-				table_1.setModel(dm);
-				table_1.removeColumn(table_1.getColumnModel()
-						.getColumn(0));
-			}
-			public void windowLostFocus(WindowEvent arg0) {
-			}
-		});
+//		addWindowFocusListener(new WindowFocusListener() {
+//			public void windowGainedFocus(WindowEvent arg0) {
+//				//model = new PersonaJTableModel();
+//
+//				recuperarDatos();
+//				table_1.setModel(model);
+//				table_1.removeColumn(table_1.getColumnModel()
+//						.getColumn(0));
+//			}
+//			public void windowLostFocus(WindowEvent arg0) {
+//			}
+//		});
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -178,7 +188,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
+		//scrollPane.setAutoscrolls(true);
 		scrollPane.setToolTipText("Lista de Personas");
 		scrollPane.setBounds(0, 158, 1146, 265);
 		getContentPane().add(scrollPane);
@@ -188,10 +198,10 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				return false;
 			}
 		};
-		//table_1.getTableHeader().setReorderingAllowed(false);
-		
+		table_1.getTableHeader().setReorderingAllowed(false);
+		 
 		table_1.setToolTipText("Listado de Personas.");
-		table_1.setAutoCreateRowSorter(true);
+		//table_1.setAutoCreateRowSorter(true);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
 		// String[] columnNames = {"Picture", "Description"};
@@ -277,7 +287,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table_1.setModel(dm);
+		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		
 		resizeColumnWidth(table_1);
@@ -362,7 +372,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		});
 		btnModificar.setIcon(new ImageIcon(VentanaBuscarPersona.class
 				.getResource("/imgs/def.png")));
-		btnModificar.setToolTipText("Eliminar");
+		btnModificar.setToolTipText("Modificar");
 		btnModificar.setOpaque(false);
 		btnModificar.setEnabled(true);
 		btnModificar.setContentAreaFilled(false);
@@ -487,7 +497,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 							model = new PersonaJTableModel();
 
 							recuperarDatos();
-							table_1.setModel(dm);
+							table_1.setModel(model);
 							table_1.removeColumn(table_1.getColumnModel()
 									.getColumn(0));
 							// model.fireTableDataChanged();
@@ -577,7 +587,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	}
 
 	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
+	    JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
 		boolean existe = false;
@@ -590,90 +600,41 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		
+		query.setTipoQueryGenerico(44);
 
-		query.setQueryGenerico("select id_persona,ci, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad, email"
-
-				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
-				+ "where per.id_evento = "
-				+ VentanaBuscarEvento.evento
-				+ " order by per.apellido , per.nombre");
+		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
+		
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsPersona> lista = new ArrayList<UcsawsPersona>();
+		try{
+		lista = mapper.readValue(jsonInString,new TypeReference<List<UcsawsPersona>>(){});
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
+		if (lista.isEmpty()) {
+			//JOptionPane.showMessageDialog(null, "algo salio mal",
+			//		"Advertencia", JOptionPane.WARNING_MESSAGE);
+			//return lista;
 		}
 
 		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
+			obtenerModeloA(table_1,lista );
+			
+	    // return lista;
 		}
 
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			contador = contador + 1;
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),
-					fil.get(1).toString(), fil.get(2).toString(),
-					fil.get(3).toString(), fil.get(4).toString(),
-					fil.get(5).toString(), fil.get(6).toString(),
-					fil.get(7).toString(), fil.get(8).toString(),
-					fil.get(9).toString(), fil.get(10).toString(), fil.get(11).toString() };
-
-			// model.ciudades.add(fin);
-			int pos = 0;
-			Vector<Object> vector = new Vector<Object>();
-			while (pos < fin.length) {
-				vector.add(fin[pos]);
-				pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-
-		// names of columns
-
-		String[] colNames = new String[] { "ID", "Item", "CI.", "Nombre",
-				"Apellido", "Fch. Nac.", "Pais Origen", "Pais Actual",
-				"Genero", "Linea Baja", "Celular", "Nacionalidad","E-mail" };
-
-		Vector<String> columnNames = new Vector<String>();
-		int columnCount = colNames.length;
-		for (int column = 0; column < columnCount; column++) {
-			columnNames.add(colNames[column]);
-		}
-
-		dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -711,4 +672,40 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
             columnModel.getColumn(column).setPreferredWidth(width);
         }
     }
+    
+	public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsPersona> evento){
+		
+		 
+		Iterator<UcsawsPersona> ite = evento.iterator();
+
+		//private String[] colNames = new String[] 
+		//{"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","E-Mail"}; 
+
+		UcsawsPersona aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+			aux = ite.next();
+
+			Object[] row = { aux.getIdPersona(), cont , 
+				formatter.format(aux.getCi()) , 
+				aux.getNombre(), aux.getApellido(), 
+			new SimpleDateFormat("dd-MM-yyyy").format((aux.getFechaNacimiento())),aux.getUcsawsPaisByIdPaisOrigen().getNombre(),
+			aux.getUcsawsPaisByIdPaisActual().getNombre(),aux.getUcsawsGenero().getDescripcion() ,aux.getTelLineaBaja(), aux.getTelCelular(), aux.getEmail() };
+					
+
+
+					//new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+					
+					
+			model.personas.add(row);
+			cont++;
+		
+		
+		
+
+
+		
+	}
+		return model;
+	}
 }

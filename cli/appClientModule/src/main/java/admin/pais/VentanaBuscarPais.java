@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -31,14 +32,19 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -202,7 +208,7 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table_1.setModel(dm);
+		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE PAISES");
@@ -257,7 +263,7 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
 		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
-		recuperarDatos();
+		//recuperarDatos();
 		cellSelectionModel
 				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
@@ -324,7 +330,7 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 							model = new PaisJTableModel();
 
 							recuperarDatos();
-							table_1.setModel(dm);
+							table_1.setModel(model);
 							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 							
 						}
@@ -415,98 +421,55 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 
 
 	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
+	    JSONArray filas = new JSONArray();
+	  		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
+	  		boolean existe = false;
 
-		// Statement estatuto = conex.getConnection().createStatement();
+	  		// Statement estatuto = conex.getConnection().createStatement();
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	  		ApplicationContext ctx = SpringApplication
+	  			.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	  		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	  		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+	  		// para registrar se inserta el codigo es 1
+	  		query.setTipoQueryGenerico(45);
 
-		query.setQueryGenerico("SELECT  id_pais, codigo, nombre "
-				+ "from  ucsaws_pais where id_evento = " + VentanaBuscarEvento.evento 
-				+ " order by codigo" + "");
+	  		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+	  		QueryGenericoResponse response = weatherClient
+	  			.getQueryGenericoResponse(query);
+	  		weatherClient.printQueryGenericoResponse(response);
 
-		String res = response.getQueryGenericoResponse();
+	  		String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
+	  		// json string to List<String>;
+	  		ObjectMapper mapper = new ObjectMapper();
+	  		String jsonInString = response.getQueryGenericoResponse();
+	  		List<UcsawsPais> pais = new ArrayList<UcsawsPais>();
+	  		try {
+	  		  pais = mapper.readValue(jsonInString,
+	  			    new TypeReference<List<UcsawsPais>>() {
+	  			    });
+	  		} catch (Exception e) {
+	  		    System.out.println(e);
+	  		}
 
-		}
+	  		if (pais.isEmpty()) {
+	  		    // JOptionPane.showMessageDialog(null, "algo salio mal",
+	  		    // "Advertencia", JOptionPane.WARNING_MESSAGE);
+	  		    // return lista;
+	  		}
 
-		else {
-			existe = true;
+	  		else {
+	  		    obtenerModeloA(table_1, pais);
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+	  		    // return lista;
+	  		}
 
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
 
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-	Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID", "Item", "Codigo", "Descripcion"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -533,4 +496,34 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 		
 		
 	}
+	
+	 public AbstractTableModel obtenerModeloA(JTable tabla,
+		    List<UcsawsPais> pais) {
+
+		// AbstractTableModel model = (DefaultTableModel) tabla.getModel();
+		Iterator<UcsawsPais> ite = pais.iterator();
+
+		// String header[] = new String[] { "ID","Item","Nro.",
+		// "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
+		// model.setColumnIdentifiers(header);
+
+		UcsawsPais aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+		    aux = ite.next();
+		   // {"ID", "Item", "Codigo", "Descripcion"}
+
+		    Object[] row = { aux.getIdPais(), cont, aux.getCodigo(),
+			    aux.getNombre() };
+
+		    // new
+		    // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+		    model.pais.add(row);
+
+		    cont++;
+
+		}
+
+		return model;
+	    }
 }

@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -31,15 +32,20 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import entity.Nacionalidad;
+import entity.UcsawsGenero;
+import entity.UcsawsNacionalidad;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -214,7 +220,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table_1.setModel(dm);
+		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE NACIONALIDADES");
@@ -372,7 +378,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 							model = new NacionalidadJTableModel();
 
 							recuperarDatos();
-							table_1.setModel(dm);
+							table_1.setModel(model);
 							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 							
 							
@@ -464,7 +470,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 
 
 	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
+	    JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
 		boolean existe = false;
@@ -472,90 +478,46 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		// Statement estatuto = conex.getConnection().createStatement();
 
 		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+			.run(WeatherConfiguration.class);
 
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
 		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(46);
 
-		query.setQueryGenerico("select id_nacionalidad, cod_nacionalidad, desc_nacionalidad, nombre" +
-		" from ucsaws_nacionalidad nac join ucsaws_pais pais on (nac.id_pais = pais.id_pais)"
-		+ "where nac.id_evento = " + VentanaBuscarEvento.evento);
+		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
+			.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsNacionalidad> lista = new ArrayList<UcsawsNacionalidad>();
+		try {
+		    lista = mapper.readValue(jsonInString,
+			    new TypeReference<List<UcsawsNacionalidad>>() {
+			    });
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
 
+		if (lista.isEmpty()) {
+		    // JOptionPane.showMessageDialog(null, "algo salio mal",
+		    // "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    // return lista;
 		}
 
 		else {
-			existe = true;
+		    obtenerModeloA(table_1, lista);
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
+		    // return lista;
 		}
 
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID", "Itema", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
@@ -582,4 +544,35 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		
 		
 	}
+	
+	 public AbstractTableModel obtenerModeloA(JTable tabla,
+		    List<UcsawsNacionalidad> nacionalidad) {
+
+		// AbstractTableModel model = (DefaultTableModel) tabla.getModel();
+		Iterator<UcsawsNacionalidad> ite = nacionalidad.iterator();
+
+		// String header[] = new String[] { "ID","Item","Nro.",
+		// "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
+		// model.setColumnIdentifiers(header);
+
+		UcsawsNacionalidad aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+		    aux = ite.next();
+		   // "ID", "Itema", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"}
+
+		    Object[] row = { aux.getIdNacionalidad(), cont, aux.getCodNacionalidad(),
+			    aux.getDescNacionalidad(), aux.getUcsawsPais().getNombre() };
+
+		    // new
+		    // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+		    model.nacionalidad.add(row);
+
+		    cont++;
+
+		}
+
+		return model;
+	    }
+
 }

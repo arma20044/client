@@ -3,16 +3,24 @@ package src.main.java.dao.nacionalidades;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsGenero;
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -20,24 +28,48 @@ import src.main.java.login.Login;
 public class NacionalidadesDAO {
 	
 	
-//	public void registrarPersona(PersonaVo miPersona)
-//	{
-//		Conexion conex= new Conexion();
-//		
-//		try {
-//			Statement estatuto = conex.getConnection().createStatement();
-//			estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-//					+miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-//					+miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-//			JOptionPane.showMessageDialog(null, "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-//			estatuto.close();
-//			conex.desconectar();
-//			
-//		} catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//			JOptionPane.showMessageDialog(null, "No se Registro");
-//		}
-//	}
+    public Boolean guardarNacionalidad(UcsawsNacionalidad nacionalidad) {
+
+   	boolean guardado = false;
+
+   	ObjectMapper mapperObj = new ObjectMapper();
+   	String jsonStr = "";
+   	try {
+   	    // get Employee object as a json string
+   	    jsonStr = mapperObj.writeValueAsString(nacionalidad);
+   	    System.out.println(jsonStr);
+   	} catch (IOException e) {
+   	    // TODO Auto-generated catch block
+   	    e.printStackTrace();
+   	}
+
+   	ApplicationContext ctx = SpringApplication
+   		.run(WeatherConfiguration.class);
+
+   	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+   	QueryGenericoRequest query = new QueryGenericoRequest();
+
+   	query.setTipoQueryGenerico(51);
+   	query.setQueryGenerico(jsonStr);
+
+   	QueryGenericoResponse response = weatherClient
+   		.getQueryGenericoResponse(query);
+   	weatherClient.printQueryGenericoResponse(response);
+
+   	ObjectMapper mapper = new ObjectMapper();
+   	String jsonInString = response.getQueryGenericoResponse();
+
+   	UcsawsNacionalidad n = new UcsawsNacionalidad();
+   	try {
+   	    n = mapper.readValue(jsonInString, UcsawsNacionalidad.class);
+   	} catch (Exception ex) {
+   	    System.out.println(ex);
+   	}
+   	guardado = true;
+
+   	return guardado;
+
+       }
 
 	public JSONArray buscarNacionalidad(String codigo) throws ParseException, org.json.simple.parser.ParseException 
 	{
@@ -243,4 +275,48 @@ public class NacionalidadesDAO {
 		return eliminado;
 		
 	}
+	
+	    public UcsawsNacionalidad obtenerNacionalidadByCodigoYNombre(String codigoNacionalidad,
+		    String descNacionalidad) {
+
+		ApplicationContext ctx = SpringApplication
+			.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		List<String> lista = new ArrayList<String>();
+		lista.add(codigoNacionalidad);
+		lista.add(descNacionalidad);
+		lista.add(VentanaBuscarEvento.evento.toString());
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+
+		// get Employee object as a json string
+		try {
+		    jsonStr = mapperObj.writeValueAsString(lista);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+
+		query.setTipoQueryGenerico(49);
+		query.setQueryGenerico(jsonStr);
+
+		QueryGenericoResponse response = weatherClient
+			.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+
+		UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
+		try {
+		    nacionalidad = mapper.readValue(jsonInString, UcsawsNacionalidad.class);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+		return nacionalidad;
+	    }
 }

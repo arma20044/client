@@ -144,7 +144,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 
 	scrollPane = new JScrollPane();
 	scrollPane.setAutoscrolls(true);
-	scrollPane.setToolTipText("Lista de Candidatos");
+	scrollPane.setToolTipText("Lista de Generos");
 	scrollPane.setBounds(0, 153, 806, 230);
 	getContentPane().add(scrollPane);
 
@@ -162,8 +162,9 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 		return component;
 	    }
 	};
+	table.getTableHeader().setReorderingAllowed(false);
 	table.setToolTipText("");
-	table.setAutoCreateRowSorter(true);
+	//table.setAutoCreateRowSorter(false);
 	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	scrollPane.setViewportView(table);
 	table.addMouseListener(new MouseAdapter() {
@@ -206,12 +207,12 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 		// selectedData.ad table_1.getValueAt(selectedRow[i],
 		// selectedColumns[0]);
 		// txtId.setText(selectedData.get(0));
-		txtCodigo.setText(selectedData.get(2));
-		txtDescripcion.setText(selectedData.get(3));
+		//txtCodigo.setText(selectedData.get(2));
+		//txtDescripcion.setText(selectedData.get(3));
 		// textFecha.setText(selectedData.get(2));
 		// textUsu.setText(selectedData.get(4));
 		// codTemporal.setText(selectedData.get(1));
-		codTemporal = (selectedData.get(0));
+		//codTemporal = (selectedData.get(0));
 
 		// System.out.println("Selected: " + selectedData);
 

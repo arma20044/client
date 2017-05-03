@@ -185,8 +185,9 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		return component;
 	    }
 	};
+	table_1 .getTableHeader().setReorderingAllowed(false);
 	table_1.setToolTipText("Listado de Generos.");
-	table_1.setAutoCreateRowSorter(true);
+	//table_1.setAutoCreateRowSorter(true);
 	table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	scrollPane.setViewportView(table_1);
 	// String[] columnNames = {"Picture", "Description"};

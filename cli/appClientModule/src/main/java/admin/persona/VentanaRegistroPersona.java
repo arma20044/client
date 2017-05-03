@@ -16,12 +16,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -41,17 +43,32 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+
+
+
+
+ 
+
+
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
+import entity.UcsawsGenero;
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
+import entity.UcsawsPersona;
+import entity.UcsawsTipoEvento;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -65,6 +82,7 @@ import src.main.java.login.Login;
 
 public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
+    	private static final DecimalFormat formatter = new DecimalFormat( "###,###,###" );
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
@@ -193,7 +211,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		table.setAutoCreateRowSorter(true);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
+		/*table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				List<String> selectedData = new ArrayList<String>();
@@ -228,13 +246,14 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 					// textUsu.setText(selectedData.get(4));
 					// codTemporal.setText(selectedData.get(1));
 					codTemporal = selectedData.get(0);
-					txtCI.setText(selectedData.get(2));
+					txtCI.setText(selectedData.get(2).replace('.', ' ').replaceAll("\\s+",""));
 					txtNombres.setText(selectedData.get(3));
 					txtApellidos.setText(selectedData.get(4));
 					txtFechaNac.setText(selectedData.get(5));
 					
 					txtLineaBaja.setText(selectedData.get(9));
 					txtCelular.setText(selectedData.get(10));
+					txtEmail.setText(selectedData.get(10) );
 					
 					
 					// actualizar combo lista
@@ -348,10 +367,10 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 				System.out.println("Selected: " + selectedData);
 
 			}
-		});
+		});*/
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table.setModel(dm);
+		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -663,24 +682,41 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == botonGuardar) {
 			try {
+			    Integer generoSelected = 0;
+			    	if(cmbGenero.getSelectedIndex()!= -1){
 				Item item = (Item) cmbGenero.getSelectedItem();
-				Integer generoSelected = item.getId();
-
+				generoSelected = item.getId();
+			    	}
+			    	
+			    	Integer actualSelected = 0 ;
+			    	if(cmbPaisActual.getSelectedIndex()!= -1){
 				Item item2 = (Item) cmbPaisActual.getSelectedItem();
-				Integer actualSelected = item2.getId();
-
+				actualSelected = item2.getId();
+			    	}
+			    	
+			    	Integer origenSelected = 0;
+			    	if(cmbPaisOrigen.getSelectedIndex()!= -1){
 				Item item3 = (Item) cmbPaisOrigen.getSelectedItem();
-				Integer origenSelected = item3.getId();
-				
+				origenSelected = item3.getId();
+			    	}
+			    	
+			    	Integer nacionalidadSelected = 0;
+			    	if(cmbNacionalidad.getSelectedIndex()!= -1){
 				Item item4 = (Item) cmbNacionalidad.getSelectedItem();
-				Integer nacionalidadSelected = item4.getId();
-				
+				nacionalidadSelected = item4.getId();
+			    	}
+			    	
 				if (!(txtCI.getText().length() == 0)
 						&& !(txtCelular.getText().length() == 0)
 						&& !(txtFechaNac.getText().length() == 0)
 						&& !(txtLineaBaja.getText().length() == 0)
 						&& !(txtNombres.getText().length() == 0)
-						&& !(txtApellidos.getText().length() == 0)) {
+						&& !(txtApellidos.getText().length() == 0)
+				    		&& !(cmbGenero.getSelectedIndex()== -1)
+				    		&& !(cmbPaisActual.getSelectedIndex()== -1)
+				    		&& ! (cmbPaisOrigen.getSelectedIndex()== -1)
+				    		&& ! (cmbNacionalidad.getSelectedIndex()== -1))
+				    {
 					if (txtCI.getText().length() > 7) {
 						lblMensaje
 								.setText("El codigo debe ser de maximo 7 caracteres.");
@@ -750,7 +786,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
 							model = new PersonaJTableModel();
 							recuperarDatos();
-							table.setModel(dm);
+							table.setModel(model);
 							model.fireTableDataChanged();
 							table.removeColumn(table.getColumnModel()
 									.getColumn(0));
@@ -837,7 +873,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 	}
 
 	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
+	    JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
 		boolean existe = false;
@@ -850,378 +886,282 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		
+		query.setTipoQueryGenerico(44);
 
-		query.setQueryGenerico("select id_persona,ci, per.nombre, per.apellido,  to_char(fecha_nacimiento, 'DD/MM/YYYY'), ori.nombre as PaisOrigen, act.nombre as PaisActual, gen.descripcion,  tel_linea_baja, tel_celular, n.desc_nacionalidad , email"
-
-				+ " from ucsaws_persona per join ucsaws_pais ori on (per.id_pais_origen = ori.id_pais) join ucsaws_pais act on (per.id_pais_actual = act.id_pais) "
-				+ "join ucsaws_genero gen on (per.id_genero = gen.id_genero) join ucsaws_nacionalidad n on (n.id_nacionalidad = per.id_nacionalidad)"
-				+ "where per.id_evento = " + VentanaBuscarEvento.evento
-				+ " order by per.apellido , per.nombre");
+		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
+		
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsPersona> lista = new ArrayList<UcsawsPersona>();
+		try{
+		lista = mapper.readValue(jsonInString,new TypeReference<List<UcsawsPersona>>(){});
+		}
+		catch(Exception e){
+			System.out.println(e);
+		}
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
+		if (lista.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "algo salio mal",
 					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
+			//return lista;
 		}
 
 		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
+			obtenerModeloA(table,lista );
+			
+	    // return lista;
 		}
 
-Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()
-					,fil.get(5).toString(),fil.get(6).toString(),fil.get(7).toString()
-					,fil.get(8).toString(),fil.get(9).toString(),fil.get(10).toString(),fil.get(11).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","Nacionalidad","E-mail"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
 
 	}
 
+
 	private Vector recuperarDatosComboBoxPaisOrigen() {
 		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
 
 		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+			.run(WeatherConfiguration.class);
 
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(45);
 
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento =  " + VentanaBuscarEvento.evento
-				+ " order by nombre");
+		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
+			.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsPais> lista = new ArrayList<UcsawsPais>();
+		try {
+		    lista = mapper.readValue(jsonInString,
+			    new TypeReference<List<UcsawsPais>>() {
+			    });
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
 
+		if (lista.isEmpty()) {
+		    JOptionPane.showMessageDialog(null, "algo salio mal",
+			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    // return lista;
 		}
 
 		else {
-			existe = true;
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+		    // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+		    Iterator<UcsawsPais> ite = lista.iterator();
 
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
+		    UcsawsPais aux;
 
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		    while (ite.hasNext()) {
+			aux = ite.next();
 
-			filas = (JSONArray) ob;
+			model.addElement(new Item(aux.getIdPais(), aux.getNombre()));
 
+		    }
+		    // return model;
 		}
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			ciudades.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
 		return model;
 
 	}
 
 	private Vector recuperarDatosComboBoxPaisActual() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
+	    Vector model = new Vector();
 
 		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+			.run(WeatherConfiguration.class);
 
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(45);
 
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_pais, nombre" + " from ucsaws_pais where id_evento= " + VentanaBuscarEvento.evento
-				+ " order by nombre");
+		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
 		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
+			.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsPais> lista = new ArrayList<UcsawsPais>();
+		try {
+		    lista = mapper.readValue(jsonInString,
+			    new TypeReference<List<UcsawsPais>>() {
+			    });
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
 
+		if (lista.isEmpty()) {
+		    JOptionPane.showMessageDialog(null, "algo salio mal",
+			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    // return lista;
 		}
 
 		else {
-			existe = true;
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+		    // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+		    Iterator<UcsawsPais> ite = lista.iterator();
 
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
+		    UcsawsPais aux;
 
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		    while (ite.hasNext()) {
+			aux = ite.next();
 
-			filas = (JSONArray) ob;
+			model.addElement(new Item(aux.getIdPais(), aux.getNombre()));
 
+		    }
+		    // return model;
 		}
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			tcandidato.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
 		return model;
-
 	}
 
 	private Vector recuperarDatosComboBoxGenero() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
+	    Vector model = new Vector();
 
 		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+			.run(WeatherConfiguration.class);
 
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
+		
+		//parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		 
+			try{
+			jsonStr = mapperObj.writeValueAsString(VentanaBuscarEvento.evento);
+			}
+			catch(Exception e){
+			    System.out.println(e);
+			}
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		query.setTipoQueryGenerico(39);
 
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
-
-		query.setQueryGenerico("SELECT id_genero, descripcion"
-				+ " from ucsaws_genero where id_evento = " + VentanaBuscarEvento.evento + "order by codigo");
+		query.setQueryGenerico(jsonStr);
 
 		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
+			.getQueryGenericoResponse(query);
 		weatherClient.printQueryGenericoResponse(response);
 
 		String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
+		// json string to List<String>;
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+		List<UcsawsGenero> genero = new ArrayList<UcsawsGenero>();
+		try {
+		    genero = mapper.readValue(jsonInString,
+			    new TypeReference<List<UcsawsGenero>>() {
+			    });
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
 
+		if (genero.isEmpty()) {
+		    JOptionPane.showMessageDialog(null, "algo salio mal",
+			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    // return lista;
 		}
 
 		else {
-			existe = true;
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+		    // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+		    Iterator<UcsawsGenero> ite = genero.iterator();
 
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
+		    UcsawsGenero aux;
 
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		    while (ite.hasNext()) {
+			aux = ite.next();
 
-			filas = (JSONArray) ob;
+			model.addElement(new Item(aux.getIdGenero(), aux.getDescripcion()));
 
+		    }
+		    // return model;
 		}
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			listas.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
 		return model;
 
 	}
 	
 	private Vector recuperarDatosComboBoxNacionalidad() {
-		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
+	    Vector model = new Vector();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
+			ApplicationContext ctx = SpringApplication
 				.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+			QueryGenericoRequest query = new QueryGenericoRequest();
+			
+		 
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+			query.setTipoQueryGenerico(46);
 
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+			query.setQueryGenerico(VentanaBuscarEvento.evento);
 
-		query.setQueryGenerico("SELECT id_nacionalidad, desc_nacionalidad"
-				+ " from ucsaws_nacionalidad where id_evento =  "+ VentanaBuscarEvento.evento + " order by cod_nacionalidad");
-
-		QueryGenericoResponse response = weatherClient
+			QueryGenericoResponse response = weatherClient
 				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+			weatherClient.printQueryGenericoResponse(response);
 
-		String res = response.getQueryGenericoResponse();
+			String res = response.getQueryGenericoResponse();
 
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
+			// json string to List<String>;
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonInString = response.getQueryGenericoResponse();
+			List<UcsawsNacionalidad> nacionalidad = new ArrayList<UcsawsNacionalidad>();
 			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    nacionalidad = mapper.readValue(jsonInString,
+				    new TypeReference<List<UcsawsNacionalidad>>() {
+				    });
+			} catch (Exception e) {
+			    System.out.println(e);
 			}
 
-			filas = (JSONArray) ob;
+			if (nacionalidad.isEmpty()) {
+			    JOptionPane.showMessageDialog(null, "algo salio mal",
+				    "Advertencia", JOptionPane.WARNING_MESSAGE);
+			    // return lista;
+			}
 
-		}
+			else {
 
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
+			    // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+			    Iterator<UcsawsNacionalidad> ite = nacionalidad.iterator();
 
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
+			    UcsawsNacionalidad aux;
 
-			listas.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
+			    while (ite.hasNext()) {
+				aux = ite.next();
+
+				model.addElement(new Item(aux.getIdNacionalidad(), aux.getDescNacionalidad()));
+
+			    }
+			    // return model;
+			}
+
+			return model;
 
 	}
 	
@@ -1251,4 +1191,40 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		   }
 		   return result;
 		}
+	
+	public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsPersona> evento){
+		
+		 
+		Iterator<UcsawsPersona> ite = evento.iterator();
+
+		//private String[] colNames = new String[] 
+		//{"ID","Item", "CI.", "Nombre", "Apellido","Fch. Nac.", "Pais Origen", "Pais Actual","Genero","Linea Baja","Celular","E-Mail"}; 
+
+		UcsawsPersona aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+			aux = ite.next();
+
+			Object[] row = { aux.getIdPersona(), cont , 
+				formatter.format(aux.getCi()) , 
+				aux.getNombre(), aux.getApellido(), 
+			new SimpleDateFormat("dd-MM-yyyy").format((aux.getFechaNacimiento())),aux.getUcsawsPaisByIdPaisOrigen().getNombre(),
+			aux.getUcsawsPaisByIdPaisActual().getNombre(),aux.getUcsawsGenero().getDescripcion() ,aux.getTelLineaBaja(), aux.getTelCelular(), aux.getEmail() };
+					
+
+
+					//new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+					
+					
+			model.personas.add(row);
+			cont++;
+		
+		
+		
+
+
+		
+	}
+		return model;
+	}
 }

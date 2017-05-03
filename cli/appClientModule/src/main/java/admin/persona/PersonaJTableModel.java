@@ -10,7 +10,7 @@ import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
 public class PersonaJTableModel extends AbstractTableModel {
 
-	List<Object[]> ciudades = new ArrayList<Object[]>();
+	List<Object[]> personas = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
@@ -19,12 +19,12 @@ public class PersonaJTableModel extends AbstractTableModel {
 
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ciudades.size();
+		return personas.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 
-		Object resultado = ciudades.get(rowIndex) [columnIndex];
+		Object resultado = personas.get(rowIndex) [columnIndex];
 		
 		return resultado;
 	}

@@ -10,7 +10,11 @@ import java.util.GregorianCalendar;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.nacionalidades.NacionalidadesDAO;
+import src.main.java.dao.pais.PaisDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
@@ -19,80 +23,38 @@ public class NacionalidadValidator {
 	public Boolean ValidarCodigo(String codigo, String desc)
 			throws ParseException, org.json.simple.parser.ParseException {
 
-		boolean existe = false;
+		 
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
-				+ "from ucsaws_nacionalidad "
-				+ "where  (upper(cod_nacionalidad) = "
-				+ "upper('" + codigo + "') or " + "upper(desc_nacionalidad) = "
-				+ "upper('" + desc + "'))" + "and id_evento = "
-				+ VentanaBuscarEvento.evento);
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("[]") != 0) {
-
-			return existe = true;
+		NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
+		
+		UcsawsNacionalidad nacionalidad = nacionalidadesDAO.obtenerNacionalidadByCodigoYNombre(codigo, desc);
+		
+		
+		if (nacionalidad.getIdNacionalidad()== null){
+			return false;
+		}
+		else{
+			return true;
 		}
 
-		else {
-			existe = false;
-
-			return existe;
-
-		}
 
 	}
 
-	public Boolean ValidarPais(Integer pais) throws ParseException,
+	public Boolean ValidarPais(Integer idPais , String idEvento) throws ParseException,
 			org.json.simple.parser.ParseException {
 
-		boolean existe = false;
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_nacionalidad, cod_nacionalidad "
-				+ "from ucsaws_nacionalidad " + "where  id_pais = "
-
-				+ pais + " and id_evento = " + VentanaBuscarEvento.evento);
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("[]") != 0) {
-
-			return existe = true;
+		PaisDAO paisDAO = new PaisDAO();
+		
+		UcsawsPais pais = new UcsawsPais();
+		pais = paisDAO.obtenerPaisByIdeIdEvento(idPais, idEvento);
+		
+		
+		if (pais == null){
+			return false;
 		}
-
-		else {
-			existe = false;
-
-			return existe;
-
+		else{
+			return true;
 		}
 
 	}
