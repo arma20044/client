@@ -29,7 +29,7 @@ public class NacionalidadJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Itema", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"};
+	private String[] colNames = new String[] {"ID", "Item", "Cod. Nacionalidad", "Desc. Nacionalidad","Pais"};
 
 	@Override
 	public String getColumnName(int col) {

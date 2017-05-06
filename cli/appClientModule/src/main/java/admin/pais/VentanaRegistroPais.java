@@ -296,9 +296,9 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 					    
 					    
 					    UcsawsPais paisAGuardar = new UcsawsPais();
-					    paisAGuardar.setCodigo(txtCodigoPais.getText() );
+					    paisAGuardar.setCodigo(txtCodigoPais.getText().toUpperCase() );
 					    paisAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
-					    paisAGuardar.setNombre(txtDescripcion.getText());
+					    paisAGuardar.setNombre(txtDescripcion.getText().toUpperCase());
 					    paisAGuardar.setIdEvento(eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento));
 					    
 					    PaisDAO paisDAO = new PaisDAO();

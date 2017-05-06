@@ -313,8 +313,8 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 			UcsawsGenero generoAGuardar = new UcsawsGenero();
 			generoAGuardar
 				.setUsuarioIns(Login.nombreApellidoUserLogeado);
-			generoAGuardar.setCodigo(txtCodigo.getText());
-			generoAGuardar.setDescripcion(txtDescripcion.getText());
+			generoAGuardar.setCodigo(txtCodigo.getText().toUpperCase());
+			generoAGuardar.setDescripcion(txtDescripcion.getText().toUpperCase());
 			generoAGuardar.setIdEvento(Integer
 				.parseInt(VentanaBuscarEvento.evento));
 

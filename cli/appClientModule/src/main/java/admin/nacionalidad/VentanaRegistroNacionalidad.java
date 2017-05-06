@@ -50,6 +50,7 @@ import org.springframework.context.ApplicationContext;
 
 
 
+
 import entity.UcsawsEvento;
 import entity.UcsawsNacionalidad;
 import entity.UcsawsPais;
@@ -178,8 +179,9 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 				return component;
 			}
 		};
+		table.getTableHeader().setReorderingAllowed(false);
 		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
+		table.setAutoCreateRowSorter(false);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table);
 		table.addMouseListener(new MouseAdapter() {
@@ -220,6 +222,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 			}
 		});
+		recuperarDatos();
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setModel(model);
 
@@ -288,7 +291,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		getContentPane().add(lblDescripcion);
 
 		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		
 
 	}
 
@@ -332,8 +335,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 						    UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
 						    UcsawsNacionalidad nacionalidadAGuardar = new UcsawsNacionalidad();
 						    
-						    nacionalidadAGuardar.setCodNacionalidad(txtCod.getText());
-						    nacionalidadAGuardar.setDescNacionalidad(txtDescripcion.getText());
+						    nacionalidadAGuardar.setCodNacionalidad(txtCod.getText().toUpperCase());
+						    nacionalidadAGuardar.setDescNacionalidad(txtDescripcion.getText().toUpperCase());
 						    nacionalidadAGuardar.setIdEvento(evento);
 						    nacionalidadAGuardar.setUcsawsPais(pais);
 						    nacionalidadAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
@@ -343,9 +346,11 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 						    nacionalidadesDAO.guardarNacionalidad(nacionalidadAGuardar);
 						    
 
-							 
+						    VentanaBuscarNacionalidad buscar = new VentanaBuscarNacionalidad();
+						    buscar.setVisible(true);
+						    dispose(); 
 
-							model = new NacionalidadJTableModel();
+							/*model = new NacionalidadJTableModel();
 							recuperarDatos();
 							table.setModel(model);
 							model.fireTableDataChanged();
@@ -367,7 +372,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 							txtCod.setText("");
 							txtDescripcion.setText("");
-							cmbPais.setSelectedIndex(-1);
+							cmbPais.setSelectedIndex(-1);*/
 							// this.dispose();
 						} else {
 							// JOptionPane.showMessageDialog(null,
@@ -503,7 +508,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 		QueryGenericoRequest query = new QueryGenericoRequest();
 
-		query.setTipoQueryGenerico(45);
+		//query.setTipoQueryGenerico(45);
+		query.setTipoQueryGenerico(57);
 
 		query.setQueryGenerico(VentanaBuscarEvento.evento);
 
@@ -526,9 +532,10 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		}
 
 		if (pais.isEmpty()) {
-		    JOptionPane.showMessageDialog(null, "algo salio mal",
-			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    //JOptionPane.showMessageDialog(null, "algo salio mal",
+			//    "Advertencia", JOptionPane.WARNING_MESSAGE);
 		    // return lista;
+		    System.out.println("Ya se agregaron todas las nacionalidades");
 		}
 
 		else {

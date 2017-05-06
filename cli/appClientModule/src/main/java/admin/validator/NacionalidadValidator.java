@@ -20,43 +20,56 @@ import src.main.java.hello.WeatherConfiguration;
 
 public class NacionalidadValidator {
 
-	public Boolean ValidarCodigo(String codigo, String desc)
-			throws ParseException, org.json.simple.parser.ParseException {
+    public Boolean ValidarCodigo(String codigo, String desc)
+	    throws ParseException, org.json.simple.parser.ParseException {
 
-		 
+	NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
 
-		NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
-		
-		UcsawsNacionalidad nacionalidad = nacionalidadesDAO.obtenerNacionalidadByCodigoYNombre(codigo, desc);
-		
-		
-		if (nacionalidad.getIdNacionalidad()== null){
-			return false;
-		}
-		else{
-			return true;
-		}
+	UcsawsNacionalidad nacionalidad = nacionalidadesDAO
+		.obtenerNacionalidadByCodigoYNombre(codigo, desc);
 
-
+	if (nacionalidad.getIdNacionalidad() == null) {
+	    return false;
+	} else {
+	    return true;
 	}
 
-	public Boolean ValidarPais(Integer idPais , String idEvento) throws ParseException,
-			org.json.simple.parser.ParseException {
+    }
 
+    public Boolean ValidarPais(Integer idPais, String idEvento)
+	    throws ParseException, org.json.simple.parser.ParseException {
 
-		PaisDAO paisDAO = new PaisDAO();
-		
-		UcsawsPais pais = new UcsawsPais();
-		pais = paisDAO.obtenerPaisByIdeIdEvento(idPais, idEvento);
-		
-		
-		if (pais == null){
-			return false;
-		}
-		else{
-			return true;
-		}
+	PaisDAO paisDAO = new PaisDAO();
 
+	UcsawsPais pais = new UcsawsPais();
+	pais = paisDAO.obtenerPaisByIdeIdEvento(idPais, idEvento);
+
+	if (pais == null) {
+	    return false;
+	} else {
+	    return true;
 	}
+
+    }
+
+    public Boolean ValidarPais2(Integer idPais )
+	    throws ParseException, org.json.simple.parser.ParseException {
+
+	UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
+	NacionalidadesDAO nacionalidadDAO = new NacionalidadesDAO();
+	
+	
+	nacionalidad = nacionalidadDAO.obtenerNacionalidadByIdPais(idPais.toString());
+
+	 
+
+
+	if (nacionalidad.getIdNacionalidad() == null) {
+	    return false;
+	} else {
+	    return true;
+	}
+
+    }
 
 }

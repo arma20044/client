@@ -26,6 +26,51 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 public class NacionalidadesDAO {
+    
+    public Boolean modificarNacionalidad(UcsawsNacionalidad nacionalidad) {
+
+ 	boolean guardado = false;
+
+   	ObjectMapper mapperObj = new ObjectMapper();
+   	String jsonStr = "";
+   	try {
+   	    // get Employee object as a json string
+   	    jsonStr = mapperObj.writeValueAsString(nacionalidad);
+   	    System.out.println(jsonStr);
+   	} catch (IOException e) {
+   	    // TODO Auto-generated catch block
+   	    e.printStackTrace();
+   	}
+
+   	ApplicationContext ctx = SpringApplication
+   		.run(WeatherConfiguration.class);
+
+   	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+   	QueryGenericoRequest query = new QueryGenericoRequest();
+
+   	query.setTipoQueryGenerico(55);
+   	query.setQueryGenerico(jsonStr);
+
+   	QueryGenericoResponse response = weatherClient
+   		.getQueryGenericoResponse(query);
+   	weatherClient.printQueryGenericoResponse(response);
+
+   	ObjectMapper mapper = new ObjectMapper();
+   	String jsonInString = response.getQueryGenericoResponse();
+
+   	if(jsonInString.compareTo("SI")==0){
+   	 guardado = true;
+   	}
+   	else{
+   	    guardado = false;
+   	}
+   	
+
+   	return guardado;
+    }
+    
+    
+    
 	
 	
     public Boolean guardarNacionalidad(UcsawsNacionalidad nacionalidad) {
@@ -192,84 +237,48 @@ public class NacionalidadesDAO {
 						
 	}
 
-//	public void modificarEvento(String codigoASetear, String codigoWhere) {
-//		
-//		
-//		try{
-//			
-//		
-//		ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-//
-//		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-//		QueryGenericoRequest query = new QueryGenericoRequest();
-//		
-//		
-//		query.setTipoQueryGenerico(3);
-//		
-//		query.setQueryGenerico("update ucsaws_evento "
-//				+ "set descripcion = upper('" +codigoASetear+"') , fch_upd = now() , usuario_upd = '" +  Login.userLogeado
-//				+ "' where id_evento = "
-//				
-//				+ codigoWhere
-//				+ "");
-//		
-//		
-//		
-//		QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-//		weatherClient.printQueryGenericoResponse(response);
-//		
-//		String res = response.getQueryGenericoResponse();
-//		
-//	} catch (Exception ex) {
-//		JOptionPane.showMessageDialog(null,"Error al intentar modificar","Error",JOptionPane.ERROR_MESSAGE);
-//	}
-//	//JOptionPane.showMessageDialog(null,"Excelente, se ha modificado el genero.");
-//	
-//
-////			if(res.compareTo("ERRORRRRRRR")==0){
-////				JOptionPane.showMessageDialog(null, "El Genero: "+ codigo +" no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-////				return gen;
-////			}
-//
-//	}
 
-	public Boolean eliminarNacionalidad(String codigo)
+
+	public Boolean eliminarNacionalidad(UcsawsNacionalidad nacionalidad)
 	{
 		boolean eliminado = false;
 		
-		try{
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+		ObjectMapper mapperObj = new ObjectMapper();
+	   	String jsonStr = "";
+	   	try {
+	   	    // get Employee object as a json string
+	   	    jsonStr = mapperObj.writeValueAsString(nacionalidad);
+	   	    System.out.println(jsonStr);
+	   	} catch (IOException e) {
+	   	    // TODO Auto-generated catch block
+	   	    e.printStackTrace();
+	   	}
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			
-			query.setTipoQueryGenerico(4);
-			
-			query.setQueryGenerico("DELETE FROM ucsaws_nacionalidad WHERE"
-					+ " id_nacionalidad = "
-					+ codigo 
-					 );
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-			
-			if (res.compareTo("ERRORRRRRRR")== 0){
-				
-				
-				eliminado = false;
-			}
-			else{
-				eliminado = true;
-			}
+	   	ApplicationContext ctx = SpringApplication
+	   		.run(WeatherConfiguration.class);
+
+	   	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	   	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	   	query.setTipoQueryGenerico(53);
+	   	query.setQueryGenerico(jsonStr);
+
+	   	QueryGenericoResponse response = weatherClient
+	   		.getQueryGenericoResponse(query);
+	   	weatherClient.printQueryGenericoResponse(response);
+
+	   	ObjectMapper mapper = new ObjectMapper();
+	   	String resp = response.getQueryGenericoResponse();
+
+	   	String n = new String();
+	   	try {
+	   	    //n = mapper.readValue(jsonInString, String.class);
+	   	    if (resp.compareTo("SI")==0){
+	   		eliminado = true;
+	   	    }
 			
 		} catch (Exception ex) {
+		    	eliminado = false;
 			JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Nacionalidad","Error",JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
@@ -314,6 +323,88 @@ public class NacionalidadesDAO {
 		UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
 		try {
 		    nacionalidad = mapper.readValue(jsonInString, UcsawsNacionalidad.class);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+		return nacionalidad;
+	    }
+	    
+	    public UcsawsNacionalidad obtenerNacionalidadById(String idNacionalidad) {
+
+		ApplicationContext ctx = SpringApplication
+			.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+ 
+ 
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+
+		// get Employee object as a json string
+		try {
+		    jsonStr = mapperObj.writeValueAsString(idNacionalidad);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+
+		query.setTipoQueryGenerico(54);
+		query.setQueryGenerico(jsonStr);
+
+		QueryGenericoResponse response = weatherClient
+			.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+
+		  UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
+		try {
+		    nacionalidad = mapper.readValue(jsonInString,  UcsawsNacionalidad.class);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+		return nacionalidad;
+	    }
+	    
+	    public UcsawsNacionalidad obtenerNacionalidadByIdPais(String idPais) {
+
+		ApplicationContext ctx = SpringApplication
+			.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+ 
+ 
+
+		// parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+
+		// get Employee object as a json string
+		try {
+		    jsonStr = mapperObj.writeValueAsString(idPais);
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
+
+		query.setTipoQueryGenerico(56);
+		query.setQueryGenerico(jsonStr);
+
+		QueryGenericoResponse response = weatherClient
+			.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = response.getQueryGenericoResponse();
+
+		  UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
+		try {
+		    nacionalidad = mapper.readValue(jsonInString,  UcsawsNacionalidad.class);
 		} catch (Exception e) {
 		    System.out.println(e);
 		}

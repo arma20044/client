@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -167,8 +168,9 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 			        return false;  
 			      }  
 			};
+		table_1.getTableHeader().setReorderingAllowed(false);	
 		table_1.setToolTipText("Listado de Nacionalidades.");
-		table_1.setAutoCreateRowSorter(true);
+		table_1.setAutoCreateRowSorter(false);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
 		// String[] columnNames = {"Picture", "Description"};
@@ -278,8 +280,9 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 			public void mouseClicked(MouseEvent arg0) {
 				if (!codTemporal.equals("")) {
 					
-					
-					VentanaModificarNacionalidad modificar = new VentanaModificarNacionalidad(nacionalidad);
+					NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
+					UcsawsNacionalidad nacionalidadModificar = nacionalidadesDAO.obtenerNacionalidadById(codTemporal);
+					VentanaModificarNacionalidad modificar = new VentanaModificarNacionalidad(nacionalidadModificar);
 					modificar.setVisible(true);
 					dispose();
 				}
@@ -313,7 +316,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
 		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
-		recuperarDatos();
+		//recuperarDatos();
 		cellSelectionModel
 				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
@@ -364,15 +367,27 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 					NacionalidadesDAO nacionalidadesDAO = new NacionalidadesDAO();
 
 					try {
-						if(nacionalidadesDAO.eliminarNacionalidad(codTemporal)==false){
+					    UcsawsNacionalidad nacionalidadEliminar = nacionalidadesDAO.obtenerNacionalidadById(codTemporal);
+						if(nacionalidadesDAO.eliminarNacionalidad(nacionalidadEliminar)==false){
 							JOptionPane.showMessageDialog(null, "Error al intentar Borrar la Nacionalidad",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}
 						
 						else{
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado la Nacionalidad ","Información", JOptionPane.INFORMATION_MESSAGE);
-							codTemporal = "";
+						    codTemporal = "";
+						    
+						    lblMensaje
+							.setText("Excelente, se ha eliminado la Nacionalidad ");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+							 
 							limpiar();
 
 							model = new NacionalidadJTableModel();
@@ -474,7 +489,19 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		JSONArray fil = new JSONArray();
 
 		boolean existe = false;
-
+		
+		//parseo json
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+			// get Employee object as a json string
+			jsonStr = mapperObj.writeValueAsString(VentanaBuscarEvento.evento);
+			System.out.println(jsonStr);
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+	}
 		// Statement estatuto = conex.getConnection().createStatement();
 
 		ApplicationContext ctx = SpringApplication
@@ -486,7 +513,7 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
 		// para registrar se inserta el codigo es 1
 		query.setTipoQueryGenerico(46);
 
-		query.setQueryGenerico(VentanaBuscarEvento.evento);
+		query.setQueryGenerico(jsonStr);
 
 		QueryGenericoResponse response = weatherClient
 			.getQueryGenericoResponse(query);

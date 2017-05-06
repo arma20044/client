@@ -663,7 +663,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 
 				UcsawsEvento eventoParaGuardar = new UcsawsEvento();
 				eventoParaGuardar.setDescripcion(txtDescripcion
-					.getText());
+					.getText().toUpperCase());
 				eventoParaGuardar.setFchDesde(g.getDesde());
 				eventoParaGuardar.setFchHasta(g.getHasta());
 				eventoParaGuardar
