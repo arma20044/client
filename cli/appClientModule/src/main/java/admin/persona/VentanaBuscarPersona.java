@@ -65,13 +65,15 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.WindowFocusListener;
 
+import javax.swing.JPanel;
+
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
     
     private static final DecimalFormat formatter = new DecimalFormat( "###,###,###" );
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
-										// coordinador
+	//private JTable table_1;									// coordinador
 	private JLabel labelTitulo;
 	private JTextField txtBuscar;
 	private JLabel lblBuscar;
@@ -79,9 +81,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
-	private JTable table_1;
 	private PersonaJTableModel model = new PersonaJTableModel();
-	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
 
@@ -93,6 +93,12 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	private Persona persona;
 	private JButton btnImportar;
 	private VentanaBuscarPersona ventanaBuscarPersona;
+	
+	private JTable table_1;
+	
+	private JScrollPane scrollPane;
+	
+	
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -186,112 +192,9 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		//scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Personas");
-		scrollPane.setBounds(0, 158, 1146, 265);
-		getContentPane().add(scrollPane);
-
-		table_1 = new JTable() {
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-		table_1.getTableHeader().setReorderingAllowed(false);
-		 
-		table_1.setToolTipText("Listado de Personas.");
-		//table_1.setAutoCreateRowSorter(true);
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table_1);
-		// String[] columnNames = {"Picture", "Description"};
-		table_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-
-				List<String> selectedData = new ArrayList<String>();
-
-				// int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-
-				// Object a =
-				// table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]),
-				// 0);
-				// int[] selectedColumns = table_1.getSelectedColumns();
-				// System.out.println(a);
-
-				// if (selectedRow >= 0) {
-				int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-				System.out.println(selectedRow);
-				int col = 0;
-				while (col < table_1.getColumnCount() + 1) {
-					// System.out.println(table_1.getValueAt(selectedRow,
-					// col));
-					try {
-						int row = table_1.rowAtPoint(arg0.getPoint());
-						String table_click0 = table_1
-								.getModel()
-								.getValueAt(
-										table_1.convertRowIndexToModel(row),
-										col).toString();
-						// System.out.println(table_click0);
-
-						selectedData.add(table_click0);
-						System.out.println(selectedData);
-
-						// comentar despues
-						// int row1 = table_1.rowAtPoint(arg0.getPoint());
-						// String table_click01 =
-						// table_1.getModel().getValueAt(table_1.
-						// convertRowIndexToModel(row1), 0).toString();
-						// System.out.println(table_click01);
-						// comentar despues
-
-					} catch (Exception e) {
-						System.out.println(e.getMessage());
-					}
-
-					col++;
-				}
-				// selectedData.ad table_1.getValueAt(selectedRow[i],
-				// selectedColumns[0]);
-				// txtId.setText(selectedData.get(0));
-				txtBuscar.setText(selectedData.get(3) + " "
-						+ selectedData.get(4));
-
-				// textFecha.setText(selectedData.get(2));
-				// textUsu.setText(selectedData.get(4));
-				// codTemporal.setText(selectedData.get(1));
-				codTemporal = (selectedData.get(0));
-
-				System.out.println("Selected: " + selectedData);
-				
-				persona = new Persona();
-				
-				persona.setCi(selectedData.get(0));
-				persona.setId_persona(selectedData.get(2));
-				persona.setNombre(selectedData.get(3));
-				persona.setApellido(selectedData.get(4));
-				
-				persona.setFecha_Nacimiento(selectedData.get(5));
-				persona.setPais_origen(selectedData.get(6));
-				persona.setPais_actual(selectedData.get(7));
-				persona.setGenero(selectedData.get(8));
-				persona.setLineabaja(selectedData.get(9));
-				persona.setCelular(selectedData.get(10));
-				persona.setNacionalidad(selectedData.get(11));
-				persona.setEmail(selectedData.get(12));
-
-				
-
-			}
-		});
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		recuperarDatos();
-		table_1.setModel(model);
-		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		
-		resizeColumnWidth(table_1);
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		//resizeColumnWidth(table_1);
+		//table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		
 		
@@ -339,7 +242,47 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				java.awt.Image.SCALE_SMOOTH);
 		btnNuevo.setIcon(new ImageIcon(newimg2));
 		getContentPane().add(btnNuevo);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setAutoscrolls(true);
+		scrollPane.setToolTipText("Lista de Personas\r\n");
+		scrollPane.setBounds(0, 158, 1146, 261);
+		getContentPane().add(scrollPane);
+		
+		
+		table_1 = new JTable() {  
+		      public boolean isCellEditable(int row, int column){  
+			        return false;  
+			      }  
+			};
+		table_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			    Integer row = table_1.rowAtPoint(arg0.getPoint());
+			    
+			    
+			    List<String> selectedData = new ArrayList<String>();
+			    
+			    int col = 0;
+				while (col < table_1.getColumnCount()+1) {
+			    String table_click0 = table_1.getModel().getValueAt(table_1.
+		                          convertRowIndexToModel(row), col).toString();
+			    selectedData.add(table_click0);
+			    
+				col++;
+				}
+			    codTemporal = selectedData.get(0);
+			}
+		});
+			table_1.setToolTipText("");
+			table_1.getTableHeader().setReorderingAllowed(false);
 
+			table_1.setAutoCreateRowSorter(false);
+			
+			//getContentPane().add(table_1);
+			
+			scrollPane.setViewportView(table_1);
+			
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
@@ -350,8 +293,10 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
 				if (!codTemporal.equals("")) {
+				    PersonaDAO personaDAO = new PersonaDAO();
+				    UcsawsPersona personaAModificar = personaDAO.obtenerPersonaByIdPersona(codTemporal);
 
-					VentanaModificarPersona modificar = new VentanaModificarPersona(persona);
+					VentanaModificarPersona modificar = new VentanaModificarPersona(personaAModificar);
 					modificar.setVisible(true);
 					dispose();
 				} else {
@@ -389,10 +334,15 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		btnImportar = new JButton();
 		btnImportar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ImportarPersona  persona = new ImportarPersona(ventanaBuscarPersona, true);
+				ImportarPersona  persona = new ImportarPersona();
 				persona.setVisible(true);
+				dispose();
 			}
 		});
+		
+		
+		
+		
 		btnImportar.setIcon(new ImageIcon(VentanaBuscarPersona.class.getResource("/imgs/caja.png")));
 		btnImportar.setToolTipText("Importar XLS");
 		btnImportar.setOpaque(false);
@@ -407,13 +357,22 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		
 		
 		getContentPane().add(btnImportar);
+		
 
-		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
-
-		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
+		
+		//table_1 = new JTable();
+		//scrollPane.setViewportView(table_1);
+		
+		//table_1 = new JTable();
+		
+		
+	
 		recuperarDatos();
-		cellSelectionModel
-				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		table_1.setModel(model);
+		
+		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+		//cellSelectionModel
+		//		.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
 		// cellSelectionModel.addListSelectionListener(new
 		// ListSelectionListener() {
@@ -498,10 +457,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 							recuperarDatos();
 							table_1.setModel(model);
-							table_1.removeColumn(table_1.getColumnModel()
-									.getColumn(0));
-							// model.fireTableDataChanged();
-							// table_1.repaint();
+							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 						}
 
 					} catch (Exception e2) {
@@ -649,12 +605,14 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 	public void filter(String query) {
 
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
-				dm);
+		//TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
 
-		table_1.setRowSorter(tr);
-
-		tr.setRowFilter(RowFilter.regexFilter(query));
+		//tr.setRowFilter(RowFilter.regexFilter(query));
+	    
+	    //table_1.setModel(new KeywordDataModel());
+	    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+	    sorter.setRowFilter(RowFilter.regexFilter(query));
+	    table_1.setRowSorter(sorter);
 
 	}
 	

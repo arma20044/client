@@ -88,10 +88,8 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 				       // coordinador
     private JLabel labelTitulo, lblMensaje;
     private JButton btnGuardar, botonCancelar, btnFecha;
-    private JTable table;
     private VentanaModificarEvento ventanaRegistroPersona;
     private EventoJTableModel model = new EventoJTableModel();
-    private JScrollPane scrollPane;
 
     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     Date date = new Date();
@@ -113,7 +111,6 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
     private JLabel lblDescripcion;
     private JTextField txtDescripcion;
     private JLabel lblFechaDesde;
-    private JTextField txtFiltrar;
 
     private DefaultTableModel dm;
 
@@ -162,7 +159,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	botonCancelar.setToolTipText("Atrás");
 	botonCancelar.setIcon(new ImageIcon(VentanaModificarEvento.class
 		.getResource("/imgs/back2.png")));
-	botonCancelar.setBounds(1114, 415, 32, 32);
+	botonCancelar.setBounds(526, 250, 32, 32);
 	botonCancelar.setOpaque(false);
 	botonCancelar.setContentAreaFilled(false);
 	botonCancelar.setBorderPainted(false);
@@ -182,113 +179,12 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	getContentPane().add(btnGuardar);
 	getContentPane().add(labelTitulo);
 	limpiar();
-	setSize(1152, 476);
+	setSize(593, 319);
 	setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 	setLocationRelativeTo(null);
 	setResizable(false);
 	getContentPane().setLayout(null);
-
-	scrollPane = new JScrollPane();
-	scrollPane.setFocusable(false);
-	scrollPane.setEnabled(false);
-	scrollPane.setAutoscrolls(true);
-	scrollPane.setToolTipText("Lista de Eventos\r\n");
-	scrollPane.setBounds(0, 257, 1146, 160);
-	getContentPane().add(scrollPane);
-
-	table = new JTable() {
-	    public boolean isCellEditable(int row, int column) {
-		return false;
-	    }
-	};
-	table.setToolTipText("Lista de Eventos");
-	table.setAutoCreateRowSorter(true);
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	scrollPane.setViewportView(table);
-	// table.addMouseListener(new MouseAdapter() {
-	// @Override
-	// public void mouseClicked(MouseEvent arg0) {
-	// List<String> selectedData = new ArrayList<String>();
-	//
-	//
-	// int selectedRow = table.rowAtPoint(arg0.getPoint());
-	// //System.out.println(selectedRow);
-	// int col = 0;
-	// while (col < table.getColumnCount()+1) {
-	// //System.out.println(table_1.getValueAt(selectedRow,
-	// // col));
-	// try {
-	// int row = table.rowAtPoint(arg0.getPoint());
-	// String table_click0 = table.getModel().getValueAt(table.
-	// convertRowIndexToModel(row), col).toString();
-	// //System.out.println(table_click0);
-	//
-	// selectedData.add(table_click0);
-	// //System.out.println(selectedData);
-	//
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// }
-	//
-	// col++;
-	// }
-	//
-	// //Selected: [1, 345343, TEST ANDE, 01/09/2015 07:00:00, 11/04/2016
-	// 23:30:00, ELECCIONES GENERALES]
-	// // selectedData.ad table_1.getValueAt(selectedRow[i],
-	// // selectedColumns[0]);
-	// // txtId.setText(selectedData.get(0));
-	// txtNro.setText(selectedData.get(2));
-	// txtDescripcion.setText(selectedData.get(3));
-	// txtFchDesde.setText(selectedData.get(4).substring(0, 10));
-	// txtHoraDesde.setText(selectedData.get(4).substring(11, 13));
-	// txtMinDesde.setText(selectedData.get(4).substring(14, 16));
-	//
-	// txtFchHasta.setText( selectedData.get(5).substring(0, 10));
-	// txtHoraHasta.setText(selectedData.get(5).substring(11, 13));
-	// txtMinHasta.setText(selectedData.get(5).substring(14, 16));
-	// // textUsu.setText(selectedData.get(4));
-	// // codTemporal.setText(selectedData.get(1));
-	// codTemporal =selectedData.get(0);
-	//
-	// // actualizar combo persona
-	// DefaultComboBoxModel dtm = (DefaultComboBoxModel)
-	// cmbTipoEvento.getModel();
-	//
-	// //System.out.println(dtm.getSize());
-	// int cont=0;
-	// Boolean finded=false;
-	// int tamanho = dtm.getSize();
-	// while(cont < dtm.getSize()){
-	// if
-	// (dtm.getElementAt(cont).toString().compareTo(selectedData.get(6).toString())==0)
-	// {
-	// //Item item = (Item) dtm.getElementAt(cont);
-	// //Integer tipoListaSelected = item.getId();
-	// cmbTipoEvento.setSelectedIndex(cont);
-	// finded=true;
-	// break;
-	// }
-	//
-	// cont++;
-	//
-	// //System.out.println(dtm.getElementAt(0));
-	// }
-	// if(finded==false){
-	// String a = selectedData.get(6).toString();
-	// cmbTipoEvento.addItem(a);
-	// cmbTipoEvento.setSelectedIndex(tamanho);
-	// }
-	// // actualizar combo persona
-	//
-	//
-	// System.out.println("Selected: " + selectedData);
-	//
-	// }
-	// });
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	recuperarDatos();
-	table.setModel(model);
+	//recuperarDatos();
 
 	btnHome = new JButton("");
 	btnHome.setToolTipText("Inicio");
@@ -373,43 +269,6 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	lblFchHasta.setHorizontalAlignment(SwingConstants.RIGHT);
 	lblFchHasta.setBounds(75, 170, 116, 25);
 	getContentPane().add(lblFchHasta);
-
-	table.removeColumn(table.getColumnModel().getColumn(0));
-	//recuperarDatos();
-
-	// cmbTipoEvento.setSelectedIndex(-1);
-
-	txtFiltrar = new JTextField();
-	txtFiltrar.addFocusListener(new FocusAdapter() {
-	    @Override
-	    public void focusGained(FocusEvent arg0) {
-		txtFiltrar.setText("");
-		txtFiltrar.setForeground(Color.BLACK);
-	    }
-
-	    @Override
-	    public void focusLost(FocusEvent e) {
-		if (txtFiltrar.getText().length() == 0) {
-		    String query = txtFiltrar.getText().toUpperCase();
-		    filter(query);
-		    txtFiltrar.setText("Escriba para Filtrar");
-		    txtFiltrar.setForeground(Color.LIGHT_GRAY);
-		}
-	    }
-	});
-	txtFiltrar.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyReleased(KeyEvent e) {
-		String query = txtFiltrar.getText().toUpperCase();
-		filter(query);
-	    }
-	});
-	txtFiltrar.setText("");
-	txtFiltrar.setForeground(Color.LIGHT_GRAY);
-	txtFiltrar.setEditable(true);
-	txtFiltrar.setBounds(234, 415, 319, 25);
-
-	getContentPane().add(txtFiltrar);
 	
 	try{
 		mf1 = new MaskFormatter("##:##");
@@ -649,7 +508,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	}
     }
 
-    private void recuperarDatos() {
+    /*private void recuperarDatos() {
 	JSONArray filas = new JSONArray();
 	JSONArray fil = new JSONArray();
 
@@ -697,7 +556,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	    // return lista;
 	}
 
-    }
+    }*/
 
     private Vector recuperarDatosComboBoxTipoEvento() {
 	Vector model = new Vector();
@@ -768,7 +627,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 
     }
 
-    public void filter(String query) {
+    /*public void filter(String query) {
 
 	TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
 		dm);
@@ -777,7 +636,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 
 	tr.setRowFilter(RowFilter.regexFilter(query));
 
-    }
+    }/*/
 
     // filtrar tipo evento
     public void filtrarComboEventoTipo() {

@@ -270,7 +270,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(0));
+					//txtBuscar.setText(selectedData.get(0));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -374,7 +374,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 								
 								
 								
-					 txtBuscar.setText(selectedData.get(3));
+					// txtBuscar.setText(selectedData.get(3));
 					 System.out.println(txtBuscar.getText());
 					 
 					 
@@ -448,10 +448,6 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		//btnModificarEvento = new JButton("");
 				btnModificar = new JButton("");
-				btnModificar.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-					}
-				});
 				btnModificar.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
@@ -769,13 +765,17 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		
 		
 		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		/*TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
 		
 		
 		
 		table_1.setRowSorter(tr);
 		
-	tr.setRowFilter(RowFilter.regexFilter(query));
+	tr.setRowFilter(RowFilter.regexFilter(query));*/
+	    
+	    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+	    sorter.setRowFilter(RowFilter.regexFilter(query));
+	    table_1.setRowSorter(sorter);
 		
 		
 	}
