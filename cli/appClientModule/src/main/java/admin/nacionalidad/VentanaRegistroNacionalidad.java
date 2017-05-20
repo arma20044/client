@@ -79,10 +79,8 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private NacionalidadJTableModel model = new NacionalidadJTableModel();
-	private JScrollPane scrollPane;
 
 	private NacionalidadValidator nacionalidadValidator = new NacionalidadValidator();
 
@@ -131,7 +129,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroNacionalidad.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(669, 158, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -153,78 +151,12 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(703, 214);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Nacionalidades");
-		scrollPane.setBounds(0, 190, 806, 193);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.getTableHeader().setReorderingAllowed(false);
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(false);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		recuperarDatos();
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
+		//recuperarDatos();
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -289,8 +221,6 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblDescripcion.setBounds(130, 84, 61, 25);
 		getContentPane().add(lblDescripcion);
-
-		table.removeColumn(table.getColumnModel().getColumn(0));
 		
 
 	}
@@ -446,7 +376,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		}
 	}
 
-	private void recuperarDatos() {
+	/*private void recuperarDatos() {
 	    JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -497,7 +427,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 
 
 
-	}
+	}*/
 
 	public Vector recuperarDatosComboBoxPaisActual() {
 		Vector model = new Vector();

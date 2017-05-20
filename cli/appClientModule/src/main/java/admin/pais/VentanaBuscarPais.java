@@ -194,7 +194,7 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 					// selectedData.ad table_1.getValueAt(selectedRow[i],
 					// selectedColumns[0]);
 					// txtId.setText(selectedData.get(0));
-					txtBuscar.setText(selectedData.get(3));
+					//txtBuscar.setText(selectedData.get(3));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -320,8 +320,21 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 						}
 						
 						else{
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado el Pais ","Información", JOptionPane.INFORMATION_MESSAGE);
+						    
+							lblMensaje
+							.setText("Excelente, se ha eliminado el Pais.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+					
+//							JOptionPane.showMessageDialog(null,
+//									"Excelente, se ha eliminado el Pais ","Información", JOptionPane.INFORMATION_MESSAGE);
 							txtBuscar.setText("");
 							codTemporal = "";
 							
@@ -482,17 +495,22 @@ public class VentanaBuscarPais extends JFrame implements ActionListener {
 
 	}
 	
-	public void filter(String query){
+    public void filter(String query){
 		
 		
 		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		/*TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
 		
 		
 		
 		table_1.setRowSorter(tr);
 		
-	tr.setRowFilter(RowFilter.regexFilter(query));
+	tr.setRowFilter(RowFilter.regexFilter(query));*/
+	
+	
+	    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+	    sorter.setRowFilter(RowFilter.regexFilter(query));
+	    table_1.setRowSorter(sorter);
 		
 		
 	}

@@ -60,10 +60,8 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private PaisJTableModel model = new PaisJTableModel();
-	private JScrollPane scrollPane;
 
 	private PaisValidator paisValidator = new PaisValidator();
 
@@ -109,7 +107,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroPais.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(617, 139, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -131,76 +129,11 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(652, 200);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Candidatos");
-		scrollPane.setBounds(0, 153, 806, 230);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtCodigoPais.setText(selectedData.get(1));
-					txtDescripcion.setText(selectedData.get(2));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -255,9 +188,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(213, 85, 310, 26);
 		getContentPane().add(txtDescripcion);
-
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		//recuperarDatos();
 
 	}
 
@@ -305,10 +236,10 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 					    paisDAO.guardarPais(paisAGuardar);
 
 						model = new PaisJTableModel();
-						recuperarDatos();
-						table.setModel(model);
+						//recuperarDatos();
+						//table.setModel(model);
 						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
+						//table.removeColumn(table.getColumnModel().getColumn(0));
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 						lblMensaje
 								.setText("Excelente, se ha guardado el Pais.");
@@ -323,6 +254,11 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 
 						txtCodigoPais.setText("");
 						txtDescripcion.setText("");
+						
+						
+						VentanaBuscarPais pais = new VentanaBuscarPais();
+						pais.setVisible(true);
+						dispose();
 
 						// this.dispose();
 						// } else {
@@ -388,7 +324,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 		}
 	}
 
-	private void recuperarDatos() {
+	/*private void recuperarDatos() {
 	    JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -439,7 +375,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 
 
 
-	}
+	}*/
 	
 	 public AbstractTableModel obtenerModeloA(JTable tabla,
 		    List<UcsawsPais> pais) {

@@ -67,10 +67,8 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 				       // coordinador
     private JLabel labelTitulo, lblMensaje;
     private JButton botonGuardar, botonCancelar;
-    private JTable table;
 
     private GeneroJTableModel model = new GeneroJTableModel();
-    private JScrollPane scrollPane;
 
     private GeneroValidator generoValidator = new GeneroValidator();
 
@@ -116,7 +114,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	botonCancelar.setToolTipText("Atrás");
 	botonCancelar.setIcon(new ImageIcon(VentanaRegistroGenero.class
 		.getResource("/imgs/back2.png")));
-	botonCancelar.setBounds(774, 383, 32, 32);
+	botonCancelar.setBounds(511, 138, 32, 32);
 	botonCancelar.setOpaque(false);
 	botonCancelar.setContentAreaFilled(false);
 	botonCancelar.setBorderPainted(false);
@@ -136,90 +134,11 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	getContentPane().add(botonGuardar);
 	getContentPane().add(labelTitulo);
 	limpiar();
-	setSize(812, 444);
+	setSize(546, 195);
 	setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 	setLocationRelativeTo(null);
 	setResizable(false);
 	getContentPane().setLayout(null);
-
-	scrollPane = new JScrollPane();
-	scrollPane.setAutoscrolls(true);
-	scrollPane.setToolTipText("Lista de Generos");
-	scrollPane.setBounds(0, 153, 806, 230);
-	getContentPane().add(scrollPane);
-
-	table = new JTable() {
-	    @Override
-	    public Component prepareRenderer(TableCellRenderer renderer,
-		    int row, int column) {
-		Component component = super.prepareRenderer(renderer, row,
-			column);
-		int rendererWidth = component.getPreferredSize().width;
-		TableColumn tableColumn = getColumnModel().getColumn(column);
-		tableColumn.setPreferredWidth(Math.max(rendererWidth
-			+ getIntercellSpacing().width,
-			tableColumn.getPreferredWidth()));
-		return component;
-	    }
-	};
-	table.getTableHeader().setReorderingAllowed(false);
-	table.setToolTipText("");
-	//table.setAutoCreateRowSorter(false);
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	scrollPane.setViewportView(table);
-	table.addMouseListener(new MouseAdapter() {
-	    @Override
-	    public void mouseClicked(MouseEvent arg0) {
-		List<String> selectedData = new ArrayList<String>();
-
-		// int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-
-		// Object a =
-		// table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]),
-		// 0);
-		// int[] selectedColumns = table_1.getSelectedColumns();
-		// System.out.println(a);
-
-		// if (selectedRow >= 0) {
-		int selectedRow = table.rowAtPoint(arg0.getPoint());
-		System.out.println(selectedRow);
-		int col = 0;
-		while (col < table.getColumnCount() + 1) {
-		    // System.out.println(table_1.getValueAt(selectedRow,
-		    // col));
-		    try {
-			int row = table.rowAtPoint(arg0.getPoint());
-			String table_click0 = table
-				.getModel()
-				.getValueAt(table.convertRowIndexToModel(row),
-					col).toString();
-			// System.out.println(table_click0);
-
-			selectedData.add(table_click0);
-			System.out.println(selectedData);
-
-		    } catch (Exception e) {
-			System.out.println(e.getMessage());
-		    }
-
-		    col++;
-		}
-		// selectedData.ad table_1.getValueAt(selectedRow[i],
-		// selectedColumns[0]);
-		// txtId.setText(selectedData.get(0));
-		//txtCodigo.setText(selectedData.get(2));
-		//txtDescripcion.setText(selectedData.get(3));
-		// textFecha.setText(selectedData.get(2));
-		// textUsu.setText(selectedData.get(4));
-		// codTemporal.setText(selectedData.get(1));
-		//codTemporal = (selectedData.get(0));
-
-		// System.out.println("Selected: " + selectedData);
-
-	    }
-	});
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	table.setModel(model);
 
 	btnHome = new JButton("");
 	btnHome.setToolTipText("Inicio");
@@ -274,9 +193,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	txtDescripcion.setColumns(10);
 	txtDescripcion.setBounds(213, 87, 310, 26);
 	getContentPane().add(txtDescripcion);
-
-	table.removeColumn(table.getColumnModel().getColumn(0));
-	recuperarDatos();
+	//recuperarDatos();
 
     }
 
@@ -322,10 +239,10 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 			generoDAO.guardarGenero(generoAGuardar);
 
 			model = new GeneroJTableModel();
-			recuperarDatos();
-			table.setModel(model);
+			//recuperarDatos();
+			//table.setModel(model);
 			model.fireTableDataChanged();
-			table.removeColumn(table.getColumnModel().getColumn(0));
+			//table.removeColumn(table.getColumnModel().getColumn(0));
 			// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 			lblMensaje
 				.setText("Excelente, se ha guardado el Genero.");
@@ -406,7 +323,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	}
     }
 
-    private void recuperarDatos() {
+   /* private void recuperarDatos() {
 
 	JSONArray filas = new JSONArray();
 	JSONArray fil = new JSONArray();
@@ -456,7 +373,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	    // return lista;
 	}
 
-    }
+    }*/
 
     public AbstractTableModel obtenerModeloA(JTable tabla,
 	    List<UcsawsGenero> genero) {

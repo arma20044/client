@@ -125,6 +125,7 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 	private DefaultTableModel dm;
 	private JTextField txtEmail;
 	private JDateChooser fechaNacimiento;
+	 
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -158,7 +159,7 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaModificarPersona.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(1114, 415, 32, 32);
+		botonCancelar.setBounds(838, 247, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -179,8 +180,9 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
+		getContentPane().add(botonCancelar);
 		limpiar();
-		setSize(905, 296);
+		setSize(876, 305);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -383,6 +385,23 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		fechaNacimiento.setBounds(213, 117, 100, 26);
 		fechaNacimiento.setDate(persona.getFechaNacimiento());
 		getContentPane().add(fechaNacimiento);
+		
+		
+		
+		
+		botonCancelar = new JButton();
+		botonCancelar.setBackground(Color.WHITE);
+		botonCancelar.setToolTipText("Atrás");
+		botonCancelar.setIcon(new ImageIcon(VentanaRegistroPersona.class
+				.getResource("/imgs/back2.png")));
+		botonCancelar.setBounds(867, 263, 32, 32);
+		botonCancelar.setOpaque(false);
+		botonCancelar.setContentAreaFilled(false);
+		botonCancelar.setBorderPainted(false);
+		Image img4 = ((ImageIcon) botonCancelar.getIcon()).getImage();
+		Image newimg4 = img4.getScaledInstance(32, 32,
+				java.awt.Image.SCALE_SMOOTH);
+		botonCancelar.setIcon(new ImageIcon(newimg4));
 		//recuperarDatos();
 
 	}

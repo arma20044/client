@@ -174,10 +174,9 @@ public class PaisDAO {
 	    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
 	    QueryGenericoRequest query = new QueryGenericoRequest();
 
-	    query.setTipoQueryGenerico(4);
+	    query.setTipoQueryGenerico(63);
 
-	    query.setQueryGenerico("DELETE FROM ucsaws_pais WHERE"
-		    + " id_pais = " + codigo);
+	    query.setQueryGenerico(codigo);
 
 	    QueryGenericoResponse response = weatherClient
 		    .getQueryGenericoResponse(query);
@@ -185,7 +184,7 @@ public class PaisDAO {
 
 	    String res = response.getQueryGenericoResponse();
 
-	    if (res.compareTo("ERRORRRRRRR") == 0) {
+	    if (res.compareTo("NO") == 0) {
 
 		eliminado = false;
 	    } else {

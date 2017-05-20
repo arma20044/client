@@ -533,12 +533,16 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
     public void filter(String query) {
 
-	TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
+	/*TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
 		dm);
 
 	table_1.setRowSorter(tr);
 
-	tr.setRowFilter(RowFilter.regexFilter(query));
+	tr.setRowFilter(RowFilter.regexFilter(query));*/
+	
+	    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+	    sorter.setRowFilter(RowFilter.regexFilter(query));
+	    table_1.setRowSorter(sorter);
 
     }
 

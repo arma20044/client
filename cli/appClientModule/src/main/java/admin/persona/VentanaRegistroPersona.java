@@ -175,7 +175,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroPersona.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(1104, 262, 32, 32);
+		botonCancelar.setBounds(838, 264, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -197,7 +197,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(1152, 325);
+		setSize(873, 325);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
