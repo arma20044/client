@@ -13,7 +13,7 @@ import src.main.java.dao.distrito.DistritoDAO;
 public class DistritoValidator {
 
     public Boolean ValidarCodigo(String codigo, String descripcion,
-	    String idEvento) throws ParseException,
+	    String idEvento, String departamentoSeleccionado) throws ParseException,
 	    org.json.simple.parser.ParseException {
 
 	boolean existe = false;
@@ -28,8 +28,8 @@ public class DistritoValidator {
 	UcsawsDistrito aux;
 	while (ite.hasNext()) {
 	    aux = ite.next();
-	    if (aux.getDescDistrito().compareTo(descripcion) == 0
-		    || aux.getNroDistrito().compareTo(codigo) == 0) {
+	    if (aux.getDescDistrito().compareToIgnoreCase(descripcion) == 0
+		    || aux.getNroDistrito().compareToIgnoreCase(codigo) == 0) {
 		existe = true;
 	    }
 	}

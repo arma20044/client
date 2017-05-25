@@ -217,7 +217,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 			try {
 
 				
-				if (!(txtNro.getText().length() == 0)) {
+				if (!(txtNro.getText().length() == 0) && !(txtDescripcion.getText().length() == 0)) {
 					if (txtNro.getText().length() > 3) {
 						lblMensaje
 								.setText("El codigo debe ser de maximo 3 caracteres.");
@@ -232,7 +232,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 					} else if
 
 					(distritoValidator.ValidarCodigo(txtNro.getText(),
-							txtDescripcion.getText(), VentanaBuscarDepartamento.departamentoSeleccionado) == false) {
+							txtDescripcion.getText(), VentanaBuscarEvento.evento,VentanaBuscarDepartamento.departamentoSeleccionado) == false) {
 						 
 					    EventoDAO evento = new EventoDAO();
 					    DepartamentoDAO departamentoDAO = new DepartamentoDAO();

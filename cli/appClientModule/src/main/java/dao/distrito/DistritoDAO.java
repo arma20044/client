@@ -18,13 +18,41 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.UcsawsDepartamento;
-import entity.UcsawsDistrito;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import entity.UcsawsDistrito;
 
 public class DistritoDAO {
+    
+    
+    public UcsawsDistrito obtenerDistritoByID(Integer idDistrito) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(77);
+	query.setQueryGenerico(idDistrito.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	UcsawsDistrito distrito = new UcsawsDistrito();
+	try {
+	    distrito = mapper.readValue(jsonInString,UcsawsDistrito.class);
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return distrito;
+    }
 
     public List<UcsawsDistrito> obtenerDistritoByIdEvento(Integer idEvento) {
 

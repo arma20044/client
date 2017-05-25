@@ -26,7 +26,7 @@ public class DepartamentoValidator {
 		UcsawsDepartamento aux;
 		while (ite.hasNext()) {
 			aux = ite.next();
-			if(aux.getDescDepartamento().compareTo(descripcion)==0 || aux.getNroDepartamento().compareTo(codigo)==0){
+			if(aux.getDescDepartamento().compareToIgnoreCase(descripcion)==0 || aux.getNroDepartamento().compareToIgnoreCase(codigo)==0){
 			    existe = true;
 			}
 		}

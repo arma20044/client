@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class UcsawsZona implements java.io.Serializable {
 
-	private int idZona;
+	private Integer idZona;
 	private UcsawsDistrito ucsawsDistrito;
 	private String descZona;
 	private String nroZona;
@@ -24,13 +24,13 @@ public class UcsawsZona implements java.io.Serializable {
 	public UcsawsZona() {
 	}
 
-	public UcsawsZona(int idZona, UcsawsDistrito ucsawsDistrito, UcsawsEvento idEvento) {
+	public UcsawsZona(Integer idZona, UcsawsDistrito ucsawsDistrito, UcsawsEvento idEvento) {
 		this.idZona = idZona;
 		this.ucsawsDistrito = ucsawsDistrito;
 		this.idEvento = idEvento;
 	}
 
-	public UcsawsZona(int idZona, UcsawsDistrito ucsawsDistrito,
+	public UcsawsZona(Integer idZona, UcsawsDistrito ucsawsDistrito,
 			String descZona, String nroZona, String usuarioIns,
 			String usuarioUpd, Date fchIns, Date fchUpd, UcsawsEvento idEvento) {
 		this.idZona = idZona;
@@ -45,11 +45,11 @@ public class UcsawsZona implements java.io.Serializable {
 		
 	}
 
-	public int getIdZona() {
+	public Integer getIdZona() {
 		return this.idZona;
 	}
 
-	public void setIdZona(int idZona) {
+	public void setIdZona(Integer idZona) {
 		this.idZona = idZona;
 	}
 
