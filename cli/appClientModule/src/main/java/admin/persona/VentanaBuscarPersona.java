@@ -23,14 +23,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
@@ -70,6 +73,9 @@ import javax.swing.JPanel;
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
     
     private static final DecimalFormat formatter = new DecimalFormat( "###,###,###" );
+    
+    
+ 
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -248,6 +254,20 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		scrollPane.setToolTipText("Lista de Personas\r\n");
 		scrollPane.setBounds(0, 158, 1146, 261);
 		getContentPane().add(scrollPane);
+		
+		   
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
+		
+		 
+	
 		
 		
 		table_1 = new JTable() {  

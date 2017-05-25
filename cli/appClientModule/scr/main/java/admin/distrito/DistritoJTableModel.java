@@ -10,7 +10,7 @@ import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
 public class DistritoJTableModel extends AbstractTableModel {
 
-	List<Object[]> ciudades = new ArrayList<Object[]>();
+	List<Object[]> distrito = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
@@ -19,12 +19,12 @@ public class DistritoJTableModel extends AbstractTableModel {
 
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ciudades.size();
+		return distrito.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 
-		Object resultado = ciudades.get(rowIndex) [columnIndex];
+		Object resultado = distrito.get(rowIndex) [columnIndex];
 		
 		return resultado;
 	}

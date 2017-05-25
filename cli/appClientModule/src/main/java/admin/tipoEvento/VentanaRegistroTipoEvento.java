@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -17,14 +18,17 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.TableCellRenderer;
@@ -35,10 +39,12 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsTipoEvento;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.TipoEventoValidator;
+import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -51,10 +57,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
 
-	private JTable table;
-
 	private TipoEventoJTableModel model = new TipoEventoJTableModel();
-	private JScrollPane scrollPane;
 
 	private TipoEventoValidator tipoEventoValidator = new TipoEventoValidator();
 
@@ -68,6 +71,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
 	private JLabel lblDescripcion;
 	private JTextField txtDescripcion;
+	private TipoEventoDAO tipoEventoDAO = new TipoEventoDAO();
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -100,7 +104,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroTipoEvento.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(640, 110, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -111,7 +115,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		
 
 		labelTitulo = new JLabel();
-		labelTitulo.setText("NUEVO TIPO DE EVENTOS");
+		labelTitulo.setText("NUEVO TIPO DE EVENTO");
 		labelTitulo.setBounds(269, 11, 380, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -121,81 +125,11 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(677, 169);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Tipo Evento");
-		scrollPane.setBounds(0, 118, 806, 267);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				
-				int selectedRow = table.rowAtPoint(arg0.getPoint());
-					//System.out.println(selectedRow);
-					int col = 0;
-					while (col < table.getColumnCount()+1) {
-						
-						try {
-							int row = table.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table.getModel().getValueAt(table.
-			                          convertRowIndexToModel(row), col).toString();
-			                
-			                
-							selectedData.add(table_click0);
-							//System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
-					
-					txtDescripcion.setText(selectedData.get(2));
-
-				
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -230,9 +164,31 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(105, 95, 363, 14);
 		getContentPane().add(lblMensaje);
+		//recuperarDatos();
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonGuardar.doClick();
+			    System.out.println("button clicked");
+			        }
+			    });
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
+		
+			    
 
 	}
 
@@ -251,43 +207,20 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 				if (!(txtDescripcion.getText().length() == 0)) {
 				  if
 
-					(tipoEventoValidator.ValidarCodigo(txtDescripcion.getText()) == false) {
+					(tipoEventoValidator.ValidarCodigo(VentanaBuscarEvento.evento, txtDescripcion.getText()) == false) {
 
-						// Genero genero = new Genero();
-						// genero.setDescripcion(textGenero.getText());
-
-						Calendar calendar = new GregorianCalendar();
-						int year = calendar.get(Calendar.YEAR);
-
-						ApplicationContext ctx = SpringApplication
-								.run(WeatherConfiguration.class);
-
-						WeatherClient weatherClient = ctx
-								.getBean(WeatherClient.class);
-						QueryGenericoRequest query = new QueryGenericoRequest();
-
-						// para registrar se inserta el codigo es 1
-						query.setTipoQueryGenerico(1);
-						System.out.println(Login.userLogeado);
-						query.setQueryGenerico("INSERT INTO ucsaws_tipo_evento"
-								+ "( id_tipo_evento, descripcion,usuario_ins,fch_ins, usuario_upd, fch_upd, id_evento) "
-								+ "VALUES ("
-								+ "nextval('ucsaws_tipo_evento_seq')" + " , "
-
-								+ " upper('"
-								+ txtDescripcion.getText() + "'), '"
-								+ Login.userLogeado + "' , now(), '"
-								+ Login.userLogeado + "' , now(), " + VentanaBuscarEvento.evento + ")");
-
-						QueryGenericoResponse response = weatherClient
-								.getQueryGenericoResponse(query);
-						weatherClient.printQueryGenericoResponse(response);
+				      UcsawsTipoEvento tipoEventoAGuardar = new UcsawsTipoEvento();
+				      tipoEventoAGuardar.setDescripcion(txtDescripcion.getText().toUpperCase());
+				      tipoEventoAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+				      tipoEventoAGuardar.setIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+				      
+				      tipoEventoDAO.guardarTipoEvento(tipoEventoAGuardar);
 
 						model = new TipoEventoJTableModel();
-						recuperarDatos();
-						table.setModel(model);
+						//recuperarDatos();
+						//table.setModel(model);
 						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
+						//table.removeColumn(table.getColumnModel().getColumn(0));
 						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 						lblMensaje
 								.setText("Excelente, se ha guardado el Tipo Evento.");
@@ -301,8 +234,10 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 						t.start();
 
 						txtDescripcion.setText("");
-
-						// this.dispose();
+						
+						VentanaBuscarTipoEvento tipoEvento = new VentanaBuscarTipoEvento();
+						tipoEvento.setVisible(true);
+						this.dispose();
 
 					} else {
 						// JOptionPane.showMessageDialog(null,
@@ -353,7 +288,7 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 
 
 
-	private void recuperarDatos() {
+	/*private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -418,11 +353,11 @@ public class VentanaRegistroTipoEvento extends JFrame implements ActionListener 
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString(), fil.get(5).toString() };
 
-			model.ciudades.add(fin);
+			model.tipoEvento.add(fin);
 			ite++;
 		}
 
-	}
+	}*/
 
 
 

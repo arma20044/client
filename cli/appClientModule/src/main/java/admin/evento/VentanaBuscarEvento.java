@@ -22,17 +22,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
@@ -43,14 +44,9 @@ import javax.swing.table.TableRowSorter;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import pruebas.Employee;
-import entity.Evento;
-import entity.UcsawsEvento;
-import src.main.java.admin.Administracion;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
@@ -61,6 +57,7 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import src.main.java.login.PreLogin;
+import entity.UcsawsEvento;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
@@ -201,6 +198,19 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
+		
+ 
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
@@ -795,8 +805,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			aux = ite.next();
 
 			Object[] row = { aux.getIdEvento(), cont , aux.getNroEvento() , aux.getDescripcion(), 
-					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchDesde())),
-					new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFchHasta())), aux.getUcsawsTipoEvento().getDescripcion() };
+					new SimpleDateFormat("dd-MM-yyyy HH:mm").format((aux.getFchDesde())),
+					new SimpleDateFormat("dd-MM-yyyy HH:mm").format((aux.getFchHasta())), aux.getUcsawsTipoEvento().getDescripcion() };
 					
 
  

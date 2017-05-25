@@ -6,54 +6,46 @@ import hello.wsdl.QueryGenericoResponse;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsEvento;
+import entity.UcsawsTipoEvento;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
 public class TipoEventoValidator {
 
-	public Boolean ValidarCodigo(String codigo) throws ParseException,
+
+	public Boolean ValidarCodigo(String idEvento, String codigo) throws ParseException,
 			org.json.simple.parser.ParseException {
-		
 
 		boolean existe = false;
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_tipo_evento, descripcion "
-				+ "from ucsaws_tipo_evento " + "where  upper(descripcion) = "
-
-				+ "upper('" +codigo + "')");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("[]") != 0) {
-
-			return existe = true;
+		TipoEventoDAO tipoEventoDAO = new TipoEventoDAO();
+		
+		List<UcsawsTipoEvento> Tipoevento = tipoEventoDAO.obtenerTipoEventoByIdEvento(Integer.parseInt(idEvento));
+		
+		Iterator<UcsawsTipoEvento> ite = Tipoevento.iterator();
+		
+		UcsawsTipoEvento aux;
+		while (ite.hasNext()) {
+			aux = ite.next();
+			if(aux.getDescripcion().compareTo(codigo)==0){
+			    existe = true;
+			}
 		}
+		
+		return existe;
 
-		else {
-			existe = false;
+		
 
-			return existe;
-
-		}
+		
 
 	}
 	

@@ -1,60 +1,40 @@
 package src.main.java.admin.validator;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
+import entity.UcsawsDistrito;
+import src.main.java.dao.distrito.DistritoDAO;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
+
+ 
 
 public class DistritoValidator {
 
-	public Boolean ValidarCodigo(String nro, String desc, String departamento)
-			throws ParseException, org.json.simple.parser.ParseException {
+    public Boolean ValidarCodigo(String codigo, String descripcion,
+	    String idEvento) throws ParseException,
+	    org.json.simple.parser.ParseException {
 
-		boolean existe = false;
+	boolean existe = false;
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
+	DistritoDAO distritoDAO = new DistritoDAO();
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	List<UcsawsDistrito> distrito = distritoDAO
+		.obtenerDistritoByIdEvento(Integer.parseInt(idEvento));
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	Iterator<UcsawsDistrito> ite = distrito.iterator();
 
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_distrito, nro_distrito "
-				+ "from ucsaws_distrito dis join ucsaws_departamento dep on (dis.id_departamento = dep.id_departamento)"
-				+ "where (nro_distrito ='" + nro + "' or  upper(desc_distrito) = upper('" + desc + "')  " 
-				+ ") and  dis.id_departamento =" +departamento+" "
-						+ " and dis.id_evento = " + VentanaBuscarEvento.evento);
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("[]") != 0) {
-
-			return existe = true;
-		}
-
-		else {
-			existe = false;
-
-			return existe;
-
-		}
-
+	UcsawsDistrito aux;
+	while (ite.hasNext()) {
+	    aux = ite.next();
+	    if (aux.getDescDistrito().compareTo(descripcion) == 0
+		    || aux.getNroDistrito().compareTo(codigo) == 0) {
+		existe = true;
+	    }
 	}
+
+	return existe;
+
+    }
 }

@@ -11,60 +11,41 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Persona;
-import entity.UcsawsGenero;
-import entity.UcsawsNacionalidad;
-import entity.UcsawsPais;
-import entity.UcsawsPersona;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.DateValidator;
 import src.main.java.admin.validator.PersonaValidator;
@@ -78,13 +59,21 @@ import src.main.java.login.Login;
 
 import com.toedter.calendar.JDateChooser;
 
+import entity.UcsawsGenero;
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
+import entity.UcsawsPersona;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class VentanaModificarPersona extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnFecha;
+	private JButton botonGuardar, borrar, btnFecha, botonCancelar;
 	private VentanaModificarPersona ventanaRegistroPersona;
 	private PersonaJTableModel model = new PersonaJTableModel();
 
@@ -153,20 +142,8 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		Image newimg3 = img3.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonGuardar.setIcon(new ImageIcon(newimg3));
-
-		botonCancelar = new JButton();
-		botonCancelar.setBackground(Color.WHITE);
-		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaModificarPersona.class
-				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(838, 247, 32, 32);
-		botonCancelar.setOpaque(false);
-		botonCancelar.setContentAreaFilled(false);
-		botonCancelar.setBorderPainted(false);
-		Image img2 = ((ImageIcon) botonCancelar.getIcon()).getImage();
-		Image newimg2 = img2.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		botonCancelar.setIcon(new ImageIcon(newimg2));
+		//Image newimg2 = img2.getScaledInstance(32, 32,
+				//java.awt.Image.SCALE_SMOOTH);
 		//Image newimg4 = img4.getScaledInstance(32, 32,
 			//	java.awt.Image.SCALE_SMOOTH);
 
@@ -176,11 +153,8 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
 		botonGuardar.addActionListener(this);
-		botonCancelar.addActionListener(this);
-		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
-		getContentPane().add(botonCancelar);
 		limpiar();
 		setSize(876, 305);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
@@ -188,7 +162,9 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		setResizable(false);
 		getContentPane().setLayout(null);
 		//recuperarDatos();
-
+		
+		
+	 	 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
 		btnHome.addActionListener(new ActionListener() {
@@ -386,23 +362,49 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		fechaNacimiento.setDate(persona.getFechaNacimiento());
 		getContentPane().add(fechaNacimiento);
 		
-		
-		
-		
-		botonCancelar = new JButton();
-		botonCancelar.setBackground(Color.WHITE);
-		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroPersona.class
-				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(867, 263, 32, 32);
-		botonCancelar.setOpaque(false);
-		botonCancelar.setContentAreaFilled(false);
-		botonCancelar.setBorderPainted(false);
+		botonCancelar = new JButton("");
+		botonCancelar.setIcon(new ImageIcon(VentanaModificarPersona.class.getResource("/imgs/back2.png")));
+		botonCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			    VentanaBuscarPersona p = new VentanaBuscarPersona();
+			    p.setVisible(true);
+			    dispose();
+			}
+		});
+		botonCancelar.setBounds(838, 244, 32, 32);
+		getContentPane().add(botonCancelar);
 		Image img4 = ((ImageIcon) botonCancelar.getIcon()).getImage();
 		Image newimg4 = img4.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg4));
+		botonCancelar.setBorderPainted(false);
+		botonCancelar.setContentAreaFilled(false);
+		
+		
+		 
 		//recuperarDatos();
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+		getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonGuardar.doClick();
+			    System.out.println("button clicked");
+			        }
+			    });
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
 
 	}
 
@@ -555,7 +557,7 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 			}
 
 		}
-		if (e.getSource() == botonCancelar) {
+		if (e.getSource() == borrar) {
 			VentanaBuscarPersona persona = new VentanaBuscarPersona();
 			persona.setVisible(true);
 			this.dispose();

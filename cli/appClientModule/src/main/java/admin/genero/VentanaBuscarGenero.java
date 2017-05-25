@@ -25,14 +25,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
@@ -96,6 +99,16 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		txtFiltro.requestFocus();
 	    }
 	});
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonCancelar.doClick();
+		    System.out.println("button esc clicked");
+		        }
+		    });
 
 	setResizable(false);
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -232,7 +245,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		// selectedData.ad table_1.getValueAt(selectedRow[i],
 		// selectedColumns[0]);
 		// txtId.setText(selectedData.get(0));
-		txtFiltro.setText(selectedData.get(3));
+		//txtFiltro.setText(selectedData.get(3));
 
 		// textFecha.setText(selectedData.get(2));
 		// textUsu.setText(selectedData.get(4));

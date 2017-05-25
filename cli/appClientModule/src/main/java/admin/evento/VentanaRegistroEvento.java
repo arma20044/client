@@ -4,16 +4,16 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,56 +24,35 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
-
-
-
-
-
-
-
-
 import net.java.balloontip.BalloonTip;
-import net.java.balloontip.BalloonTip.AttachLocation;
-import net.java.balloontip.BalloonTip.Orientation;
 import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.EdgedBalloonStyle;
-import net.java.balloontip.utils.ToolTipUtils;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Generic;
-import entity.UcsawsEvento;
-import entity.UcsawsTipoEvento;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.evento.Calendario;
-import src.main.java.admin.genero.GeneroJTableModel;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.utils.ArmarFecha;
 import src.main.java.admin.utils.Time24hFormatValidator;
@@ -83,16 +62,13 @@ import src.main.java.dao.tipoEvento.TipoEventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-import src.main.java.login.PreLogin;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.io.IOException;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
-import javax.swing.JFormattedTextField;
+import entity.Generic;
+import entity.UcsawsEvento;
+import entity.UcsawsTipoEvento;
 
 
 public class VentanaRegistroEvento extends JFrame implements ActionListener {
@@ -206,6 +182,27 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	setLocationRelativeTo(null);
 	setResizable(false);
 	getContentPane().setLayout(null);
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+	getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonGuardar.doClick();
+		    System.out.println("button clicked");
+		        }
+		    });
+	
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonCancelar.doClick();
+		    System.out.println("button esc clicked");
+		        }
+		    });
 	//recuperarDatos();
 
 	btnHome = new JButton("");
@@ -601,7 +598,9 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 				//txtFiltrar.setText("Escriba para Filtrar");
 				//txtFiltrar.setForeground(Color.LIGHT_GRAY);
 
-				// this.dispose();
+				VentanaBuscarEvento evento = new VentanaBuscarEvento();
+				evento.setVisible(true);
+				this.dispose();
 
 			    } else {
 				// JOptionPane.showMessageDialog(null,

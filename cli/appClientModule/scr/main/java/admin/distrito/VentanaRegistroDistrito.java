@@ -1,10 +1,6 @@
 package scr.main.java.admin.distrito;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,42 +8,34 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.DistritoValidator;
+import src.main.java.dao.departamento.DepartamentoDAO;
 import src.main.java.dao.distrito.DistritoDAO;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
+import src.main.java.dao.evento.EventoDAO;
 import src.main.java.login.Login;
+import entity.UcsawsDistrito;
 
 public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
@@ -55,11 +43,9 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
-	private JButton botonGuardar, botonCancelar, btnEliminar;
-	private JTable table;
+	private JButton botonGuardar, botonCancelar;
 
 	private DistritoJTableModel model = new DistritoJTableModel();
-	private JScrollPane scrollPane;
 
 	private String codTemporal = "";
 	private JButton btnHome;
@@ -105,7 +91,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(579, 134, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -113,20 +99,8 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
 		botonCancelar.setIcon(new ImageIcon(newimg2));
-
-		btnEliminar = new JButton();
-		btnEliminar.setToolTipText("Eliminar");
-		btnEliminar.setIcon(new ImageIcon(VentanaRegistroDistrito.class
-				.getResource("/imgs/borrar.png")));
-		btnEliminar.setEnabled(true);
-		btnEliminar.setBounds(340, 52, 32, 32);
-		btnEliminar.setOpaque(false);
-		btnEliminar.setContentAreaFilled(false);
-		btnEliminar.setBorderPainted(false);
-		Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
-		Image newimg4 = img4.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnEliminar.setIcon(new ImageIcon(newimg4));
+		//Image newimg4 = img4.getScaledInstance(32, 32,
+		//		java.awt.Image.SCALE_SMOOTH);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("NUEVO DISTRITO");
@@ -135,82 +109,15 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 		botonGuardar.addActionListener(this);
 		botonCancelar.addActionListener(this);
-		btnEliminar.addActionListener(this);
 		getContentPane().add(botonCancelar);
 		getContentPane().add(botonGuardar);
-		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(614, 192);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Distritos");
-		scrollPane.setBounds(0, 190, 806, 193);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -259,7 +166,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(114, 165, 575, 14);
+		lblMensaje.setBounds(23, 122, 575, 14);
 		getContentPane().add(lblMensaje);
 
 		JLabel lblDescripcionZona = new JLabel();
@@ -272,9 +179,28 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(213, 85, 309, 26);
 		getContentPane().add(txtDescripcion);
+		//recuperarDatos();
+		
+	 	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+			getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+				        public void actionPerformed(ActionEvent ae)
+				        {
+				    botonGuardar.doClick();
+				    System.out.println("button clicked");
+				        }
+				    });
+			
+			
+			getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+			getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+				        public void actionPerformed(ActionEvent ae)
+				        {
+				    botonCancelar.doClick();
+				    System.out.println("button esc clicked");
+				        }
+				    });
 
 	}
 
@@ -307,78 +233,35 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 					(distritoValidator.ValidarCodigo(txtNro.getText(),
 							txtDescripcion.getText(), VentanaBuscarDepartamento.departamentoSeleccionado) == false) {
-						// if
-						// (candidatoValidator.ValidarPersona(personaSelected)
-						// == false) {
-						// Genero genero = new Genero();
-						// genero.setDescripcion(textGenero.getText());
-
-						Calendar calendar = new GregorianCalendar();
-						int year = calendar.get(Calendar.YEAR);
-
-						ApplicationContext ctx = SpringApplication
-								.run(WeatherConfiguration.class);
-
-						WeatherClient weatherClient = ctx
-								.getBean(WeatherClient.class);
-						QueryGenericoRequest query = new QueryGenericoRequest();
-
-						// para registrar se inserta el codigo es 1
-						query.setTipoQueryGenerico(1);
-						System.out.println(Login.userLogeado);
-						query.setQueryGenerico("INSERT INTO ucsaws_distrito"
-								+ "( id_distrito, id_evento, desc_distrito, nro_distrito, id_departamento ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_distrito_seq') ," + VentanaBuscarEvento.evento + ","
-								+ " upper('" + txtDescripcion.getText()
-								+ "'), '"
-
-								+ txtNro.getText() + "' ,'"
-								+ VentanaBuscarDepartamento.departamentoSeleccionado + "','" + Login.userLogeado
-								+ "' , now(), '" + Login.userLogeado
-								+ "' , now())");
-
-						QueryGenericoResponse response = weatherClient
-								.getQueryGenericoResponse(query);
-						weatherClient.printQueryGenericoResponse(response);
-
-						model = new DistritoJTableModel();
-						recuperarDatos();
-						table.setModel(model);
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-						lblMensaje
-								.setText("Excelente, se ha guardado el Distrito.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-
-						txtNro.setText("");
-						txtDescripcion.setText("");
-
-						// this.dispose();
-						// } else {
-						// // JOptionPane.showMessageDialog(null,
-						// // "Ya existe el genero " + txtDesc.getText(),
-						// // "Información",JOptionPane.WARNING_MESSAGE);
-						// lblMensaje
-						// .setText("La Persona no puede tener mas de una candidatura");
-						// Timer t = new Timer(Login.timer,
-						// new ActionListener() {
-						//
-						// public void actionPerformed(
-						// ActionEvent e) {
-						// lblMensaje.setText(null);
-						// }
-						// });
-						// t.setRepeats(false);
-						// t.start();
-						// }
+						 
+					    EventoDAO evento = new EventoDAO();
+					    DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+					    DistritoDAO distritoDAO = new DistritoDAO();
+					    
+					    UcsawsDistrito distritoAGuardar = new UcsawsDistrito();
+					    distritoAGuardar.setNroDistrito(txtNro.getText());
+					    distritoAGuardar.setDescDistrito(txtDescripcion.getText().toUpperCase());
+					    distritoAGuardar.setFchIns(new Date());
+					    distritoAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+					    distritoAGuardar.setIdEvento(evento.obtenerEventoById(VentanaBuscarEvento.evento));
+					    distritoAGuardar.setUcsawsDepartamento(departamentoDAO.obtenerDepartamentoByID(Integer.parseInt(VentanaBuscarDepartamento.departamentoSeleccionado)));
+					    
+					    try{
+					    distritoDAO.guardarDistrito(distritoAGuardar);
+					    }
+					    catch(Exception ex){
+						System.out
+							.println(ex);
+					    }
+					    
+					    finally{
+						VentanaBuscarDistrito distrito = new VentanaBuscarDistrito();
+						distrito.setVisible(true);
+						dispose();
+					    }
+					    
+					    
+					    
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
@@ -418,87 +301,6 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 			}
 
 		}
-		if (e.getSource() == btnEliminar) {
-
-			if (!codTemporal.equals("")) {
-
-				int respuesta = JOptionPane.showConfirmDialog(this,
-						"¿Esta seguro de eliminar el Distrito?", "Confirmación",
-						JOptionPane.YES_NO_OPTION);
-				if (respuesta == JOptionPane.YES_NO_OPTION)
-
-				{
-					DistritoDAO distritoDAO = new DistritoDAO();
-
-					try {
-						distritoDAO.eliminarDistrito(codTemporal);
-
-					} catch (Exception e2) {
-						// TODO: handle exception
-						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
-								"Información", JOptionPane.WARNING_MESSAGE);
-					}
-					if (distritoDAO.eliminarDistrito(codTemporal) == true) {
-
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha eliminado el genero "
-						// + txtDesc.getText());
-						// modificarGenero(textCod.getText(),
-						// codTemporal.getText());
-						// txtId.setText("");
-						lblMensaje
-								.setText("Excelente, se ha eliminado el Distrito ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						limpiar();
-						txtDescripcion.setText("");
-						txtNro.setText("");
-						model = new DistritoJTableModel();
-
-						recuperarDatos();
-						table.setModel(model);
-
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-					}
-
-					else {
-						// JOptionPane.showMessageDialog(null,"Existen registros que apuntan al Genero que desea eliminar ","Error",JOptionPane.ERROR_MESSAGE);
-						lblMensaje
-								.setText("ERROR: Existen registros que apuntan al Distrito que desea eliminar ");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-				}
-
-			} else {
-				// JOptionPane.showMessageDialog(null,
-				// "Por favor seleccione que Genero desea Eliminar",
-				// "Información",JOptionPane.WARNING_MESSAGE);
-				lblMensaje
-						.setText("Por favor seleccione que Distrito desea Eliminar");
-				Timer t = new Timer(Login.timer, new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						lblMensaje.setText(null);
-					}
-				});
-				t.setRepeats(false);
-				t.start();
-			}
-
-		}
 		if (e.getSource() == botonCancelar) {
 			VentanaBuscarDistrito candidato = new VentanaBuscarDistrito();
 			candidato.setVisible(true);
@@ -509,7 +311,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 
 
 
-	private void recuperarDatos() {
+	/*private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -579,7 +381,7 @@ public class VentanaRegistroDistrito extends JFrame implements ActionListener {
 			ite++;
 		}
 
-	}
+	}*/
 
 
 

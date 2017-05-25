@@ -17,20 +17,25 @@ import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -39,11 +44,14 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsDepartamento;
+import entity.UcsawsDistrito;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.zona.VentanaBuscarZona;
+import src.main.java.dao.departamento.DepartamentoDAO;
 import src.main.java.dao.distrito.DistritoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -191,7 +199,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 						col++;
 					}
 
-					txtBuscar.setText(selectedData.get(3));
+					//txtBuscar.setText(selectedData.get(3));
 
 					// textFecha.setText(selectedData.get(2));
 					// textUsu.setText(selectedData.get(4));
@@ -218,7 +226,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 		});
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
-		table_1.setModel(dm);
+		table_1.setModel(model);
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE DISTRITOS");
@@ -269,11 +277,21 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 		lblMensaje.setForeground(Color.RED);
 		lblMensaje.setBounds(57, 88, 432, 14);
 		getContentPane().add(lblMensaje);
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
 
 		// table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
 		ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
-		recuperarDatos();
+		//recuperarDatos();
 		cellSelectionModel
 				.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
@@ -329,8 +347,21 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}
 						else{
-							JOptionPane.showMessageDialog(null,
-									"Excelente, se ha eliminado el Distrito ","Información", JOptionPane.INFORMATION_MESSAGE);
+						    
+						    lblMensaje
+							.setText("Excelente, se ha eliminado el Distrito.");
+
+					Timer t = new Timer(Login.timer, new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							lblMensaje.setText(null);
+						}
+					});
+					t.setRepeats(false);
+					t.start();
+					
+							//JOptionPane.showMessageDialog(null,
+							//		"Excelente, se ha eliminado el Distrito ","Información", JOptionPane.INFORMATION_MESSAGE);
 							
 							
 							codTemporal = "";
@@ -339,7 +370,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 							model = new DistritoJTableModel();
 
 							recuperarDatos();
-							table_1.setModel(dm);
+							table_1.setModel(model);
 							table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 							// model.fireTableDataChanged();
 							// table_1.repaint();
@@ -429,104 +460,62 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 
 
 
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
+	    private void recuperarDatos() {
+		DistritoDAO distritoDAO = new DistritoDAO();
+		
+		List<UcsawsDistrito> listaDistritosByEvento = distritoDAO
+			.obtenerDistritoByIdEvento(Integer
+				.parseInt(VentanaBuscarEvento.evento));
 
-		boolean existe = false;
+		List<UcsawsDistrito> lista = new ArrayList<UcsawsDistrito>();
+		try {
+		    lista = listaDistritosByEvento;
+		} catch (Exception e) {
+		    System.out.println(e);
+		}
 
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_distrito, nro_distrito,desc_distrito,nro_departamento, desc_departamento  "
-				+ " from ucsaws_distrito di join ucsaws_departamento de on (di.id_departamento = de.id_departamento)"
-				+ " where di.id_evento =" + VentanaBuscarEvento.evento
-				+ " and di.id_departamento =" + VentanaBuscarDepartamento.departamentoSeleccionado
-				+ " order by nro_departamento, nro_distrito" + "");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
+		if (lista.isEmpty()) {
+		    // JOptionPane.showMessageDialog(null, "algo salio mal",
+		    // "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    // return lista;
 		}
 
 		else {
-			existe = true;
+		    obtenerModeloA(table_1, lista);
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
+		    // return lista;
 		}
 
-Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID", "Item", "Nro. Distrito", "Desc. Distrito","Nro. Departamento", "Desc. Departamento"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
 	    }
 	    
-	    dm = new DefaultTableModel(data, columnNames);
+	    public AbstractTableModel obtenerModeloA(JTable tabla,
+		    List<UcsawsDistrito> distrito) {
+
+		// AbstractTableModel model = (DefaultTableModel) tabla.getModel();
+		Iterator<UcsawsDistrito> ite = distrito.iterator();
+
+		// String header[] = new String[] { "ID","Item","Nro.",
+		// "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
+		// model.setColumnIdentifiers(header);
+		//"ID", "Item", "Nro. Distrito", "Desc. Distrito","Nro. Departamento", "Desc. Departamento"
+		UcsawsDistrito aux;
+		Integer cont = 1;
+		while (ite.hasNext()) {
+		    aux = ite.next();
 
 
-	}
+		    Object[] row = { aux.getIdDistrito(), cont,aux.getNroDistrito(), aux.getDescDistrito(), aux.getUcsawsDepartamento().getNroDepartamento(), aux.getUcsawsDepartamento().getDescDepartamento()};
+
+		    // new
+		    // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
+		    model.distrito.add(row);
+
+		    cont++;
+
+		}
+
+		return model;
+	    }
 
 	void LimpiarCampos() {
 		txtBuscar.setText("");
@@ -538,16 +527,18 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 	}
 	public void filter(String query){
 		
+		TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+		sorter.setRowFilter(RowFilter.regexFilter(query));
+		table_1.setRowSorter(sorter);
 		
-		
-		TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+		/*TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
 		
 		
 		
 		table_1.setRowSorter(tr);
 		
 	tr.setRowFilter(RowFilter.regexFilter(query));
-		
+		*/
 		
 	}
 }

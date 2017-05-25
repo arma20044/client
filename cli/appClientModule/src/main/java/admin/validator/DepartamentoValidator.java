@@ -1,58 +1,41 @@
 package src.main.java.admin.validator;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
+import entity.UcsawsDepartamento;
+import src.main.java.dao.departamento.DepartamentoDAO;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
+
 
 public class DepartamentoValidator {
 
-	public Boolean ValidarCodigo(String nro, String desc)
-			throws ParseException, org.json.simple.parser.ParseException {
+
+	public Boolean ValidarCodigo(String codigo, String descripcion, String idEvento) throws ParseException,
+			org.json.simple.parser.ParseException {
 
 		boolean existe = false;
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT id_departamento, nro_departamento "
-				+ "from ucsaws_departamento " + "where (nro_departamento ='" + nro
-				+ "' or upper(desc_departamento) = upper('" +  desc  +  "'))and id_evento= " + VentanaBuscarEvento.evento );
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("[]") != 0) {
-
-			return existe = true;
+		DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+		
+		List<UcsawsDepartamento> departamento = departamentoDAO.obtenerDepartamentoByIdEvento(Integer.parseInt(idEvento));
+		
+		Iterator<UcsawsDepartamento> ite = departamento.iterator();
+		
+		UcsawsDepartamento aux;
+		while (ite.hasNext()) {
+			aux = ite.next();
+			if(aux.getDescDepartamento().compareTo(descripcion)==0 || aux.getNroDepartamento().compareTo(codigo)==0){
+			    existe = true;
+			}
 		}
+		
+		return existe;
 
-		else {
-			existe = false;
+		
 
-			return existe;
-
-		}
+		
 
 	}
 }

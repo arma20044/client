@@ -3,42 +3,57 @@ package src.main.java.dao.distrito;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsDepartamento;
+import entity.UcsawsDistrito;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.Login;
 
 public class DistritoDAO {
 
-	// public void registrarPersona(PersonaVo miPersona)
-	// {
-	// Conexion conex= new Conexion();
-	//
-	// try {
-	// Statement estatuto = conex.getConnection().createStatement();
-	// estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-	// +miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-	// +miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-	// JOptionPane.showMessageDialog(null,
-	// "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-	// estatuto.close();
-	// conex.desconectar();
-	//
-	// } catch (SQLException e) {
-	// System.out.println(e.getMessage());
-	// JOptionPane.showMessageDialog(null, "No se Registro");
-	// }
-	// }
+    public List<UcsawsDistrito> obtenerDistritoByIdEvento(Integer idEvento) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(70);
+	query.setQueryGenerico(idEvento.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	List<UcsawsDistrito> distrito = new ArrayList<UcsawsDistrito>();
+	try {
+	    distrito = mapper.readValue(jsonInString, new TypeReference<List<UcsawsDistrito>>(){});
+	    
+	    
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return distrito;
+    }
 
 	public JSONArray buscarDistrito(String codigo)
 			throws ParseException, org.json.simple.parser.ParseException {
@@ -134,41 +149,84 @@ public class DistritoDAO {
 
 	}
 
-	public Boolean eliminarDistrito(String codigo) {
+	    public Boolean eliminarDistrito(String idDistrito) {
 		boolean eliminado = false;
 
 		try {
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+		    ApplicationContext ctx = SpringApplication
+			    .run(WeatherConfiguration.class);
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+		    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		    QueryGenericoRequest query = new QueryGenericoRequest();
 
-			query.setTipoQueryGenerico(4);
+		    query.setTipoQueryGenerico(73);
 
-			query.setQueryGenerico("DELETE FROM ucsaws_distrito WHERE"
-					+ " id_distrito = " + codigo);
+		    query.setQueryGenerico(idDistrito);
 
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
+		    QueryGenericoResponse response = weatherClient
+			    .getQueryGenericoResponse(query);
+		    weatherClient.printQueryGenericoResponse(response);
 
-			String res = response.getQueryGenericoResponse();
+		    String res = response.getQueryGenericoResponse();
 
-			if (res.compareTo("ERRORRRRRRR") == 0) {
+		    if (res.compareTo("NO") == 0) {
 
-				eliminado = false;
-			} else {
-				eliminado = true;
-			}
+			eliminado = false;
+		    } else {
+			eliminado = true;
+		    }
 
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,
-					"Error al intentar eliminar el Distrito.", "Error",
-					JOptionPane.ERROR_MESSAGE);
+		    JOptionPane.showMessageDialog(null,
+			    "Error al intentar eliminar el Distrito.", "Error",
+			    JOptionPane.ERROR_MESSAGE);
 		}
 		return eliminado;
 
-	}
+	    }
+	
+	public boolean guardarDistrito(UcsawsDistrito distrito) {
+		boolean guardado = false;
+
+		ObjectMapper mapperObj = new ObjectMapper();
+		String jsonStr = "";
+		try {
+		    // get Employee object as a json string
+		    jsonStr = mapperObj.writeValueAsString(distrito);
+		    System.out.println(jsonStr);
+		} catch (IOException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+
+		ApplicationContext ctx = SpringApplication
+			.run(WeatherConfiguration.class);
+
+		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+		QueryGenericoRequest query = new QueryGenericoRequest();
+
+		query.setTipoQueryGenerico(72);
+		query.setQueryGenerico(jsonStr);
+
+		QueryGenericoResponse response = weatherClient
+			.getQueryGenericoResponse(query);
+		weatherClient.printQueryGenericoResponse(response);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String string = response.getQueryGenericoResponse();
+
+		UcsawsDistrito n = new UcsawsDistrito();
+		try {
+		    if (string.compareTo("SI") == 0) {
+			guardado = true;
+		    }
+
+		} catch (Exception ex) {
+		    System.out.println(ex);
+		}
+		// guardado = true;
+
+		return guardado;
+	    }
 }

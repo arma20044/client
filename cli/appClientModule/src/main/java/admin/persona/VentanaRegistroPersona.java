@@ -11,75 +11,43 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-
-
-
-
- 
-
-
-
-
-
-
-
-
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JTextFieldDateEditor;
-
-import entity.UcsawsGenero;
-import entity.UcsawsNacionalidad;
-import entity.UcsawsPais;
-import entity.UcsawsPersona;
-import entity.UcsawsTipoEvento;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.MenuPrincipal;
-import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.DateValidator;
 import src.main.java.admin.validator.PersonaValidator;
@@ -91,6 +59,14 @@ import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
+import entity.UcsawsGenero;
+import entity.UcsawsNacionalidad;
+import entity.UcsawsPais;
+import entity.UcsawsPersona;
 
 public class VentanaRegistroPersona extends JFrame implements ActionListener {
 
@@ -185,6 +161,27 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		botonCancelar.setIcon(new ImageIcon(newimg2));
 		//Image newimg4 = img4.getScaledInstance(32, 32,
 			//	java.awt.Image.SCALE_SMOOTH);
+		
+	 	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+			getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+				        public void actionPerformed(ActionEvent ae)
+				        {
+				    botonGuardar.doClick();
+				    System.out.println("button clicked");
+				        }
+				    });
+			
+			
+			getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+			getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+				        public void actionPerformed(ActionEvent ae)
+				        {
+				    botonCancelar.doClick();
+				    System.out.println("button esc clicked");
+				        }
+				    });
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("NUEVA PERSONA");

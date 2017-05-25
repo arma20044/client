@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class UcsawsDepartamento implements java.io.Serializable {
 
-	private int idDepartamento;
+	private Integer idDepartamento;
 	private String descDepartamento;
 	private String nroDepartamento;
 	private String usuarioIns;
@@ -23,11 +23,11 @@ public class UcsawsDepartamento implements java.io.Serializable {
 	public UcsawsDepartamento() {
 	}
 
-	public UcsawsDepartamento(int idDepartamento) {
+	public UcsawsDepartamento(Integer idDepartamento) {
 		this.idDepartamento = idDepartamento;
 	}
 
-	public UcsawsDepartamento(int idDepartamento, String descDepartamento,
+	public UcsawsDepartamento(Integer idDepartamento, String descDepartamento,
 			String nroDepartamento, String usuarioIns, String usuarioUpd,
 			Date fchIns, Date fchUpd, UcsawsEvento idEvento) {
 		this.idDepartamento = idDepartamento;
@@ -41,11 +41,11 @@ public class UcsawsDepartamento implements java.io.Serializable {
 		
 	}
 
-	public int getIdDepartamento() {
+	public Integer getIdDepartamento() {
 		return this.idDepartamento;
 	}
 
-	public void setIdDepartamento(int idDepartamento) {
+	public void setIdDepartamento(Integer idDepartamento) {
 		this.idDepartamento = idDepartamento;
 	}
 

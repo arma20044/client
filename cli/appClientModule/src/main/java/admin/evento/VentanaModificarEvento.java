@@ -24,10 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -69,6 +72,9 @@ import src.main.java.login.Login;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
+
+
 
 
 
@@ -139,6 +145,26 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	
 	evento = e;
 
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+	getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    btnGuardar.doClick();
+		    System.out.println("button clicked");
+		        }
+		    });
+	
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonCancelar.doClick();
+		    System.out.println("button esc clicked");
+		        }
+		    });
 	
 
 	btnGuardar = new JButton();
@@ -225,6 +251,7 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
 	getContentPane().add(lblNro);
 
 	txtNro = new JTextField();
+	txtNro.setEditable(false);
 	txtNro.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyTyped(KeyEvent arg0) {
