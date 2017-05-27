@@ -12,12 +12,14 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import entity.UcsawsGenero;
+import entity.UcsawsMesa;
 import entity.UcsawsNacionalidad;
 import entity.UcsawsPais;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -26,6 +28,38 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
 public class NacionalidadesDAO {
+    
+    
+    public List<UcsawsNacionalidad> obtenerNacionalidadByIdEvento(Integer idEvento) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(91);
+	query.setQueryGenerico(idEvento.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	List<UcsawsNacionalidad> nacionalidad = new ArrayList<UcsawsNacionalidad>();
+	try {
+	    nacionalidad = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsNacionalidad>>() {
+		    });
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return nacionalidad;
+    }
+    
     
     public Boolean modificarNacionalidad(UcsawsNacionalidad nacionalidad) {
 

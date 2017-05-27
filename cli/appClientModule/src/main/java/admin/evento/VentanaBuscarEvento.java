@@ -211,6 +211,18 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			    System.out.println("button esc clicked");
 			        }
 			    });
+		
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"clickButtondelete");
+
+getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
+        public void actionPerformed(ActionEvent ae)
+        {
+     btnEliminar.doClick();
+    System.out.println("button delete clicked");
+        }
+    });
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAutoscrolls(true);
@@ -225,7 +237,8 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 			};
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setToolTipText("Listado de Eventos.");
-		table_1.setAutoCreateRowSorter(true);
+		table_1.setAutoCreateRowSorter(false);
+		table_1 .getTableHeader().setReorderingAllowed(false);
 		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
 		// String[] columnNames = {"Picture", "Description"};

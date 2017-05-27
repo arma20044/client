@@ -18,17 +18,21 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.TableCellRenderer;
@@ -39,11 +43,18 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsLocal;
+import entity.UcsawsMesa;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.validator.MesaValidator;
+import src.main.java.admin.zona.VentanaBuscarZona;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.local.LocalDAO;
+import src.main.java.dao.mesa.MesaDAO;
+import src.main.java.dao.zona.ZonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -55,10 +66,8 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private MesaJTableModel model = new MesaJTableModel();
-	private JScrollPane scrollPane;
 
 	private MesaValidator mesaValidator = new MesaValidator();
 
@@ -104,7 +113,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroMesa.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(660, 167, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -125,76 +134,11 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(694, 231);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Mesa");
-		scrollPane.setBounds(0, 190, 806, 193);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -243,7 +187,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(326, 165, 363, 14);
+		lblMensaje.setBounds(213, 122, 363, 14);
 		getContentPane().add(lblMensaje);
 		
 		JLabel lblDescripcionMesa = new JLabel();
@@ -256,9 +200,28 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 		txtDescripcion.setColumns(10);
 		txtDescripcion.setBounds(213, 85, 320, 26);
 		getContentPane().add(txtDescripcion);
+		//recuperarDatos();
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonGuardar.doClick();
+			    System.out.println("button clicked");
+			        }
+			    });
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
 
 	}
 
@@ -276,7 +239,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 				
 
 				
-				if (!(txtNroMesa.getText().length() == 0)) {
+				if (!(txtNroMesa.getText().length() == 0) && !(txtDescripcion.getText().length() == 0)) {
 					if (txtNroMesa.getText().length() > 3) {
 						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
@@ -289,86 +252,40 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(mesaValidator.ValidarCodigo(txtNroMesa.getText() , txtDescripcion.getText() , VentanaBuscarLocal.localSeleccionado) == false) {
-						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-							// Genero genero = new Genero();
-							// genero.setDescripcion(textGenero.getText());
+					(mesaValidator.ValidarCodigo(txtNroMesa.getText() , txtDescripcion.getText(),VentanaBuscarEvento.evento , VentanaBuscarLocal.localSeleccionado) == false) {
 
-							Calendar calendar = new GregorianCalendar();
-							int year = calendar.get(Calendar.YEAR);
 
-							ApplicationContext ctx = SpringApplication
-									.run(WeatherConfiguration.class);
 
-							WeatherClient weatherClient = ctx
-									.getBean(WeatherClient.class);
-							QueryGenericoRequest query = new QueryGenericoRequest();
-
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
-							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_mesa"
-									+ "( id_mesa, desc_mesa, nro_mesa, id_local, id_evento ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_mesa_seq') ,"
-									+ " upper('"
-									+ txtDescripcion.getText()
-									+ "'), '"
-									
-									+ txtNroMesa.getText()
-									+ "' ,'"
-									+ VentanaBuscarLocal.localSeleccionado + "',"
-									+ VentanaBuscarEvento.evento + ",'"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
-
-							QueryGenericoResponse response = weatherClient
-									.getQueryGenericoResponse(query);
-							weatherClient.printQueryGenericoResponse(response);
-
-							model = new MesaJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado la Mesa.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-
-							txtNroMesa.setText("");
-							txtDescripcion.setText("");
-
-							// this.dispose();
-//						} else {
-//							// JOptionPane.showMessageDialog(null,
-//							// "Ya existe el genero " + txtDesc.getText(),
-//							// "Información",JOptionPane.WARNING_MESSAGE);
-//							lblMensaje
-//									.setText("La Persona no puede tener mas de una candidatura");
-//							Timer t = new Timer(Login.timer,
-//									new ActionListener() {
-//
-//										public void actionPerformed(
-//												ActionEvent e) {
-//											lblMensaje.setText(null);
-//										}
-//									});
-//							t.setRepeats(false);
-//							t.start();
-//						}
+					    EventoDAO evento = new EventoDAO();
+					    MesaDAO mesaDAO = new MesaDAO();
+					    LocalDAO localDAO = new LocalDAO();
+					    
+					    UcsawsMesa mesaAGuardar = new UcsawsMesa();
+					    mesaAGuardar.setNroMesa(Integer.parseInt(txtNroMesa.getText()));
+					    mesaAGuardar.setDescMesa(txtDescripcion.getText().toUpperCase());
+					    mesaAGuardar.setFchIns(new Date());
+					    mesaAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+					    mesaAGuardar.setIdEvento(evento.obtenerEventoById(VentanaBuscarEvento.evento));
+					    mesaAGuardar.setUcsawsLocal(localDAO.obtenerLocalByID(Integer.parseInt(VentanaBuscarLocal.localSeleccionado)));
+					    
+					    try{
+						mesaDAO.guardarMesa(mesaAGuardar);
+					    }
+					    catch(Exception ex){
+						System.out
+							.println(ex);
+					    }
+					    
+					    finally{
+						VentanaBuscarMesa mesa = new VentanaBuscarMesa();
+						mesa.setVisible(true);
+						dispose();
+					    }
+					    
+					    
+					    
+					    
+					    
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
@@ -419,80 +336,7 @@ public class VentanaRegistroMesa extends JFrame implements ActionListener {
 
 
 
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT  id_mesa, nro_mesa,desc_mesa,nro_local, desc_local "
-				+ "from ucsaws_mesa m join ucsaws_local l on (m.id_local = l.id_local)"
-				+ "join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
-				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ " where m.id_evento = " + VentanaBuscarEvento.evento
-				+ " and l.id_local = " + VentanaBuscarLocal.localSeleccionado
-				+ " order by nro_local , nro_mesa" + "");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(),String.valueOf(contador), fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString() };
-
-			model.ciudades.add(fin);
-			ite++;
-		}
-
-	}
 
 
 

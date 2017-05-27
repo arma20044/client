@@ -1,10 +1,6 @@
 package src.main.java.admin.local;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,41 +8,34 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.LocalValidator;
 import src.main.java.admin.zona.VentanaBuscarZona;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.local.LocalDAO;
+import src.main.java.dao.zona.ZonaDAO;
 import src.main.java.login.Login;
+import entity.UcsawsLocal;
 
 public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
@@ -55,10 +44,8 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private LocalJTableModel model = new LocalJTableModel();
-	private JScrollPane scrollPane;
 
 	private LocalValidator localValidator = new LocalValidator();
 
@@ -70,9 +57,9 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 	List<Object[]> listas = new ArrayList<Object[]>();
 
 	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JLabel lblNroZona;
-	private JTextField txtNroZona;
-	private JTextField txtDescripcion;
+	private JLabel lblNroLocal;
+	private JTextField txtNroLocal;
+	private JTextField txtDescripcionLocal;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -82,7 +69,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
-				txtNroZona.requestFocus();
+				txtNroLocal.requestFocus();
 			}
 		});
 		
@@ -105,7 +92,7 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroLocal.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(589, 150, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -126,76 +113,11 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(624, 208);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Locales");
-		scrollPane.setBounds(0, 190, 806, 193);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int[] selectedRow = table.getSelectedRows();
-				// int[] selectedColumns = table_1.getSelectedColumns();
-
-				for (int i = 0; i < selectedRow.length; i++) {
-					int col = 0;
-					while (table.getColumnCount() > col) {
-						System.out.println(table
-								.getValueAt(selectedRow[i], col));
-						try {
-							selectedData.add((String) table.getValueAt(
-									selectedRow[i], col));
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					// txtCod.setText(selectedData.get(0));
-					// txtDesc.setText(selectedData.get(1));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (String) (table.getModel().getValueAt(
-							selectedRow[i], 0));
-
-				}
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -215,51 +137,70 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 		btnHome.setIcon(new ImageIcon(newimg));
 		getContentPane().add(btnHome);
 
-		lblNroZona = new JLabel();
-		lblNroZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNroZona.setText("Nro:");
-		lblNroZona.setBounds(142, 59, 61, 25);
-		getContentPane().add(lblNroZona);
+		lblNroLocal = new JLabel();
+		lblNroLocal.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNroLocal.setText("Nro:");
+		lblNroLocal.setBounds(142, 59, 61, 25);
+		getContentPane().add(lblNroLocal);
 
-		txtNroZona = new JTextField();
-		txtNroZona.addKeyListener(new KeyAdapter() {
+		txtNroLocal = new JTextField();
+		txtNroLocal.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char car = e.getKeyChar();
 				if((car<'0' || car>'9')) e.consume();
 			}
 		});
-		txtNroZona.addFocusListener(new FocusAdapter() {
+		txtNroLocal.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				if (txtNroZona.getText().length() == 1)
+				if (txtNroLocal.getText().length() == 1)
 				{
-					txtNroZona.setText(0 + txtNroZona.getText() );
+					txtNroLocal.setText(0 + txtNroLocal.getText() );
 				}
 			}
 		});
-		txtNroZona.setBounds(213, 54, 75, 26);
-		getContentPane().add(txtNroZona);
-		txtNroZona.setColumns(10);
+		txtNroLocal.setBounds(213, 54, 75, 26);
+		getContentPane().add(txtNroLocal);
+		txtNroLocal.setColumns(10);
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(326, 165, 363, 14);
+		lblMensaje.setBounds(213, 122, 363, 14);
 		getContentPane().add(lblMensaje);
 		
-		JLabel lblDescripcionZona = new JLabel();
-		lblDescripcionZona.setText("Descripcion:");
-		lblDescripcionZona.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcionZona.setBounds(114, 86, 89, 25);
-		getContentPane().add(lblDescripcionZona);
+		JLabel lblDescripcionLocal = new JLabel();
+		lblDescripcionLocal.setText("Descripcion:");
+		lblDescripcionLocal.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDescripcionLocal.setBounds(114, 86, 89, 25);
+		getContentPane().add(lblDescripcionLocal);
 		
-		txtDescripcion = new JTextField();
-		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 85, 298, 26);
-		getContentPane().add(txtDescripcion);
+		txtDescripcionLocal = new JTextField();
+		txtDescripcionLocal.setColumns(10);
+		txtDescripcionLocal.setBounds(213, 85, 298, 26);
+		getContentPane().add(txtDescripcionLocal);
+		//recuperarDatos();
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonGuardar.doClick();
+			    System.out.println("button clicked");
+			        }
+			    });
+		
+		
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+		getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+			        public void actionPerformed(ActionEvent ae)
+			        {
+			    botonCancelar.doClick();
+			    System.out.println("button esc clicked");
+			        }
+			    });
 
 	}
 
@@ -277,8 +218,8 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 				
 
 				
-				if (!(txtNroZona.getText().length() == 0)) {
-					if (txtNroZona.getText().length() > 3) {
+				if (!(txtNroLocal.getText().length() == 0) && !(txtDescripcionLocal.getText().length() == 0)  ) {
+					if (txtNroLocal.getText().length() > 3) {
 						lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -290,85 +231,36 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(localValidator.ValidarCodigo(txtNroZona.getText() , txtDescripcion.getText() , VentanaBuscarZona.zonaSeleccionada) == false) {
-						//if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-							// Genero genero = new Genero();
-							// genero.setDescripcion(textGenero.getText());
+					(localValidator.ValidarCodigo(txtNroLocal.getText() , txtDescripcionLocal.getText(), VentanaBuscarEvento.evento
+						, VentanaBuscarZona.zonaSeleccionada) == false) {
 
-							Calendar calendar = new GregorianCalendar();
-							int year = calendar.get(Calendar.YEAR);
-
-							ApplicationContext ctx = SpringApplication
-									.run(WeatherConfiguration.class);
-
-							WeatherClient weatherClient = ctx
-									.getBean(WeatherClient.class);
-							QueryGenericoRequest query = new QueryGenericoRequest();
-
-							// para registrar se inserta el codigo es 1
-							query.setTipoQueryGenerico(1);
-							System.out.println(Login.userLogeado);
-							query.setQueryGenerico("INSERT INTO ucsaws_local"
-									+ "( id_local,id_evento, desc_local, nro_local, id_zona ,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-									+ "VALUES ("
-									+ "nextval('ucsaws_local_seq') , " + VentanaBuscarEvento.evento + "," 
-									+ " upper('"
-									+ txtDescripcion.getText()
-									+ "'), '"
-									
-									+ txtNroZona.getText()
-									+ "' ,'"
-									+ VentanaBuscarZona.zonaSeleccionada + "','"
-									+ Login.userLogeado
-									+ "' , now(), '"
-									+ Login.userLogeado
-									+ "' , now())");
-
-							QueryGenericoResponse response = weatherClient
-									.getQueryGenericoResponse(query);
-							weatherClient.printQueryGenericoResponse(response);
-
-							model = new LocalJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado el Local.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-
-							txtNroZona.setText("");
-							txtDescripcion.setText("");
-
-							// this.dispose();
-//						} else {
-//							// JOptionPane.showMessageDialog(null,
-//							// "Ya existe el genero " + txtDesc.getText(),
-//							// "Información",JOptionPane.WARNING_MESSAGE);
-//							lblMensaje
-//									.setText("La Persona no puede tener mas de una candidatura");
-//							Timer t = new Timer(Login.timer,
-//									new ActionListener() {
-//
-//										public void actionPerformed(
-//												ActionEvent e) {
-//											lblMensaje.setText(null);
-//										}
-//									});
-//							t.setRepeats(false);
-//							t.start();
-//						}
+					    EventoDAO evento = new EventoDAO();
+					    ZonaDAO zonaDAO = new ZonaDAO();
+					    LocalDAO localDAO = new LocalDAO();
+					    
+					    UcsawsLocal localAGuardar = new UcsawsLocal();
+					    localAGuardar.setNroLocal(txtNroLocal.getText());
+					    localAGuardar.setDescLocal(txtDescripcionLocal.getText().toUpperCase());
+					    localAGuardar.setFchIns(new Date());
+					    localAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+					    localAGuardar.setIdEvento(evento.obtenerEventoById(VentanaBuscarEvento.evento));
+					    localAGuardar.setUcsawsZona(zonaDAO.obtenerZonaByID(Integer.parseInt(VentanaBuscarZona.zonaSeleccionada)));
+					    
+					    try{
+						localDAO.guardarLocal(localAGuardar);
+					    }
+					    catch(Exception ex){
+						System.out
+							.println(ex);
+					    }
+					    
+					    finally{
+						VentanaBuscarLocal local = new VentanaBuscarLocal();
+						local.setVisible(true);
+						dispose();
+					    }
+					    
+					    
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
@@ -419,79 +311,6 @@ public class VentanaRegistroLocal extends JFrame implements ActionListener {
 
 
 
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT  id_local, nro_local,desc_local,nro_zona, desc_zona "
-				+ "from  ucsaws_local l join ucsaws_zona z on (l.id_zona = z.id_zona)"
-				+ " join ucsaws_distrito dis on (dis.id_distrito = z.id_distrito)"
-				+ " join ucsaws_departamento dep on (dep.id_departamento = dis.id_departamento)"
-				+ " where l.id_evento = " + VentanaBuscarEvento.evento
-				+ " and l.id_zona = " + VentanaBuscarZona.zonaSeleccionada
-				+ " order by nro_zona , nro_local" + "");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(), fil.get(3).toString(),
-					fil.get(4).toString() };
-
-			model.ciudades.add(fin);
-			ite++;
-		}
-
-	}
 
 	
 

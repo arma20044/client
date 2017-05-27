@@ -3,206 +3,193 @@ package src.main.java.dao.mesa;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
+import entity.UcsawsMesa;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.Login;
+
 
 public class MesaDAO {
-	
-	
-//	public void registrarPersona(PersonaVo miPersona)
-//	{
-//		Conexion conex= new Conexion();
-//		
-//		try {
-//			Statement estatuto = conex.getConnection().createStatement();
-//			estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-//					+miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-//					+miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-//			JOptionPane.showMessageDialog(null, "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-//			estatuto.close();
-//			conex.desconectar();
-//			
-//		} catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//			JOptionPane.showMessageDialog(null, "No se Registro");
-//		}
-//	}
 
-	public JSONArray buscarMesa(String codigo) throws ParseException, org.json.simple.parser.ParseException 
-	{
-		JSONArray filas = new JSONArray();
-		
-		Date date = null;
-		
-		boolean existe=false;
-		
-			
-			//Statement estatuto = conex.getConnection().createStatement();
-		
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+    public UcsawsMesa obtenerMesaByID(Integer idMesa) {
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			//para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
-			
-			query.setQueryGenerico("SELECT id_mesa, desc_mesa "
-					+ " from ucsaws_mesa "
-				  + "where upper(desc_mesa) like upper('%"+codigo+"%') and id_evento = " + VentanaBuscarEvento.evento);
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-	
-				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "La Mesa no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-					return filas;
-				}
-				
-				else
-			{
-				existe=true;
-				
-				
-				
-				String generoAntesPartir = response.getQueryGenericoResponse();
-				
-				JSONParser j = new JSONParser();
-				Object ob;
-				String part1,part2,part3;
-				
-					ob = j.parse(generoAntesPartir);
-					filas = (JSONArray) ob;
-					
-					
-					
-				//	JSONArray fila		= (JSONArray) filas.get(0);
-					//JSONArray fila1		= (JSONArray) filas.get(1);
-							
-//					System.out.print(filas);
-//					System.out.print("\\n");
-//				//	System.out.print(fila);
-//					System.out.print("\\n");
-//					System.out.print(fila1);
-					
-					
-					
-//					 part1 = (String) array1.get(0);
-//					 part2 = (String) array1.get(1);
-//					 part3 = (String) array1.get(2);
-					 
-//					 gen.setDescripcion(part1);
-//					 gen.setFecha(part2);
-//					 gen.setUsuario(part3);
-					
-				
-				
-				
-				
-				
-				
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
-				
-				
-				
-				
-//				String[] parts = generoAntesPartir.split(",");
-//				
-				
-				
-				
-//				DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-//				DateTime dt = formatter.parseDateTime(part2);
-				
-//				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-//				
-//				
-//					date = formatter.parse(part2);
-//					
-//				GregorianCalendar newCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-//				newCalendar.setTime(date);
-				//GregorianCalendar fecha = date.tog
-				
-				//fecha.setTime(date);
-				
-//				gen.setFecha(part2);
-//				
-//				gen.setUsuario(part3);
-				
-				
-				return filas;
-				
-			}
-			
-			
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-	
-		
-				
-			 
-						
+	query.setTipoQueryGenerico(86);
+	query.setQueryGenerico(idMesa.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	UcsawsMesa mesa = new UcsawsMesa();
+	try {
+	    mesa = mapper.readValue(jsonInString, UcsawsMesa.class);
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return mesa;
+    }
+
+    public List<UcsawsMesa> obtenerMesaByIdEvento(Integer idEvento) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(87);
+	query.setQueryGenerico(idEvento.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	List<UcsawsMesa> mesa = new ArrayList<UcsawsMesa>();
+	try {
+	    mesa = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsMesa>>() {
+		    });
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return mesa;
+    }
+    
+    public boolean guardarMesa(UcsawsMesa mesa) {
+	boolean guardado = false;
+
+	ObjectMapper mapperObj = new ObjectMapper();
+	String jsonStr = "";
+	try {
+	    // get Employee object as a json string
+	    jsonStr = mapperObj.writeValueAsString(mesa);
+	    System.out.println(jsonStr);
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-	public Boolean eliminarMesa(String codigo)
-	{
-		boolean eliminado = false;
-		
-		try{
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+	query.setTipoQueryGenerico(88);
+	query.setQueryGenerico(jsonStr);
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			
-			query.setTipoQueryGenerico(4);
-			
-			query.setQueryGenerico("DELETE FROM ucsaws_mesa WHERE"
-					+ " id_mesa= "
-					+ codigo 
-					 );
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-			
-			if (res.compareTo("ERRORRRRRRR")== 0){
-				
-				
-				eliminado = false;
-			}
-			else{
-				eliminado = true;
-			}
-			
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Mesa","Error",JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
-		
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String string = response.getQueryGenericoResponse();
+
+	UcsawsMesa n = new UcsawsMesa();
+	try {
+	    if (string.compareTo("SI") == 0) {
+		guardado = true;
+	    }
+
+	} catch (Exception ex) {
+	    System.out.println(ex);
 	}
+	// guardado = true;
+
+	return guardado;
+    }
+
+    public Boolean eliminarMesa(String idMesa) {
+	boolean eliminado = false;
+
+	try {
+
+	    ApplicationContext ctx = SpringApplication
+		    .run(WeatherConfiguration.class);
+
+	    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	    QueryGenericoRequest query = new QueryGenericoRequest();
+
+	    query.setTipoQueryGenerico(89);
+
+	    query.setQueryGenerico(idMesa);
+
+	    QueryGenericoResponse response = weatherClient
+		    .getQueryGenericoResponse(query);
+	    weatherClient.printQueryGenericoResponse(response);
+
+	    String res = response.getQueryGenericoResponse();
+
+	    if (res.compareTo("NO") == 0 || res.compareTo("ERRORRRRRRR")==0) {
+
+		eliminado = false;
+	    } else {
+		eliminado = true;
+	    }
+
+	} catch (Exception ex) {
+	    JOptionPane.showMessageDialog(null,
+		    "Error al intentar eliminar la Mesa.", "Error",
+		    JOptionPane.ERROR_MESSAGE);
+	}
+	return eliminado;
+
+    }
+
+
+
+    public List<UcsawsMesa> obtenerMesaByIdLocal(Integer idMesa) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(90);
+	query.setQueryGenerico(idMesa.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	List<UcsawsMesa> mesa = new ArrayList<UcsawsMesa>();
+	try {
+	    mesa = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsMesa>>() {
+		    });
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return mesa;
+    }
+
 }

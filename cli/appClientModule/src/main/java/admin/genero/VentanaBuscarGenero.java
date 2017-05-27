@@ -99,16 +99,30 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		txtFiltro.requestFocus();
 	    }
 	});
-	
-	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
 
-	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
-		        public void actionPerformed(ActionEvent ae)
-		        {
-		    botonCancelar.doClick();
-		    System.out.println("button esc clicked");
-		        }
-		    });
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+		KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+		"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",
+		new AbstractAction() {
+		    public void actionPerformed(ActionEvent ae) {
+			botonCancelar.doClick();
+			System.out.println("button esc clicked");
+		    }
+		});
+
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+		KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+		"clickButtondelete");
+
+	getRootPane().getActionMap().put("clickButtondelete",
+		new AbstractAction() {
+		    public void actionPerformed(ActionEvent ae) {
+			btnEliminar.doClick();
+			System.out.println("button delete clicked");
+		    }
+		});
 
 	setResizable(false);
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -198,9 +212,9 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		return component;
 	    }
 	};
-	table_1 .getTableHeader().setReorderingAllowed(false);
+	table_1.getTableHeader().setReorderingAllowed(false);
 	table_1.setToolTipText("Listado de Generos.");
-	//table_1.setAutoCreateRowSorter(true);
+	// table_1.setAutoCreateRowSorter(true);
 	table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	scrollPane.setViewportView(table_1);
 	// String[] columnNames = {"Picture", "Description"};
@@ -245,7 +259,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 		// selectedData.ad table_1.getValueAt(selectedRow[i],
 		// selectedColumns[0]);
 		// txtId.setText(selectedData.get(0));
-		//txtFiltro.setText(selectedData.get(3));
+		// txtFiltro.setText(selectedData.get(3));
 
 		// textFecha.setText(selectedData.get(2));
 		// textUsu.setText(selectedData.get(4));
@@ -546,16 +560,18 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
     public void filter(String query) {
 
-	/*TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(
-		dm);
+	/*
+	 * TableRowSorter<DefaultTableModel> tr = new
+	 * TableRowSorter<DefaultTableModel>( dm);
+	 * 
+	 * table_1.setRowSorter(tr);
+	 * 
+	 * tr.setRowFilter(RowFilter.regexFilter(query));
+	 */
 
-	table_1.setRowSorter(tr);
-
-	tr.setRowFilter(RowFilter.regexFilter(query));*/
-	
-	    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
-	    sorter.setRowFilter(RowFilter.regexFilter(query));
-	    table_1.setRowSorter(sorter);
+	TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+	sorter.setRowFilter(RowFilter.regexFilter(query));
+	table_1.setRowSorter(sorter);
 
     }
 

@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class UcsawsMesa implements java.io.Serializable {
 
-	private int idMesa;
+	private Integer idMesa;
 	private UcsawsLocal ucsawsLocal;
 	private String descMesa;
 	private String usuarioIns;
@@ -24,11 +24,11 @@ public class UcsawsMesa implements java.io.Serializable {
 	public UcsawsMesa() {
 	}
 
-	public UcsawsMesa(int idMesa) {
+	public UcsawsMesa(Integer idMesa) {
 		this.idMesa = idMesa;
 	}
 
-	public UcsawsMesa(int idMesa, UcsawsLocal ucsawsLocal, String descMesa,
+	public UcsawsMesa(Integer idMesa, UcsawsLocal ucsawsLocal, String descMesa,
 			String usuarioIns, String usuarioUpd, Date fchIns, Date fchUpd,
 			Integer nroMesa, UcsawsEvento idEvento) {
 		this.idMesa = idMesa;
@@ -43,11 +43,11 @@ public class UcsawsMesa implements java.io.Serializable {
 		
 	}
 
-	public int getIdMesa() {
+	public Integer getIdMesa() {
 		return this.idMesa;
 	}
 
-	public void setIdMesa(int idMesa) {
+	public void setIdMesa(Integer idMesa) {
 		this.idMesa = idMesa;
 	}
 

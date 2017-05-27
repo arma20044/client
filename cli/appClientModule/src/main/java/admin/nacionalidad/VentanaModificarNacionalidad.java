@@ -13,22 +13,23 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
@@ -38,7 +39,6 @@ import javax.swing.table.TableColumn;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -52,7 +52,6 @@ import src.main.java.dao.pais.PaisDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-import entity.Nacionalidad;
 import entity.UcsawsNacionalidad;
 import entity.UcsawsPais;
 
@@ -64,10 +63,8 @@ public class VentanaModificarNacionalidad extends JFrame implements
 				       // coordinador
     private JLabel labelTitulo, lblMensaje;
     private JButton botonGuardar, botonCancelar;
-    private JTable table;
 
     private NacionalidadJTableModel model = new NacionalidadJTableModel();
-    private JScrollPane scrollPane;
 
     private NacionalidadValidator nacionalidadValidator = new NacionalidadValidator();
 
@@ -98,6 +95,27 @@ public class VentanaModificarNacionalidad extends JFrame implements
 		txtCod.requestFocus();
 	    }
 	});
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
+
+	getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonGuardar.doClick();
+		    System.out.println("button clicked");
+		        }
+		    });
+	
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonCancelar.doClick();
+		    System.out.println("button esc clicked");
+		        }
+		    });
 
 	nac = n;
 
@@ -119,7 +137,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 	botonCancelar.setToolTipText("Atrás");
 	botonCancelar.setIcon(new ImageIcon(VentanaModificarNacionalidad.class
 		.getResource("/imgs/back2.png")));
-	botonCancelar.setBounds(774, 383, 32, 32);
+	botonCancelar.setBounds(640, 150, 32, 32);
 	botonCancelar.setOpaque(false);
 	botonCancelar.setContentAreaFilled(false);
 	botonCancelar.setBorderPainted(false);
@@ -141,76 +159,11 @@ public class VentanaModificarNacionalidad extends JFrame implements
 	getContentPane().add(botonGuardar);
 	getContentPane().add(labelTitulo);
 	limpiar();
-	setSize(812, 444);
+	setSize(678, 211);
 	setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 	setLocationRelativeTo(null);
 	setResizable(false);
 	getContentPane().setLayout(null);
-
-	scrollPane = new JScrollPane();
-	scrollPane.setAutoscrolls(true);
-	scrollPane.setToolTipText("Lista de Nacionalidades");
-	scrollPane.setBounds(0, 190, 806, 193);
-	getContentPane().add(scrollPane);
-
-	table = new JTable() {
-	    @Override
-	    public Component prepareRenderer(TableCellRenderer renderer,
-		    int row, int column) {
-		Component component = super.prepareRenderer(renderer, row,
-			column);
-		int rendererWidth = component.getPreferredSize().width;
-		TableColumn tableColumn = getColumnModel().getColumn(column);
-		tableColumn.setPreferredWidth(Math.max(rendererWidth
-			+ getIntercellSpacing().width,
-			tableColumn.getPreferredWidth()));
-		return component;
-	    }
-	};
-	table.setToolTipText("");
-	table.setAutoCreateRowSorter(true);
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	scrollPane.setViewportView(table);
-	// table.addMouseListener(new MouseAdapter() {
-	// @Override
-	// public void mouseClicked(MouseEvent arg0) {
-	// List<String> selectedData = new ArrayList<String>();
-	//
-	// int[] selectedRow = table.getSelectedRows();
-	// // int[] selectedColumns = table_1.getSelectedColumns();
-	//
-	// for (int i = 0; i < selectedRow.length; i++) {
-	// int col = 0;
-	// while (table.getColumnCount() > col) {
-	// System.out.println(table
-	// .getValueAt(selectedRow[i], col));
-	// try {
-	// selectedData.add((String) table.getValueAt(
-	// selectedRow[i], col));
-	// } catch (Exception e) {
-	// System.out.println(e.getMessage());
-	// }
-	//
-	// col++;
-	// }
-	// // selectedData.ad table_1.getValueAt(selectedRow[i],
-	// // selectedColumns[0]);
-	// // txtId.setText(selectedData.get(0));
-	// // txtCod.setText(selectedData.get(0));
-	// // txtDesc.setText(selectedData.get(1));
-	// // textFecha.setText(selectedData.get(2));
-	// // textUsu.setText(selectedData.get(4));
-	// // codTemporal.setText(selectedData.get(1));
-	// codTemporal = (String) (table.getModel().getValueAt(
-	// selectedRow[i], 0));
-	//
-	// }
-	// System.out.println("Selected: " + selectedData);
-	//
-	// }
-	// });
-	table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	table.setModel(model);
 
 	btnHome = new JButton("");
 	btnHome.setToolTipText("Inicio");
@@ -263,7 +216,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 
 	lblMensaje = new JLabel("");
 	lblMensaje.setForeground(Color.RED);
-	lblMensaje.setBounds(413, 176, 363, 14);
+	lblMensaje.setBounds(197, 150, 363, 14);
 	getContentPane().add(lblMensaje);
 
 	txtDescripcion = new JTextField();
@@ -277,9 +230,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 	lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 	lblDescripcion.setBounds(130, 84, 61, 25);
 	getContentPane().add(lblDescripcion);
-
-	table.removeColumn(table.getColumnModel().getColumn(0));
-	recuperarDatos();
+	//recuperarDatos();
 
     }
 
@@ -297,7 +248,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 
 		Item item3 = (Item) cmbPais.getSelectedItem();
 		Integer paisSelected = item3.getId();
-		if (!(txtCod.getText().length() == 0)) {
+		if (!(txtCod.getText().length() == 0) && !(txtDescripcion.getText().length()==0) && !(paisSelected == -1)) {
 		    if (txtCod.getText().length() == 3 ) {
 			
 			 PaisDAO paisDAO = new PaisDAO();
@@ -320,11 +271,11 @@ public class VentanaModificarNacionalidad extends JFrame implements
 			    nacionalidadesDAO.modificarNacionalidad(nac);
 
 			    model = new NacionalidadJTableModel();
-			    recuperarDatos();
-			    table.setModel(model);
+			   // recuperarDatos();
+			 //   table.setModel(model);
 			    model.fireTableDataChanged();
-			    table.removeColumn(table.getColumnModel()
-				    .getColumn(0));
+			//    table.removeColumn(table.getColumnModel()
+				 //   .getColumn(0));
 			    // JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 			    lblMensaje
 				    .setText("Excelente, se ha Modificado la Nacionalidad.");
@@ -412,6 +363,18 @@ public class VentanaModificarNacionalidad extends JFrame implements
 			t.start();
 		    }
 		}
+		else{
+			lblMensaje
+			.setText("Ingrese todos los campos.");
+		Timer t = new Timer(Login.timer, new ActionListener() {
+
+		    public void actionPerformed(ActionEvent e) {
+			lblMensaje.setText(null);
+		    }
+		});
+		t.setRepeats(false);
+		t.start();
+		}
 	    } catch (Exception ex) {
 		JOptionPane.showMessageDialog(null, "Ingrese el codigo",
 			"Error", JOptionPane.ERROR_MESSAGE);
@@ -425,56 +388,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 	}
     }
 
-    private void recuperarDatos() {
-	JSONArray filas = new JSONArray();
-	JSONArray fil = new JSONArray();
 
-	boolean existe = false;
-
-	// Statement estatuto = conex.getConnection().createStatement();
-
-	ApplicationContext ctx = SpringApplication
-		.run(WeatherConfiguration.class);
-
-	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-	QueryGenericoRequest query = new QueryGenericoRequest();
-
-	// para registrar se inserta el codigo es 1
-	query.setTipoQueryGenerico(46);
-
-	query.setQueryGenerico(VentanaBuscarEvento.evento);
-
-	QueryGenericoResponse response = weatherClient
-		.getQueryGenericoResponse(query);
-	weatherClient.printQueryGenericoResponse(response);
-
-	String res = response.getQueryGenericoResponse();
-
-	// json string to List<String>;
-	ObjectMapper mapper = new ObjectMapper();
-	String jsonInString = response.getQueryGenericoResponse();
-	List<UcsawsNacionalidad> lista = new ArrayList<UcsawsNacionalidad>();
-	try {
-	    lista = mapper.readValue(jsonInString,
-		    new TypeReference<List<UcsawsNacionalidad>>() {
-		    });
-	} catch (Exception e) {
-	    System.out.println(e);
-	}
-
-	if (lista.isEmpty()) {
-	    // JOptionPane.showMessageDialog(null, "algo salio mal",
-	    // "Advertencia", JOptionPane.WARNING_MESSAGE);
-	    // return lista;
-	}
-
-	else {
-	    obtenerModeloA(table, lista);
-
-	    // return lista;
-	}
-
-    }
 
     public Vector recuperarDatosComboBoxPaisActual() {
 	Vector model = new Vector();

@@ -24,8 +24,7 @@ import src.main.java.hello.WeatherConfiguration;
 import entity.UcsawsDistrito;
 
 public class DistritoDAO {
-    
-    
+
     public UcsawsDistrito obtenerDistritoByID(Integer idDistrito) {
 
 	ApplicationContext ctx = SpringApplication
@@ -46,7 +45,7 @@ public class DistritoDAO {
 
 	UcsawsDistrito distrito = new UcsawsDistrito();
 	try {
-	    distrito = mapper.readValue(jsonInString,UcsawsDistrito.class);
+	    distrito = mapper.readValue(jsonInString, UcsawsDistrito.class);
 
 	} catch (Exception e) {
 	    System.out.println(e);
@@ -74,187 +73,125 @@ public class DistritoDAO {
 
 	List<UcsawsDistrito> distrito = new ArrayList<UcsawsDistrito>();
 	try {
-	    distrito = mapper.readValue(jsonInString, new TypeReference<List<UcsawsDistrito>>(){});
-	    
-	    
+	    distrito = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsDistrito>>() {
+		    });
+
 	} catch (Exception e) {
 	    System.out.println(e);
 	}
 	return distrito;
     }
 
-	public JSONArray buscarDistrito(String codigo)
-			throws ParseException, org.json.simple.parser.ParseException {
-		JSONArray filas = new JSONArray();
+    public Boolean eliminarDistrito(String idDistrito) {
+	boolean eliminado = false;
 
-		Date date = null;
+	try {
 
-		boolean existe = false;
+	    ApplicationContext ctx = SpringApplication
+		    .run(WeatherConfiguration.class);
 
-		// Statement estatuto = conex.getConnection().createStatement();
+	    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	    QueryGenericoRequest query = new QueryGenericoRequest();
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	    query.setTipoQueryGenerico(73);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	    query.setQueryGenerico(idDistrito);
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+	    QueryGenericoResponse response = weatherClient
+		    .getQueryGenericoResponse(query);
+	    weatherClient.printQueryGenericoResponse(response);
 
-		query.setQueryGenerico("SELECT id_distrito, desc_distrito "
-				+ " from ucsaws_distrito di join ucsaws_departamento de on (di.id_departamento = de.id_departamento)"
-				+ "where (upper(desc_distrito) like upper('%" + codigo + "%') "
-				+ ") and di.id_evento = " + VentanaBuscarEvento.evento);
+	    String res = response.getQueryGenericoResponse();
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+	    if (res.compareTo("NO") == 0 || res.compareTo("ERRORRRRRRR")==0) {
 
-		String res = response.getQueryGenericoResponse();
+		eliminado = false;
+	    } else {
+		eliminado = true;
+	    }
 
-		if (res.compareTo("[]") == 0) {
-			JOptionPane.showMessageDialog(null, "El Distrito no Existe",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-			return filas;
-		}
+	} catch (Exception ex) {
+	    JOptionPane.showMessageDialog(null,
+		    "Error al intentar eliminar el Distrito.", "Error",
+		    JOptionPane.ERROR_MESSAGE);
+	}
+	return eliminado;
 
-		else {
-			existe = true;
+    }
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+    public boolean guardarDistrito(UcsawsDistrito distrito) {
+	boolean guardado = false;
 
-			JSONParser j = new JSONParser();
-			Object ob;
-			String part1, part2, part3;
-
-			ob = j.parse(generoAntesPartir);
-			filas = (JSONArray) ob;
-
-			// JSONArray fila = (JSONArray) filas.get(0);
-			// JSONArray fila1 = (JSONArray) filas.get(1);
-
-			// System.out.print(filas);
-			// System.out.print("\\n");
-			// // System.out.print(fila);
-			// System.out.print("\\n");
-			// System.out.print(fila1);
-
-			// part1 = (String) array1.get(0);
-			// part2 = (String) array1.get(1);
-			// part3 = (String) array1.get(2);
-
-			// gen.setDescripcion(part1);
-			// gen.setFecha(part2);
-			// gen.setUsuario(part3);
-
-			// String[] parts = generoAntesPartir.split(",");
-			//
-
-			// DateTimeFormatter formatter =
-			// DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-			// DateTime dt = formatter.parseDateTime(part2);
-
-			// DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-			//
-			//
-			// date = formatter.parse(part2);
-			//
-			// GregorianCalendar newCalendar = (GregorianCalendar)
-			// GregorianCalendar.getInstance();
-			// newCalendar.setTime(date);
-			// GregorianCalendar fecha = date.tog
-
-			// fecha.setTime(date);
-
-			// gen.setFecha(part2);
-			//
-			// gen.setUsuario(part3);
-
-			return filas;
-
-		}
-
+	ObjectMapper mapperObj = new ObjectMapper();
+	String jsonStr = "";
+	try {
+	    // get Employee object as a json string
+	    jsonStr = mapperObj.writeValueAsString(distrito);
+	    System.out.println(jsonStr);
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	    public Boolean eliminarDistrito(String idDistrito) {
-		boolean eliminado = false;
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
-		try {
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-		    ApplicationContext ctx = SpringApplication
-			    .run(WeatherConfiguration.class);
+	query.setTipoQueryGenerico(72);
+	query.setQueryGenerico(jsonStr);
 
-		    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		    QueryGenericoRequest query = new QueryGenericoRequest();
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
 
-		    query.setTipoQueryGenerico(73);
+	ObjectMapper mapper = new ObjectMapper();
+	String string = response.getQueryGenericoResponse();
 
-		    query.setQueryGenerico(idDistrito);
-
-		    QueryGenericoResponse response = weatherClient
-			    .getQueryGenericoResponse(query);
-		    weatherClient.printQueryGenericoResponse(response);
-
-		    String res = response.getQueryGenericoResponse();
-
-		    if (res.compareTo("NO") == 0) {
-
-			eliminado = false;
-		    } else {
-			eliminado = true;
-		    }
-
-		} catch (Exception ex) {
-		    JOptionPane.showMessageDialog(null,
-			    "Error al intentar eliminar el Distrito.", "Error",
-			    JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
-
+	UcsawsDistrito n = new UcsawsDistrito();
+	try {
+	    if (string.compareTo("SI") == 0) {
+		guardado = true;
 	    }
-	
-	public boolean guardarDistrito(UcsawsDistrito distrito) {
-		boolean guardado = false;
 
-		ObjectMapper mapperObj = new ObjectMapper();
-		String jsonStr = "";
-		try {
-		    // get Employee object as a json string
-		    jsonStr = mapperObj.writeValueAsString(distrito);
-		    System.out.println(jsonStr);
-		} catch (IOException e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+	} catch (Exception ex) {
+	    System.out.println(ex);
+	}
+	// guardado = true;
 
-		ApplicationContext ctx = SpringApplication
-			.run(WeatherConfiguration.class);
+	return guardado;
+    }
+    
+    
+    public List<UcsawsDistrito> obtenerDistritoByIdDepartamento(Integer idDepartamento) {
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+   	ApplicationContext ctx = SpringApplication
+   		.run(WeatherConfiguration.class);
 
-		query.setTipoQueryGenerico(72);
-		query.setQueryGenerico(jsonStr);
+   	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+   	QueryGenericoRequest query = new QueryGenericoRequest();
 
-		QueryGenericoResponse response = weatherClient
-			.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+   	query.setTipoQueryGenerico(83);
+   	query.setQueryGenerico(idDepartamento.toString());
 
-		ObjectMapper mapper = new ObjectMapper();
-		String string = response.getQueryGenericoResponse();
+   	QueryGenericoResponse response = weatherClient
+   		.getQueryGenericoResponse(query);
+   	weatherClient.printQueryGenericoResponse(response);
 
-		UcsawsDistrito n = new UcsawsDistrito();
-		try {
-		    if (string.compareTo("SI") == 0) {
-			guardado = true;
-		    }
+   	ObjectMapper mapper = new ObjectMapper();
+   	String jsonInString = response.getQueryGenericoResponse();
 
-		} catch (Exception ex) {
-		    System.out.println(ex);
-		}
-		// guardado = true;
+   	List<UcsawsDistrito> distrito = new ArrayList<UcsawsDistrito>();
+   	try {
+   	    distrito = mapper.readValue(jsonInString,
+   		    new TypeReference<List<UcsawsDistrito>>() {
+   		    });
 
-		return guardado;
-	    }
+   	} catch (Exception e) {
+   	    System.out.println(e);
+   	}
+   	return distrito;
+       }
 }

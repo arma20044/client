@@ -162,7 +162,7 @@ public class DepartamentoDAO {
 
 	    String res = response.getQueryGenericoResponse();
 
-	    if (res.compareTo("NO") == 0) {
+	    if (res.compareTo("NO") == 0 || res.compareTo("ERRORRRRRRR")==0) {
 
 		eliminado = false;
 	    } else {

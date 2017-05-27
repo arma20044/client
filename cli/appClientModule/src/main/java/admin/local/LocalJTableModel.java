@@ -1,16 +1,13 @@
 package src.main.java.admin.local;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.postgresql.jdbc2.ArrayAssistantRegistry;
-
 public class LocalJTableModel extends AbstractTableModel {
 
-	List<Object[]> ciudades = new ArrayList<Object[]>();
+	List<Object[]> local = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
@@ -19,12 +16,12 @@ public class LocalJTableModel extends AbstractTableModel {
 
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ciudades.size();
+		return local.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 
-		Object resultado = ciudades.get(rowIndex) [columnIndex];
+		Object resultado = local.get(rowIndex) [columnIndex];
 		
 		return resultado;
 	}
