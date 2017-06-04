@@ -277,6 +277,7 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 		getContentPane().add(lblMensaje);
 		
 		btnModificar = new JButton();
+		btnModificar.setVisible(false);
 		btnModificar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -389,17 +390,18 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 						"¿Esta seguro de eliminar la Lista?", "Confirmación",
 						JOptionPane.YES_NO_OPTION);
 				if (respuesta == JOptionPane.YES_NO_OPTION) {
+				  boolean a= false;
 					ListasDAO listasDAO = new ListasDAO();
 
 					try {
-						listasDAO.eliminarLista(codTemporal);
+						a = listasDAO.eliminarLista(codTemporal);
 
 					} catch (Exception e2) {
 						// TODO: handle exception
 						JOptionPane.showMessageDialog(null, "sfdsfsfsdfs",
 								"Información", JOptionPane.WARNING_MESSAGE);
 					}
-
+					if(a){
 					lblMensaje.setText("Excelente, se ha eliminado la Lista");
 					codTemporal = "";
 					txtBuscar.setText("");
@@ -422,6 +424,11 @@ public class VentanaBuscarLista extends JFrame implements ActionListener {
 					recuperarDatos();
 					table_1.setModel(model);
 					table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+					}
+					else{
+					  JOptionPane.showMessageDialog(null, "No se ha podido eliminar la Lista. Se deben eliminar todas las referencias a esta lista.",
+                          "Información", JOptionPane.ERROR_MESSAGE);
+					}
 					// model.fireTableDataChanged();
 					// table_1.repaint();
 				}

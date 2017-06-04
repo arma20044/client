@@ -325,7 +325,7 @@ public class ListasDAO {
 
 	boolean eliminado = false;
 
-	try {
+	//try {
 
 	    ApplicationContext ctx = SpringApplication
 		    .run(WeatherConfiguration.class);
@@ -343,19 +343,17 @@ public class ListasDAO {
 
 	    String res = response.getQueryGenericoResponse();
 
-	    if (res.compareTo("NO") == 0) {
-
-		eliminado = false;
-	    } else {
-		eliminado = true;
-	    }
-
-	} catch (Exception ex) {
-	    JOptionPane.showMessageDialog(null,
-		    "Error al intentar eliminar la Lista.", "Error",
-		    JOptionPane.ERROR_MESSAGE);
-	}
-	return eliminado;
+        try {
+          //n = mapper.readValue(jsonInString, String.class);
+          if (res.compareTo("SI")==0){
+          eliminado = true;
+          }
+          
+      } catch (Exception ex) {
+              eliminado = false;
+          JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Lista.","Error",JOptionPane.ERROR_MESSAGE);
+      }
+      return eliminado;
 
     }
 }

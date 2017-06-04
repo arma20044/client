@@ -200,7 +200,7 @@ public class PersonaDAO {
 	{
 		boolean eliminado = false;
 
-		try {
+		//try {
 		    ObjectMapper mapperObj = new ObjectMapper();
 		  //  String jsonStr = "";
 
@@ -223,19 +223,17 @@ public class PersonaDAO {
 
 		    String res = response.getQueryGenericoResponse();
 
-		    if (res.compareTo("NO") == 0) {
-
-			eliminado = false;
-		    } else {
-			eliminado = true;
-		    }
-
-		} catch (Exception ex) {
-		    JOptionPane.showMessageDialog(null,
-			    "Error al intentar eliminar la Persona", "Error",
-			    JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
+	        try {
+	            //n = mapper.readValue(jsonInString, String.class);
+	            if (res.compareTo("SI")==0){
+	            eliminado = true;
+	            }
+	            
+	        } catch (Exception ex) {
+	                eliminado = false;
+	            JOptionPane.showMessageDialog(null,"Error al intentar eliminar la Persona.","Error",JOptionPane.ERROR_MESSAGE);
+	        }
+	        return eliminado;
 		
 	}
 	

@@ -112,6 +112,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarEvento() {
+	  setVisible(true);
 		
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
@@ -471,6 +472,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		
 		//btnModificarEvento = new JButton("");
 				btnModificar = new JButton("");
+				btnModificar.setVisible(false);
 				btnModificar.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {

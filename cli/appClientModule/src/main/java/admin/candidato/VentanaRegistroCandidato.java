@@ -4,43 +4,31 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
@@ -49,30 +37,24 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.sun.org.apache.bcel.internal.generic.LUSHR;
-
-import entity.UcsawsCandidatos;
-import entity.UcsawsEvento;
-import entity.UcsawsListas;
-import entity.UcsawsNacionalidad;
-import entity.UcsawsPais;
-import entity.UcsawsPersona;
-import entity.UcsawsTipoLista;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.CandidatoValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.dao.listas.ListasDAO;
-import src.main.java.dao.nacionalidades.NacionalidadesDAO;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import entity.UcsawsCandidatos;
+import entity.UcsawsEvento;
+import entity.UcsawsListas;
+import entity.UcsawsPersona;
+import entity.UcsawsTipoLista;
 
 public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
@@ -301,6 +283,27 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     getContentPane().add(lblMensaje);
     // recuperarDatos();
 
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "clickButton");
+
+    getRootPane().getActionMap().put("clickButton", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonGuardar.doClick();
+        System.out.println("button clicked");
+      }
+    });
+
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonCancelar.doClick();
+        System.out.println("button esc clicked");
+      }
+    });
+
   }
 
   private void limpiar() {
@@ -317,33 +320,35 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
         Integer listaSelected = 0, personaSelected = 0, obervacionSelected = 0;
         String item4 = "";
-        
-      /*  if(!(combo.isVisible())){
-          if(combo.getSelectedIndex() ==-1){
-            lblMensaje.setText("Ingrese todos los campos");
-            Timer t = new Timer(Login.timer, new ActionListener() {
 
-              public void actionPerformed(ActionEvent e) {
-                lblMensaje.setText(null);
-              }
-            });
-            t.setRepeats(false);
-            t.start();
-          }
-        }
-        else{*/
+        /*
+         * if(!(combo.isVisible())){ if(combo.getSelectedIndex() ==-1){
+         * lblMensaje.setText("Ingrese todos los campos"); Timer t = new Timer(Login.timer, new
+         * ActionListener() {
+         * 
+         * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
+         * t.setRepeats(false); t.start(); } } else{
+         */
 
-        if (cmbLista.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1
-            && combo.getSelectedIndex() != -1 ) {
+        if (cmbLista.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 //&& combo.getSelectedIndex() != -1
+            ) {
           Item item = (Item) cmbLista.getSelectedItem();
           listaSelected = item.getId();
 
           Item item3 = (Item) cmbPersona.getSelectedItem();
           personaSelected = item3.getId();
+              if(  combo.getSelectedIndex() == -1 ){
+                item4 = esPresidenteOVice;
+              }
+              else{
+                item4 = (String) combo.getSelectedItem();
+              }
+          
 
-          item4 = (String) combo.getSelectedItem();
+          
           // obervacionSelected = Integer.parseInt(item4);
         }
+        
 
         if (!(txtCod.getText().length() == 0)) {
           if (!(txtCod.getText().length() == 3)) {
@@ -364,53 +369,48 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
 
             if (codTemporal == "") {
-            //  if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-                EventoDAO eventoDAO = new EventoDAO();
-                PersonaDAO personaDAO = new PersonaDAO();
-                ListasDAO listaDAO = new ListasDAO();
-                CandidatoDAO candidatoDAO = new CandidatoDAO();
-                
-                UcsawsCandidatos candidatoAGuardar = new UcsawsCandidatos();
+              // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+              EventoDAO eventoDAO = new EventoDAO();
+              PersonaDAO personaDAO = new PersonaDAO();
+              ListasDAO listaDAO = new ListasDAO();
+              CandidatoDAO candidatoDAO = new CandidatoDAO();
 
-               
-                UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
-                
-                
-                candidatoAGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected.toString()));
-                candidatoAGuardar.setIdLista(listaDAO.obtenerListaByIdIdLista(listaSelected));
-                candidatoAGuardar.setIdEvento(evento);
-                candidatoAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
-                candidatoAGuardar.setFchIns(new Date());
-                candidatoAGuardar.setCodigo(txtCod.getText());
-                candidatoAGuardar.setDescripcion(item4);
-                
-                //candidatoAGuardar.setUcsawsPais(pais);
-                
-                
-                
-                
-                candidatoDAO.guardarCandidato(candidatoAGuardar);
-                
+              UcsawsCandidatos candidatoAGuardar = new UcsawsCandidatos();
 
-                VentanaBuscarCandidato buscar = new VentanaBuscarCandidato();
-                buscar.setVisible(true);
-                dispose(); 
-                /*  }
 
-              else
-                // JOptionPane.showMessageDialog(null,
-                // "Ya existe el genero " + txtDesc.getText(),
-                // "Información",JOptionPane.WARNING_MESSAGE);
-                lblMensaje.setText("La Persona no puede tener mas de una candidatura");
-              Timer t = new Timer(Login.timer, new ActionListener() {
+              UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
 
-                public void actionPerformed(ActionEvent e) {
-                  lblMensaje.setText(null);
-                }
-              });
-              t.setRepeats(false);
-              t.start();
-*/
+
+              candidatoAGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
+                  .toString()));
+              candidatoAGuardar.setIdLista(listaDAO.obtenerListaByIdIdLista(listaSelected));
+              candidatoAGuardar.setIdEvento(evento);
+              candidatoAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
+              candidatoAGuardar.setFchIns(new Date());
+              candidatoAGuardar.setCodigo(txtCod.getText());
+              candidatoAGuardar.setDescripcion(item4);
+
+              // candidatoAGuardar.setUcsawsPais(pais);
+
+
+
+              candidatoDAO.guardarCandidato(candidatoAGuardar);
+
+
+              VentanaBuscarCandidato buscar = new VentanaBuscarCandidato();
+              buscar.setVisible(true);
+              dispose();
+              /*
+               * }
+               * 
+               * else // JOptionPane.showMessageDialog(null, // "Ya existe el genero " +
+               * txtDesc.getText(), // "Información",JOptionPane.WARNING_MESSAGE);
+               * lblMensaje.setText("La Persona no puede tener mas de una candidatura"); Timer t =
+               * new Timer(Login.timer, new ActionListener() {
+               * 
+               * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
+               * t.setRepeats(false); t.start();
+               */
               // this.dispose();
             } else {
 
@@ -419,7 +419,8 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
             // JOptionPane.showMessageDialog(null,
             // "Ya existe el genero " + txtDesc.getText(),
             // "Información",JOptionPane.WARNING_MESSAGE);
-            lblMensaje.setText("Ya existe el candidato con alguno de los datos cargados. Favor verificar.");
+            lblMensaje
+                .setText("Ya existe el candidato con alguno de los datos cargados. Favor verificar.");
             Timer t = new Timer(Login.timer, new ActionListener() {
 
               public void actionPerformed(ActionEvent e) {
@@ -445,7 +446,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
           t.setRepeats(false);
           t.start();
         }
-     // }
+        // }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Error al intentar insertar : " + ex, "Error",
             JOptionPane.ERROR_MESSAGE);

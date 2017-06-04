@@ -1,8 +1,5 @@
 package src.main.java.admin.candidato;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -15,22 +12,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
@@ -40,26 +38,15 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
-import entity.Candidato;
-import entity.UcsawsCandidatos;
-import entity.UcsawsNacionalidad;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.evento.VentanaModificarEvento;
-import src.main.java.admin.nacionalidad.NacionalidadJTableModel;
 import src.main.java.dao.candidato.CandidatoDAO;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import entity.Candidato;
+import entity.UcsawsCandidatos;
 
 public class VentanaBuscarCandidato extends JFrame implements ActionListener {
 
@@ -82,7 +69,6 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
   private JLabel lblMensaje;
 
   private DefaultTableModel dm;
-  private JButton btnModificar;
 
   private Candidato candidato;
 
@@ -212,8 +198,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
         // selectedData.ad table_1.getValueAt(selectedRow[i],
         // selectedColumns[0]);
         // txtId.setText(selectedData.get(0));
-        txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
-            + selectedData.get(4));
+       // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
+        //    + selectedData.get(4));
 
         // textFecha.setText(selectedData.get(2));
         // textUsu.setText(selectedData.get(4));
@@ -282,40 +268,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     lblMensaje.setForeground(Color.RED);
     lblMensaje.setBounds(57, 88, 432, 14);
     getContentPane().add(lblMensaje);
-
-    btnModificar = new JButton();
-    btnModificar.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        if (!codTemporal.equals("")) {
-
-          VentanaModificarCandidato modificar = new VentanaModificarCandidato(candidato);
-          modificar.setVisible(true);
-          dispose();
-        } else {
-          lblMensaje.setText("Por favor seleccione que Candidato desea Modificar.");
-
-          Timer t = new Timer(Login.timer, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-              lblMensaje.setText(null);
-            }
-          });
-          t.setRepeats(false);
-          t.start();
-        }
-      }
-    });
-    btnModificar.setIcon(new ImageIcon(VentanaBuscarCandidato.class.getResource("/imgs/def.png")));
-    btnModificar.setToolTipText("Modificar");
-    btnModificar.setOpaque(false);
-    btnModificar.setEnabled(true);
-    btnModificar.setContentAreaFilled(false);
-    btnModificar.setBorderPainted(false);
-    btnModificar.setBounds(499, 45, 32, 32);
-    Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
-    Image newimg6 = img6.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
-    btnModificar.setIcon(new ImageIcon(newimg6));
-    getContentPane().add(btnModificar);
+    // Image newimg6 = img6.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
 
     // table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 
@@ -341,6 +294,28 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     // }
     //
     // });
+    
+    
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+                public void actionPerformed(ActionEvent ae)
+                {
+            botonCancelar.doClick();
+            System.out.println("button esc clicked");
+                }
+            });
+            
+            
+                getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"clickButtondelete");
+
+    getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
+                public void actionPerformed(ActionEvent ae)
+                {
+             btnEliminar.doClick();
+            System.out.println("button delete clicked");
+                }
+            });
 
     DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 
@@ -349,8 +324,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
       btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
       btnEliminar.setEnabled(false);
       btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
-      btnModificar.setEnabled(false);
-      btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+      // btnModificar.setEnabled(false);
+      // btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
     }
 
   }
@@ -406,13 +381,13 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "sfdsfsfsdfs", "Información",
                 JOptionPane.WARNING_MESSAGE);
           }
-        //  JOptionPane.showMessageDialog(null, "Excelente, se ha eliminado el candidato ");
+          // JOptionPane.showMessageDialog(null, "Excelente, se ha eliminado el candidato ");
           // modificarGenero(textCod.getText(),
           // codTemporal.getText());
-          
-         // limpiar();
 
-       
+          // limpiar();
+
+
           // model.fireTableDataChanged();
           // table_1.repaint();
         }

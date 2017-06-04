@@ -232,8 +232,12 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 
 			GeneroDAO generoDAO = new GeneroDAO();
 			generoDAO.guardarGenero(generoAGuardar);
+			
+			VentanaBuscarGenero genero = new VentanaBuscarGenero();
+			genero.setVisible(true);
+			dispose();
 
-			model = new GeneroJTableModel();
+			/*model = new GeneroJTableModel();
 			//recuperarDatos();
 			//table.setModel(model);
 			model.fireTableDataChanged();
@@ -251,7 +255,7 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 			t.start();
 
 			txtCodigo.setText("");
-			txtDescripcion.setText("");
+			txtDescripcion.setText("");*/
 
 			// this.dispose();
 			// } else {

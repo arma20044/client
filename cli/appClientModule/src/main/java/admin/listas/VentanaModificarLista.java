@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -49,10 +50,14 @@ import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.ListasValidator;
 import src.main.java.dao.listas.ListasDAO;
+import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import entity.Listas;
+import entity.UcsawsListas;
+import entity.UcsawsPais;
+import entity.UcsawsTipoLista;
 
 public class VentanaModificarLista extends JFrame implements ActionListener {
 
@@ -61,10 +66,8 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private ListasJTableModel model = new ListasJTableModel();
-	private JScrollPane scrollPane;
 
 	private ListasValidator listasValidator = new ListasValidator();
 
@@ -82,7 +85,6 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 	private JLabel lblAnho;
 	private JTextField txtAnho;
 	private JComboBox cmbTipoLista;
-	private JTextField txtFiltrar;
 	private DefaultTableModel dm;
 	private ListasDAO listaDAO = new ListasDAO();
 	
@@ -120,7 +122,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaModificarLista.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(676, 198, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -142,141 +144,13 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(719, 259);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Listas");
-		scrollPane.setBounds(0, 200, 806, 183);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		/*table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				int selectedRow = table.rowAtPoint(arg0.getPoint());
-					System.out.println(selectedRow);
-					int col = 0;
-					while (col < table.getColumnCount()+1) {
-						//System.out.println(table_1.getValueAt(selectedRow,
-						//		col));
-						try {
-							int row = table.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table.getModel().getValueAt(table.
-			                          convertRowIndexToModel(row), col).toString();
-			                //System.out.println(table_click0);
-			                
-							selectedData.add(table_click0);
-							System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtNro.setText(selectedData.get(2));
-					txtNombre.setText(selectedData.get(3));
-					txtAnho.setText(selectedData.get(4));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
-					
-				//	cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
-					//cmbTipoLista.removeAllItems();
-					
-//					//cmbTipoLista = new JComboBox(recuperarDatosComboBoxTipoLista());
-//					Item item = (Item) cmbTipoLista.getSelectedItem();
-//					Integer tipoListaSelected = item.getId();
-					
-					//cmbTipoLista.setSelectedItem(3);
-					System.out.println(cmbTipoLista.getSelectedItem());
-					
-				//	Item item = (Item) cmbTipoLista.getSelectedItem();
-				//	Integer tipoListaSelected = item.getId();
-					
-					
-					//cmbTipoLista.setSelectedItem(selectedData.get(5));
-					//test datamodel to array
-					DefaultComboBoxModel dtm = (DefaultComboBoxModel)  cmbTipoLista.getModel();
-					System.out.println(dtm.getSize());
-					int cont=0;
-					while(cont < dtm.getSize()){
-						if (dtm.getElementAt(cont).toString().compareToIgnoreCase(selectedData.get(5).toString())==0)
-						{
-							Item item = (Item) dtm.getElementAt(cont);
-							Integer tipoListaSelected = item.getId();
-							cmbTipoLista.setSelectedIndex(cont);
-							break;
-						}
-						
-							cont++;
-						
-						System.out.println(dtm.getElementAt(0));
-					}
-					
-					selectedData.get(5);
-				   // int nRow = dtm.getRowCount(), nCol = dtm.getColumnCount();
-				   // Object[][] tableData = new Object[nRow][nCol];
-				  //  for (int i = 0 ; i < nRow ; i++)
-				  //      for (int j = 0 ; j < nCol ; j++)
-				          //  tableData[i][j] = dtm.getValueAt(i,j);
-					
-					
-					
-					
-					
-					//test
-					//cmbTipoLista.getModel();
-					
-					
-					//cmbTipoLista.setSelectedIndex(2);
-					
-					
-				//	cmbTipoLista.repaint();
-				//	//cmbTipoLista.updateUI();
-				//	System.out.println(cmbTipoLista.getSelectedItem().toString());
-				   
-				        
-				        
-					
-				//	cmbTipoLista.setSelectedItem(selectedData.get(2));
-					//repaint();
-
-				
-				System.out.println("Selected: " + selectedData);
-
-			}
-		});*/
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		recuperarDatos();
-		table.setModel(dm);
+	//recuperarDatos();
+		//table.setModel(dm);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -367,39 +241,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		filtrarComboEventoTipo();
 		cmbTipoLista.setBounds(213, 146, 340, 20);
 		getContentPane().add(cmbTipoLista);
-		
-		txtFiltrar = new JTextField();
-		txtFiltrar.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String query =txtFiltrar.getText().toUpperCase(); 
-				filter(query);
-			}
-		});
-		txtFiltrar.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				txtFiltrar.setText("");
-				txtFiltrar.setForeground(Color.BLACK);
-			}
-			@Override
-			public void focusLost(FocusEvent e) {
-				if(txtFiltrar.getText().length()== 0){
-					String query =txtFiltrar.getText().toUpperCase(); 
-					filter(query);
-					txtFiltrar.setText("Escriba para Filtrar");
-					txtFiltrar.setForeground(Color.LIGHT_GRAY);
-				}
-			}
-		});
-		txtFiltrar.setForeground(Color.LIGHT_GRAY);
-		txtFiltrar.setText("Escriba para filtrar...");
-		txtFiltrar.setEditable(true);
-		txtFiltrar.setBounds(174, 383, 319, 26);
-		getContentPane().add(txtFiltrar);
-
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+		//recuperarDatos();
 
 	}
 
@@ -434,96 +276,27 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 						t.start();
 					} else if
 
-					(listasValidator.ValidarCodigo(txtNro.getText(),
-							tipoListaSelected, txtNombre.getText(),
-							txtAnho.getText()) == false) {
+					(listasValidator.ValidarCodigo(
+		                Integer.parseInt(txtNro.getText()),
+		                txtNombre.getText(),
+		                Integer.parseInt(txtAnho.getText()),
+		                tipoListaSelected, VentanaBuscarEvento.evento) == false) {
 						// if
 						// (candidatoValidator.ValidarPersona(personaSelected)
 						// == false) {
 						// Genero genero = new Genero();
 						// genero.setDescripcion(textGenero.getText());
 
-						
-						if (codTemporal==""){
-						Calendar calendar = new GregorianCalendar();
-						int year = calendar.get(Calendar.YEAR);
-
-						ApplicationContext ctx = SpringApplication
-								.run(WeatherConfiguration.class);
-
-						WeatherClient weatherClient = ctx
-								.getBean(WeatherClient.class);
-						QueryGenericoRequest query = new QueryGenericoRequest();
-
-						// para UPDATE se inserta el codigo es 3
-						query.setTipoQueryGenerico(1);
-						System.out.println(Login.userLogeado);
-						query.setQueryGenerico("UPDATE ucsaws_listas"
-								+ " set nombre_lista = upper('"+ txtNombre.getText() + "') ,"
-								+ " nro_lista = " + txtNro.getText() + ","
-								+ " anho = " + txtAnho.getText() + ","
-								+ " id_tipo_lista = " + tipoListaSelected + ","
-								+ " usuario_upd = " + Login.userLogeado + ","
-								+ " fch_upd = now() "
-								+ "where id_lista = " + lista.getId_lista());
-
-						QueryGenericoResponse response = weatherClient
-								.getQueryGenericoResponse(query);
-						weatherClient.printQueryGenericoResponse(response);
-
-						model = new ListasJTableModel();
-						recuperarDatos();
-						table.setModel(dm);
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-						lblMensaje
-								.setText("Excelente, se ha guardado la Lista.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-						cmbTipoLista.setSelectedIndex(-1);
-						txtNro.setText("");
-						txtNombre.setText("");
-						txtAnho.setText("");
-						codTemporal = "";
-						// this.dispose();
-						// } else {
-						// // JOptionPane.showMessageDialog(null,
-						// // "Ya existe el genero " + txtDesc.getText(),
-						// // "Información",JOptionPane.WARNING_MESSAGE);
-						// lblMensaje
-						// .setText("La Persona no puede tener mas de una candidatura");
-						// Timer t = new Timer(Login.timer,
-						// new ActionListener() {
-						//
-						// public void actionPerformed(
-						// ActionEvent e) {
-						// lblMensaje.setText(null);
-						// }
-						// });
-						// t.setRepeats(false);
-						// t.start();
-						// }
-						
-						VentanaBuscarLista mostrar = new VentanaBuscarLista();
-						mostrar.setVisible(true);
-						dispose();
-						
-					}
-						else 
-							if(codTemporal!= "")
+				
+							if(codTemporal== "")
 							{
-								listaDAO.actualizarLista(txtNro.getText(), txtNombre.getText(), txtAnho.getText(), tipoListaSelected.toString(), codTemporal);
-								recuperarDatos();
-								table.setModel(dm);
+								//listaDAO.actualizarLista(txtNro.getText(), txtNombre.getText(), txtAnho.getText(), tipoListaSelected.toString(), codTemporal);
+							    
+							    listaDAO.modificarLista(listaDAO.obtenerListaByIdIdLista(Integer.parseInt(codTemporal)));
+							//	recuperarDatos();
+								//table.setModel(dm);
 								model.fireTableDataChanged();
-								table.removeColumn(table.getColumnModel().getColumn(0));
+							//	table.removeColumn(table.getColumnModel().getColumn(0));
 								// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
 								lblMensaje
 										.setText("Excelente, se ha modificado la Lista.");
@@ -589,175 +362,40 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 		}
 	}
 
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT  id_lista, nro_lista, nombre_lista, anho, tlis.descripcion "
-				+ "from  ucsaws_listas lis join ucsaws_tipo_lista tlis on "
-				+ "( lis.id_tipo_lista = tlis.id_tipo_lista) where lis.id_evento = " + VentanaBuscarEvento.evento
-				+  " order by tlis.descripcion, nro_lista" + "");
-
-
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		
-		//Vector<Object> vector = new Vector<Object>();
-		
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString(),fil.get(3).toString(),fil.get(4).toString()};
-
-			//model.ciudades.add(fin);
-			int pos = 0;
-			 Vector<Object> vector = new Vector<Object>();
-			while(pos < fin.length){
-			vector.add(fin[pos]);
-			pos++;
-			}
-			ite++;
-			data.add(vector);
-		}
-		 
-		
-		
-		
-		  // names of columns
-		
-		String[] colNames = new String[] {"ID","Item", "Nro", "Nombre","Año","Tipo Lista"};
-		
-	    Vector<String> columnNames = new Vector<String>();
-	    int columnCount = colNames.length;
-	    for (int column = 0; column < columnCount; column++) {
-	        columnNames.add(colNames[column]);
-	    }
-	    
-	    dm = new DefaultTableModel(data, columnNames);
-
-	}
 
 	private Vector recuperarDatosComboBoxTipoLista() {
 		Vector model = new Vector();
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
+		TipoListaDAO tipoListaDAO = new TipoListaDAO();
+		
+		
+		List<UcsawsTipoLista> tipoListas = tipoListaDAO.obtenerTipoListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
-		// Statement estatuto = conex.getConnection().createStatement();
+		  if (tipoListas.isEmpty()) {
+		       // JOptionPane.showMessageDialog(null, "algo salio mal",
+		        //    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		        // return lista;
+		       // System.out.println("Ya se agregaron todas las nacionalidades");
+		    }
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+		    else {
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+		        // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+		        Iterator<UcsawsTipoLista> ite = tipoListas.iterator();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+		        UcsawsTipoLista aux;
 
-		// query.setQueryGenerico("SELECT id_genero, descripcion, to_char(fch_ins, 'DD/MM/YYYY HH24:MI:SS') as FchIns , "
-		// +
-		// "usuario_ins, to_char(fch_upd, 'DD/MM/YYYY HH24:MI:SS') as FchUpd ,usuario_upd from ucsaws_departamento ");
+		        while (ite.hasNext()) {
+		        aux = ite.next();
 
-		query.setQueryGenerico("SELECT id_tipo_lista, descripcion"
-				+ " from ucsaws_tipo_lista where id_evento = " + VentanaBuscarEvento.evento + " order by descripcion");
+		        model.addElement(new Item(aux.getIdTipoLista(),aux.getDescripcion()));
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+		        }
+		        // return model;
+		    }
 
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		while (filas.size() > ite) {
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), fil.get(1).toString(), };
-
-			listas.add(fin);
-			model.addElement(new Item(Integer.parseInt(fin[0]), fin[1]));
-			ite++;
-		}
-		return model;
-
+		    return model;
 	}
 	public void filter(String query){
 		
@@ -767,7 +405,7 @@ Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		
 		
 		
-		table.setRowSorter(tr);
+		//table.setRowSorter(tr);
 		
 	tr.setRowFilter(RowFilter.regexFilter(query));
 		

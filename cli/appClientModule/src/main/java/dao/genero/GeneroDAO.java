@@ -169,12 +169,17 @@ public class GeneroDAO {
     public Boolean eliminarGenero(UcsawsGenero genero) {
 	boolean eliminado = false;
 
-	try {
+
 	    ObjectMapper mapperObj = new ObjectMapper();
 	    String jsonStr = "";
 
 	    // get Employee object as a json string
+	    try{
 	    jsonStr = mapperObj.writeValueAsString(genero);
+	    }
+	    catch(Exception e){
+	      System.out.println(e);
+	    }
 
 	    ApplicationContext ctx = SpringApplication
 		    .run(WeatherConfiguration.class);
@@ -192,20 +197,20 @@ public class GeneroDAO {
 
 	    String res = response.getQueryGenericoResponse();
 
-	    if (res.compareTo("NO") == 0) {
+        try {
+          //n = mapper.readValue(jsonInString, String.class);
+          if (res.compareTo("SI")==0){
+          eliminado = true;
+          }
+          
+      } catch (Exception ex) {
+              eliminado = false;
+          JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Genero","Error",JOptionPane.ERROR_MESSAGE);
+      }
+      return eliminado;
 
-		eliminado = false;
-	    } else {
-		eliminado = true;
-	    }
-
-	} catch (Exception ex) {
-	    JOptionPane.showMessageDialog(null,
-		    "Error al intentar eliminar el Evento", "Error",
-		    JOptionPane.ERROR_MESSAGE);
-	}
-	return eliminado;
-
+    
+    
     }
 
     public Boolean guardarGenero(UcsawsGenero genero) {
