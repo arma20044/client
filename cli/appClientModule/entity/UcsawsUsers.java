@@ -17,8 +17,8 @@ public class UcsawsUsers implements java.io.Serializable {
 	private String pass;
 	private Boolean esAdmin;
 	private String usuario;
-	private Integer idEvento;
-	private Integer idRol;
+	private UcsawsEvento idEvento;
+	private UcsawsRoles idRol;
 
 	public UcsawsUsers() {
 	}
@@ -33,7 +33,7 @@ public class UcsawsUsers implements java.io.Serializable {
 
 	public UcsawsUsers(Integer idUser, UcsawsPersona ucsawsPersona, Date fchIns,
 			Date fchUpd, String usuarioIns, String usuarioUpd, String pass,
-			Boolean esAdmin, String usuario, Integer idEvento, Integer idRol) {
+			Boolean esAdmin, String usuario, UcsawsEvento idEvento, UcsawsRoles idRol) {
 		this.idUser = idUser;
 		this.ucsawsPersona = ucsawsPersona;
 		this.fchIns = fchIns;
@@ -119,19 +119,19 @@ public class UcsawsUsers implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	public Integer getIdEvento() {
+	public UcsawsEvento getIdEvento() {
 		return this.idEvento;
 	}
 
-	public void setIdEvento(Integer idEvento) {
+	public void setIdEvento(UcsawsEvento idEvento) {
 		this.idEvento = idEvento;
 	}
 
-	public Integer getIdRol() {
+	public UcsawsRoles getIdRol() {
 		return this.idRol;
 	}
 
-	public void setIdRol(Integer idRol) {
+	public void setIdRol(UcsawsRoles idRol) {
 		this.idRol = idRol;
 	}
 

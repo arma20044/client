@@ -30,35 +30,32 @@ import src.main.java.login.Login;
 public class NacionalidadesDAO {
     
     
-    public List<UcsawsNacionalidad> obtenerNacionalidadByIdEvento(Integer idEvento) {
+  public List<UcsawsNacionalidad> obtenerNacionalidadByIdEvento(Integer idEvento) {
 
-	ApplicationContext ctx = SpringApplication
-		.run(WeatherConfiguration.class);
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-	QueryGenericoRequest query = new QueryGenericoRequest();
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
 
-	query.setTipoQueryGenerico(91);
-	query.setQueryGenerico(idEvento.toString());
+    query.setTipoQueryGenerico(91);
+    query.setQueryGenerico(idEvento.toString());
 
-	QueryGenericoResponse response = weatherClient
-		.getQueryGenericoResponse(query);
-	weatherClient.printQueryGenericoResponse(response);
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
 
-	ObjectMapper mapper = new ObjectMapper();
-	String jsonInString = response.getQueryGenericoResponse();
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
 
-	List<UcsawsNacionalidad> nacionalidad = new ArrayList<UcsawsNacionalidad>();
-	try {
-	    nacionalidad = mapper.readValue(jsonInString,
-		    new TypeReference<List<UcsawsNacionalidad>>() {
-		    });
+    List<UcsawsNacionalidad> nacionalidad = new ArrayList<UcsawsNacionalidad>();
+    try {
+      nacionalidad =
+          mapper.readValue(jsonInString, new TypeReference<List<UcsawsNacionalidad>>() {});
 
-	} catch (Exception e) {
-	    System.out.println(e);
-	}
-	return nacionalidad;
+    } catch (Exception e) {
+      System.out.println(e);
     }
+    return nacionalidad;
+  }
     
     
     public Boolean modificarNacionalidad(UcsawsNacionalidad nacionalidad) {
