@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 30/05/2017 06:35:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+	<class name="entity.UcsawsCandidatos" table="ucsaws_candidatos" schema="public"
+		optimistic-lock="version">
+		<id name="idCandidatos" type="int">
+			<column name="id_candidatos" />
+			<generator class="assigned" />
+		</id>
+		<many-to-one name="idPersona" class="entity.UcsawsPersona"
+			fetch="select" lazy="proxy">
+			<column name="id_persona" not-null="true" />
+		</many-to-one>
+		<many-to-one name="idLista" class="entity.UcsawsListas"
+			fetch="select" lazy="proxy">
+			<column name="id_lista" not-null="true" />
+		</many-to-one>
+		<property name="fchIns" type="timestamp">
+			<column name="fch_ins" length="29" not-null="true" />
+		</property>
+		<property name="fchUpd" type="timestamp">
+			<column name="fch_upd" length="29" />
+		</property>
+		<property name="usuarioIns" type="string">
+			<column name="usuario_ins" length="20" not-null="true" />
+		</property>
+		<property name="usuarioUpd" type="string">
+			<column name="usuario_upd" length="20" />
+		</property>
+		<property name="codigo" type="string">
+			<column name="codigo" />
+		</property>
+		<many-to-one name="ucsawsEvento" class="entity.UcsawsEvento"
+			fetch="select" lazy="proxy">
+			<column name="id_evento" not-null="true" />
+		</many-to-one>
+		<property name="descripcion" type="string">
+			<column name="descripcion" length="20" />
+		</property>
+	</class>
+</hibernate-mapping>

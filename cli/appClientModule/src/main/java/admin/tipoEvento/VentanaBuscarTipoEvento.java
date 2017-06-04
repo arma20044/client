@@ -168,7 +168,8 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 	    }
 	};
 	table_1.setToolTipText("Listado de Generos.");
-	table_1.setAutoCreateRowSorter(true);
+	table_1.setAutoCreateRowSorter(false);
+	table_1 .getTableHeader().setReorderingAllowed(false);
 	table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	scrollPane.setViewportView(table_1);
 	// String[] columnNames = {"Picture", "Description"};
@@ -202,7 +203,7 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		// selectedData.ad table_1.getValueAt(selectedRow[i],
 		// selectedColumns[0]);
 		// txtId.setText(selectedData.get(0));
-		txtBuscar.setText(selectedData.get(2));
+		//txtBuscar.setText(selectedData.get(2));
 
 		// textFecha.setText(selectedData.get(2));
 		// textUsu.setText(selectedData.get(4));
@@ -308,6 +309,16 @@ public class VentanaBuscarTipoEvento extends JFrame implements ActionListener {
 		        {
 		    botonCancelar.doClick();
 		    System.out.println("button esc clicked");
+		        }
+		    });
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"clickButtondelete");
+
+	getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		     btnEliminar.doClick();
+		    System.out.println("button delete clicked");
 		        }
 		    });
 

@@ -12,12 +12,14 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
  
+
 
 import entity.UcsawsNacionalidad;
 import entity.UcsawsPais;
@@ -322,5 +324,35 @@ public class PaisDAO {
 	    System.out.println(e);
 	}
 	return n.getUcsawsPais();
+    }
+    
+    public List<UcsawsPais> obtenerPaisByIdEvento(Integer idEvento) {
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(92);
+	query.setQueryGenerico(idEvento.toString());
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	List<UcsawsPais> pais = new ArrayList<UcsawsPais>();
+	try {
+	    pais = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsPais>>() {
+		    });
+
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return pais;
     }
 }

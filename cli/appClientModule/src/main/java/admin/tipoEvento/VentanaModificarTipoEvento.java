@@ -421,7 +421,7 @@ public class VentanaModificarTipoEvento extends JFrame implements ActionListener
 					fil.get(2).toString(), fil.get(3).toString(),
 					fil.get(4).toString(), fil.get(5).toString() };
 
-			model.ciudades.add(fin);
+			model.tipoEvento.add(fin);
 			ite++;
 		}
 

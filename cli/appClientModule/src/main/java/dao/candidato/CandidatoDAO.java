@@ -3,248 +3,211 @@ package src.main.java.dao.candidato;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.Login;
+import entity.UcsawsCandidatos;
+
+
 
 public class CandidatoDAO {
-	
-	
-//	public void registrarPersona(PersonaVo miPersona)
-//	{
-//		Conexion conex= new Conexion();
-//		
-//		try {
-//			Statement estatuto = conex.getConnection().createStatement();
-//			estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-//					+miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-//					+miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-//			JOptionPane.showMessageDialog(null, "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-//			estatuto.close();
-//			conex.desconectar();
-//			
-//		} catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//			JOptionPane.showMessageDialog(null, "No se Registro");
-//		}
-//	}
 
-	public JSONArray buscarCandidato(String codigo) throws ParseException, org.json.simple.parser.ParseException 
-	{
-		JSONArray filas = new JSONArray();
-		
-		Date date = null;
-		
-		boolean existe=false;
-		
-			
-			//Statement estatuto = conex.getConnection().createStatement();
-		
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			//para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
-			
-			query.setQueryGenerico("SELECT id_candidatos, ca.codigo,  to_char(ca.fch_ins, 'DD/MM/YYYY HH24:MI:SS'), to_char(ca.fch_upd, 'DD/MM/YYYY HH24:MI:SS') , ca.usuario_ins,"
-					+ " ca.usuario_upd "
-					+ "from ucsaws_candidatos ca join ucsaws_persona per on (ca.id_persona = per.id_persona)"
-				  + "join ucsaws_listas li on (ca.id_lista = li.id_lista) join ucsaws_tipo_candidato tcan on (ca.id_tipo_candidato = tcan.id_tipo_candidato) "
-				  + "where upper(tcan.descripcion) like upper('%"+codigo+"%') or upper(li.descripcion) like upper('%"+codigo+"%')  or"
-				  + " upper(per.nombre) like upper('%"+codigo+"%') or upper(per.apellido) like upper('%"+codigo+"%')");
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-	
-				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Candidato no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-					return filas;
-				}
-				
-				else
-			{
-				existe=true;
-				
-				
-				
-				String generoAntesPartir = response.getQueryGenericoResponse();
-				
-				JSONParser j = new JSONParser();
-				Object ob;
-				String part1,part2,part3;
-				
-					ob = j.parse(generoAntesPartir);
-					filas = (JSONArray) ob;
-					
-					
-					
-				//	JSONArray fila		= (JSONArray) filas.get(0);
-					//JSONArray fila1		= (JSONArray) filas.get(1);
-							
-//					System.out.print(filas);
-//					System.out.print("\\n");
-//				//	System.out.print(fila);
-//					System.out.print("\\n");
-//					System.out.print(fila1);
-					
-					
-					
-//					 part1 = (String) array1.get(0);
-//					 part2 = (String) array1.get(1);
-//					 part3 = (String) array1.get(2);
-					 
-//					 gen.setDescripcion(part1);
-//					 gen.setFecha(part2);
-//					 gen.setUsuario(part3);
-					
-				
-				
-				
-				
-				
-				
+  public List<UcsawsCandidatos> obtenerCandidatosByIdEvento(Integer idEvento) {
 
-				
-				
-				
-				
-//				String[] parts = generoAntesPartir.split(",");
-//				
-				
-				
-				
-//				DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-//				DateTime dt = formatter.parseDateTime(part2);
-				
-//				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-//				
-//				
-//					date = formatter.parse(part2);
-//					
-//				GregorianCalendar newCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-//				newCalendar.setTime(date);
-				//GregorianCalendar fecha = date.tog
-				
-				//fecha.setTime(date);
-				
-//				gen.setFecha(part2);
-//				
-//				gen.setUsuario(part3);
-				
-				
-				return filas;
-				
-			}
-			
-			
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-	
-		
-				
-			 
-						
-	}
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
 
-	public Boolean actualizarCandidato(String codigo, String persona, String lista, String id) {
-		boolean actualizado = false;
+    query.setTipoQueryGenerico(101);
+    query.setQueryGenerico(idEvento.toString());
 
-		try {
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+    List<UcsawsCandidatos> candidatos = new ArrayList<UcsawsCandidatos>();
+    try {
+      candidatos = mapper.readValue(jsonInString, new TypeReference<List<UcsawsCandidatos>>() {});
 
-			query.setTipoQueryGenerico(3);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return candidatos;
+  }
 
-			query.setQueryGenerico("UPDATE ucsaws_candidatos    SET codigo= '" + codigo
-					+ "', id_persona= " + persona + ", "
-					+ "fch_upd= now() , usuario_upd= " + Login.userLogeado + " , "
-					+ " id_lista= " + lista 
-					+ " WHERE id_candidatos =" + id + " and id_evento = "+ VentanaBuscarEvento.evento);
 
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
+  public Boolean modificarCandidato(UcsawsCandidatos candidato) {
 
-			String res = response.getQueryGenericoResponse();
+    boolean guardado = false;
 
-			if (res.compareTo("ERRORRRRRRR") == 0) {
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(candidato);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-				actualizado = false;
-			} else {
-				actualizado = true;
-			}
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,
-					"Error al intentar actualizar el Candidato.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
-		return actualizado;
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
 
-	}
+    query.setTipoQueryGenerico(103);
+    query.setQueryGenerico(jsonStr);
 
-	public Boolean eliminarCandidato(String codigo)
-	{
-		boolean eliminado = false;
-		
-		try{
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			
-			query.setTipoQueryGenerico(4);
-			
-			query.setQueryGenerico("DELETE FROM ucsaws_candidatos WHERE"
-					+ " id_candidatos = "
-					+ codigo 
-					 );
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-			
-			if (res.compareTo("ERRORRRRRRR")== 0){
-				
-				
-				eliminado = false;
-			}
-			else{
-				eliminado = true;
-			}
-			
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el candidato","Error",JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
-		
-	}
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    if (jsonInString.compareTo("SI") == 0) {
+      guardado = true;
+    } else {
+      guardado = false;
+    }
+
+
+    return guardado;
+  }
+
+
+
+  public Boolean guardarCandidato(UcsawsCandidatos candidato) {
+
+    boolean guardado = false;
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(candidato);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(104);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsCandidatos n = new UcsawsCandidatos();
+    try {
+      n = mapper.readValue(jsonInString, UcsawsCandidatos.class);
+    } catch (Exception ex) {
+      System.out.println(ex);
+    }
+    guardado = true;
+
+    return guardado;
+
+  }
+
+
+
+  public Boolean eliminarCandidato(UcsawsCandidatos candidato) {
+    boolean eliminado = false;
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(candidato);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(105);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String resp = response.getQueryGenericoResponse();
+
+    String n = new String();
+    try {
+      // n = mapper.readValue(jsonInString, String.class);
+      if (resp.compareTo("SI") == 0) {
+        eliminado = true;
+      }
+
+    } catch (Exception ex) {
+      eliminado = false;
+      JOptionPane.showMessageDialog(null, "Error al intentar eliminar al Candidato", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    }
+    return eliminado;
+
+  }
+
+
+
+  public UcsawsCandidatos obtenerCandidatoById(String idCandidato) {
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+
+ 
+
+    query.setTipoQueryGenerico(106);
+    query.setQueryGenerico(idCandidato);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsCandidatos candidato = new UcsawsCandidatos();
+    try {
+      candidato = mapper.readValue(jsonInString, UcsawsCandidatos.class);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return candidato;
+  }
+
+
 }

@@ -63,7 +63,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 	private JButton botonGuardar, botonCancelar;
 	private JTable table;
 
-	private PaisJTableModel model = new PaisJTableModel();
+	private ListasJTableModel model = new ListasJTableModel();
 	private JScrollPane scrollPane;
 
 	private ListasValidator listasValidator = new ListasValidator();
@@ -471,7 +471,7 @@ public class VentanaModificarLista extends JFrame implements ActionListener {
 								.getQueryGenericoResponse(query);
 						weatherClient.printQueryGenericoResponse(response);
 
-						model = new PaisJTableModel();
+						model = new ListasJTableModel();
 						recuperarDatos();
 						table.setModel(dm);
 						model.fireTableDataChanged();

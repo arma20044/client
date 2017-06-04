@@ -287,30 +287,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 						    buscar.setVisible(true);
 						    dispose(); 
 
-							/*model = new NacionalidadJTableModel();
-							recuperarDatos();
-							table.setModel(model);
-							model.fireTableDataChanged();
-							table.removeColumn(table.getColumnModel()
-									.getColumn(0));
-							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-							lblMensaje
-									.setText("Excelente, se ha guardado el genero.");
-							Timer t = new Timer(Login.timer,
-									new ActionListener() {
-
-										public void actionPerformed(
-												ActionEvent e) {
-											lblMensaje.setText(null);
-										}
-									});
-							t.setRepeats(false);
-							t.start();
-
-							txtCod.setText("");
-							txtDescripcion.setText("");
-							cmbPais.setSelectedIndex(-1);*/
-							// this.dispose();
+						 
 						} else {
 							// JOptionPane.showMessageDialog(null,
 							// "Ya existe el genero " + txtDesc.getText(),

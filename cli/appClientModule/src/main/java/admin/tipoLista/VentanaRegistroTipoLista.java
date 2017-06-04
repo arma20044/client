@@ -4,43 +4,44 @@ import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsTipoEvento;
+import entity.UcsawsTipoLista;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.tipoEvento.TipoEventoJTableModel;
+import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.validator.TipoListaValidator;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -53,10 +54,8 @@ public class VentanaRegistroTipoLista extends JFrame implements
 										// coordinador
 	private JLabel labelTitulo, lblMensaje;
 	private JButton botonGuardar, botonCancelar;
-	private JTable table;
 
 	private TipoListaJTableModel model = new TipoListaJTableModel();
-	private JScrollPane scrollPane;
 
 	private TipoListaValidator tipoListaValidator = new TipoListaValidator();
 
@@ -102,7 +101,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		botonCancelar.setToolTipText("Atrás");
 		botonCancelar.setIcon(new ImageIcon(VentanaRegistroTipoLista.class
 				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
+		botonCancelar.setBounds(674, 142, 32, 32);
 		botonCancelar.setOpaque(false);
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
@@ -123,79 +122,11 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		getContentPane().add(botonGuardar);
 		getContentPane().add(labelTitulo);
 		limpiar();
-		setSize(812, 444);
+		setSize(710, 208);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		setResizable(false);
 		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Tipo Lista");
-		scrollPane.setBounds(0, 153, 806, 230);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				
-				int selectedRow = table.rowAtPoint(arg0.getPoint());
-					//System.out.println(selectedRow);
-					int col = 0;
-					while (col < table.getColumnCount()+1) {
-						
-						try {
-							int row = table.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table.getModel().getValueAt(table.
-			                          convertRowIndexToModel(row), col).toString();
-			                
-			                
-							selectedData.add(table_click0);
-							//System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					 txtCodigoTipoLista.setText(selectedData.get(2));
-					txtDescripcionTipoLista.setText(selectedData.get(3));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = selectedData.get(0);
-
-				
-				//System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
 
 		btnHome = new JButton("");
 		btnHome.setToolTipText("Inicio");
@@ -222,6 +153,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		getContentPane().add(lblNroZona);
 
 		txtCodigoTipoLista = new JTextField();
+		txtCodigoTipoLista.setToolTipText("Solo Letras");
 		txtCodigoTipoLista.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent arg0) {
@@ -237,7 +169,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(213, 128, 454, 14);
+		lblMensaje.setBounds(213, 119, 454, 14);
 		getContentPane().add(lblMensaje);
 
 		JLabel lblDescripcionZona = new JLabel();
@@ -250,9 +182,28 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		txtDescripcionTipoLista.setColumns(10);
 		txtDescripcionTipoLista.setBounds(213, 82, 310, 26);
 		getContentPane().add(txtDescripcionTipoLista);
+		//recuperarDatos();
+		
+	 	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0),"clickButton");
 
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
+	getRootPane().getActionMap().put("clickButton",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonGuardar.doClick();
+		    System.out.println("button clicked");
+		        }
+		    });
+	
+	
+	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+	getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+		        public void actionPerformed(ActionEvent ae)
+		        {
+		    botonCancelar.doClick();
+		    System.out.println("button esc clicked");
+		        }
+		    });
 
 	}
 
@@ -283,85 +234,51 @@ public class VentanaRegistroTipoLista extends JFrame implements
 						t.start();
 					} else if
 
-					(tipoListaValidator.Validar(txtCodigoTipoLista.getText()) == false) {
-						// if
-						// (candidatoValidator.ValidarPersona(personaSelected)
-						// == false) {
-						// Genero genero = new Genero();
-						// genero.setDescripcion(textGenero.getText());
+					(tipoListaValidator.ValidarCodigo(txtCodigoTipoLista.getText(),txtDescripcionTipoLista.getText(), VentanaBuscarEvento.evento) == false) {
+					    TipoListaDAO tipoListaDAO = new TipoListaDAO();
+					    EventoDAO eventoDAO = new EventoDAO();
 
-						Calendar calendar = new GregorianCalendar();
-						int year = calendar.get(Calendar.YEAR);
+					      UcsawsTipoLista listaAGuardar = new UcsawsTipoLista();
+					      listaAGuardar.setCodigo(txtCodigoTipoLista.getText().toUpperCase());
+					      listaAGuardar.setDescripcion(txtDescripcionTipoLista.getText().toUpperCase());
+					      listaAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+					      listaAGuardar.setFchIns(new Date());
+					      listaAGuardar.setIdEvento(eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento));
+					      
+					      tipoListaDAO.guardarTipoLista(listaAGuardar);
 
-						ApplicationContext ctx = SpringApplication
-								.run(WeatherConfiguration.class);
+							model = new TipoListaJTableModel();
+							//recuperarDatos();
+							//table.setModel(model);
+							model.fireTableDataChanged();
+							//table.removeColumn(table.getColumnModel().getColumn(0));
+							// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+							lblMensaje
+									.setText("Excelente, se ha guardado el Tipo Lista.");
+							Timer t = new Timer(Login.timer, new ActionListener() {
 
-						WeatherClient weatherClient = ctx
-								.getBean(WeatherClient.class);
-						QueryGenericoRequest query = new QueryGenericoRequest();
+								public void actionPerformed(ActionEvent e) {
+									lblMensaje.setText(null);
+								}
+							});
+							t.setRepeats(false);
+							t.start();
 
-						// para registrar se inserta el codigo es 1
-						query.setTipoQueryGenerico(1);
-						//System.out.println(Login.userLogeado);
-						query.setQueryGenerico("INSERT INTO ucsaws_tipo_lista"
-								+ "( id_tipo_lista, id_evento,descripcion, codigo,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_tipo_lista_seq') ," + VentanaBuscarEvento.evento 
-								+ " , upper('" + txtDescripcionTipoLista.getText()
-								+ "'), "
-
-								+ " upper('" + txtCodigoTipoLista.getText() + "'), '"
-								+ Login.userLogeado + "' , now(), '"
-								+ Login.userLogeado + "' , now())");
-
-						QueryGenericoResponse response = weatherClient
-								.getQueryGenericoResponse(query);
-						weatherClient.printQueryGenericoResponse(response);
-
-						model = new TipoListaJTableModel();
-						recuperarDatos();
-						table.setModel(model);
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-						lblMensaje
-								.setText("Excelente, se ha guardado el Tipo Lista.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-
-						txtCodigoTipoLista.setText("");
-						txtDescripcionTipoLista.setText("");
-
-						// this.dispose();
-						// } else {
-						// // JOptionPane.showMessageDialog(null,
-						// // "Ya existe el genero " + txtDesc.getText(),
-						// // "Información",JOptionPane.WARNING_MESSAGE);
-						// lblMensaje
-						// .setText("La Persona no puede tener mas de una candidatura");
-						// Timer t = new Timer(Login.timer,
-						// new ActionListener() {
-						//
-						// public void actionPerformed(
-						// ActionEvent e) {
-						// lblMensaje.setText(null);
-						// }
-						// });
-						// t.setRepeats(false);
-						// t.start();
-						// }
+							//txtDescripcion.setText("");
+							
+							VentanaBuscarTipoLista tipoLista = new VentanaBuscarTipoLista();
+							tipoLista.setVisible(true);
+							this.dispose();
+					    
+					    
+					    
+					    
 					} else {
 						// JOptionPane.showMessageDialog(null,
 						// "Ya existe el genero " + txtDesc.getText(),
 						// "Información",JOptionPane.WARNING_MESSAGE);
 						lblMensaje
-								.setText("Ya existe el Tipo Lista con ese codigo. "
-										+ txtCodigoTipoLista.getText());
+								.setText("Ya existe el Tipo Lista con el codigo o descripcion ingresado. ");
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
 							public void actionPerformed(ActionEvent e) {
@@ -402,7 +319,7 @@ public class VentanaRegistroTipoLista extends JFrame implements
 		}
 	}
 
-	private void recuperarDatos() {
+	/*private void recuperarDatos() {
 		JSONArray filas = new JSONArray();
 		JSONArray fil = new JSONArray();
 
@@ -469,6 +386,6 @@ public class VentanaRegistroTipoLista extends JFrame implements
 			ite++;
 		}
 
-	}
+	}*/
 
 }

@@ -36,7 +36,7 @@ public class TipoEventoValidator {
 		UcsawsTipoEvento aux;
 		while (ite.hasNext()) {
 			aux = ite.next();
-			if(aux.getDescripcion().compareTo(codigo)==0){
+			if(aux.getDescripcion().compareToIgnoreCase(codigo)==0){
 			    existe = true;
 			}
 		}

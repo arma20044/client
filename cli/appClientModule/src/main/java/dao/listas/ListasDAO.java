@@ -3,215 +3,359 @@ package src.main.java.dao.listas;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
+import entity.UcsawsListas;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import src.main.java.login.Login;
 
 public class ListasDAO {
 
-	// public void registrarPersona(PersonaVo miPersona)
-	// {
-	// Conexion conex= new Conexion();
-	//
-	// try {
-	// Statement estatuto = conex.getConnection().createStatement();
-	// estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-	// +miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-	// +miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-	// JOptionPane.showMessageDialog(null,
-	// "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-	// estatuto.close();
-	// conex.desconectar();
-	//
-	// } catch (SQLException e) {
-	// System.out.println(e.getMessage());
-	// JOptionPane.showMessageDialog(null, "No se Registro");
-	// }
-	// }
+    public UcsawsListas obtenerListaByIdIdLista(Integer idLista) {
 
-	public JSONArray buscarLista(String codigo) throws ParseException,
-			org.json.simple.parser.ParseException {
-		JSONArray filas = new JSONArray();
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
-		Date date = null;
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-		boolean existe = false;
+	query.setTipoQueryGenerico(102);
+	query.setQueryGenerico(idLista.toString());
 
-		// Statement estatuto = conex.getConnection().createStatement();
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	UcsawsListas lista = new UcsawsListas();
+	try {
+	    lista = mapper.readValue(jsonInString, UcsawsListas.class);
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return lista;
+    }
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
+    public List<UcsawsListas> obtenerListaByIdEvento(Integer idEvento) {
 
-		query.setQueryGenerico("SELECT id_lista, nombre_lista "
-				+ " from ucsaws_listas "
-				+ "where upper(nombre_lista) like upper('%" + codigo
-				+ "%') and id_evento =   " + VentanaBuscarEvento.evento);
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-		String res = response.getQueryGenericoResponse();
+	query.setTipoQueryGenerico(97);
+	query.setQueryGenerico(idEvento.toString());
 
-		if (res.compareTo("[]") == 0) {
-			JOptionPane.showMessageDialog(null, "La Lista no Existe",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-			return filas;
-		}
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
 
-		else {
-			existe = true;
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
 
-			String generoAntesPartir = response.getQueryGenericoResponse();
+	List<UcsawsListas> lista = new ArrayList<UcsawsListas>();
+	try {
+	    lista = mapper.readValue(jsonInString,
+		    new TypeReference<List<UcsawsListas>>() {
+		    });
 
-			JSONParser j = new JSONParser();
-			Object ob;
-			String part1, part2, part3;
+	} catch (Exception e) {
+	    System.out.println(e);
+	}
+	return lista;
+    }
 
-			ob = j.parse(generoAntesPartir);
-			filas = (JSONArray) ob;
+    public Boolean modificarLista(UcsawsListas lista) {
 
-			// JSONArray fila = (JSONArray) filas.get(0);
-			// JSONArray fila1 = (JSONArray) filas.get(1);
+	boolean guardado = false;
 
-			// System.out.print(filas);
-			// System.out.print("\\n");
-			// // System.out.print(fila);
-			// System.out.print("\\n");
-			// System.out.print(fila1);
-
-			// part1 = (String) array1.get(0);
-			// part2 = (String) array1.get(1);
-			// part3 = (String) array1.get(2);
-
-			// gen.setDescripcion(part1);
-			// gen.setFecha(part2);
-			// gen.setUsuario(part3);
-
-			// String[] parts = generoAntesPartir.split(",");
-			//
-
-			// DateTimeFormatter formatter =
-			// DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-			// DateTime dt = formatter.parseDateTime(part2);
-
-			// DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-			//
-			//
-			// date = formatter.parse(part2);
-			//
-			// GregorianCalendar newCalendar = (GregorianCalendar)
-			// GregorianCalendar.getInstance();
-			// newCalendar.setTime(date);
-			// GregorianCalendar fecha = date.tog
-
-			// fecha.setTime(date);
-
-			// gen.setFecha(part2);
-			//
-			// gen.setUsuario(part3);
-
-			return filas;
-
-		}
-
+	ObjectMapper mapperObj = new ObjectMapper();
+	String jsonStr = "";
+	try {
+	    // get Employee object as a json string
+	    jsonStr = mapperObj.writeValueAsString(lista);
+	    System.out.println(jsonStr);
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	public Boolean eliminarLista(String codigo) {
-		boolean eliminado = false;
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
 
-		try {
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+	query.setTipoQueryGenerico(98);
+	query.setQueryGenerico(jsonStr);
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
 
-			query.setTipoQueryGenerico(4);
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
 
-			query.setQueryGenerico("DELETE FROM ucsaws_listas WHERE"
-					+ " id_lista = " + codigo);
-
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-
-			String res = response.getQueryGenericoResponse();
-
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-
-				eliminado = false;
-			} else {
-				eliminado = true;
-			}
-
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,
-					"Error al intentar eliminar la Lista.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
-
+	if (jsonInString.compareTo("SI") == 0) {
+	    guardado = true;
+	} else {
+	    guardado = false;
 	}
 
-	public Boolean actualizarLista(String numero, String nombre, String anho,
-			String tipo, String id) {
-		boolean actualizado = false;
+	return guardado;
+    }
 
-		try {
+    public Boolean guardarLista(UcsawsListas lista) {
 
-			ApplicationContext ctx = SpringApplication
-					.run(WeatherConfiguration.class);
+	boolean guardado = false;
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-
-			query.setTipoQueryGenerico(3);
-
-			query.setQueryGenerico("UPDATE ucsaws_listas    SET nombre_lista= '" + nombre
-					+ "', anho= " + anho + ", "
-					+ "fch_upd= now() , usuario_upd= " + Login.userLogeado + " , "
-					+ " nro_lista= " + numero + ", id_tipo_lista= " +
-					 tipo
-					+ " WHERE id_lista =" + id + " and id_evento = "+ VentanaBuscarEvento.evento);
-
-			QueryGenericoResponse response = weatherClient
-					.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-
-			String res = response.getQueryGenericoResponse();
-
-			if (res.compareTo("ERRORRRRRRR") == 0) {
-
-				actualizado = false;
-			} else {
-				actualizado = true;
-			}
-
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,
-					"Error al intentar actualizar la Lista.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		}
-		return actualizado;
-
+	ObjectMapper mapperObj = new ObjectMapper();
+	String jsonStr = "";
+	try {
+	    // get Employee object as a json string
+	    jsonStr = mapperObj.writeValueAsString(lista);
+	    System.out.println(jsonStr);
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(99);
+	query.setQueryGenerico(jsonStr);
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String jsonInString = response.getQueryGenericoResponse();
+
+	UcsawsListas n = new UcsawsListas();
+	try {
+	    n = mapper.readValue(jsonInString, UcsawsListas.class);
+	} catch (Exception ex) {
+	    System.out.println(ex);
+	}
+	guardado = true;
+
+	return guardado;
+
+    }
+
+    public Boolean eliminarLista(UcsawsListas lista) {
+	boolean eliminado = false;
+
+	ObjectMapper mapperObj = new ObjectMapper();
+	String jsonStr = "";
+	try {
+	    // get Employee object as a json string
+	    jsonStr = mapperObj.writeValueAsString(lista);
+	    System.out.println(jsonStr);
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	ApplicationContext ctx = SpringApplication
+		.run(WeatherConfiguration.class);
+
+	WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	QueryGenericoRequest query = new QueryGenericoRequest();
+
+	query.setTipoQueryGenerico(100);
+	query.setQueryGenerico(jsonStr);
+
+	QueryGenericoResponse response = weatherClient
+		.getQueryGenericoResponse(query);
+	weatherClient.printQueryGenericoResponse(response);
+
+	ObjectMapper mapper = new ObjectMapper();
+	String resp = response.getQueryGenericoResponse();
+
+	String n = new String();
+	try {
+	    // n = mapper.readValue(jsonInString, String.class);
+	    if (resp.compareTo("SI") == 0) {
+		eliminado = true;
+	    }
+
+	} catch (Exception ex) {
+	    eliminado = false;
+	    JOptionPane.showMessageDialog(null,
+		    "Error al intentar eliminar la Lista", "Error",
+		    JOptionPane.ERROR_MESSAGE);
+	}
+	return eliminado;
+
+    }
+
+    /*
+     * public JSONArray buscarLista(String codigo) throws ParseException,
+     * org.json.simple.parser.ParseException { JSONArray filas = new
+     * JSONArray();
+     * 
+     * Date date = null;
+     * 
+     * boolean existe = false;
+     * 
+     * // Statement estatuto = conex.getConnection().createStatement();
+     * 
+     * ApplicationContext ctx = SpringApplication
+     * .run(WeatherConfiguration.class);
+     * 
+     * WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+     * QueryGenericoRequest query = new QueryGenericoRequest();
+     * 
+     * // para registrar se inserta el codigo es 1
+     * query.setTipoQueryGenerico(2);
+     * 
+     * query.setQueryGenerico("SELECT id_lista, nombre_lista " +
+     * " from ucsaws_listas " + "where upper(nombre_lista) like upper('%" +
+     * codigo + "%') and id_evento =   " + VentanaBuscarEvento.evento);
+     * 
+     * QueryGenericoResponse response = weatherClient
+     * .getQueryGenericoResponse(query);
+     * weatherClient.printQueryGenericoResponse(response);
+     * 
+     * String res = response.getQueryGenericoResponse();
+     * 
+     * if (res.compareTo("[]") == 0) { JOptionPane.showMessageDialog(null,
+     * "La Lista no Existe", "Advertencia", JOptionPane.WARNING_MESSAGE); return
+     * filas; }
+     * 
+     * else { existe = true;
+     * 
+     * String generoAntesPartir = response.getQueryGenericoResponse();
+     * 
+     * JSONParser j = new JSONParser(); Object ob; String part1, part2, part3;
+     * 
+     * ob = j.parse(generoAntesPartir); filas = (JSONArray) ob;
+     * 
+     * // JSONArray fila = (JSONArray) filas.get(0); // JSONArray fila1 =
+     * (JSONArray) filas.get(1);
+     * 
+     * // System.out.print(filas); // System.out.print("\\n"); // //
+     * System.out.print(fila); // System.out.print("\\n"); //
+     * System.out.print(fila1);
+     * 
+     * // part1 = (String) array1.get(0); // part2 = (String) array1.get(1); //
+     * part3 = (String) array1.get(2);
+     * 
+     * // gen.setDescripcion(part1); // gen.setFecha(part2); //
+     * gen.setUsuario(part3);
+     * 
+     * // String[] parts = generoAntesPartir.split(","); //
+     * 
+     * // DateTimeFormatter formatter = //
+     * DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss"); // DateTime dt =
+     * formatter.parseDateTime(part2);
+     * 
+     * // DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy"); // // //
+     * date = formatter.parse(part2); // // GregorianCalendar newCalendar =
+     * (GregorianCalendar) // GregorianCalendar.getInstance(); //
+     * newCalendar.setTime(date); // GregorianCalendar fecha = date.tog
+     * 
+     * // fecha.setTime(date);
+     * 
+     * // gen.setFecha(part2); // // gen.setUsuario(part3);
+     * 
+     * return filas;
+     * 
+     * }
+     * 
+     * }
+     * 
+     * 
+     * 
+     * public Boolean actualizarLista(String numero, String nombre, String anho,
+     * String tipo, String id) { boolean actualizado = false;
+     * 
+     * try {
+     * 
+     * ApplicationContext ctx = SpringApplication
+     * .run(WeatherConfiguration.class);
+     * 
+     * WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+     * QueryGenericoRequest query = new QueryGenericoRequest();
+     * 
+     * query.setTipoQueryGenerico(3);
+     * 
+     * query.setQueryGenerico("UPDATE ucsaws_listas    SET nombre_lista= '" +
+     * nombre + "', anho= " + anho + ", " + "fch_upd= now() , usuario_upd= " +
+     * Login.userLogeado + " , " + " nro_lista= " + numero + ", id_tipo_lista= "
+     * + tipo + " WHERE id_lista =" + id + " and id_evento = "+
+     * VentanaBuscarEvento.evento);
+     * 
+     * QueryGenericoResponse response = weatherClient
+     * .getQueryGenericoResponse(query);
+     * weatherClient.printQueryGenericoResponse(response);
+     * 
+     * String res = response.getQueryGenericoResponse();
+     * 
+     * if (res.compareTo("ERRORRRRRRR") == 0) {
+     * 
+     * actualizado = false; } else { actualizado = true; }
+     * 
+     * } catch (Exception ex) { JOptionPane.showMessageDialog(null,
+     * "Error al intentar actualizar la Lista.", "Error",
+     * JOptionPane.ERROR_MESSAGE); } return actualizado;
+     * 
+     * }
+     */
+
+    public Boolean eliminarLista(String codigo) {
+
+	boolean eliminado = false;
+
+	try {
+
+	    ApplicationContext ctx = SpringApplication
+		    .run(WeatherConfiguration.class);
+
+	    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+	    QueryGenericoRequest query = new QueryGenericoRequest();
+
+	    query.setTipoQueryGenerico(100);
+
+	    query.setQueryGenerico(codigo);
+
+	    QueryGenericoResponse response = weatherClient
+		    .getQueryGenericoResponse(query);
+	    weatherClient.printQueryGenericoResponse(response);
+
+	    String res = response.getQueryGenericoResponse();
+
+	    if (res.compareTo("NO") == 0) {
+
+		eliminado = false;
+	    } else {
+		eliminado = true;
+	    }
+
+	} catch (Exception ex) {
+	    JOptionPane.showMessageDialog(null,
+		    "Error al intentar eliminar la Lista.", "Error",
+		    JOptionPane.ERROR_MESSAGE);
+	}
+	return eliminado;
+
+    }
 }

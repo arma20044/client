@@ -226,7 +226,7 @@ public class VentanaRegistroPais extends JFrame implements ActionListener {
 					} else if
 
 					(paisValidator.ValidarCodigo(txtCodigoPais.getText(),
-							txtDescripcion.getText()) == false) {
+							txtDescripcion.getText(), VentanaBuscarEvento.evento) == false) {
 					    
 					    EventoDAO eventoDAO = new EventoDAO();
 					    

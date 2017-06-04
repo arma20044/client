@@ -8,9 +8,9 @@ import javax.swing.table.AbstractTableModel;
 
 import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
-public class PaisJTableModel extends AbstractTableModel {
+public class ListasJTableModel extends AbstractTableModel {
 
-	List<Object[]> ciudades = new ArrayList<Object[]>();
+	List<Object[]> listas = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
@@ -19,12 +19,12 @@ public class PaisJTableModel extends AbstractTableModel {
 
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ciudades.size();
+		return listas.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 
-		Object resultado = ciudades.get(rowIndex) [columnIndex];
+		Object resultado = listas.get(rowIndex) [columnIndex];
 		
 		return resultado;
 	}
