@@ -1,482 +1,281 @@
 package src.main.java.admin.roles;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.validator.GeneroValidator;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
+import src.main.java.admin.validator.RolValidator;
+import src.main.java.dao.evento.EventoDAO;
+import src.main.java.dao.rol.RolDAO;
 import src.main.java.login.Login;
+import entity.UcsawsRoles;
 
 public class VentanaRegistroRoles extends JFrame implements ActionListener {
 
-	private Coordinador miCoordinador; // objeto miCoordinador que permite la
-										// relacion entre esta clase y la clase
-										// coordinador
-	private JLabel labelTitulo, lblMensaje;
-	private JButton btnGuardar, botonCancelar;
-	private JTable table;
-
-	private RolesJTableModel model = new RolesJTableModel();
-	private JScrollPane scrollPane;
-
-	private GeneroValidator generoValidator = new GeneroValidator();
-
-	private String codTemporal = "";
-	private JButton btnHome;
-
-	List<Object[]> ciudades = new ArrayList<Object[]>();
-
-	List<Object[]> listas = new ArrayList<Object[]>();
-
-	List<Object[]> tcandidato = new ArrayList<Object[]>();
-	private JLabel lblCodigo;
-	private JTextField txtCodigo;
-	private JTextField txtDescripcion;
-
-	/**
-	 * constructor de la clase donde se inicializan todos los componentes de la
-	 * ventana de registro
-	 */
-	public VentanaRegistroRoles() {
-		
-		addWindowListener(new WindowAdapter() {
-			public void windowOpened(WindowEvent e){
-				txtCodigo.requestFocus();
-			}
-		});
-
-		btnGuardar = new JButton();
-		btnGuardar.setToolTipText("Guardar");
-		btnGuardar.setIcon(new ImageIcon(VentanaRegistroRoles.class.getResource("/imgs/save.png")));
-		btnGuardar.setBounds(339, 52, 32, 32);
-		btnGuardar.setOpaque(false);
-		btnGuardar.setContentAreaFilled(false);
-		btnGuardar.setBorderPainted(false);
-		Image img3 = ((ImageIcon) btnGuardar.getIcon()).getImage();
-		Image newimg3 = img3.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnGuardar.setIcon(new ImageIcon(newimg3));
-
-		botonCancelar = new JButton();
-		botonCancelar.setBackground(Color.WHITE);
-		botonCancelar.setToolTipText("Atrás");
-		botonCancelar.setIcon(new ImageIcon(VentanaRegistroRoles.class
-				.getResource("/imgs/back2.png")));
-		botonCancelar.setBounds(774, 383, 32, 32);
-		botonCancelar.setOpaque(false);
-		botonCancelar.setContentAreaFilled(false);
-		botonCancelar.setBorderPainted(false);
-		Image img2 = ((ImageIcon) botonCancelar.getIcon()).getImage();
-		Image newimg2 = img2.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		botonCancelar.setIcon(new ImageIcon(newimg2));
-	
-
-		labelTitulo = new JLabel();
-		labelTitulo.setText("NUEVO ROL");
-		labelTitulo.setBounds(269, 11, 380, 30);
-		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
-
-		btnGuardar.addActionListener(this);
-		botonCancelar.addActionListener(this);
-		getContentPane().add(botonCancelar);
-		getContentPane().add(btnGuardar);
-		getContentPane().add(labelTitulo);
-		limpiar();
-		setSize(812, 444);
-		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
-		setLocationRelativeTo(null);
-		setResizable(false);
-		getContentPane().setLayout(null);
-
-		scrollPane = new JScrollPane();
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setToolTipText("Lista de Roles");
-		scrollPane.setBounds(0, 153, 806, 230);
-		getContentPane().add(scrollPane);
-
-		table = new JTable() {
-			@Override
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component component = super.prepareRenderer(renderer, row,
-						column);
-				int rendererWidth = component.getPreferredSize().width;
-				TableColumn tableColumn = getColumnModel().getColumn(column);
-				tableColumn.setPreferredWidth(Math.max(rendererWidth
-						+ getIntercellSpacing().width,
-						tableColumn.getPreferredWidth()));
-				return component;
-			}
-		};
-		table.setToolTipText("");
-		table.setAutoCreateRowSorter(true);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		scrollPane.setViewportView(table);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				List<String> selectedData = new ArrayList<String>();
-
-				//int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-				
-				
-				//Object a = table_1.getModel().getValueAt(table_1.convertRowIndexToView(selectedRow[0]), 0);
-				// int[] selectedColumns = table_1.getSelectedColumns();
-				//System.out.println(a);
-
-				//if (selectedRow >= 0) {
-				int selectedRow = table.rowAtPoint(arg0.getPoint());
-					System.out.println(selectedRow);
-					int col = 0;
-					while (col < table.getColumnCount()+1) {
-						//System.out.println(table_1.getValueAt(selectedRow,
-						//		col));
-						try {
-							int row = table.rowAtPoint(arg0.getPoint());
-							 String table_click0 = table.getModel().getValueAt(table.
-			                          convertRowIndexToModel(row), col).toString();
-			                //System.out.println(table_click0);
-			                
-							selectedData.add(table_click0);
-							System.out.println(selectedData);
-						
-						} catch (Exception e) {
-							System.out.println(e.getMessage());
-						}
-
-						col++;
-					}
-					// selectedData.ad table_1.getValueAt(selectedRow[i],
-					// selectedColumns[0]);
-					// txtId.setText(selectedData.get(0));
-					txtCodigo.setText(selectedData.get(2));
-					txtDescripcion.setText(selectedData.get(3));
-					// textFecha.setText(selectedData.get(2));
-					// textUsu.setText(selectedData.get(4));
-					// codTemporal.setText(selectedData.get(1));
-					codTemporal = (selectedData.get(0));
-
-				
-			//	System.out.println("Selected: " + selectedData);
-
-			}
-		});
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setModel(model);
-
-		btnHome = new JButton("");
-		btnHome.setToolTipText("Inicio");
-		btnHome.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
-				menuprincipal.setVisible(true);
-				dispose();
-			}
-		});
-		btnHome.setIcon(new ImageIcon(VentanaRegistroRoles.class
-				.getResource("/imgs/home.png")));
-		btnHome.setBounds(0, 0, 32, 32);
-		Image img = ((ImageIcon) btnHome.getIcon()).getImage();
-		Image newimg = img.getScaledInstance(32, 32,
-				java.awt.Image.SCALE_SMOOTH);
-		btnHome.setIcon(new ImageIcon(newimg));
-		getContentPane().add(btnHome);
-
-		lblCodigo = new JLabel();
-		lblCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCodigo.setText("Codigo:");
-		lblCodigo.setBounds(130, 52, 61, 25);
-		getContentPane().add(lblCodigo);
-
-		txtCodigo = new JTextField();
-		txtCodigo.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-				char car = arg0.getKeyChar();
-				if ((car < 'a' || car > 'z') && (car < 'A' || car > 'Z'))
-					arg0.consume();
-			}
-		});
-
-		txtCodigo.setBounds(213, 52, 75, 26);
-		getContentPane().add(txtCodigo);
-		txtCodigo.setColumns(10);
-
-		lblMensaje = new JLabel("");
-		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(213, 128, 454, 14);
-		getContentPane().add(lblMensaje);
-
-		JLabel lblDescripcion = new JLabel();
-		lblDescripcion.setText("Descripcion:");
-		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcion.setBounds(102, 82, 89, 25);
-		getContentPane().add(lblDescripcion);
-
-		txtDescripcion = new JTextField();
-		txtDescripcion.setColumns(10);
-		txtDescripcion.setBounds(213, 87, 310, 26);
-		getContentPane().add(txtDescripcion);
-
-		table.removeColumn(table.getColumnModel().getColumn(0));
-		recuperarDatos();
-
-	}
-
-	private void limpiar() {
-		codTemporal = "";
-	}
-
-	public void setCoordinador(Coordinador miCoordinador) {
-		this.miCoordinador = miCoordinador;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnGuardar) {
-			try {
-
-				if (!(txtCodigo.getText().length() == 0)
-						&& !(txtDescripcion.getText().length() == 0)) {
-					if (txtCodigo.getText().length() > 3) {
-						lblMensaje
-								.setText("El codigo debe ser de maximo 3 caracteres.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					} else if
-
-					(generoValidator.ValidarCodigo(txtCodigo.getText()) == false) {
-						// if
-						// (candidatoValidator.ValidarPersona(personaSelected)
-						// == false) {
-						// Genero genero = new Genero();
-						// genero.setDescripcion(textGenero.getText());
-
-						Calendar calendar = new GregorianCalendar();
-						int year = calendar.get(Calendar.YEAR);
-
-						ApplicationContext ctx = SpringApplication
-								.run(WeatherConfiguration.class);
-
-						WeatherClient weatherClient = ctx
-								.getBean(WeatherClient.class);
-						QueryGenericoRequest query = new QueryGenericoRequest();
-
-						// para registrar se inserta el codigo es 1
-						query.setTipoQueryGenerico(1);
-						System.out.println(Login.userLogeado);
-						query.setQueryGenerico("INSERT INTO ucsaws_roles"
-								+ "( id_rol, descripcion, codigo,id_evento,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-								+ "VALUES (" + "nextval('ucsaws_roles_seq') ,"
-								+ " upper('" + txtDescripcion.getText()
-								+ "'), "
-
-								+ " upper('" + txtCodigo.getText() + "'), "
-								+ VentanaBuscarEvento.evento + ","
-								+ "'"
-								+ Login.userLogeado + "' , now(), '"
-								+ Login.userLogeado + "' , now())");
-
-						QueryGenericoResponse response = weatherClient
-								.getQueryGenericoResponse(query);
-						weatherClient.printQueryGenericoResponse(response);
-
-						model = new RolesJTableModel();
-						recuperarDatos();
-						table.setModel(model);
-						model.fireTableDataChanged();
-						table.removeColumn(table.getColumnModel().getColumn(0));
-						// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
-						lblMensaje
-								.setText("Excelente, se ha guardado el Rol.");
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-
-						txtCodigo.setText("");
-						txtDescripcion.setText("");
-
-						// this.dispose();
-						// } else {
-						// // JOptionPane.showMessageDialog(null,
-						// // "Ya existe el genero " + txtDesc.getText(),
-						// // "Información",JOptionPane.WARNING_MESSAGE);
-						// lblMensaje
-						// .setText("La Persona no puede tener mas de una candidatura");
-						// Timer t = new Timer(Login.timer,
-						// new ActionListener() {
-						//
-						// public void actionPerformed(
-						// ActionEvent e) {
-						// lblMensaje.setText(null);
-						// }
-						// });
-						// t.setRepeats(false);
-						// t.start();
-						// }
-					} else {
-						// JOptionPane.showMessageDialog(null,
-						// "Ya existe el genero " + txtDesc.getText(),
-						// "Información",JOptionPane.WARNING_MESSAGE);
-						lblMensaje
-								.setText("Ya existe el Rol con ese codigo. "
-										+ txtCodigo.getText());
-						Timer t = new Timer(Login.timer, new ActionListener() {
-
-							public void actionPerformed(ActionEvent e) {
-								lblMensaje.setText(null);
-							}
-						});
-						t.setRepeats(false);
-						t.start();
-					}
-
-				}
-
-				else {
-					// JOptionPane.showMessageDialog(null, ,
-					// "Información",JOptionPane.WARNING_MESSAGE);
-					lblMensaje.setText("Debe ingresar todos los campos.");
-					Timer t = new Timer(Login.timer, new ActionListener() {
-
-						public void actionPerformed(ActionEvent e) {
-							lblMensaje.setText(null);
-						}
-					});
-					t.setRepeats(false);
-					t.start();
-				}
-			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(null,
-						"Error al intentar insertar", "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
-
-		}
-		if (e.getSource() == botonCancelar) {
-			VentanaBuscarRoles candidato = new VentanaBuscarRoles();
-			candidato.setVisible(true);
-			this.dispose();
-
-		}
-	}
-
-	private void recuperarDatos() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
-
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("SELECT  id_rol, codigo, descripcion "
-				+ "from  ucsaws_roles where id_evento = " + VentanaBuscarEvento.evento 
-				+ "order by codigo" + "");
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		int contador = 0;
-		while (filas.size() > ite) {
-			contador = contador + 1;
-			fil = (JSONArray) filas.get(ite);
-
-			String[] fin = { fil.get(0).toString(), String.valueOf(contador),fil.get(1).toString(),
-					fil.get(2).toString() };
-
-			model.ciudades.add(fin);
-			ite++;
-		}
-
-	}
+  private Coordinador miCoordinador; // objeto miCoordinador que permite la
+  // relacion entre esta clase y la clase
+  // coordinador
+  private JLabel labelTitulo, lblMensaje;
+  private JButton botonGuardar, botonCancelar;
+
+  private RolesJTableModel model = new RolesJTableModel();
+
+  private GeneroValidator generoValidator = new GeneroValidator();
+
+  private String codTemporal = "";
+  private JButton btnHome;
+
+  List<Object[]> ciudades = new ArrayList<Object[]>();
+
+  List<Object[]> listas = new ArrayList<Object[]>();
+
+  List<Object[]> tcandidato = new ArrayList<Object[]>();
+  private JLabel lblCodigo;
+  private JTextField txtCodigo;
+  private JTextField txtDescripcion;
+
+  /**
+   * constructor de la clase donde se inicializan todos los componentes de la ventana de registro
+   */
+  public VentanaRegistroRoles() {
+
+    addWindowListener(new WindowAdapter() {
+      public void windowOpened(WindowEvent e) {
+        txtCodigo.requestFocus();
+      }
+    });
+
+    botonGuardar = new JButton();
+    botonGuardar.setToolTipText("Guardar");
+    botonGuardar.setIcon(new ImageIcon(VentanaRegistroRoles.class.getResource("/imgs/save.png")));
+    botonGuardar.setBounds(339, 52, 32, 32);
+    botonGuardar.setOpaque(false);
+    botonGuardar.setContentAreaFilled(false);
+    botonGuardar.setBorderPainted(false);
+    Image img3 = ((ImageIcon) botonGuardar.getIcon()).getImage();
+    Image newimg3 = img3.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    botonGuardar.setIcon(new ImageIcon(newimg3));
+
+    botonCancelar = new JButton();
+    botonCancelar.setBackground(Color.WHITE);
+    botonCancelar.setToolTipText("Atrás");
+    botonCancelar.setIcon(new ImageIcon(VentanaRegistroRoles.class.getResource("/imgs/back2.png")));
+    botonCancelar.setBounds(674, 160, 32, 32);
+    botonCancelar.setOpaque(false);
+    botonCancelar.setContentAreaFilled(false);
+    botonCancelar.setBorderPainted(false);
+    Image img2 = ((ImageIcon) botonCancelar.getIcon()).getImage();
+    Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    botonCancelar.setIcon(new ImageIcon(newimg2));
+
+
+    labelTitulo = new JLabel();
+    labelTitulo.setText("NUEVO ROL");
+    labelTitulo.setBounds(269, 11, 380, 30);
+    labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
+
+    botonGuardar.addActionListener(this);
+    botonCancelar.addActionListener(this);
+    getContentPane().add(botonCancelar);
+    getContentPane().add(botonGuardar);
+    getContentPane().add(labelTitulo);
+    limpiar();
+    setSize(716, 223);
+    setTitle("Sistema E-vote: Paraguay Elecciones 2015");
+    setLocationRelativeTo(null);
+    setResizable(false);
+    getContentPane().setLayout(null);
+
+    btnHome = new JButton("");
+    btnHome.setToolTipText("Inicio");
+    btnHome.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
+        menuprincipal.setVisible(true);
+        dispose();
+      }
+    });
+    btnHome.setIcon(new ImageIcon(VentanaRegistroRoles.class.getResource("/imgs/home.png")));
+    btnHome.setBounds(0, 0, 32, 32);
+    Image img = ((ImageIcon) btnHome.getIcon()).getImage();
+    Image newimg = img.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    btnHome.setIcon(new ImageIcon(newimg));
+    getContentPane().add(btnHome);
+
+    lblCodigo = new JLabel();
+    lblCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
+    lblCodigo.setText("Codigo:");
+    lblCodigo.setBounds(130, 52, 61, 25);
+    getContentPane().add(lblCodigo);
+
+    txtCodigo = new JTextField();
+    txtCodigo.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyTyped(KeyEvent arg0) {
+        char car = arg0.getKeyChar();
+        if ((car < 'a' || car > 'z') && (car < 'A' || car > 'Z'))
+          arg0.consume();
+      }
+    });
+
+    txtCodigo.setBounds(213, 52, 75, 26);
+    getContentPane().add(txtCodigo);
+    txtCodigo.setColumns(10);
+
+    lblMensaje = new JLabel("");
+    lblMensaje.setForeground(Color.RED);
+    lblMensaje.setBounds(213, 128, 454, 14);
+    getContentPane().add(lblMensaje);
+
+    JLabel lblDescripcion = new JLabel();
+    lblDescripcion.setText("Descripcion:");
+    lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
+    lblDescripcion.setBounds(102, 82, 89, 25);
+    getContentPane().add(lblDescripcion);
+
+    txtDescripcion = new JTextField();
+    txtDescripcion.setColumns(10);
+    txtDescripcion.setBounds(213, 87, 310, 26);
+    getContentPane().add(txtDescripcion);
+    // recuperarDatos();
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "clickButton");
+
+    getRootPane().getActionMap().put("clickButton", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonGuardar.doClick();
+        System.out.println("button clicked");
+      }
+    });
+
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonCancelar.doClick();
+        System.out.println("button esc clicked");
+      }
+    });
+
+  }
+
+  private void limpiar() {
+    codTemporal = "";
+  }
+
+  public void setCoordinador(Coordinador miCoordinador) {
+    this.miCoordinador = miCoordinador;
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == botonGuardar) {
+      try {
+        RolValidator rolValidator = new RolValidator();
+
+        if (!(txtCodigo.getText().length() == 0) && !(txtDescripcion.getText().length() == 0)) {
+          if (txtCodigo.getText().length() > 3) {
+            lblMensaje.setText("El codigo debe ser de maximo 3 caracteres.");
+            Timer t = new Timer(Login.timer, new ActionListener() {
+
+              public void actionPerformed(ActionEvent e) {
+                lblMensaje.setText(null);
+              }
+            });
+            t.setRepeats(false);
+            t.start();
+          } else if
+
+          (rolValidator.ValidarCodigo(txtCodigo.getText(), txtDescripcion.getText(),
+              VentanaBuscarEvento.evento) == false) {
+
+            EventoDAO eventoDAO = new EventoDAO();
+            RolDAO rolDAO = new RolDAO();
+
+            UcsawsRoles rolAGuardar = new UcsawsRoles();
+            rolAGuardar.setCodigo(txtCodigo.getText().toUpperCase());
+            rolAGuardar.setDescripcion(txtDescripcion.getText().toUpperCase());
+            rolAGuardar.setFchIns(new Date());
+            rolAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
+            rolAGuardar.setUcsawsEvento(eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento));
+            rolDAO.guardarRol(rolAGuardar);
+
+            VentanaBuscarRoles roles = new VentanaBuscarRoles();
+            roles.setVisible(true);
+            dispose();
+
+
+
+          } else {
+            // JOptionPane.showMessageDialog(null,
+            // "Ya existe el genero " + txtDesc.getText(),
+            // "Información",JOptionPane.WARNING_MESSAGE);
+            lblMensaje.setText("Ya existe el Rol con ese codigo. " + txtCodigo.getText());
+            Timer t = new Timer(Login.timer, new ActionListener() {
+
+              public void actionPerformed(ActionEvent e) {
+                lblMensaje.setText(null);
+              }
+            });
+            t.setRepeats(false);
+            t.start();
+          }
+
+        }
+
+        else {
+          // JOptionPane.showMessageDialog(null, ,
+          // "Información",JOptionPane.WARNING_MESSAGE);
+          lblMensaje.setText("Debe ingresar todos los campos.");
+          Timer t = new Timer(Login.timer, new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+              lblMensaje.setText(null);
+            }
+          });
+          t.setRepeats(false);
+          t.start();
+        }
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Error al intentar insertar", "Error",
+            JOptionPane.ERROR_MESSAGE);
+      }
+
+    }
+    if (e.getSource() == botonCancelar) {
+      VentanaBuscarRoles candidato = new VentanaBuscarRoles();
+      candidato.setVisible(true);
+      this.dispose();
+
+    }
+  }
+
+
 
 }

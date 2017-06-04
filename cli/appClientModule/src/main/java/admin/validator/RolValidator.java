@@ -35,6 +35,8 @@ public class RolValidator {
     UcsawsRoles aux;
     while (ite.hasNext()) {
       aux = ite.next();
+      if ((aux.getCodigo().compareToIgnoreCase(codigo.toUpperCase()) == 0 || aux.getDescripcion().compareTo(descripcion.toUpperCase()) == 0)
+        ) {
         existe = true;
       }
     }

@@ -3,204 +3,213 @@ package src.main.java.dao.rol;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.text.ParseException;
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsRoles;
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
+
 public class RolDAO {
-	
-	
-//	public void registrarPersona(PersonaVo miPersona)
-//	{
-//		Conexion conex= new Conexion();
-//		
-//		try {
-//			Statement estatuto = conex.getConnection().createStatement();
-//			estatuto.executeUpdate("INSERT INTO persona VALUES ('"+miPersona.getIdPersona()+"', '"
-//					+miPersona.getNombrePersona()+"', '"+miPersona.getEdadPersona()+"', '"
-//					+miPersona.getProfesionPersona()+"', '"+miPersona.getTelefonoPersona()+"')");
-//			JOptionPane.showMessageDialog(null, "Se ha registrado Exitosamente","Informaci�n",JOptionPane.INFORMATION_MESSAGE);
-//			estatuto.close();
-//			conex.desconectar();
-//			
-//		} catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//			JOptionPane.showMessageDialog(null, "No se Registro");
-//		}
-//	}
-
-	public JSONArray buscarRol(String codigo) throws ParseException, org.json.simple.parser.ParseException 
-	{
-		JSONArray filas = new JSONArray();
-		
-		Date date = null;
-		
-		boolean existe=false;
-		
-			
-			//Statement estatuto = conex.getConnection().createStatement();
-		
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			//para registrar se inserta el codigo es 1
-			query.setTipoQueryGenerico(2);
-			
-			query.setQueryGenerico("SELECT id_rol, descripcion "
-					+ " from ucsaws_roles "
-				  + "where upper(descripcion) like upper('%"+codigo+"%')  ");
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-	
-				if(res.compareTo("[]")==0){
-					JOptionPane.showMessageDialog(null, "El Rol no Existe","Advertencia",JOptionPane.WARNING_MESSAGE);
-					return filas;
-				}
-				
-				else
-			{
-				existe=true;
-				
-				
-				
-				String generoAntesPartir = response.getQueryGenericoResponse();
-				
-				JSONParser j = new JSONParser();
-				Object ob;
-				String part1,part2,part3;
-				
-					ob = j.parse(generoAntesPartir);
-					filas = (JSONArray) ob;
-					
-					
-					
-				//	JSONArray fila		= (JSONArray) filas.get(0);
-					//JSONArray fila1		= (JSONArray) filas.get(1);
-							
-//					System.out.print(filas);
-//					System.out.print("\\n");
-//				//	System.out.print(fila);
-//					System.out.print("\\n");
-//					System.out.print(fila1);
-					
-					
-					
-//					 part1 = (String) array1.get(0);
-//					 part2 = (String) array1.get(1);
-//					 part3 = (String) array1.get(2);
-					 
-//					 gen.setDescripcion(part1);
-//					 gen.setFecha(part2);
-//					 gen.setUsuario(part3);
-					
-				
-				
-				
-				
-				
-				
-
-				
-				
-				
-				
-//				String[] parts = generoAntesPartir.split(",");
-//				
-				
-				
-				
-//				DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
-//				DateTime dt = formatter.parseDateTime(part2);
-				
-//				DateFormat formatter = new SimpleDateFormat("dd-mm-yyyy");
-//				
-//				
-//					date = formatter.parse(part2);
-//					
-//				GregorianCalendar newCalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-//				newCalendar.setTime(date);
-				//GregorianCalendar fecha = date.tog
-				
-				//fecha.setTime(date);
-				
-//				gen.setFecha(part2);
-//				
-//				gen.setUsuario(part3);
-				
-				
-				return filas;
-				
-			}
-			
-			
-
-	
-		
-				
-			 
-						
-	}
 
 
 
-	public Boolean eliminarRol(String codigo)
-	{
-		boolean eliminado = false;
-		
-		try{
-			
-			
-			ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+  public List<UcsawsRoles> obtenerRolByIdEvento(Integer idEvento) {
 
-			WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-			QueryGenericoRequest query = new QueryGenericoRequest();
-			
-			
-			query.setTipoQueryGenerico(4);
-			
-			query.setQueryGenerico("DELETE FROM ucsaws_roles WHERE"
-					+ " id_rol = "
-					+ codigo 
-					 );
-			
-			
-			
-			QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-			weatherClient.printQueryGenericoResponse(response);
-			
-			String res = response.getQueryGenericoResponse();
-			
-			if (res.compareTo("ERRORRRRRRR")== 0){
-				
-				
-				eliminado = false;
-			}
-			else{
-				eliminado = true;
-			}
-			
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(null,"Error al intentar eliminar el Rol.","Error",JOptionPane.ERROR_MESSAGE);
-		}
-		return eliminado;
-		
-	}
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(112);
+    query.setQueryGenerico(idEvento.toString());
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    List<UcsawsRoles> rol = new ArrayList<UcsawsRoles>();
+    try {
+      rol = mapper.readValue(jsonInString, new TypeReference<List<UcsawsRoles>>() {});
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return rol;
+  }
+
+
+  /*public Boolean modificarNacionalidad(UcsawsNacionalidad nacionalidad) {
+
+    boolean guardado = false;
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(nacionalidad);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(55);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    if (jsonInString.compareTo("SI") == 0) {
+      guardado = true;
+    } else {
+      guardado = false;
+    }
+
+
+    return guardado;
+  }*/
+
+
+
+  public Boolean guardarRol(UcsawsRoles rol) {
+
+    boolean guardado = false;
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(rol);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(114);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsRoles n = new UcsawsRoles();
+    try {
+      n = mapper.readValue(jsonInString, UcsawsRoles.class);
+    } catch (Exception ex) {
+      System.out.println(ex);
+    }
+    guardado = true;
+
+    return guardado;
+
+  }
+
+
+
+  public Boolean eliminarRol(UcsawsRoles rol) {
+    boolean eliminado = false;
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(rol);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(115);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String resp = response.getQueryGenericoResponse();
+
+    String n = new String();
+    try {
+      // n = mapper.readValue(jsonInString, String.class);
+      if (resp.compareTo("SI") == 0) {
+        eliminado = true;
+      }
+
+    } catch (Exception ex) {
+      eliminado = false;
+      JOptionPane.showMessageDialog(null, "Error al intentar eliminar el Rol.", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    }
+    return eliminado;
+
+  }
+
+
+
+  public UcsawsRoles obtenerRolById(String idRol) {
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+
+
+
+
+    query.setTipoQueryGenerico(113);
+    query.setQueryGenerico(idRol);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsRoles rol = new UcsawsRoles();
+    try {
+      rol = mapper.readValue(jsonInString, UcsawsRoles.class);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return rol;
+  }
+
+
+
 }
