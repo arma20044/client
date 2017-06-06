@@ -6,95 +6,126 @@ import hello.wsdl.QueryGenericoResponse;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsPersona;
+import entity.UcsawsRoles;
+import entity.UcsawsUsers;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.nacionalidades.NacionalidadesDAO;
+import src.main.java.dao.user.UserDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
 public class UsuariosValidator {
+  
 
-	public Boolean ValidarUser(String usuario)
-			throws ParseException, org.json.simple.parser.ParseException {
 
-		boolean existe = false;
+  public Boolean ValidarCodigo(UcsawsPersona persona,UcsawsRoles rol, String user,  String idEvento)
+      throws ParseException, org.json.simple.parser.ParseException {
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
+    boolean existe = false;
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+    UserDAO userDAO = new UserDAO();
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+    List<UcsawsUsers> usuarios = userDAO.obtenerUserByIdEvento(Integer.parseInt(idEvento));
 
-		query.setTipoQueryGenerico(2);
+    Iterator<UcsawsUsers> ite = usuarios.iterator();
 
-		query.setQueryGenerico("select id_user, usuario  from ucsaws_users "
-				
-					+ "where id_evento = " + VentanaBuscarEvento.evento + " "
-							+ "and usuario = '" + usuario + "'" );
+    UcsawsUsers aux;
+    while (ite.hasNext()) {
+      aux = ite.next();
+      if (
+         ( (aux.getUcsawsPersona().getIdPersona().toString().compareTo(persona.getIdPersona().toString())==0)   
+              && (aux.getIdRol().getIdRol().toString().compareTo(rol.getIdRol().toString())  == 0 ) )
+          || aux.getUsuario().compareTo(user)==0
+          )  {
+        existe = true;
+      }
+    }
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+    return existe;
 
-		String res = response.getQueryGenericoResponse();
+  }
 
-		if (res.compareTo("[]") != 0) {
+  public Boolean ValidarUser(String usuario) throws ParseException,
+      org.json.simple.parser.ParseException {
 
-			return existe = true;
-		}
+    boolean existe = false;
 
-		else {
-			existe = false;
+    Calendar calendar = new GregorianCalendar();
+    int year = calendar.get(Calendar.YEAR);
 
-			return existe;
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		}
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
 
-	}
-	
-	public Boolean ValidarPersona(Integer idPersona)
-			throws ParseException, org.json.simple.parser.ParseException {
+    query.setTipoQueryGenerico(2);
 
-		boolean existe = false;
+    query.setQueryGenerico("select id_user, usuario  from ucsaws_users "
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
+    + "where id_evento = " + VentanaBuscarEvento.evento + " " + "and usuario = '" + usuario + "'");
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+    String res = response.getQueryGenericoResponse();
 
-		query.setTipoQueryGenerico(2);
+    if (res.compareTo("[]") != 0) {
 
-		query.setQueryGenerico("select id_user, usuario  from ucsaws_users "
-				
-					+ "where id_evento = " + VentanaBuscarEvento.evento + " "
-							+ "and id_persona = '" + idPersona + "'" );
+      return existe = true;
+    }
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+    else {
+      existe = false;
 
-		String res = response.getQueryGenericoResponse();
+      return existe;
 
-		if (res.compareTo("[]") != 0) {
+    }
 
-			return existe = true;
-		}
+  }
 
-		else {
-			existe = false;
+  public Boolean ValidarPersona(Integer idPersona) throws ParseException,
+      org.json.simple.parser.ParseException {
 
-			return existe;
+    boolean existe = false;
 
-		}
+    Calendar calendar = new GregorianCalendar();
+    int year = calendar.get(Calendar.YEAR);
 
-	}
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(2);
+
+    query.setQueryGenerico("select id_user, usuario  from ucsaws_users "
+
+    + "where id_evento = " + VentanaBuscarEvento.evento + " " + "and id_persona = '" + idPersona
+        + "'");
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    String res = response.getQueryGenericoResponse();
+
+    if (res.compareTo("[]") != 0) {
+
+      return existe = true;
+    }
+
+    else {
+      existe = false;
+
+      return existe;
+
+    }
+
+  }
 }

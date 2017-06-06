@@ -1,8 +1,5 @@
 package src.main.java.admin.users;
 
-import hello.wsdl.QueryGenericoRequest;
-import hello.wsdl.QueryGenericoResponse;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -20,16 +17,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
@@ -40,22 +39,13 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 
-import entity.UcsawsCandidatos;
-import entity.UcsawsUsers;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.genero.GeneroJTableModel;
-import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.dao.user.UserDAO;
-import src.main.java.hello.WeatherClient;
-import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
+import entity.UcsawsUsers;
 
 public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
@@ -91,6 +81,27 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
    * constructor de la clase donde se inicializan todos los componentes de la ventana de busqueda
    */
   public VentanaBuscarUsers() {
+    
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
+                public void actionPerformed(ActionEvent ae)
+                {
+            botonCancelar.doClick();
+            System.out.println("button esc clicked");
+                }
+            });
+            
+            
+                getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"clickButtondelete");
+
+    getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
+                public void actionPerformed(ActionEvent ae)
+                {
+             btnEliminar.doClick();
+            System.out.println("button delete clicked");
+                }
+            });
 
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
@@ -217,7 +228,7 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
         // selectedData.ad table_1.getValueAt(selectedRow[i],
         // selectedColumns[0]);
         // txtId.setText(selectedData.get(0));
-        txtBuscar.setText(selectedData.get(3));
+       // txtBuscar.setText(selectedData.get(3));
 
         // textFecha.setText(selectedData.get(2));
         // textUsu.setText(selectedData.get(4));
@@ -322,18 +333,29 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
               UserDAO userDAO = new UserDAO();
 
               try {
-                if (userDAO.eliminarUser(codTemporal) == false) {
+                if (userDAO.eliminarUser(userDAO.obtenerUserById(codTemporal)) == false) {
                   JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Usuario",
                       "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                  JOptionPane.showMessageDialog(null, "Excelente, se ha eliminado el Usuario ",
-                      "Información", JOptionPane.INFORMATION_MESSAGE);
+                  lblMensaje.setText("Excelente, se ha eliminado el Usuario.");
+
+                  Timer t = new Timer(Login.timer, new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                      lblMensaje.setText(null);
+                    }
+                  });
+                  t.setRepeats(false);
+                  t.start();
+                  
+                  //JOptionPane.showMessageDialog(null, "Excelente, se ha eliminado el Usuario ",
+                     // "Información", JOptionPane.INFORMATION_MESSAGE);
                   // modificarGenero(textCod.getText(),
                   // codTemporal.getText());
                   codTemporal = "";
                   limpiar();
 
-                  // model = new GeneroJTableModel();
+                   model = new UsersJTableModel();
 
                   recuperarDatos();
                   table_1.setModel(model);

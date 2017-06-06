@@ -241,46 +241,43 @@ public class NacionalidadesDAO {
 		return nacionalidad;
 	    }
 	    
-	    public UcsawsNacionalidad obtenerNacionalidadById(String idNacionalidad) {
+  public UcsawsNacionalidad obtenerNacionalidadById(String idNacionalidad) {
 
-		ApplicationContext ctx = SpringApplication
-			.run(WeatherConfiguration.class);
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
 
- 
- 
 
-		// parseo json
-		ObjectMapper mapperObj = new ObjectMapper();
-		String jsonStr = "";
 
-		// get Employee object as a json string
-		try {
-		    jsonStr = mapperObj.writeValueAsString(idNacionalidad);
-		} catch (Exception e) {
-		    System.out.println(e);
-		}
+    // parseo json
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
 
-		query.setTipoQueryGenerico(54);
-		query.setQueryGenerico(jsonStr);
+    // get Employee object as a json string
+    try {
+      jsonStr = mapperObj.writeValueAsString(idNacionalidad);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
 
-		QueryGenericoResponse response = weatherClient
-			.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+    query.setTipoQueryGenerico(54);
+    query.setQueryGenerico(jsonStr);
 
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString = response.getQueryGenericoResponse();
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
 
-		  UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
-		try {
-		    nacionalidad = mapper.readValue(jsonInString,  UcsawsNacionalidad.class);
-		} catch (Exception e) {
-		    System.out.println(e);
-		}
-		return nacionalidad;
-	    }
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsNacionalidad nacionalidad = new UcsawsNacionalidad();
+    try {
+      nacionalidad = mapper.readValue(jsonInString, UcsawsNacionalidad.class);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return nacionalidad;
+  }
 	    
 	    public UcsawsNacionalidad obtenerNacionalidadByIdPais(String idPais) {
 

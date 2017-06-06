@@ -10,7 +10,7 @@ import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
 public class PersonaJTableModel extends AbstractTableModel {
 
-	List<Object[]> personas = new ArrayList<Object[]>();
+	public List<Object[]> personas = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub

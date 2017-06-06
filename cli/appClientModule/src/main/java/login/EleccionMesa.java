@@ -632,7 +632,7 @@ public class EleccionMesa extends JFrame {
 							UcsawsUsers u = mapper.readValue(jsonInString, UcsawsUsers.class);
 							//result = u.getIdEvento().toString();
 							idPersona = u.getUcsawsPersona().getIdPersona();
-							idEvento = u.getIdEvento();
+							idEvento = u.getIdEvento().getIdEvento();
 							result = true;
 						} catch (JsonParseException e1) {
 							// TODO Auto-generated catch block

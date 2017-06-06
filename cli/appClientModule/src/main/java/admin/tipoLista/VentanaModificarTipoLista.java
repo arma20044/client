@@ -471,7 +471,7 @@ public class VentanaModificarTipoLista extends JFrame implements
 			String[] fin = { fil.get(0).toString(),String.valueOf(contador), fil.get(1).toString(),
 					fil.get(2).toString() };
 
-			model.ciudades.add(fin);
+			model.tipoLista.add(fin);
 			ite++;
 		}
 

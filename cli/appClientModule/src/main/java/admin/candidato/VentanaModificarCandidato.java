@@ -569,7 +569,7 @@ public class VentanaModificarCandidato extends JFrame implements ActionListener 
 							{
 								
 								
-								candidatoDAO.actualizarCandidato(txtCod.getText(),personaSelected.toString(), listaSelected.toString(), codTemporal);
+								//candidatoDAO.actualizarCandidato(txtCod.getText(),personaSelected.toString(), listaSelected.toString(), codTemporal);
 								
 								recuperarDatos();
 								table.setModel(dm);
