@@ -32,7 +32,7 @@ public class UsuariosValidator {
 
     UserDAO userDAO = new UserDAO();
 
-    List<UcsawsUsers> usuarios = userDAO.obtenerUserByIdEvento(Integer.parseInt(idEvento));
+    List<UcsawsUsers> usuarios = userDAO.obtenerTodosLosUser();
 
     Iterator<UcsawsUsers> ite = usuarios.iterator();
 

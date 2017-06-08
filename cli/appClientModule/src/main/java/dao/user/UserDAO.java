@@ -158,5 +158,32 @@ public class UserDAO {
     }
     return users;
   }
+  
+  //consultar todos los usuarios
+  public List<UcsawsUsers> obtenerTodosLosUser() {
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(117);
+    query.setQueryGenerico("todosLosUsers");
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    List<UcsawsUsers> user = new ArrayList<UcsawsUsers>();
+    try {
+      user = mapper.readValue(jsonInString, new TypeReference<List<UcsawsUsers>>() {});
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return user;
+  }
 
 }

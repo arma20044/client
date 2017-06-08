@@ -8,22 +8,22 @@ import java.util.Date;
  */
 public class UcsawsVotante implements java.io.Serializable {
 
-	private int idVotante;
+	private Integer idVotante;
 	private UcsawsMesa ucsawsMesa;
 	private UcsawsPersona idPersona;
-	private int sufrago;
+	private Integer sufrago;
 	private Date fchIns;
 	private Date fchUpd;
 	private String usuarioIns;
 	private String usuarioUpd;
-	private int habilitado;
+	private Integer habilitado;
 	private UcsawsEvento idEvento;
 
 	public UcsawsVotante() {
 	}
 
-	public UcsawsVotante(int idVotante, UcsawsMesa ucsawsMesa, UcsawsPersona idPersona,
-			int sufrago, Date fchIns, String usuarioIns, int habilitado,
+	public UcsawsVotante(Integer idVotante, UcsawsMesa ucsawsMesa, UcsawsPersona idPersona,
+			Integer sufrago, Date fchIns, String usuarioIns, Integer habilitado,
 			UcsawsEvento idEvento) {
 		this.idVotante = idVotante;
 		this.ucsawsMesa = ucsawsMesa;
@@ -35,9 +35,9 @@ public class UcsawsVotante implements java.io.Serializable {
 		this.idEvento = idEvento;
 	}
 
-	public UcsawsVotante(int idVotante, UcsawsMesa ucsawsMesa, UcsawsPersona idPersona,
-			int sufrago, Date fchIns, Date fchUpd, String usuarioIns,
-			String usuarioUpd, int habilitado, UcsawsEvento idEvento) {
+	public UcsawsVotante(Integer idVotante, UcsawsMesa ucsawsMesa, UcsawsPersona idPersona,
+			Integer sufrago, Date fchIns, Date fchUpd, String usuarioIns,
+			String usuarioUpd, Integer habilitado, UcsawsEvento idEvento) {
 		this.idVotante = idVotante;
 		this.ucsawsMesa = ucsawsMesa;
 		this.idPersona = idPersona;
@@ -50,11 +50,11 @@ public class UcsawsVotante implements java.io.Serializable {
 		this.idEvento = idEvento;
 	}
 
-	public int getIdVotante() {
+	public Integer getIdVotante() {
 		return this.idVotante;
 	}
 
-	public void setIdVotante(int idVotante) {
+	public void setIdVotante(Integer idVotante) {
 		this.idVotante = idVotante;
 	}
 
@@ -74,11 +74,11 @@ public class UcsawsVotante implements java.io.Serializable {
 		this.idPersona = idPersona;
 	}
 
-	public int getSufrago() {
+	public Integer getSufrago() {
 		return this.sufrago;
 	}
 
-	public void setSufrago(int sufrago) {
+	public void setSufrago(Integer sufrago) {
 		this.sufrago = sufrago;
 	}
 
@@ -114,11 +114,11 @@ public class UcsawsVotante implements java.io.Serializable {
 		this.usuarioUpd = usuarioUpd;
 	}
 
-	public int getHabilitado() {
+	public Integer getHabilitado() {
 		return this.habilitado;
 	}
 
-	public void setHabilitado(int habilitado) {
+	public void setHabilitado(Integer habilitado) {
 		this.habilitado = habilitado;
 	}
 

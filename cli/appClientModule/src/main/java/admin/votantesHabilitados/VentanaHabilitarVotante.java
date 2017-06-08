@@ -22,7 +22,9 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsVotante;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
@@ -37,9 +39,9 @@ public class VentanaHabilitarVotante extends JDialog {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(Integer ci, String nombre, String apellido, Integer idMesa) {
+	public static void main(UcsawsVotante votante) {
 		try {
-			VentanaHabilitarVotante dialog = new VentanaHabilitarVotante(ci, nombre, apellido, idMesa);
+			VentanaHabilitarVotante dialog = new VentanaHabilitarVotante(votante);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -52,12 +54,14 @@ public class VentanaHabilitarVotante extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public VentanaHabilitarVotante(Integer ci, String nombre, String apellido, Integer idMesa ) {
+	public VentanaHabilitarVotante(UcsawsVotante votante) {
 		
-		nombre1 = nombre;
-		apellido1 = apellido;
-		ci1 = ci.toString();
-		idMesa1 = idMesa.toString();
+		nombre1 = votante.getIdPersona().getNombre();
+		apellido1 = votante.getIdPersona().getApellido();
+		ci1 = votante.getIdPersona().getCi().toString();
+		idMesa1 = votante.getUcsawsMesa().getDescMesa();
+		
+		final UcsawsVotante votanteHabilitar = votante;
 		
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -105,9 +109,9 @@ public class VentanaHabilitarVotante extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						
-						if (validarUnSoloHabilitadoPorMesaALaVez() == false){
-						
-						if (habilitarVotante()){
+					//	if (validarUnSoloHabilitadoPorMesaALaVez() == false){
+						VotantesHabilitadosDAO votanteDAO = new VotantesHabilitadosDAO();
+						if (votanteDAO.habilitarVotante(votanteHabilitar)){
 							System.out.println("deluxe time");
 							VentanaBuscarVotantesHabilitados buscar = new VentanaBuscarVotantesHabilitados();
 							buscar.setVisible(true);
@@ -118,13 +122,13 @@ public class VentanaHabilitarVotante extends JDialog {
 							System.out.println("error time");
 							
 						}
-						}
+						//}
 						
-						else{
+					/*	else{
 							JOptionPane.showMessageDialog(null, "ya hay una persona habilitada en la mesa favor aguarde unos minutos para habilitar",
 									"Advertencia", JOptionPane.WARNING_MESSAGE);
 							System.out.println("hule. ya hay una persona habilitada en la mesa favor aguarde unos minutos para habilitar");
-						}
+						}*/
 						
 						
 						
@@ -151,100 +155,8 @@ public class VentanaHabilitarVotante extends JDialog {
 		}
 	}
 	
-	private boolean habilitarVotante() {
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		boolean existe = false;
-
-		// Statement estatuto = conex.getConnection().createStatement();
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para modificar el codigo es 3
-		query.setTipoQueryGenerico(3);
-
-		query.setQueryGenerico("UPDATE ucsaws_votante " +
-		" set habilitado = 1    where id_votante = " + VentanaBuscarVotantesHabilitados.idVotante + " and  id_evento= " 
-				+ VentanaBuscarEvento.evento
-				 );
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			
-
-		}
-		return existe;
-
-		
-		
-
-	}
 	
-	public boolean validarUnSoloHabilitadoPorMesaALaVez(){
-		
-		boolean existe = false;
-		
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
 
-		Object ob = null;
-
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
-
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
-
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-		
-		
-		query.setQueryGenerico("select id_votante, id_persona from ucsaws_votante where sufrago = 0 and habilitado = 1 and id_mesa = " +
-		idMesa1);
-		
-				
-				
-				
-				QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-		
-		String res = response.getQueryGenericoResponse();
-		
-		
-		if (res.compareTo("[]") == 0) {
-			
-			existe = false;
-			
-
-		}
-
-		else {
-			existe = true;
-
-			
-
-		}
-		
-		return existe;
-	}
 	
 }

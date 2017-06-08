@@ -503,7 +503,8 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
     UserDAO userDAO = new UserDAO();
 
-    List<UcsawsUsers> lista = userDAO.obtenerUserByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    //List<UcsawsUsers> lista = userDAO.obtenerUserByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsUsers> lista = userDAO.obtenerTodosLosUser();
 
     if (lista.isEmpty()) {
       // JOptionPane.showMessageDialog(null, "algo salio mal",

@@ -441,15 +441,17 @@ public class VentanaBuscarPersonaDesdeUsers extends JDialog implements ActionLis
 
   public void filter(String query) {
 
+    TableRowSorter sorter = new TableRowSorter(table_1.getModel());
+    sorter.setRowFilter(RowFilter.regexFilter(query));
+    table_1.setRowSorter(sorter);
 
-
-    TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
-
-
-
-    table_1.setRowSorter(tr);
-
-    tr.setRowFilter(RowFilter.regexFilter(query));
+//    TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(dm);
+//
+//
+//
+//    table_1.setRowSorter(tr);
+//
+//    tr.setRowFilter(RowFilter.regexFilter(query));
 
 
   }

@@ -3,57 +3,76 @@ package src.main.java.admin.validator;
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
 
+import org.json.simple.JSONArray;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsVotante;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 
+ 
+
 public class VotantesHabilitadosValidator {
 
-	public Boolean ValidarCedula(Integer idPersona)
+	public Boolean ValidarCedula(BigDecimal cedula)
 			throws ParseException, org.json.simple.parser.ParseException {
 
-		boolean existe = false;
+	    boolean existe = false;
 
-		Calendar calendar = new GregorianCalendar();
-		int year = calendar.get(Calendar.YEAR);
+	    VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	    List<UcsawsVotante> votante = votantesHabilitadosDAO.obtenerVotanteByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	    Iterator<UcsawsVotante> ite = votante.iterator();
 
-		query.setTipoQueryGenerico(2);
+	    UcsawsVotante aux;
+	    while (ite.hasNext()) {
+	        aux = ite.next();
+	        if (aux.getIdPersona().getCi().compareTo(cedula)==0) {
+	        existe = true;
+	        }
+	    }
 
-		query.setQueryGenerico("select id_votante, ci  from ucsaws_votante vot join ucsaws_persona per "
-				
-					+ "on (vot.id_persona = per.id_persona) where per.id_evento = " + VentanaBuscarEvento.evento + " "
-							+ "and per.id_persona = '" + idPersona + "'" );
+	    return existe;
 
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
+	    }
+	
+	
+	   public boolean validarUnSoloHabilitadoPorMesaALaVez(UcsawsVotante v){
+	        
+	       boolean existe = false;
 
-		String res = response.getQueryGenericoResponse();
+	        VotantesHabilitadosDAO votantesHabilitadosDAO = new VotantesHabilitadosDAO();
 
-		if (res.compareTo("[]") != 0) {
+	        List<UcsawsVotante> votante = votantesHabilitadosDAO.obtenerVotanteByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
-			return existe = true;
-		}
+	        Iterator<UcsawsVotante> ite = votante.iterator();
 
-		else {
-			existe = false;
+	        UcsawsVotante aux;
+	        while (ite.hasNext()) {
+	            aux = ite.next();
+	            if (aux.getSufrago().compareTo(0)==0  
+	                && aux.getHabilitado().compareTo(1)==0 
+	                && aux.getUcsawsMesa().getIdMesa() == (v.getUcsawsMesa().getIdMesa()) ) {
+	            existe = true;
+	            }
+	        }
 
-			return existe;
-
-		}
-
-	}
+	        return existe;
+	        
+	     //   query.setQueryGenerico("select id_votante, id_persona from ucsaws_votante where sufrago = 0 and habilitado = 1 and id_mesa = " +
+	       // idMesa1);
+	        
+	   }           
+	                
+	             
+	
 }
