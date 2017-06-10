@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import entity.UcsawsEvento;
 import src.main.java.admin.escrutinio.VentanaEscrutinioDiputados;
 import src.main.java.admin.escrutinio.VentanaEscrutinioPresidente;
 import src.main.java.admin.escrutinio.VentanaEscrutinioSenadores;
@@ -137,7 +139,10 @@ public class Escrutinio extends JFrame implements ActionListener{
 				label_4.setBounds(317, 25, 83, 14);
 				panel.add(label_4);
 				
-				JLabel label_5 = new JLabel(VentanaBuscarEvento.fechaDesde);
+				SimpleDateFormat dt1 = new SimpleDateFormat("dd-mm-yyyy");
+				 
+				
+				JLabel label_5 = new JLabel(dt1.format(VentanaBuscarEvento.eventoClase.getFchDesde()));
 				label_5.setBounds(410, 25, 191, 14);
 				panel.add(label_5);
 				label_5.setForeground(Color.BLACK);
@@ -146,7 +151,7 @@ public class Escrutinio extends JFrame implements ActionListener{
 				lblFechaHasta.setBounds(317, 37, 83, 14);
 				panel.add(lblFechaHasta);
 				
-				JLabel label_7 = new JLabel(VentanaBuscarEvento.fechaHasta);
+				JLabel label_7 = new JLabel(dt1.format(VentanaBuscarEvento.eventoClase.getFchHasta()));
 				label_7.setBounds(410, 37, 191, 14);
 				panel.add(label_7);
 				label_7.setForeground(Color.BLACK);

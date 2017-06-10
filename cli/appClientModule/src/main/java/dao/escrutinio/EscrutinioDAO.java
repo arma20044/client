@@ -1,33 +1,29 @@
-package src.main.java.dao.candidato;
+package src.main.java.dao.escrutinio;
 
 import hello.wsdl.QueryGenericoRequest;
 import hello.wsdl.QueryGenericoResponse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import src.main.java.admin.evento.VentanaBuscarEvento;
+import entity.UcsawsVotos;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
-import entity.UcsawsCandidatos;
-import entity.UcsawsVotos;
 
 
 
-public class CandidatoDAO {
+
+public class EscrutinioDAO {
+  
   
 
 
-
-  public List<UcsawsCandidatos> obtenerCandidatosByIdEvento(Integer idEvento) {
+  /*public List<UcsawsCandidatos> obtenerCandidatosByIdEvento(Integer idEvento) {
 
     ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
 
@@ -211,6 +207,44 @@ public class CandidatoDAO {
     }
     return candidato;
   }
+*/
+  
+  public List<UcsawsVotos> obtenerVotosByIdEvento(Integer idEvento, String tipoLista) {
 
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+    
+    List<String> paraEnviar = new ArrayList<String>();
+    paraEnviar.add(idEvento.toString());
+    paraEnviar.add(tipoLista);
+    List<UcsawsVotos> voto = new ArrayList<UcsawsVotos>();
+    try {
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+     
+        // get Employee object as a json string
+        jsonStr = mapperObj.writeValueAsString(paraEnviar);
+
+    query.setTipoQueryGenerico(124);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+   
+   
+      voto = mapper.readValue(jsonInString, new TypeReference<List<UcsawsVotos>>() {});
+
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return voto;
+  
+  }
 
 }

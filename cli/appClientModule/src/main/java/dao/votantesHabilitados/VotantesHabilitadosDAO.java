@@ -23,39 +23,38 @@ import src.main.java.hello.WeatherConfiguration;
 
 
 public class VotantesHabilitadosDAO {
-  
-  
+
+
   public boolean habilitarVotante(UcsawsVotante votante) {
 
-/* query.setQueryGenerico("UPDATE ucsaws_votante " +
-    " set habilitado = 1    where id_votante = " + VentanaBuscarVotantesHabilitados.idVotante + " and  id_evento= " 
-    + VentanaBuscarEvento.evento
-     );*/
+    /*
+     * query.setQueryGenerico("UPDATE ucsaws_votante " +
+     * " set habilitado = 1    where id_votante = " + VentanaBuscarVotantesHabilitados.idVotante +
+     * " and  id_evento= " + VentanaBuscarEvento.evento );
+     */
 
     boolean existe = false;
 
     // Statement estatuto = conex.getConnection().createStatement();
-    
+
     votante.setHabilitado(1);
-    
-    try{
-    modificarVotante(votante);
-    }
-    catch(Exception e){
+
+    try {
+      modificarVotante(votante);
+    } catch (Exception e) {
       System.out.println(e);
     }
-    
-    finally{
+
+    finally {
       existe = true;
     }
-    
-    
-    return existe;
- 
-    
-    
 
-}
+
+    return existe;
+
+
+
+  }
 
 
   public List<UcsawsVotante> obtenerVotanteByIdEvento(Integer idEvento) {
@@ -225,15 +224,12 @@ public class VotantesHabilitadosDAO {
 
 
     // parseo json
-  /*  ObjectMapper mapperObj = new ObjectMapper();
-    String jsonStr = "";
-
-    // get Employee object as a json string
-    try {
-      jsonStr = mapperObj.writeValueAsString(idVotante);
-    } catch (Exception e) {
-      System.out.println(e);
-    }*/
+    /*
+     * ObjectMapper mapperObj = new ObjectMapper(); String jsonStr = "";
+     * 
+     * // get Employee object as a json string try { jsonStr =
+     * mapperObj.writeValueAsString(idVotante); } catch (Exception e) { System.out.println(e); }
+     */
 
     query.setTipoQueryGenerico(121);
     query.setQueryGenerico(idVotante);
@@ -253,7 +249,47 @@ public class VotantesHabilitadosDAO {
     return votante;
   }
 
+  public UcsawsVotante obtenerVotanteByIdPersonaYEvento(String idPersona, String IdEvento) {
 
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+
+    List<String> parametros = new ArrayList<String>();
+    parametros.add(idPersona);
+    parametros.add(IdEvento);
+    // parseo json
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+
+    // get Employee object as a json string
+    try {
+      jsonStr = mapperObj.writeValueAsString(parametros);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+
+
+    query.setTipoQueryGenerico(4);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    UcsawsVotante votante = new UcsawsVotante();
+    try {
+      votante = mapper.readValue(jsonInString, UcsawsVotante.class);
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    return votante;
+  }
 
 
 }

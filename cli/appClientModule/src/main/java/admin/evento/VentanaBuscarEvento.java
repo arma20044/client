@@ -71,6 +71,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	public static Date fechaHasta;
 	public static String tipoEventoDescripcon;
 	//public static String idEveto;
+	public static UcsawsEvento eventoClase;
 	
 	public static Date fechaDesdeDate;
 	public static Date fechaHastaDate;
@@ -333,6 +334,8 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 					else{
 						readOnly=true;
 					}
+					
+					eventoClase = eventoDAO.obtenerEventoById(codTemporal);
 					
 					if (MenuPrincipal.reporte){
 						Reportes reportes = new Reportes();

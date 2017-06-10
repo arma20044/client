@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -37,13 +38,19 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsNacionalidad;
+import entity.UcsawsTipoLista;
+import entity.UcsawsVotos;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.Escrutinio;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.Dhondt;
+import src.main.java.dao.candidato.CandidatoDAO;
+import src.main.java.dao.escrutinio.EscrutinioDAO;
 import src.main.java.dao.listas.ListasDAO;
+import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -517,84 +524,74 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
 	}
 	
 	List<String> ObtenerListaCandidatos(){
-		JSONArray filas = new JSONArray();
-		JSONArray fil = new JSONArray();
+		 
+		//query.setQueryGenerico("select 'Lista N° ' || nro_lista || ' ' || nombre_lista as a, count(id_voto)  from ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista) " 
+		//		+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = 'PRESIDENTE - VICEPRESIDENTE' and li.id_evento = " +
+		//		VentanaBuscarEvento.evento + " group by a order by 2 " );
 
-		boolean existe = false;
+	  
+	  TipoListaDAO tipoListaDAO = new TipoListaDAO();
+	  List<UcsawsTipoLista> tipoLista = tipoListaDAO.obtenerTipoListaByIdEvento(VentanaBuscarEvento.eventoClase.getIdEvento());
+	  
+	  Iterator<UcsawsTipoLista> ite = tipoLista.iterator();
 
-		// Statement estatuto = conex.getConnection().createStatement();
+	  UcsawsTipoLista aux;
+	  String tipoListaParam = "";
+	    while (ite.hasNext()) {
+	        aux = ite.next();
+	        if (aux.getDescripcion().toUpperCase().contains("PRESIDENTE")) {
+	          tipoListaParam = aux.getIdTipoLista().toString();
+	        }
+	    }
 
-		ApplicationContext ctx = SpringApplication
-				.run(WeatherConfiguration.class);
+	    
 
-		WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-		QueryGenericoRequest query = new QueryGenericoRequest();
+	    
+	  
+	  
+	  
+	  EscrutinioDAO escrutinioDAO = new EscrutinioDAO();
+	  List<UcsawsVotos> listaVotos =escrutinioDAO.obtenerVotosByIdEvento(VentanaBuscarEvento.eventoClase.getIdEvento(), tipoListaParam);
+	  
+	  //contar los votos por lista
+	  
+	  
+	  Iterator<UcsawsVotos> ite2 = listaVotos.iterator();
 
-		// para registrar se inserta el codigo es 1
-		query.setTipoQueryGenerico(2);
-
-		query.setQueryGenerico("select 'Lista N° ' || nro_lista || ' ' || nombre_lista as a, count(id_voto)  from ucsaws_votos vo join ucsaws_listas li on (vo.id_lista = li.id_lista) " 
-				+ " join ucsaws_tipo_lista tli on (li.id_tipo_lista = tli.id_tipo_lista) where descripcion = 'PRESIDENTE - VICEPRESIDENTE' and li.id_evento = " +
-				VentanaBuscarEvento.evento + " group by a order by 2 " );
-
-		QueryGenericoResponse response = weatherClient
-				.getQueryGenericoResponse(query);
-		weatherClient.printQueryGenericoResponse(response);
-
-		String res = response.getQueryGenericoResponse();
-
-		if (res.compareTo("ERRORRRRRRR") == 0) {
-			JOptionPane.showMessageDialog(null, "algo salio mal",
-					"Advertencia", JOptionPane.WARNING_MESSAGE);
-
-		}
-
-		else {
-			existe = true;
-
-			String generoAntesPartir = response.getQueryGenericoResponse();
-
-			JSONParser j = new JSONParser();
-			Object ob = null;
-			String part1, part2, part3;
-
-			try {
-				ob = j.parse(generoAntesPartir);
-			} catch (org.json.simple.parser.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			filas = (JSONArray) ob;
-
-		}
-
-		int ite = 0;
-		String campo4, campo5 = "";
-		List<String> result = new ArrayList<String>();
-		int contador = 0;
-		
-		List<String> fin = new ArrayList<String>();
-		
-		while (filas.size() > ite) {
-			
-			contador = contador + 1  ;
-			
-			fil = (JSONArray) filas.get(ite);
-
-			
-		//	Arrays.toString()
-			
-			
-			
-			fin.add(fil.get(0).toString() + "-" + fil.get(1).toString() );
-			//= { fil.get(1).toString() };
-
-			//result.
-			//model.ciudades.add(fin);
-			ite++;
-			System.out.println(fin);
-		}
-		return fin;
+	  UcsawsVotos aux2;
+      Integer cantVotos = 0;
+      Integer lista1= 0, lista3= 0, lista4= 0, lista7= 0;
+      List<Object> lvotos = new ArrayList<Object>();
+        while (ite2.hasNext()) {
+            aux2 = ite2.next();
+            if (aux2.getIdLista().getUcsawsTipoLista().getIdTipoLista() ==Integer.parseInt(tipoListaParam)) {
+              
+              switch (aux2.getIdLista().getNroLista()) {
+                case 1:
+                    lista1++;
+                    break;
+                case 3:
+                    lista3++;
+                    break;
+                case 4:
+                    lista4++;
+                    break;
+                case 7:
+                  lista7++;
+                  break;
+                default:
+                    System.out.println("no hay lista");
+                     
+                    break;
+                }
+              lvotos.add(lista1);
+              
+            }
+        }
+	  
+        
+    return miPersona;
+	  
+		 
 	}
 }
