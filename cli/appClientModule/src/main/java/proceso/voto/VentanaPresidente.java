@@ -3,6 +3,7 @@ package src.main.java.proceso.voto;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,13 @@ import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.login.EleccionMesa;
 
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
 public class VentanaPresidente extends JFrame implements ActionListener {
-  
+
   List<UcsawsCandidatos> resultA = new ArrayList<UcsawsCandidatos>();
   List<UcsawsCandidatos> resultB = new ArrayList<UcsawsCandidatos>();
   List<UcsawsCandidatos> resultC = new ArrayList<UcsawsCandidatos>();
@@ -79,6 +85,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
   }
 
   public VentanaPresidente() {
+
+
 
     // List<UcsawsCandidatos> listaCandidatosPresidente = candidatosPresidente();
 
@@ -144,6 +152,9 @@ public class VentanaPresidente extends JFrame implements ActionListener {
   }
 
   private void iniciarComponentes() {
+
+    SimpleAttributeSet center = new SimpleAttributeSet();
+    StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
     contenedor = getContentPane();/* instanciamos el contenedor */
     /*
      * con esto definmos nosotros mismos los tama�os y posicion de los componentes
@@ -159,18 +170,18 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     lblNewLabel.setBounds(171, 66, 850, 31);
     getContentPane().add(lblNewLabel);
 
-    JPanel panel = new JPanel( );
+    JPanel panel = new JPanel();
     panel.setBounds(211, 204, 211, 290);
     getContentPane().add(panel);
     panel.setLayout(null);
-    
-    
 
-        
+
+
     JLabel lblFotoPrimerCandidatoPresidente = new JLabel("PresidenteA");
-   lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultA.get(0).getIdPersona().getNombre() + resultA.get(0).getIdPersona().getApellido() +".jpg")));
-   // lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon());
+    lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
+        .getResource("/candidatosJpeg/" + resultA.get(0).getIdPersona().getNombre()
+            + resultA.get(0).getIdPersona().getApellido() + ".jpg")));
+    // lblFotoPrimerCandidatoPresidente.setIcon(new ImageIcon());
     // lblHC.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/img/hc.jpg")));
     lblFotoPrimerCandidatoPresidente.setBounds(0, 0, 100, 141);
 
@@ -185,7 +196,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
 
     JLabel lblFotoPrimerCandidatoVicePresidente = new JLabel("VicePresidenteA");
     lblFotoPrimerCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultA.get(1).getIdPersona().getNombre() + resultA.get(1).getIdPersona().getApellido()+".jpg")));
+        .getResource("/candidatosJpeg/" + resultA.get(1).getIdPersona().getNombre()
+            + resultA.get(1).getIdPersona().getApellido() + ".jpg")));
     lblFotoPrimerCandidatoVicePresidente.setBounds(110, 0, 100, 141);
 
     Image img2 = ((ImageIcon) lblFotoPrimerCandidatoVicePresidente.getIcon()).getImage();
@@ -198,19 +210,28 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     // lblAfara.setIcon(new ImageIcon(Main.class.getResource("/img/afara.gif")));
 
     JLabel lblNombrePrimerCandidatoVicePresidente = new JLabel("candidato a vice");
-    lblNombrePrimerCandidatoVicePresidente.setBounds(110, 139, 98, 14);
-    lblNombrePrimerCandidatoVicePresidente.setText(resultA.get(1).getIdPersona().getNombre() + " " + resultA.get(1).getIdPersona().getApellido());
+    lblNombrePrimerCandidatoVicePresidente.setHorizontalAlignment(SwingConstants.CENTER);
+    lblNombrePrimerCandidatoVicePresidente.setBounds(110, 140, 100, 15);
+    lblNombrePrimerCandidatoVicePresidente.setText(resultA.get(1).getIdPersona().getNombre() + " "
+        + resultA.get(1).getIdPersona().getApellido());
     panel.add(lblNombrePrimerCandidatoVicePresidente);
     lblNombrePrimerCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
+    decreaseFontSize(lblNombrePrimerCandidatoVicePresidente);
 
     JLabel lblNombrePrimerCandidatoPresidente = new JLabel("candidato a presidente");
-    lblNombrePrimerCandidatoPresidente.setBounds(0, 140, 100, 13);
-    lblNombrePrimerCandidatoPresidente.setText(resultA.get(0).getIdPersona().getNombre() + " " + resultA.get(0).getIdPersona().getApellido());
+    lblNombrePrimerCandidatoPresidente.setHorizontalAlignment(SwingConstants.CENTER);
+    lblNombrePrimerCandidatoPresidente.setBounds(0, 140, 100, 15);
+    lblNombrePrimerCandidatoPresidente.setText(resultA.get(0).getIdPersona().getNombre() + " "
+        + resultA.get(0).getIdPersona().getApellido());
     panel.add(lblNombrePrimerCandidatoPresidente);
+    decreaseFontSize(lblNombrePrimerCandidatoPresidente);
+
 
     lblNombrePrimerCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
 
-    final JRadioButton rdbLista1 = new JRadioButton("LISTA " +resultA.get(0).getIdLista().getNroLista().toString());
+    final JRadioButton rdbLista1 =
+        new JRadioButton("LISTA " + resultA.get(0).getIdLista().getNroLista().toString());
+    rdbLista1.setHorizontalAlignment(SwingConstants.CENTER);
     // rdbLista1.addMouseListener(new MouseAdapter() {
     // @Override
     // public void mouseClicked(MouseEvent arg0) {
@@ -224,21 +245,30 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     rdbLista1.setBounds(31, 173, 147, 39);
     panel.add(rdbLista1);
 
-    JLabel lblPartidoColorado = new JLabel(resultA.get(0).getIdLista().getNombreLista());
-    lblPartidoColorado.setHorizontalAlignment(SwingConstants.CENTER);
-    lblPartidoColorado.setFont(new Font("Tahoma", Font.PLAIN, 20));
-    lblPartidoColorado.setBounds(0, 219, 210, 25);
-    panel.add(lblPartidoColorado);
-
     JLabel label = new JLabel("Presidente");
+    label.setHorizontalAlignment(SwingConstants.CENTER);
     label.setFont(new Font("Tahoma", Font.PLAIN, 10));
-    label.setBounds(21, 153, 72, 13);
+    label.setBounds(0, 155, 100, 13);
     panel.add(label);
 
     JLabel label_1 = new JLabel("Vicepresidente");
+    label_1.setHorizontalAlignment(SwingConstants.CENTER);
     label_1.setFont(new Font("Tahoma", Font.PLAIN, 10));
-    label_1.setBounds(130, 152, 90, 13);
+    label_1.setBounds(110, 155, 100, 13);
     panel.add(label_1);
+
+    JTextPane textPaneA = new JTextPane();
+    textPaneA.setText(resultA.get(0).getIdLista().getNombreLista());
+    textPaneA.setFont(new Font("Tahoma", Font.BOLD, 16));
+    textPaneA.setEnabled(false);
+    textPaneA.setEditable(false);
+    textPaneA.setDisabledTextColor(Color.BLACK);
+    textPaneA.setBounds(0, 214, 210, 76);
+    panel.add(textPaneA);
+
+    StyledDocument docA = textPaneA.getStyledDocument();
+    docA.setParagraphAttributes(0, docA.getLength(), center, false);
+
 
     JPanel panel_1 = new JPanel();
     panel_1.setLayout(null);
@@ -247,7 +277,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
 
     JLabel lblFotoSegundoCandidatoPresidente = new JLabel("PresidenteB");
     lblFotoSegundoCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultB.get(0).getIdPersona().getNombre()  + resultB.get(0).getIdPersona().getApellido()+".jpg")));
+        .getResource("/candidatosJpeg/" + resultB.get(0).getIdPersona().getNombre()
+            + resultB.get(0).getIdPersona().getApellido() + ".jpg")));
     // label.setIcon(new ImageIcon(Main.class.getResource("/img/ferre.jpg")));
     lblFotoSegundoCandidatoPresidente.setBounds(0, 0, 100, 141);
 
@@ -261,7 +292,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
 
     JLabel lblFotoSegundoCandidatoVicePresidente = new JLabel("VicePresidenteB");
     lblFotoSegundoCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultB.get(1).getIdPersona().getNombre()  + resultB.get(1).getIdPersona().getApellido()+".jpg")));
+        .getResource("/candidatosJpeg/" + resultB.get(1).getIdPersona().getNombre()
+            + resultB.get(1).getIdPersona().getApellido() + ".jpg")));
     // label_1.setIcon(new
     // ImageIcon(Main.class.getResource("/img/imagen-cynthia-brizuela-speratti.jpg")));
     lblFotoSegundoCandidatoVicePresidente.setBounds(110, 0, 100, 141);
@@ -275,19 +307,26 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel_1.add(lblFotoSegundoCandidatoVicePresidente);
 
     JLabel lblNombreSegundoCandidatoVicePresidente = new JLabel("vice 2");
+    lblNombreSegundoCandidatoVicePresidente.setHorizontalAlignment(SwingConstants.CENTER);
     lblNombreSegundoCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
-    lblNombreSegundoCandidatoVicePresidente.setBounds(110, 140, 100, 14);
-    lblNombreSegundoCandidatoVicePresidente
-        .setText(resultB.get(1).getIdPersona().getNombre()+ " " + resultB.get(1).getIdPersona().getApellido());
+    lblNombreSegundoCandidatoVicePresidente.setBounds(110, 140, 100, 15);
+    lblNombreSegundoCandidatoVicePresidente.setText(resultB.get(1).getIdPersona().getNombre() + " "
+        + resultB.get(1).getIdPersona().getApellido());
     panel_1.add(lblNombreSegundoCandidatoVicePresidente);
+    decreaseFontSize(lblNombreSegundoCandidatoVicePresidente);
 
     JLabel lblNombreSegundoCandidatoPresidente = new JLabel("candidato 2");
+    lblNombreSegundoCandidatoPresidente.setHorizontalAlignment(SwingConstants.CENTER);
     lblNombreSegundoCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
-    lblNombreSegundoCandidatoPresidente.setBounds(10, 141, 80, 13);
-    lblNombreSegundoCandidatoPresidente.setText(resultB.get(0).getIdPersona().getNombre()+ " " + resultB.get(0).getIdPersona().getApellido() );
+    lblNombreSegundoCandidatoPresidente.setBounds(0, 140, 100, 15);
+    lblNombreSegundoCandidatoPresidente.setText(resultB.get(0).getIdPersona().getNombre() + " "
+        + resultB.get(0).getIdPersona().getApellido());
     panel_1.add(lblNombreSegundoCandidatoPresidente);
+    decreaseFontSize(lblNombreSegundoCandidatoPresidente);
 
-    final JRadioButton rdbLista2 = new JRadioButton("LISTA " +resultB.get(0).getIdLista().getNroLista().toString());
+    final JRadioButton rdbLista2 =
+        new JRadioButton("LISTA " + resultB.get(0).getIdLista().getNroLista().toString());
+    rdbLista2.setHorizontalAlignment(SwingConstants.CENTER);
     // rdbLista2.addMouseListener(new MouseAdapter() {
     // @Override
     // public void mouseClicked(MouseEvent arg0) {
@@ -301,21 +340,29 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     rdbLista2.setBounds(26, 172, 147, 39);
     panel_1.add(rdbLista2);
 
-    JLabel lblAvanzaPais = new JLabel(resultB.get(0).getIdLista().getNombreLista());
-    lblAvanzaPais.setHorizontalAlignment(SwingConstants.CENTER);
-    lblAvanzaPais.setFont(new Font("Tahoma", Font.PLAIN, 20));
-    lblAvanzaPais.setBounds(0, 219, 209, 25);
-    panel_1.add(lblAvanzaPais);
-
     JLabel lblPresidente1 = new JLabel("Presidente");
-    lblPresidente1.setBounds(29, 152, 72, 13);
+    lblPresidente1.setHorizontalAlignment(SwingConstants.CENTER);
+    lblPresidente1.setBounds(0, 155, 100, 13);
     panel_1.add(lblPresidente1);
     lblPresidente1.setFont(new Font("Tahoma", Font.PLAIN, 10));
 
     JLabel lblVice1 = new JLabel("Vicepresidente");
-    lblVice1.setBounds(120, 152, 90, 13);
+    lblVice1.setHorizontalAlignment(SwingConstants.CENTER);
+    lblVice1.setBounds(110, 155, 100, 13);
     panel_1.add(lblVice1);
     lblVice1.setFont(new Font("Tahoma", Font.PLAIN, 10));
+
+    JTextPane textPaneB = new JTextPane();
+    textPaneB.setText(resultB.get(0).getIdLista().getNombreLista());
+    textPaneB.setFont(new Font("Tahoma", Font.BOLD, 16));
+    textPaneB.setEnabled(false);
+    textPaneB.setEditable(false);
+    textPaneB.setDisabledTextColor(Color.BLACK);
+    textPaneB.setBounds(0, 214, 210, 76);
+    panel_1.add(textPaneB);
+
+    StyledDocument docB = textPaneB.getStyledDocument();
+    docB.setParagraphAttributes(0, docB.getLength(), center, false);
 
     JPanel panel_2 = new JPanel();
     panel_2.setLayout(null);
@@ -324,7 +371,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
 
     JLabel lblFotoTercerCandidatoPresidente = new JLabel("PresidenteC");
     lblFotoTercerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultC.get(0).getIdPersona().getNombre()  + resultC.get(0).getIdPersona().getApellido()+".jpg")));
+        .getResource("/candidatosJpeg/" + resultC.get(0).getIdPersona().getNombre()
+            + resultC.get(0).getIdPersona().getApellido() + ".jpg")));
     // label_2.setIcon(new ImageIcon(Main.class.getResource("/img/alegre.jpg")));
     lblFotoTercerCandidatoPresidente.setBounds(0, 0, 100, 141);
 
@@ -338,7 +386,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
 
     JLabel lblFotoTercerCandidatoVicePresidente = new JLabel("VicePresidenteC");
     lblFotoTercerCandidatoVicePresidente.setIcon(new ImageIcon(VentanaPresidente.class
-        .getResource("/candidatosJpeg/"+resultC.get(1).getIdPersona().getNombre()  + resultC.get(1).getIdPersona().getApellido()+".jpeg")));
+        .getResource("/candidatosJpeg/" + resultC.get(1).getIdPersona().getNombre()
+            + resultC.get(1).getIdPersona().getApellido() + ".jpeg")));
     // label_3.setIcon(new ImageIcon(Main.class.getResource("/img/fili.jpg")));
     lblFotoTercerCandidatoVicePresidente.setBounds(110, 0, 100, 141);
 
@@ -352,18 +401,26 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel_2.add(lblFotoTercerCandidatoVicePresidente);
 
     JLabel lblNombreTercerCandidatoVicePresidente = new JLabel("vice 3");
+    lblNombreTercerCandidatoVicePresidente.setHorizontalAlignment(SwingConstants.CENTER);
     lblNombreTercerCandidatoVicePresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
-    lblNombreTercerCandidatoVicePresidente.setBounds(120, 139, 100, 14);
-    lblNombreTercerCandidatoVicePresidente.setText(resultC.get(1).getIdPersona().getNombre()+ " "  + resultC.get(1).getIdPersona().getApellido());
+    lblNombreTercerCandidatoVicePresidente.setBounds(110, 140, 100, 15);
+    lblNombreTercerCandidatoVicePresidente.setText(resultC.get(1).getIdPersona().getNombre() + " "
+        + resultC.get(1).getIdPersona().getApellido());
     panel_2.add(lblNombreTercerCandidatoVicePresidente);
+    decreaseFontSize(lblNombreTercerCandidatoVicePresidente);
 
     JLabel lblNombreTercerCandidatoPresidente = new JLabel("candidato 3");
+    lblNombreTercerCandidatoPresidente.setHorizontalAlignment(SwingConstants.CENTER);
     lblNombreTercerCandidatoPresidente.setFont(new Font("Tahoma", Font.BOLD, 12));
-    lblNombreTercerCandidatoPresidente.setBounds(0, 140, 109, 13);
-    lblNombreTercerCandidatoPresidente.setText(resultC.get(0).getIdPersona().getNombre() + " "  + resultC.get(0).getIdPersona().getApellido());
+    lblNombreTercerCandidatoPresidente.setBounds(0, 140, 100, 15);
+    lblNombreTercerCandidatoPresidente.setText(resultC.get(0).getIdPersona().getNombre() + " "
+        + resultC.get(0).getIdPersona().getApellido());
     panel_2.add(lblNombreTercerCandidatoPresidente);
+    decreaseFontSize(lblNombreTercerCandidatoPresidente);
 
-    final JRadioButton rdbLista3 = new JRadioButton("LISTA " +resultC.get(0).getIdLista().getNroLista().toString());
+    final JRadioButton rdbLista3 =
+        new JRadioButton("LISTA " + resultC.get(0).getIdLista().getNroLista().toString());
+    rdbLista3.setHorizontalAlignment(SwingConstants.CENTER);
     // rdbLista3.addMouseListener(new MouseAdapter() {
     // @Override
     // public void mouseClicked(MouseEvent arg0) {
@@ -377,21 +434,29 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     rdbLista3.setBounds(20, 172, 147, 39);
     panel_2.add(rdbLista3);
 
-    JLabel lblAlianzaParaguayAlegre = new JLabel(resultC.get(0).getIdLista().getNombreLista());
-    lblAlianzaParaguayAlegre.setHorizontalAlignment(SwingConstants.CENTER);
-    lblAlianzaParaguayAlegre.setFont(new Font("Tahoma", Font.PLAIN, 20));
-    lblAlianzaParaguayAlegre.setBounds(0, 219, 210, 31);
-    panel_2.add(lblAlianzaParaguayAlegre);
-
     JLabel label_2 = new JLabel("Presidente");
+    label_2.setHorizontalAlignment(SwingConstants.CENTER);
     label_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
-    label_2.setBounds(28, 150, 72, 13);
+    label_2.setBounds(0, 155, 100, 13);
     panel_2.add(label_2);
 
     JLabel label_3 = new JLabel("Vicepresidente");
+    label_3.setHorizontalAlignment(SwingConstants.CENTER);
     label_3.setFont(new Font("Tahoma", Font.PLAIN, 10));
-    label_3.setBounds(130, 150, 90, 13);
+    label_3.setBounds(110, 155, 100, 13);
     panel_2.add(label_3);
+
+    JTextPane textPaneC = new JTextPane();
+    textPaneC.setText(resultB.get(0).getIdLista().getNombreLista());
+    textPaneC.setFont(new Font("Tahoma", Font.BOLD, 16));
+    textPaneC.setEnabled(false);
+    textPaneC.setEditable(false);
+    textPaneC.setDisabledTextColor(Color.BLACK);
+    textPaneC.setBounds(0, 214, 210, 76);
+    panel_2.add(textPaneC);
+
+    StyledDocument docC = textPaneC.getStyledDocument();
+    docC.setParagraphAttributes(0, docC.getLength(), center, false);
 
 
     // ver www.camick.com select button group
@@ -564,8 +629,8 @@ public class VentanaPresidente extends JFrame implements ActionListener {
   }
 
   private List<List<UcsawsCandidatos>> filtrarCandidatos(List<UcsawsCandidatos> candidatos) {
-    
-    List<List<UcsawsCandidatos>> result = new ArrayList<List<UcsawsCandidatos>>(); 
+
+    List<List<UcsawsCandidatos>> result = new ArrayList<List<UcsawsCandidatos>>();
     try {
       Iterator<UcsawsCandidatos> ite = candidatos.iterator();
 
@@ -577,36 +642,32 @@ public class VentanaPresidente extends JFrame implements ActionListener {
         if (i == 0) {
           if (aux.getDescripcion().compareTo("PRE") == 0) {
             resultA.add(aux);
-            
+
           } else {
             if (aux.getDescripcion().compareTo("VICE") == 0) {
               resultA.add(aux);
-              i=2;
+              i = 2;
             }
           }
-        }
-        else
-        if (i == 2) {
+        } else if (i == 2) {
           if (aux.getDescripcion().compareTo("PRE") == 0) {
             resultB.add(aux);
-            //i++;
+            // i++;
           } else {
             if (aux.getDescripcion().compareTo("VICE") == 0) {
               resultB.add(aux);
-              i=4;
+              i = 4;
             }
           }
 
-        }
-        else
-        if (i == 4) {
+        } else if (i == 4) {
           if (aux.getDescripcion().compareTo("PRE") == 0) {
             resultC.add(aux);
-            //i++;
+            // i++;
           } else {
             if (aux.getDescripcion().compareTo("VICE") == 0) {
               resultC.add(aux);
-              i=6;
+              i = 6;
             }
           }
         }
@@ -620,31 +681,55 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     result.add(resultA);
     result.add(resultB);
     result.add(resultC);
-    
-    
+
+
     return result;
   }
-  
+
   /**
    * Save bytes array to image file
-   * @param chunk 
+   * 
+   * @param chunk
    */
-  public void Bytes2Image( byte[] chunk ) {
-       
-      BufferedImage image;
-      String formatName = "jpg";
-      try {
-          ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(chunk));
-          Iterator<ImageReader> iter=ImageIO.getImageReaders(iis);
-          if (iter.hasNext()) {
-              ImageReader reader = (ImageReader)iter.next();
-              reader.setInput(iis);
-              formatName = reader.getFormatName();
-          }
-          image = ImageIO.read( new ByteArrayInputStream( chunk ) );
-           
-      } catch (IOException ex) {
-          System.err.println(ex.getMessage());
+  public void Bytes2Image(byte[] chunk) {
+
+    BufferedImage image;
+    String formatName = "jpg";
+    try {
+      ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(chunk));
+      Iterator<ImageReader> iter = ImageIO.getImageReaders(iis);
+      if (iter.hasNext()) {
+        ImageReader reader = (ImageReader) iter.next();
+        reader.setInput(iis);
+        formatName = reader.getFormatName();
       }
+      image = ImageIO.read(new ByteArrayInputStream(chunk));
+
+    } catch (IOException ex) {
+      System.err.println(ex.getMessage());
+    }
+  }
+
+
+  protected void decreaseFontSize(JLabel comp) {
+
+    Font font = comp.getFont();
+    FontMetrics fm = comp.getFontMetrics(font);
+    int width = comp.getWidth();
+    int height = comp.getHeight();
+    int textWidth = fm.stringWidth(comp.getText());
+    int textHeight = fm.getHeight();
+
+    int size = font.getSize();
+    while (size > 0 && (textHeight > height || textWidth > width)) {
+      size -= 2;
+      font = font.deriveFont(font.getStyle(), size);
+      fm = comp.getFontMetrics(font);
+      textWidth = fm.stringWidth(comp.getText());
+      textHeight = fm.getHeight();
+    }
+
+    comp.setFont(font);
+
   }
 }
