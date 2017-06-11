@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,6 +26,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import src.main.java.admin.utils.FechaUtils;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.login.EleccionMesa;
 import entity.UcsawsCandidatos;
@@ -80,13 +82,15 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     /* permite iniciar las propiedades de los componentes */
     iniciarComponentes();
     setTitle("Sistema E-vote - 2014");
-    setSize(1201, 763);
+    setSize(1201, 740);
     getContentPane().setLayout(null);
 
-    JPanel panel = new JPanel();
-    panel.setLayout(null);
-    panel.setBounds(900, 192, 203, 234);
-    getContentPane().add(panel);
+    JPanel panelD = new JPanel();
+    panelD.setLayout(null);
+    panelD.setBounds(900, 192, 203, 234);
+    getContentPane().add(panelD);
+    panelD.setBorder(BorderFactory.createLoweredBevelBorder());
+    
 
     JLabel lblAlanTuring = new JLabel("SenadorD");
     lblAlanTuring.setIcon(new ImageIcon(VentanaSenadores.class
@@ -99,18 +103,19 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblAlanTuring.setIcon(new ImageIcon(newimg));
 
-    panel.add(lblAlanTuring);
+    panelD.add(lblAlanTuring);
 
     JLabel label_3 = new JLabel(listaSenadores.get(3).getIdPersona().getNombre() + " "+ listaSenadores.get(3).getIdPersona().getApellido());
+    label_3.setHorizontalAlignment(SwingConstants.CENTER);
     label_3.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_3.setBounds(0, 140, 203, 15);
-    panel.add(label_3);
+    panelD.add(label_3);
     decreaseFontSize(label_3 );
 
     rdbList4 = new JRadioButton(listaSenadores.get(3).getIdLista().getNroLista().toString());
     buttonGroup_1.add(rdbList4);
     rdbList4.setBounds(106, 36, 75, 105);
-    panel.add(rdbList4);
+    panelD.add(rdbList4);
     // rdbList4.addMouseListener(new MouseAdapter() {
     // @Override
     // public void mouseClicked(MouseEvent arg0) {
@@ -125,8 +130,8 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneD.setEnabled(false);
     textPaneD.setEditable(false);
     textPaneD.setDisabledTextColor(Color.BLACK);
-    textPaneD.setBounds(0, 158, 203, 76);
-    panel.add(textPaneD);
+    textPaneD.setBounds(2, 158, 199, 74);
+    panelD.add(textPaneD);
     StyledDocument docD = textPaneD.getStyledDocument();
     docD.setParagraphAttributes(0, docD.getLength(), center, false);
 
@@ -148,7 +153,9 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     label.setBounds(444, 24, 342, 31);
     getContentPane().add(label);
 
-    JLabel label_1 = new JLabel("PERIODO 2016-2021");
+    Integer d = FechaUtils.obtenerAnhoDeDate(listaSenadores.get(0).getIdEvento().getFchDesde());
+    Integer h = d + 5;
+    JLabel label_1 = new JLabel("Periodo: "+ d +" - " +  h);
     label_1.setHorizontalAlignment(SwingConstants.CENTER);
     label_1.setForeground(Color.GRAY);
     label_1.setFont(new Font("Tahoma", Font.BOLD, 25));
@@ -162,10 +169,11 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     label_2.setBounds(302, 150, 631, 31);
     getContentPane().add(label_2);
 
-    JPanel panel_1 = new JPanel();
-    panel_1.setLayout(null);
-    panel_1.setBounds(129, 192, 203, 234);
-    getContentPane().add(panel_1);
+    JPanel panelA = new JPanel();
+    panelA.setLayout(null);
+    panelA.setBounds(129, 192, 203, 234);
+    getContentPane().add(panelA);
+    panelA.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblStevenBallmer = new JLabel("SenadorA");
     lblStevenBallmer.setIcon(new ImageIcon(VentanaSenadores.class
@@ -178,12 +186,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblStevenBallmer.setIcon(new ImageIcon(newimg4));
 
-    panel_1.add(lblStevenBallmer);
+    panelA.add(lblStevenBallmer);
 
     JLabel label_7 = new JLabel(listaSenadores.get(0).getIdPersona().getNombre() + " "+ listaSenadores.get(0).getIdPersona().getApellido() );
+    label_7.setHorizontalAlignment(SwingConstants.CENTER);
     label_7.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_7.setBounds(0, 141, 203, 15);
-    panel_1.add(label_7);
+    panelA.add(label_7);
     decreaseFontSize(label_7);
 
     rdbList1 = new JRadioButton(listaSenadores.get(0).getIdLista().getNroLista().toString());
@@ -196,7 +205,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList1);
     rdbList1.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList1.setBounds(106, 36, 75, 105);
-    panel_1.add(rdbList1);
+    panelA.add(rdbList1);
     
     JTextPane textPaneA = new JTextPane();
     textPaneA.setText(listaSenadores.get(0).getIdLista().getNombreLista());
@@ -204,16 +213,17 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneA.setEnabled(false);
     textPaneA.setEditable(false);
     textPaneA.setDisabledTextColor(Color.BLACK);
-    textPaneA.setBounds(0, 158, 203, 76);
-    panel_1.add(textPaneA);
+    textPaneA.setBounds(2, 158, 199, 74);
+    panelA.add(textPaneA);
     
     StyledDocument docA = textPaneA.getStyledDocument();
     docA.setParagraphAttributes(0, docA.getLength(), center, false);
 
-    JPanel panel_2 = new JPanel();
-    panel_2.setLayout(null);
-    panel_2.setBounds(377, 192, 203, 234);
-    getContentPane().add(panel_2);
+    JPanel panelB = new JPanel();
+    panelB.setLayout(null);
+    panelB.setBounds(377, 192, 203, 234);
+    getContentPane().add(panelB);
+    panelB.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblRolandWayne = new JLabel("SenadorB");
     lblRolandWayne.setIcon(new ImageIcon(VentanaSenadores.class
@@ -226,12 +236,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblRolandWayne.setIcon(new ImageIcon(newimg5));
 
-    panel_2.add(lblRolandWayne);
+    panelB.add(lblRolandWayne);
 
     JLabel label_6 = new JLabel(listaSenadores.get(1).getIdPersona().getNombre() + " "+ listaSenadores.get(1).getIdPersona().getApellido());
+    label_6.setHorizontalAlignment(SwingConstants.CENTER);
     label_6.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_6.setBounds(0, 141, 203, 15);
-    panel_2.add(label_6);
+    panelB.add(label_6);
     decreaseFontSize(label_6 );
 
     rdbList2 = new JRadioButton(listaSenadores.get(1).getIdLista().getNroLista().toString());
@@ -244,7 +255,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList2);
     rdbList2.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList2.setBounds(106, 36, 75, 105);
-    panel_2.add(rdbList2);
+    panelB.add(rdbList2);
     
     JTextPane textPaneB = new JTextPane();
     textPaneB.setText(listaSenadores.get(1).getIdLista().getNombreLista());
@@ -252,15 +263,16 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneB.setEnabled(false);
     textPaneB.setEditable(false);
     textPaneB.setDisabledTextColor(Color.BLACK);
-    textPaneB.setBounds(0, 158, 203, 76);
-    panel_2.add(textPaneB);
+    textPaneB.setBounds(2, 158, 199, 74);
+    panelB.add(textPaneB);
     StyledDocument docB = textPaneB.getStyledDocument();
     docB.setParagraphAttributes(0, docB.getLength(), center, false);
 
-    JPanel panel_3 = new JPanel();
-    panel_3.setLayout(null);
-    panel_3.setBounds(639, 192, 203, 234);
-    getContentPane().add(panel_3);
+    JPanel panelC = new JPanel();
+    panelC.setLayout(null);
+    panelC.setBounds(639, 192, 203, 234);
+    getContentPane().add(panelC);
+    panelC.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblShawnFanning = new JLabel("SenadorC");
     lblShawnFanning.setIcon(new ImageIcon(VentanaSenadores.class
@@ -273,12 +285,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblShawnFanning.setIcon(new ImageIcon(newimg8));
 
-    panel_3.add(lblShawnFanning);
+    panelC.add(lblShawnFanning);
 
     JLabel label_11 = new JLabel(listaSenadores.get(2).getIdPersona().getNombre() + " "+ listaSenadores.get(2).getIdPersona().getApellido());
+    label_11.setHorizontalAlignment(SwingConstants.CENTER);
     label_11.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_11.setBounds(0, 141, 203, 15);
-    panel_3.add(label_11);
+    panelC.add(label_11);
     decreaseFontSize(label_11 );
     rdbList3 = new JRadioButton(listaSenadores.get(2).getIdLista().getNroLista().toString());
     // rdbList3.addMouseListener(new MouseAdapter() {
@@ -290,7 +303,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList3);
     rdbList3.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList3.setBounds(106, 36, 75, 105);
-    panel_3.add(rdbList3);
+    panelC.add(rdbList3);
     
     JTextPane textPane_C = new JTextPane();
     textPane_C.setText(listaSenadores.get(2).getIdLista().getNombreLista());
@@ -298,15 +311,16 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPane_C.setEnabled(false);
     textPane_C.setEditable(false);
     textPane_C.setDisabledTextColor(Color.BLACK);
-    textPane_C.setBounds(0, 158, 203, 76);
-    panel_3.add(textPane_C);
+    textPane_C.setBounds(2, 158, 199, 74);
+    panelC.add(textPane_C);
     StyledDocument docC = textPane_C.getStyledDocument();
     docC.setParagraphAttributes(0, docC.getLength(), center, false);
 
-    JPanel panel_4 = new JPanel();
-    panel_4.setLayout(null);
-    panel_4.setBounds(129, 437, 203, 234);
-    getContentPane().add(panel_4);
+    JPanel panelE = new JPanel();
+    panelE.setLayout(null);
+    panelE.setBounds(129, 437, 203, 234);
+    getContentPane().add(panelE);
+    panelE.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblVintonCerf = new JLabel("SenadorE");
     lblVintonCerf.setIcon(new ImageIcon(VentanaSenadores.class
@@ -319,12 +333,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblVintonCerf.setIcon(new ImageIcon(newimg9));
 
-    panel_4.add(lblVintonCerf);
+    panelE.add(lblVintonCerf);
 
     JLabel label_5 = new JLabel(listaSenadores.get(4).getIdPersona().getNombre() + " "+ listaSenadores.get(4).getIdPersona().getApellido());
+    label_5.setHorizontalAlignment(SwingConstants.CENTER);
     label_5.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_5.setBounds(0, 141, 203, 15);
-    panel_4.add(label_5);
+    panelE.add(label_5);
     decreaseFontSize(label_5 );
 
     rdbList5 = new JRadioButton(listaSenadores.get(4).getIdLista().getNroLista().toString());
@@ -337,25 +352,26 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList5);
     rdbList5.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList5.setBounds(106, 36, 75, 105);
-    panel_4.add(rdbList5);
+    panelE.add(rdbList5);
     
     JTextPane textPaneE = new JTextPane();
     textPaneE.setEnabled(false);
     textPaneE.setEditable(false);
     textPaneE.setText(listaSenadores.get(4).getIdLista().getNombreLista());
-    textPaneE.setBounds(0, 158, 203, 76);
+    textPaneE.setBounds(2, 158, 199, 74);
     textPaneE.setFont(new Font("Tahoma", Font.BOLD, 16));
-    panel_4.add(textPaneE);
+    panelE.add(textPaneE);
     StyledDocument docE = textPaneE.getStyledDocument();
     
     docE.setParagraphAttributes(0, docE.getLength(), center, false);
     textPaneE.setDisabledTextColor(Color.BLACK);
 
     
-    JPanel panel_5 = new JPanel();
-    panel_5.setLayout(null);
-    panel_5.setBounds(377, 437, 203, 234);
-    getContentPane().add(panel_5);
+    JPanel panelF = new JPanel();
+    panelF.setLayout(null);
+    panelF.setBounds(377, 437, 203, 234);
+    getContentPane().add(panelF);
+    panelF.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblJackSKilby = new JLabel("SenadorF");
     lblJackSKilby.setIcon(new ImageIcon(VentanaSenadores.class
@@ -369,12 +385,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     lblJackSKilby.setIcon(new ImageIcon(newimg10));
 
 
-    panel_5.add(lblJackSKilby);
+    panelF.add(lblJackSKilby);
 
     JLabel label_15 = new JLabel(listaSenadores.get(5).getIdPersona().getNombre() + " "+ listaSenadores.get(5).getIdPersona().getApellido());
+    label_15.setHorizontalAlignment(SwingConstants.CENTER);
     label_15.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_15.setBounds(0, 141, 203, 15);
-    panel_5.add(label_15);
+    panelF.add(label_15);
     decreaseFontSize( label_15);
 
     rdbList6 = new JRadioButton(listaSenadores.get(5).getIdLista().getNroLista().toString());
@@ -387,7 +404,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList6);
     rdbList6.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList6.setBounds(106, 36, 75, 105);
-    panel_5.add(rdbList6);
+    panelF.add(rdbList6);
     
     JTextPane textPaneF = new JTextPane();
     textPaneF.setText(listaSenadores.get(5).getIdLista().getNombreLista());
@@ -395,15 +412,16 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneF.setEnabled(false);
     textPaneF.setEditable(false);
     textPaneF.setDisabledTextColor(Color.BLACK);
-    textPaneF.setBounds(0, 158, 203, 76);
+    textPaneF.setBounds(2, 158, 199, 74);
     StyledDocument docf = textPaneF.getStyledDocument();
     docf.setParagraphAttributes(0, docf.getLength(), center, false);
-    panel_5.add(textPaneF);
+    panelF.add(textPaneF);
 
-    JPanel panel_6 = new JPanel();
-    panel_6.setLayout(null);
-    panel_6.setBounds(639, 437, 203, 234);
-    getContentPane().add(panel_6);
+    JPanel paneG = new JPanel();
+    paneG.setLayout(null);
+    paneG.setBounds(639, 437, 203, 234);
+    getContentPane().add(paneG);
+    paneG.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblGuglielmoMarconi = new JLabel("SenadorG");
     lblGuglielmoMarconi.setIcon(new ImageIcon(VentanaSenadores.class
@@ -416,12 +434,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
             java.awt.Image.SCALE_SMOOTH);
     lblGuglielmoMarconi.setIcon(new ImageIcon(newimg11));
 
-    panel_6.add(lblGuglielmoMarconi);
+    paneG.add(lblGuglielmoMarconi);
 
     JLabel label_19 = new JLabel(listaSenadores.get(6).getIdPersona().getNombre() + " "+ listaSenadores.get(6).getIdPersona().getApellido());
+    label_19.setHorizontalAlignment(SwingConstants.CENTER);
     label_19.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_19.setBounds(0, 141, 203, 15);
-    panel_6.add(label_19);
+    paneG.add(label_19);
     decreaseFontSize(label_19 );
 
     rdbList7 = new JRadioButton(listaSenadores.get(6).getIdLista().getNroLista().toString());
@@ -434,7 +453,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList7);
     rdbList7.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList7.setBounds(106, 36, 75, 105);
-    panel_6.add(rdbList7);
+    paneG.add(rdbList7);
     
     JTextPane textPaneG = new JTextPane();
     textPaneG.setText(listaSenadores.get(6).getIdLista().getNombreLista());
@@ -442,16 +461,17 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneG.setEnabled(false);
     textPaneG.setEditable(false);
     textPaneG.setDisabledTextColor(Color.BLACK);
-    textPaneG.setBounds(0, 158, 203, 76);
-    panel_6.add(textPaneG);
+    textPaneG.setBounds(2, 158, 199, 74);
+    paneG.add(textPaneG);
     StyledDocument docG = textPaneG.getStyledDocument();
     docG.setParagraphAttributes(0, docG.getLength(), center, false);
      
 
-    JPanel panel_7 = new JPanel();
-    panel_7.setLayout(null);
-    panel_7.setBounds(900, 437, 203, 234);
-    getContentPane().add(panel_7);
+    JPanel panel_H = new JPanel();
+    panel_H.setLayout(null);
+    panel_H.setBounds(900, 437, 203, 234);
+    getContentPane().add(panel_H);
+    panel_H.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblLawrenceJEllison = new JLabel("SenadorH");
     lblLawrenceJEllison.setIcon(new ImageIcon(VentanaSenadores.class
@@ -465,12 +485,13 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     lblLawrenceJEllison.setIcon(new ImageIcon(newimg12));
 
 
-    panel_7.add(lblLawrenceJEllison);
+    panel_H.add(lblLawrenceJEllison);
 
     JLabel label_23 = new JLabel(listaSenadores.get(7).getIdPersona().getNombre() + " "+ listaSenadores.get(7).getIdPersona().getApellido());
+    label_23.setHorizontalAlignment(SwingConstants.CENTER);
     label_23.setFont(new Font("Tahoma", Font.BOLD, 12));
     label_23.setBounds(0, 142, 203, 15);
-    panel_7.add(label_23);
+    panel_H.add(label_23);
     decreaseFontSize(label_23 );
 
     rdbList8 = new JRadioButton(listaSenadores.get(7).getIdLista().getNroLista().toString());
@@ -483,7 +504,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     buttonGroup_1.add(rdbList8);
     rdbList8.setFont(new Font("Tahoma", Font.BOLD, 79));
     rdbList8.setBounds(106, 36, 75, 105);
-    panel_7.add(rdbList8);
+    panel_H.add(rdbList8);
     
     JTextPane textPaneH = new JTextPane();
     textPaneH.setText(listaSenadores.get(7).getIdLista().getNombreLista());
@@ -491,8 +512,8 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     textPaneH.setEnabled(false);
     textPaneH.setEditable(false);
     textPaneH.setDisabledTextColor(Color.BLACK);
-    textPaneH.setBounds(0, 158, 203, 76);
-    panel_7.add(textPaneH);
+    textPaneH.setBounds(2, 158, 199, 74);
+    panel_H.add(textPaneH);
 
     StyledDocument docH = textPaneH.getStyledDocument();
     docH.setParagraphAttributes(0, docH.getLength(), center, false);
@@ -618,7 +639,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     // }
     // });
     botonCambiar.setFont(new Font("Tahoma", Font.PLAIN, 23));
-    botonCambiar.setBounds(395, 686, 185, 37);
+    botonCambiar.setBounds(423, 673, 185, 37);
     getContentPane().add(botonCambiar);
 
     JButton btnNewButton_1 = new JButton("Votar BLANCO");
@@ -633,7 +654,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
       }
     });
     btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-    btnNewButton_1.setBounds(639, 686, 179, 37);
+    btnNewButton_1.setBounds(639, 673, 185, 37);
     getContentPane().add(btnNewButton_1);
 
 

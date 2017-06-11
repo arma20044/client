@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,17 +26,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
-
-import entity.UcsawsCandidatos;
-import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.dao.candidato.CandidatoDAO;
-import src.main.java.login.EleccionMesa;
-
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.EtchedBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import src.main.java.admin.utils.FechaUtils;
+import src.main.java.dao.candidato.CandidatoDAO;
+import src.main.java.login.EleccionMesa;
+import entity.UcsawsCandidatos;
 
 public class VentanaPresidente extends JFrame implements ActionListener {
 
@@ -120,21 +120,23 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     JLabel lblBoletinDeVoto = new JLabel("BOLETIN DE VOTO OFICIAL");
     lblBoletinDeVoto.setHorizontalAlignment(SwingConstants.CENTER);
     lblBoletinDeVoto.setFont(new Font("Tahoma", Font.BOLD, 25));
-    lblBoletinDeVoto.setBounds(405, 24, 342, 31);
+    lblBoletinDeVoto.setBounds(171, 24, 850, 31);
     getContentPane().add(lblBoletinDeVoto);
 
-    JLabel lblPeriodo = new JLabel("PERIODO 2016-2021");
+    Integer d = FechaUtils.obtenerAnhoDeDate(resultA.get(0).getIdEvento().getFchDesde());
+    Integer h = d + 5;
+    JLabel lblPeriodo = new JLabel("Periodo: "+ d +" - " +  h);
     lblPeriodo.setForeground(Color.GRAY);
     lblPeriodo.setHorizontalAlignment(SwingConstants.CENTER);
     lblPeriodo.setFont(new Font("Tahoma", Font.BOLD, 25));
-    lblPeriodo.setBounds(445, 108, 264, 31);
+    lblPeriodo.setBounds(171, 108, 850, 31);
     getContentPane().add(lblPeriodo);
 
     JLabel lblS = new JLabel("SELECCIONE LA CANDIDATURA DE SU PREFERENCIA");
     lblS.setHorizontalAlignment(SwingConstants.CENTER);
     lblS.setForeground(Color.BLACK);
     lblS.setFont(new Font("Tahoma", Font.BOLD, 20));
-    lblS.setBounds(311, 150, 531, 25);
+    lblS.setBounds(171, 150, 850, 25);
     getContentPane().add(lblS);
     /* Asigna un titulo a la barra de titulo */
     // setTitle("CoDejaVu : JFrame VentanaPrincipal");
@@ -174,6 +176,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel.setBounds(211, 204, 211, 290);
     getContentPane().add(panel);
     panel.setLayout(null);
+    panel.setBorder(BorderFactory.createLoweredBevelBorder());
 
 
 
@@ -263,7 +266,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     textPaneA.setEnabled(false);
     textPaneA.setEditable(false);
     textPaneA.setDisabledTextColor(Color.BLACK);
-    textPaneA.setBounds(0, 214, 210, 76);
+    textPaneA.setBounds(2, 214, 207, 74);
     panel.add(textPaneA);
 
     StyledDocument docA = textPaneA.getStyledDocument();
@@ -274,6 +277,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel_1.setLayout(null);
     panel_1.setBounds(461, 204, 211, 290);
     getContentPane().add(panel_1);
+    panel_1.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblFotoSegundoCandidatoPresidente = new JLabel("PresidenteB");
     lblFotoSegundoCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
@@ -358,7 +362,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     textPaneB.setEnabled(false);
     textPaneB.setEditable(false);
     textPaneB.setDisabledTextColor(Color.BLACK);
-    textPaneB.setBounds(0, 214, 210, 76);
+    textPaneB.setBounds(2, 214, 207, 74);
     panel_1.add(textPaneB);
 
     StyledDocument docB = textPaneB.getStyledDocument();
@@ -368,6 +372,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel_2.setLayout(null);
     panel_2.setBounds(712, 204, 211, 290);
     getContentPane().add(panel_2);
+    panel_2.setBorder(BorderFactory.createLoweredBevelBorder());
 
     JLabel lblFotoTercerCandidatoPresidente = new JLabel("PresidenteC");
     lblFotoTercerCandidatoPresidente.setIcon(new ImageIcon(VentanaPresidente.class
@@ -452,7 +457,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     textPaneC.setEnabled(false);
     textPaneC.setEditable(false);
     textPaneC.setDisabledTextColor(Color.BLACK);
-    textPaneC.setBounds(0, 214, 210, 76);
+    textPaneC.setBounds(2, 214, 207, 74);
     panel_2.add(textPaneC);
 
     StyledDocument docC = textPaneC.getStyledDocument();
@@ -589,7 +594,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
       }
     });
     btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 23));
-    btnNewButton_1.setBounds(639, 537, 179, 37);
+    btnNewButton_1.setBounds(639, 537, 185, 37);
     getContentPane().add(btnNewButton_1);
 
 
