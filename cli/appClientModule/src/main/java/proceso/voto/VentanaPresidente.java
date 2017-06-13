@@ -37,14 +37,18 @@ import src.main.java.admin.utils.FechaUtils;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.login.EleccionMesa;
 import entity.UcsawsCandidatos;
+import entity.UcsawsListas;
 
 public class VentanaPresidente extends JFrame implements ActionListener {
+  
+  public static boolean votoBlanco = false; 
 
   List<UcsawsCandidatos> resultA = new ArrayList<UcsawsCandidatos>();
   List<UcsawsCandidatos> resultB = new ArrayList<UcsawsCandidatos>();
   List<UcsawsCandidatos> resultC = new ArrayList<UcsawsCandidatos>();
 
   public static String presidente;
+  public static UcsawsListas listaPresidente;
 
   private Container contenedor;/* declaramos el contenedor */
   JButton botonCambiar;/* declaramos el objeto Boton */
@@ -452,7 +456,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     panel_2.add(label_3);
 
     JTextPane textPaneC = new JTextPane();
-    textPaneC.setText(resultB.get(0).getIdLista().getNombreLista());
+    textPaneC.setText(resultC.get(0).getIdLista().getNombreLista());
     textPaneC.setFont(new Font("Tahoma", Font.BOLD, 16));
     textPaneC.setEnabled(false);
     textPaneC.setEditable(false);
@@ -484,26 +488,25 @@ public class VentanaPresidente extends JFrame implements ActionListener {
               if (!lista.isEmpty()) {
 
                 if (rdbLista1.isSelected()) {
-
-                  presidente =
-                      rdbLista1.getText().substring(rdbLista1.getText().length() - 1,
-                          rdbLista1.getText().length());
-                  System.out.println("PRESIDENTE: " + presidente);
+                   
+                  //presidente =    rdbLista1.getText().substring(rdbLista1.getText().length() - 1,  rdbLista1.getText().length());
+                  listaPresidente = resultA.get(0).getIdLista();
+                  System.out.println("PRESIDENTE A ID Lista " +listaPresidente.getNroLista() + "-"  +listaPresidente.getNombreLista());
                 }
 
                 else if (rdbLista2.isSelected()) {
-                  presidente =
-                      rdbLista2.getText().substring(rdbLista2.getText().length() - 1,
-                          rdbLista2.getText().length());
-                  System.out.println("PRESIDENTE: " + presidente);
+                  
+                 // presidente = rdbLista2.getText().substring(rdbLista2.getText().length() - 1,  rdbLista2.getText().length());
+                  listaPresidente = resultB.get(0).getIdLista();
+                  System.out.println("PRESIDENTE A ID Lista " +listaPresidente.getNroLista() + "-"  +listaPresidente.getNombreLista());
                 }
 
 
                 else if (rdbLista3.isSelected()) {
-                  presidente =
-                      rdbLista3.getText().substring(rdbLista3.getText().length() - 1,
-                          rdbLista3.getText().length());
-                  System.out.println("PRESIDENTE: " + presidente);
+                  
+                  //presidente =     rdbLista3.getText().length());
+                  listaPresidente = resultC.get(0).getIdLista();
+                  System.out.println("PRESIDENTE A ID Lista " +listaPresidente.getNroLista() + "-"  +listaPresidente.getNombreLista());
                 }
 
                 dispose();
@@ -587,7 +590,7 @@ public class VentanaPresidente extends JFrame implements ActionListener {
     JButton btnNewButton_1 = new JButton("Votar BLANCO");
     btnNewButton_1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        presidente = "BLANCO";
+        votoBlanco = true;
         dispose();
         VentanaConfirmacionPresidente miVentanaConfirmacion =
             new VentanaConfirmacionPresidente(miVentanaPrincipal, true);

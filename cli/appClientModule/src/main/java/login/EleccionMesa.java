@@ -56,6 +56,8 @@ import java.awt.event.FocusEvent;
 import java.io.IOException;
 
 public class EleccionMesa extends JFrame {
+  
+  public static UcsawsVotante votante;
 
   private JPanel contentPane;
 
@@ -111,6 +113,8 @@ public class EleccionMesa extends JFrame {
 
 
                 if (habilitado == 1) {
+                  
+                   
 
 
                   VentanaPresidente main = new VentanaPresidente();
@@ -631,7 +635,7 @@ public class EleccionMesa extends JFrame {
     Boolean result = false;
 
     VotantesHabilitadosDAO votanteDAO = new VotantesHabilitadosDAO();
-    UcsawsVotante votante =
+    votante =
         votanteDAO.obtenerVotanteByIdPersonaYEvento(idPersona.toString(), idEvento.toString());
 
 

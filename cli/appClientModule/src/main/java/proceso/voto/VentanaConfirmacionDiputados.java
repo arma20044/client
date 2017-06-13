@@ -14,8 +14,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import scr.main.java.admin.mail.SendEmailGenerico;
+import src.main.java.dao.voto.VotoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.EleccionMesa;
@@ -45,6 +48,8 @@ import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
 import entity.UcsawsListas;
 import entity.UcsawsTipoLista;
+import entity.UcsawsVotante;
+import entity.UcsawsVotos;
 
 @Transactional(readOnly = true)
 public class VentanaConfirmacionDiputados extends JDialog {
@@ -102,20 +107,20 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
     lblListaPresidente = new JLabel();
 
-    lblListaPresidente.setBounds(80, 95, 141, 14);
-    lblListaPresidente.setText("Presidente Lista: " + VentanaPresidente.presidente);
+    lblListaPresidente.setBounds(29, 95, 276, 14);
+    lblListaPresidente.setText("Presidente Lista: " + VentanaPresidente.listaPresidente.getNroLista() + " - "+ VentanaPresidente.listaPresidente.getNombreLista());
     getContentPane().add(lblListaPresidente);
 
     lblListaSenador = new JLabel();
 
-    lblListaSenador.setBounds(80, 120, 141, 14);
-    lblListaSenador.setText("Senador Lista: " + VentanaSenadores.senadores);
+    lblListaSenador.setBounds(29, 120, 276, 14);
+    lblListaSenador.setText("Senador Lista: " + VentanaSenadores.listaSenador.getNroLista() + " - " + VentanaSenadores.listaSenador.getNombreLista());
     getContentPane().add(lblListaSenador);
 
     lblListaDiputado = new JLabel();
 
-    lblListaDiputado.setBounds(80, 147, 141, 14);
-    lblListaDiputado.setText("Diputado Lista: " + VentanaDiputados.diputados);
+    lblListaDiputado.setBounds(29, 147, 264, 14);
+    lblListaDiputado.setText("Diputado Lista: " + VentanaDiputados.listaDiputado.getNroLista() + " - " + VentanaDiputados.listaDiputado.getNombreLista());
     getContentPane().add(lblListaDiputado);
     /*
      * Al llamar al constructor super(), le enviamos el JFrame Padre y la propiedad booleana que
@@ -342,50 +347,28 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
   }
 
-  private void votar(Integer idLista, Integer idMesa) {
+  private void votar(UcsawsListas lista, UcsawsVotante votante) {
 
-    List<Integer> v = new ArrayList<Integer>();
-    v.add(idLista);
-    v.add(idMesa);
-    v.add(EleccionMesa.evento);
-
-    // parseo json
-    ObjectMapper mapperObj = new ObjectMapper();
-    String jsonStr = "";
+ 
+    
+    Date today = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     try {
-      // get Employee object as a json string
-      jsonStr = mapperObj.writeValueAsString(v);
-      System.out.println(jsonStr);
-    } catch (IOException e) {
+      today = sdf.parse(sdf.format(today));
+    } catch (java.text.ParseException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
-    // insertar voto inicioS
-    Calendar calendar = new GregorianCalendar();
-    int year = calendar.get(Calendar.YEAR);
-
-    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-
-    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-    QueryGenericoRequest query = new QueryGenericoRequest();
-
-    // para registrar se inserta el codigo es 1
-    query.setTipoQueryGenerico(17);
-    System.out.println(Login.userLogeado);
-
-    query.setQueryGenerico(jsonStr);
-    /*
-     * query.setQueryGenerico(
-     * "INSERT INTO ucsaws_votos ( id_voto, id_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd) "
-     * + "VALUES (nextval('ucsaws_votos_seq') , " + idLista + "," + idMesa + " , '" +
-     * Login.userLogeado + "' , now(), '" + Login.userLogeado + "' , now())");
-     */
-
-    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-    weatherClient.printQueryGenericoResponse(response);
-
-    // insertar votoS fin
+    UcsawsVotos votoAGuardar = new UcsawsVotos();
+    votoAGuardar.setFchIns(today);
+    votoAGuardar.setUsuarioIns("sistema");
+    votoAGuardar.setIdLista(lista);
+    votoAGuardar.setIdMesa(votante.getUcsawsMesa());
+    
+    
+     VotoDAO votoDAO = new VotoDAO();
+     votoDAO.guardarVoto(votoAGuardar);
 
   }
 
@@ -583,16 +566,18 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
     idMesa = EleccionMesa.Mesa;
 
-    System.out.println("Presidente Seleccionado Lista N° : " + VentanaPresidente.presidente);
-    System.out.println("Senador Seleccionado Lista N° : " + VentanaSenadores.senadores);
-    System.out.println("Presidente Seleccionado Lista N° : " + VentanaDiputados.diputados);
+    System.out.println("Presidente Seleccionado Lista N° : " + VentanaPresidente.listaPresidente.getNombreLista());
+    System.out.println("Senador Seleccionado Lista N° : " + VentanaSenadores.listaSenador.getNombreLista());
+    System.out.println("Presidente Seleccionado Lista N° : " + VentanaDiputados.listaDiputado.getNombreLista());
 
-    Integer idTipoListaPresidente =
-        obtenerTipoListaPorCodigo("PRE", VentanaPresidente.presidente).getIdTipoLista();
-    Integer idTipoListaSenador =
-        obtenerTipoListaPorCodigo("SEN", VentanaSenadores.senadores).getIdTipoLista();
-    Integer idTipoListaDiputado =
-        obtenerTipoListaPorCodigo("DIP", VentanaDiputados.diputados).getIdTipoLista();
+    Integer idTipoListaPresidente = VentanaPresidente.listaPresidente.getUcsawsTipoLista().getIdTipoLista(); 
+  //Integer idTipoListaPresidente = obtenerTipoListaPorCodigo("PRE", VentanaPresidente.presidente).getIdTipoLista();
+    
+    Integer idTipoListaSenador = VentanaSenadores.listaSenador.getUcsawsTipoLista().getIdTipoLista();
+  //Integer idTipoListaSenador =  obtenerTipoListaPorCodigo("SEN", VentanaSenadores.senadores).getIdTipoLista();
+    
+    Integer idTipoListaDiputado = VentanaDiputados.listaDiputado.getUcsawsTipoLista().getIdTipoLista();
+  //Integer idTipoListaDiputado =  obtenerTipoListaPorCodigo("DIP", VentanaDiputados.diputados).getIdTipoLista();
 
     if ((idTipoListaPresidente == null || idTipoListaPresidente == 0)
         || (idTipoListaSenador == null || idTipoListaSenador == 0)
@@ -604,12 +589,12 @@ public class VentanaConfirmacionDiputados extends JDialog {
       return false;
     } else {
 
-      if (!(VentanaPresidente.presidente.compareTo("BLANCO") == 0)) {
+      if (VentanaPresidente.votoBlanco == false  )  {
         // Integer idListaPresidete = obtenerLista(1,
         // Integer
         // .parseInt(VentanaPresidente.presidente));
         try {
-          votar(idTipoListaPresidente, idMesa);
+          votar(VentanaPresidente.listaPresidente, EleccionMesa.votante);
           System.out.println("Se voto presidente");
         } catch (Exception e) {
           System.out.println(e);
@@ -627,11 +612,11 @@ public class VentanaConfirmacionDiputados extends JDialog {
         }
       }
 
-      if (!(VentanaSenadores.senadores.compareTo("BLANCO") == 0)) {
+      if (VentanaSenadores.votoBlanco == false ) {
         // Integer idListaSenador = obtenerLista(3, Integer
         // .parseInt(VentanaSenadores.senadores));
         try {
-          votar(idTipoListaSenador, idMesa);
+          votar(VentanaSenadores.listaSenador, EleccionMesa.votante);
           System.out.println("Se voto Senador");
         } catch (Exception e) {
           System.out.println(e);
@@ -648,11 +633,11 @@ public class VentanaConfirmacionDiputados extends JDialog {
         }
       }
 
-      if (!(VentanaDiputados.diputados.compareTo("BLANCO") == 0)) {
+      if (VentanaDiputados.votoBlanco == false ) {
         // Integer idListaDiputado = obtenerLista(2, Integer
         // .parseInt(VentanaDiputados.diputados));
         try {
-          votar(idTipoListaDiputado, idMesa);
+          votar(VentanaDiputados.listaDiputado, EleccionMesa.votante);
           System.out.println("Se voto Diputado");
         } catch (Exception e) {
           System.out.println(e);

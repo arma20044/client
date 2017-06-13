@@ -30,12 +30,17 @@ import src.main.java.admin.utils.FechaUtils;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.login.EleccionMesa;
 import entity.UcsawsCandidatos;
+import entity.UcsawsListas;
 
 public class VentanaSenadores extends JFrame implements ActionListener {
 
   public static String senadores;
   
   List<UcsawsCandidatos> listaSenadores;
+  
+  public static UcsawsListas listaSenador;
+  
+  public static boolean votoBlanco = false; 
 
   private Container contenedor;/* declaramos el contenedor */
   JButton botonCambiar;/* declaramos el objeto Boton */
@@ -568,9 +573,10 @@ public class VentanaSenadores extends JFrame implements ActionListener {
               lista = rdb[i].getText();
               if (!lista.isEmpty()) {
 
-
-                senadores = lista.substring(lista.length() - 1, lista.length());
-                System.out.println("Senador: " + senadores);
+                 
+                //senadores = lista.substring(lista.length() - 1, lista.length());
+                listaSenador = listaSenadores.get(i).getIdLista();
+                System.out.println("Senador: " + listaSenador.getNroLista() + "-" + listaSenador.getNombreLista());
 
                 dispose();
                 VentanaConfirmacionSenadores miVentanaConfirmacion =
@@ -645,7 +651,7 @@ public class VentanaSenadores extends JFrame implements ActionListener {
     JButton btnNewButton_1 = new JButton("Votar BLANCO");
     btnNewButton_1.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        senadores = "BLANCO";
+        votoBlanco = true;
 
         dispose();
         VentanaConfirmacionSenadores miVentanaConfirmacion =
