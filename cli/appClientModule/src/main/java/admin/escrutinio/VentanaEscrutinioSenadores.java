@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -37,6 +38,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.UcsawsTipoLista;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.Escrutinio;
@@ -44,6 +46,8 @@ import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.utils.Dhondt;
 import src.main.java.dao.listas.ListasDAO;
+import src.main.java.dao.tipoLista.TipoListaDAO;
+import src.main.java.dao.voto.VotoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
@@ -68,6 +72,7 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 	JLabel lblCandidato4;
 	JButton btnComenzar;
 	private JLabel lblEscrutinioSenadores;
+	private JLabel lblNewLabel;
 
 	/**
 	 * constructor de la clase donde se inicializan todos los componentes de la
@@ -150,6 +155,43 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 		btnComenzar = new JButton("Comenzar");
 		btnComenzar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			  
+			  
+		       // ****** NEW
+		        VotoDAO votoDAO = new VotoDAO();
+		        TipoListaDAO tipoListaDAO = new TipoListaDAO();
+		        List<UcsawsTipoLista> listas = tipoListaDAO.obtenerTipoListaByIdEvento(VentanaBuscarEvento.eventoClase.getIdEvento());
+		        UcsawsTipoLista listaDiputado = new UcsawsTipoLista();
+		        
+		        Iterator<UcsawsTipoLista> ite = listas.iterator();
+
+		        UcsawsTipoLista aux;
+		        while (ite.hasNext()) {
+		            aux = ite.next();
+		            if (aux.getCodigo().compareToIgnoreCase("SEN") == 0 ) {
+		              listaDiputado = aux;
+		              break;
+		            }
+		        }
+		        
+		        
+		        
+		        List<Object> votosParaDiputados = votoDAO.obteneConteoVotoByEvento(listaDiputado);
+		        System.out.println(votosParaDiputados);
+		        
+		        
+		        Iterator<Object> ite2 = votosParaDiputados.iterator();
+		        List<String> aux2;
+		        List<String> CandidatoVotos = new ArrayList<String>();
+		        
+		        while (ite2.hasNext()) {
+		            aux2 = (List<String>) ite2.next();
+		            CandidatoVotos.add(aux2.get(0)+"-"+String.valueOf(aux2.get(1)));
+		        }
+		        
+		        
+		        //******
+		        
 				
 				Dhondt d = 	new Dhondt();
 				
@@ -163,7 +205,7 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 			   //	double []votes =  new double[]  {16, 38, 14, 29, 8, 1, 1, 1};
 //			   	double[] votes =  new double[]{12.9, 29.3, 13.9, 26.3, 7.7, 2.4, 0.9, 6.6};
 			   	//String[] party = {"UUP","DUP","SDLP", "SF","Alliance", "IndU", "Green", "Ind"};
-			   	List<String> CandidatoVotos =  ObtenerListaCandidatosYVotos("SENADOR");
+			   //	List<String> CandidatoVotos =  ObtenerListaCandidatosYVotos("SENADOR");
 			   	int cont= 0;
 			   	int cont2=0;
 			   	List<String> party = new ArrayList<String>();
@@ -234,26 +276,26 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 			   	for (int p=0; p < votes.length; p++) {
 			   		
 			   		if(ban == 0){
-			   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-			   		lblCandidato1.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+			   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
+			   		lblCandidato1.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
 			   		ban++;
 			   		}
 			   		else
 			   		if(ban == 1){
-				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato2.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
+				   		lblCandidato2.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
 				   		ban++;
 				   		}
 			   		else
 			   		if(ban == 2){
-				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato3.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+				   		System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
+				   		lblCandidato3.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
 				   		ban++;
 				   		}
 			   		else
 			   		if(ban == 3){
-			   			System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
-				   		lblCandidato4.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s)");
+			   			System.out.println(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
+				   		lblCandidato4.setText(party.get(p) + " obtuvo " + allocated [p] + " Escaño(s) con " + allocated [p] * 100 /80 + "% de votos.");
 				   		ban++;
 				   		}
 			   	}
@@ -266,27 +308,37 @@ public class VentanaEscrutinioSenadores extends JFrame implements ActionListener
 		getContentPane().add(btnComenzar);
 		
 		lblCandidato1 = new JLabel("");
-		lblCandidato1.setBounds(51, 169, 517, 32);
+		lblCandidato1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblCandidato1.setBounds(51, 192, 517, 32);
 		getContentPane().add(lblCandidato1);
 		
 		lblCandidato2 = new JLabel("");
-		lblCandidato2.setBounds(51, 212, 517, 32);
+		lblCandidato2.setBounds(51, 246, 517, 32);
 		getContentPane().add(lblCandidato2);
 		
 		lblCandidato3 = new JLabel("");
-		lblCandidato3.setBounds(51, 255, 517, 32);
+		lblCandidato3.setBounds(51, 289, 517, 32);
 		getContentPane().add(lblCandidato3);
 		
 		lblCandidato4 = new JLabel("");
-		lblCandidato4.setBounds(51, 289, 517, 32);
+		lblCandidato4.setBounds(51, 332, 517, 32);
 		getContentPane().add(lblCandidato4);
 		
 		lblEscrutinioSenadores = new JLabel();
 		lblEscrutinioSenadores.setText("ESCRUTINIO SENADORES.");
 		lblEscrutinioSenadores.setFont(new Font("Verdana", Font.BOLD, 18));
-		lblEscrutinioSenadores.setBounds(200, 120, 270, 30);
+		lblEscrutinioSenadores.setBounds(263, 95, 270, 30);
 		getContentPane().add(lblEscrutinioSenadores);
+		
+		lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon(VentanaEscrutinioSenadores.class.getResource("/imgs/logoTSJE.png")));
+		lblNewLabel.setBounds(34, 0, 182, 188);
+		getContentPane().add(lblNewLabel);
 		recuperarDatos();
+	      Image img6 = ((ImageIcon) lblNewLabel.getIcon()).getImage();
+	        Image newimg6 = img6.getScaledInstance( lblNewLabel.getWidth(),lblNewLabel.getHeight(),
+	                java.awt.Image.SCALE_SMOOTH);
+	        lblNewLabel.setIcon(new ImageIcon(newimg6));
 
 
 		// cellSelectionModel.addListSelectionListener(new

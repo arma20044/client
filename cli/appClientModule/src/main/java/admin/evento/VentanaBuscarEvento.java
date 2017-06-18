@@ -808,7 +808,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		
 	}
 	
-	public DefaultTableModel obtenerModelo(JTable tabla, List<UcsawsEvento> evento){
+	/*public DefaultTableModel obtenerModelo(JTable tabla, List<UcsawsEvento> evento){
 		
 		
 		DefaultTableModel model = (DefaultTableModel) tabla.getModel();
@@ -841,7 +841,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		
 	}
 		return model;
-	}
+	}*/
 	
 	public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsEvento> evento){
 		
