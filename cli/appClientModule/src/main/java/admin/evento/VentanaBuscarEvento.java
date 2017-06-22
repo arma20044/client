@@ -31,8 +31,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
@@ -43,7 +41,10 @@ import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.JXSearchField;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -59,9 +60,13 @@ import src.main.java.login.Login;
 import src.main.java.login.PreLogin;
 import entity.UcsawsEvento;
 
+import org.jdesktop.swingx.JXFindBar;
+
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
 	ArmarFecha armarFecha = new ArmarFecha();
+	
+	JXFindBar txtBuscar;
 	
 	private static final DecimalFormat formatter = new DecimalFormat( "#,##0.00" );
 	//public static Integer evento; // 0
@@ -86,13 +91,11 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 										// relacion entre esta clase y la clase
 										// coordinador
 	private JLabel labelTitulo;
-	private JTextField txtBuscar;
-	private JLabel lblBuscar;
 	private JButton botonCancelar, btnEliminar, btnNuevo, btnModificar;
 
 	JSONArray miPersona = null;
 	DefaultTableModel modelo;
-	private JTable table_1;
+	private JXTable table_1;
 	private EventoJTableModel model = new EventoJTableModel();
 	private JScrollPane scrollPane;
 
@@ -152,7 +155,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		btnEliminar.setToolTipText("Eliminar");
 		btnEliminar.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/borrar.png")));
-		btnEliminar.setBounds(460, 52, 32, 32);
+		btnEliminar.setBounds(554, 62, 32, 32);
 		btnEliminar.setOpaque(false);
 		btnEliminar.setContentAreaFilled(false);
 		btnEliminar.setBorderPainted(false);
@@ -172,22 +175,6 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		labelTitulo.setText("VER EVENTOS");
 		labelTitulo.setBounds(248, 11, 270, 30);
 		labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
-
-		lblBuscar = new JLabel();
-		lblBuscar.setText("Buscar:");
-		lblBuscar.setBounds(20, 52, 64, 25);
-		getContentPane().add(lblBuscar);
-
-		txtBuscar = new JTextField();
-		txtBuscar.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String query =txtBuscar.getText().toUpperCase(); 
-				filter(query);
-			}
-		});
-		txtBuscar.setBounds(86, 52, 319, 25);
-		getContentPane().add(txtBuscar);
 		btnEliminar.addActionListener(this);
 		botonCancelar.addActionListener(this);
 
@@ -232,16 +219,16 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		scrollPane.setBounds(0, 158, 1146, 265);
 		getContentPane().add(scrollPane);
 
-		table_1 = new JTable() {  
+		table_1 = new JXTable() {  
 		      public boolean isCellEditable(int row, int column){  
 			        return false;  
 			      }  
 			};
 		table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table_1.setToolTipText("Listado de Eventos.");
-		table_1.setAutoCreateRowSorter(false);
+		//table_1.setAutoCreateRowSorter(false);
 		table_1 .getTableHeader().setReorderingAllowed(false);
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table_1.setAutoResizeMode(JXTable.AUTO_RESIZE_OFF);
 		scrollPane.setViewportView(table_1);
 		// String[] columnNames = {"Picture", "Description"};
 		table_1.addMouseListener(new MouseAdapter() {
@@ -402,7 +389,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 								
 								
 					// txtBuscar.setText(selectedData.get(3));
-					 System.out.println(txtBuscar.getText());
+					// System.out.println(txtBuscar.get));
 					 
 					 
 						
@@ -417,9 +404,10 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 
 			}
 		});
-		table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		table_1.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
 		table_1.setModel(model);
+		 
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE EVENTOS");
@@ -459,7 +447,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		btnNuevo.setBorderPainted(false);
 		btnNuevo.setIcon(new ImageIcon(VentanaBuscarEvento.class
 				.getResource("/imgs/add.png")));
-		btnNuevo.setBounds(418, 52, 32, 32);
+		btnNuevo.setBounds(512, 62, 32, 32);
 		Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 		Image newimg2 = img2.getScaledInstance(32, 32,
 				java.awt.Image.SCALE_SMOOTH);
@@ -510,7 +498,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 				btnModificar.setOpaque(false);
 				btnModificar.setContentAreaFilled(false);
 				btnModificar.setBorderPainted(false);
-				btnModificar.setBounds(502, 53, 32, 32);
+				btnModificar.setBounds(596, 63, 32, 32);
 				getContentPane().add(btnModificar);
 				Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
 				Image newimg6 = img6.getScaledInstance(32, 32,
@@ -535,8 +523,18 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);
-		lblMensaje.setBounds(57, 88, 432, 14);
+		lblMensaje.setBounds(86, 106, 432, 14);
 		getContentPane().add(lblMensaje);
+		
+		txtBuscar = new JXFindBar(table_1.getSearchable());
+		txtBuscar.setToolTipText("Ingrese texto para filtrar...");
+		txtBuscar.setBounds(28, 61, 474, 33);
+		getContentPane().add(txtBuscar);
+		
+		
+		table_1.setColumnControlVisible(true);
+		
+		TableRowFilterSupport.forTable(table_1).searchable(true).apply();
 		
 		
 
@@ -599,7 +597,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 						
 						lblMensaje.setText("No se ha podido Eliminar - Existen referencias a éste registro.");
 						codTemporal = "";
-						txtBuscar.setText("");
+						//txtBuscar.set
 						
 						Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -613,7 +611,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 
 					lblMensaje.setText("Excelente, se ha eliminado el Evento");
 					codTemporal = "";
-					txtBuscar.setText("");
+					//txtBuscar.setText("");
 
 					Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -689,7 +687,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 	private void muestraPersona(JSONArray genero) {
 		JSONArray a = (JSONArray) genero.get(0);
 		// txtId.setText(Long.toString( (Long) a.get(0)) );
-		txtBuscar.setText((String) a.get(1));
+		//txtBuscar.setText((String) a.get(1));
 		// textFecha.setText((String) a.get(2));
 		// textUsu.setText((String) a.get(4));
 		codTemporal = a.get(0).toString();
@@ -701,7 +699,6 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 	 * Permite limpiar los componentes
 	 */
 	public void limpiar() {
-		txtBuscar.setText("");
 
 		// codTemporal.setText("");
 		habilita(true, false, false, false, false, true, false, true, true);
@@ -724,7 +721,6 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 	public void habilita(boolean codigo, boolean nombre, boolean edad,
 			boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 			boolean bModificar, boolean bEliminar) {
-		txtBuscar.setEditable(codigo);
 		// botonModificar.setEnabled(true);
 		btnEliminar.setEnabled(bEliminar);
 	}
@@ -781,7 +777,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 	}
 
 	void LimpiarCampos() {
-		txtBuscar.setText("");
+		//txtBuscar.sea
 		// textFecha.setText("");
 		// textUsu.setText("");
 		codTemporal = "";
@@ -843,7 +839,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		return model;
 	}*/
 	
-	public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsEvento> evento){
+	public AbstractTableModel obtenerModeloA(JXTable tabla, List<UcsawsEvento> evento){
 		
 		
 		//AbstractTableModel model = (DefaultTableModel) tabla.getModel();
@@ -883,5 +879,4 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 	        System.out.println(time);
 		return time;
 	    }
-	
 }

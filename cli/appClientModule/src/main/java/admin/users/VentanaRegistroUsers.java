@@ -39,6 +39,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
@@ -303,6 +304,7 @@ public class VentanaRegistroUsers extends JFrame implements ActionListener {
     cmbRol.setBounds(212, 101, 217, 20);
     cmbRol.setSelectedIndex(-1);
     getContentPane().add(cmbRol);
+    AutoCompleteDecorator.decorate(cmbRol);
 
 
 

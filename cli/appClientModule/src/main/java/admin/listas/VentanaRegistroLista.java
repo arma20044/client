@@ -28,6 +28,8 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -215,6 +217,7 @@ public class VentanaRegistroLista extends JFrame implements ActionListener {
 	cmbTipoLista.setSelectedIndex(-1);
 	cmbTipoLista.setBounds(213, 146, 340, 20);
 	getContentPane().add(cmbTipoLista);
+	AutoCompleteDecorator.decorate(cmbTipoLista);
 	// recuperarDatos();
 
 	getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(

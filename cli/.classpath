@@ -64,5 +64,7 @@
 	<classpathentry kind="lib" path="appClientModule/lib/slf4j-simple-1.6.99.jar"/>
 	<classpathentry kind="lib" path="lib/balloontip-1.2.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/arma2/OneDrive/Documents/GitHub/web/VotoWS/WebContent/WEB-INF/lib/org.springframework.transaction-3.0.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/swingx-all-1.6.5-1.jar" sourcepath="lib/swingx-all-1.6.5-1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/swingbits-1.2.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

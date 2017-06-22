@@ -38,6 +38,7 @@ import javax.swing.table.TableColumn;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.simple.JSONArray;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
@@ -187,6 +188,7 @@ public class VentanaModificarNacionalidad extends JFrame implements
 	cmbPais.setBounds(213, 119, 340, 20);
 	filtrarComboNacionalidad();
 	getContentPane().add(cmbPais);
+	AutoCompleteDecorator.decorate(cmbPais);
 
 	JLabel lblPais = new JLabel();
 	lblPais.setHorizontalAlignment(SwingConstants.RIGHT);

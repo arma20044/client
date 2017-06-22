@@ -33,6 +33,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -163,6 +164,7 @@ public class VentanaRegistroNacionalidad extends JFrame implements
 		cmbPais.setBounds(213, 119, 340, 20);
 		cmbPais.setSelectedIndex(-1);
 		getContentPane().add(cmbPais);
+		AutoCompleteDecorator.decorate(cmbPais);
 
 		JLabel lblPais = new JLabel();
 		lblPais.setHorizontalAlignment(SwingConstants.RIGHT);

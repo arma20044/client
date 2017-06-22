@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -188,6 +189,7 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		cmbPaisOrigen.setSelectedIndex(-1);
 		filtrarComboPaisOrigen(); 
 		getContentPane().add(cmbPaisOrigen);
+		AutoCompleteDecorator.decorate(cmbPaisOrigen);
 
 		JLabel lblPaisOrigen = new JLabel();
 		lblPaisOrigen.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -205,6 +207,7 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		cmbPaisActual.setBounds(213, 184, 340, 20);
 		filtrarComboPaisActual();	 
 		getContentPane().add(cmbPaisActual);
+		AutoCompleteDecorator.decorate(cmbPaisActual);
 
 		lblGenero = new JLabel();
 		lblGenero.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -216,11 +219,13 @@ public class VentanaModificarPersona extends JFrame implements ActionListener {
 		cmbGenero.setBounds(213, 217, 340, 20);
 		filtrarComboGenero();		 
 		getContentPane().add(cmbGenero);
+		AutoCompleteDecorator.decorate(cmbGenero);
 		
 		cmbNacionalidad = new JComboBox(recuperarDatosComboBoxNacionalidad());
 		cmbNacionalidad.setBounds(705, 195, 158, 20);
 		filtrarComboNacionalidad();	 
 		getContentPane().add(cmbNacionalidad);
+		AutoCompleteDecorator.decorate(cmbNacionalidad);
 
 		lblCI = new JLabel();
 		lblCI.setHorizontalAlignment(SwingConstants.RIGHT);

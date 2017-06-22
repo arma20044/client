@@ -50,12 +50,14 @@ import entity.UcsawsListas;
 import entity.UcsawsTipoLista;
 import entity.UcsawsVotante;
 import entity.UcsawsVotos;
+import org.jdesktop.swingx.JXBusyLabel;
 
 @Transactional(readOnly = true)
 public class VentanaConfirmacionDiputados extends JDialog {
   private Container contenedor;
   JLabel labelTitulo;
-  private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado, lblMensaje, lblCargar;
+  private JLabel lblListaPresidente, lblListaSenador, lblListaDiputado, lblMensaje;
+  JXBusyLabel busyLabel = new JXBusyLabel();
 
   // public static Integer idLocal;
 
@@ -143,7 +145,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
 
     // contenedor.add(labelTitulo);
     // tama�o de la ventana
-    setSize(446, 305);
+    setSize(700, 442);
     // pone la ventana en el Centro de la pantalla
     // setLocationRelativeTo(null);
     // setLocationRelativeTo(null);
@@ -181,13 +183,11 @@ public class VentanaConfirmacionDiputados extends JDialog {
     lblMensaje.setFont(UIManager.getFont("Label.font"));
     lblMensaje.setBounds(80, 172, 199, 32);
     getContentPane().add(lblMensaje);
-
-    lblCargar = new JLabel("");
-    lblCargar.setIcon(new ImageIcon(VentanaConfirmacionDiputados.class
-        .getResource("/imgs/hourglass.gif")));
-    lblCargar.setBounds(29, 68, 264, 147);
-    getContentPane().add(lblCargar);
-    lblCargar.setVisible(false);
+    
+    
+    busyLabel.setBounds(10, 215, 73, 50);
+    getContentPane().add(busyLabel);
+    busyLabel.setVisible(false);
 
     setLocationRelativeTo(null);
     setVisible(true);
@@ -542,7 +542,9 @@ public class VentanaConfirmacionDiputados extends JDialog {
     // ImageIcon(VentanaConfirmacionDiputados.class.getResource("/imgs/hourglass.gif")),
     // JLabel.CENTER);
     // JLabel lblCargar = new JLabel();
-    lblCargar.setVisible(true);
+   // lblCargar.setVisible(true);
+    busyLabel.setVisible(true);
+    busyLabel.setBusy(true);
     // lblCargar.setBounds(80, 120, 141, 14);
     // lblCargar.setText("Senador Lista: " +
     // VentanaSenadores.senadores);
@@ -670,7 +672,7 @@ public class VentanaConfirmacionDiputados extends JDialog {
       end.setVisible(true);
       dispose();
       // frame.setVisible(false);
-      lblCargar.setVisible(false);
+      busyLabel.setVisible(false);
       return true;
     }
   }

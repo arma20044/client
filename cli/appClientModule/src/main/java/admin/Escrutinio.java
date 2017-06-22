@@ -21,6 +21,7 @@ import src.main.java.admin.escrutinio.VentanaEscrutinioPresidente;
 import src.main.java.admin.escrutinio.VentanaEscrutinioSenadores;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.login.Login;
+import org.jdesktop.swingx.JXDatePicker;
 
 public class Escrutinio extends JFrame implements ActionListener{
 	

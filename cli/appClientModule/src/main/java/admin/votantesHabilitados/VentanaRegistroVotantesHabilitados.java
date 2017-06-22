@@ -32,6 +32,8 @@ import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.buscadores.VentanaBuscarPerson;
@@ -245,6 +247,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
 
     cmbDepartamento.setBounds(209, 81, 289, 20);
     getContentPane().add(cmbDepartamento);
+    AutoCompleteDecorator.decorate(cmbDepartamento);
 
     cmbDistrito = new JComboBox();
     cmbDistrito.addActionListener(new ActionListener() {
@@ -265,6 +268,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
     });
     cmbDistrito.setBounds(209, 111, 289, 20);
     cmbDistrito.revalidate();
+    AutoCompleteDecorator.decorate(cmbDistrito);
 
     cmbZona = new JComboBox();
     cmbZona.addActionListener(new ActionListener() {
@@ -284,6 +288,7 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
     });
     cmbZona.setBounds(209, 144, 289, 20);
     getContentPane().add(cmbZona);
+    AutoCompleteDecorator.decorate(cmbZona);
 
     // repaint();
     getContentPane().add(cmbDistrito);
@@ -309,10 +314,12 @@ public class VentanaRegistroVotantesHabilitados extends JFrame implements Action
     });
     cmbLocal.setBounds(209, 172, 289, 20);
     getContentPane().add(cmbLocal);
+    AutoCompleteDecorator.decorate(cmbLocal);
 
     cmbMesa = new JComboBox();
     cmbMesa.setBounds(209, 199, 169, 20);
     getContentPane().add(cmbMesa);
+    AutoCompleteDecorator.decorate(cmbMesa);
 
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
         KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "clickButton");

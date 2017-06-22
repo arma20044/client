@@ -43,6 +43,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -223,6 +224,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		cmbPaisOrigen.setBounds(213, 151, 340, 20);
 		cmbPaisOrigen.setSelectedIndex(-1);
 		getContentPane().add(cmbPaisOrigen);
+		AutoCompleteDecorator.decorate(cmbPaisOrigen);
 
 		JLabel lblPaisOrigen = new JLabel();
 		lblPaisOrigen.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -240,6 +242,7 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		cmbPaisActual.setBounds(213, 184, 340, 20);
 		cmbPaisActual.setSelectedIndex(-1);
 		getContentPane().add(cmbPaisActual);
+		AutoCompleteDecorator.decorate(cmbPaisActual);
 
 		lblGenero = new JLabel();
 		lblGenero.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -251,11 +254,13 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		cmbGenero.setBounds(213, 217, 340, 20);
 		cmbGenero.setSelectedIndex(-1);
 		getContentPane().add(cmbGenero);
+		AutoCompleteDecorator.decorate(cmbGenero);
 		
 		cmbNacionalidad = new JComboBox(recuperarDatosComboBoxNacionalidad());
 		cmbNacionalidad.setBounds(705, 195, 158, 20);
 		cmbNacionalidad.setSelectedIndex(-1);
 		getContentPane().add(cmbNacionalidad);
+		AutoCompleteDecorator.decorate(cmbNacionalidad);
 
 		lblCI = new JLabel();
 		lblCI.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -652,8 +657,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		}
 
 		if (lista.isEmpty()) {
-		    JOptionPane.showMessageDialog(null, "algo salio mal",
-			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		   // JOptionPane.showMessageDialog(null, "algo salio mal",
+			//    "Advertencia", JOptionPane.WARNING_MESSAGE);
 		    // return lista;
 		}
 
@@ -709,8 +714,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		}
 
 		if (lista.isEmpty()) {
-		    JOptionPane.showMessageDialog(null, "algo salio mal",
-			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		  //  JOptionPane.showMessageDialog(null, "algo salio mal",
+			//    "Advertencia", JOptionPane.WARNING_MESSAGE);
 		    // return lista;
 		}
 
@@ -776,8 +781,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 		}
 
 		if (genero.isEmpty()) {
-		    JOptionPane.showMessageDialog(null, "algo salio mal",
-			    "Advertencia", JOptionPane.WARNING_MESSAGE);
+		    //JOptionPane.showMessageDialog(null, "algo salio mal",
+			//    "Advertencia", JOptionPane.WARNING_MESSAGE);
 		    // return lista;
 		}
 
@@ -835,8 +840,8 @@ public class VentanaRegistroPersona extends JFrame implements ActionListener {
 			}
 
 			if (nacionalidad.isEmpty()) {
-			    JOptionPane.showMessageDialog(null, "algo salio mal",
-				    "Advertencia", JOptionPane.WARNING_MESSAGE);
+			   // JOptionPane.showMessageDialog(null, "algo salio mal",
+				//    "Advertencia", JOptionPane.WARNING_MESSAGE);
 			    // return lista;
 			}
 

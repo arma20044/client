@@ -32,6 +32,7 @@ import javax.swing.table.DefaultTableModel;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
@@ -185,6 +186,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     cmbPersona.setBounds(213, 90, 501, 20);
     cmbPersona.setSelectedIndex(-1);
     getContentPane().add(cmbPersona);
+    AutoCompleteDecorator.decorate(cmbPersona);
 
     JLabel lblPersona = new JLabel();
     lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -264,6 +266,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     cmbLista.setBounds(213, 123, 501, 20);
     cmbLista.setSelectedIndex(-1);
     getContentPane().add(cmbLista);
+    AutoCompleteDecorator.decorate(cmbLista);
 
     lblCod = new JLabel();
     lblCod.setHorizontalAlignment(SwingConstants.RIGHT);

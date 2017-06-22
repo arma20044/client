@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -29,6 +30,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -48,6 +50,10 @@ import net.java.balloontip.styles.EdgedBalloonStyle;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.JXErrorPane;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.error.ErrorInfo;
+import org.jdesktop.swingx.error.ErrorLevel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -232,6 +238,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	cmbTipoEvento = new JComboBox(recuperarDatosComboBoxTipoEvento());
 	cmbTipoEvento.setBounds(213, 208, 340, 25);
 	getContentPane().add(cmbTipoEvento);
+	AutoCompleteDecorator.decorate(cmbTipoEvento);
 
 	lblNro = new JLabel();
 	lblNro.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -557,14 +564,14 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 				weatherClient
 					.printQueryGenericoResponse(response);
 
-				//model = new EventoJTableModel();
-				//recuperarDatos();
-				//table.setModel(model);
-				// table.repaint();
-				//model.fireTableDataChanged();
-				//table.removeColumn(table.getColumnModel()
-				//	.getColumn(0));
-				// JOptionPane.showMessageDialog(null,"Excelente, se ha guardado el genero.");
+
+				if (response.getQueryGenericoResponse().compareTo("NO") ==0){
+				   
+				  showErrorMessage("Error Fatal.", "No se ha podido insertar el registro",  new RuntimeException ( "Ocurrio un error mientras se intentaba insertar." ) );
+				}
+				else{
+				  
+				
 				lblMensaje
 					.setText("Excelente, se ha guardado el Evento.");
 				Timer t = new Timer(Login.timer,
@@ -601,7 +608,7 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 				VentanaBuscarEvento evento = new VentanaBuscarEvento();
 				evento.setVisible(true);
 				this.dispose();
-
+				}
 			    } else {
 				// JOptionPane.showMessageDialog(null,
 				// "Ya existe el genero " + txtDesc.getText(),
@@ -650,9 +657,10 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		    t.start();
 		}
 	    } catch (Exception ex) {
-		JOptionPane.showMessageDialog(null,
+		/*JOptionPane.showMessageDialog(null,
 			"Error al intentar insertar", "Error",
-			JOptionPane.ERROR_MESSAGE);
+			JOptionPane.ERROR_MESSAGE);*/
+	      showErrorMessage("Error Fatal.", "No se ha podido insertar el registro", ex);
 	    }
 
 	}
@@ -890,5 +898,18 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 		
 		
 		
+	}
+	
+	public static void showErrorMessage(final String shortMessage, final String detailedMessage, final Throwable exception) {
+	    JXErrorPane.setDefaultLocale(Locale.getDefault());
+	    final JXErrorPane errorPane = new JXErrorPane();
+	    final ErrorInfo info = new ErrorInfo(shortMessage, detailedMessage, null, "error", exception, ErrorLevel.SEVERE,
+	        null);
+	    errorPane.setErrorInfo(info);
+	    final JDialog dialog = JXErrorPane.createDialog(null, errorPane);
+	    //centerOnScreen(dialog);
+	    dialog.setLocale(Locale.ENGLISH);
+	    dialog.setModal(true);
+	    dialog.setTitle(shortMessage);
 	}
 }

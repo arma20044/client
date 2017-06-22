@@ -15,7 +15,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.PlainDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 
@@ -33,8 +35,11 @@ import entity.UcsawsTipoLista;
 
 import javax.swing.JScrollPane;
 
+import org.jdesktop.swingx.JXBusyLabel;
+
 public class VentanaEscrutinioPresidente extends JFrame implements ActionListener {
 
+  JXBusyLabel busyLabel = new JXBusyLabel();
   private Coordinador miCoordinador; // objeto miCoordinador que permite la
   private JButton botonCancelar;
 
@@ -105,110 +110,19 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
     btnComenzar = new JButton("Comenzar");
     btnComenzar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        final SwingWorker worker = new SwingWorker() {
 
+          @Override
+          protected Object doInBackground() throws Exception {
 
-        // ****** NEW
-        VotoDAO votoDAO = new VotoDAO();
-        TipoListaDAO tipoListaDAO = new TipoListaDAO();
-        List<UcsawsTipoLista> listas =
-            tipoListaDAO.obtenerTipoListaByIdEvento(VentanaBuscarEvento.eventoClase.getIdEvento());
-        UcsawsTipoLista listaPresidente = new UcsawsTipoLista();
+             procesoEscrutinio() ;
+            return null;
+ 
 
-        Iterator<UcsawsTipoLista> ite = listas.iterator();
-
-        UcsawsTipoLista aux;
-        while (ite.hasNext()) {
-          aux = ite.next();
-          if (aux.getCodigo().compareToIgnoreCase("PRE") == 0) {
-            listaPresidente = aux;
-            break;
           }
-        }
+        };
+        worker.execute();
 
-
-
-        List<Object> votosParaDiputados = votoDAO.obteneConteoVotoByEvento(listaPresidente);
-        System.out.println(votosParaDiputados);
-
-
-        Iterator<Object> ite2 = votosParaDiputados.iterator();
-        List<String> aux2;
-        List<String> CandidatoVotos = new ArrayList<String>();
-
-        while (ite2.hasNext()) {
-          aux2 = (List<String>) ite2.next();
-          CandidatoVotos.add(aux2.get(0) + "-" + String.valueOf(aux2.get(1)));
-        }
-
-
-        int cont = 0;
-        List<String> party = new ArrayList<String>();
-        List<Integer> votos = new ArrayList<Integer>();
-        while (CandidatoVotos.size() > cont) {
-
-          String a = CandidatoVotos.get(cont);
-          String[] parts = a.split("-");
-          String part1 = parts[0]; // 004
-          Integer part2 = Integer.parseInt(parts[1]); // 034556
-
-
-          party.add(part1);
-          votos.add(part2);
-          cont++;
-        }
-
-
-        // ******
-        List<Integer> votes = votos;
-        int ban = 0;
-        // Output Results
-        for (int p = 0; p < votes.size(); p++) {
-          textPane.setDisabledTextColor(Color.BLACK); 
-          StyledDocument doc = textPane.getStyledDocument();
-
-          // Define a keyword attribute
-
-          SimpleAttributeSet keyWord = new SimpleAttributeSet();
-
-          try {
-            Integer i = votes.get(p);
-            //textPane.setText();
-           // doc.insertString(0, "Start of text\n", null);
-            doc.insertString(doc.getLength(), "• " +party.get(p) + " obtuvo " + i + " Voto(s) \n", keyWord);
-          } catch (Exception ex) {
-            System.out.println(ex);
-          }
-
-          
-          /*
-           * if (ban == 0) {
-           * 
-           * Integer i = votes.get(p); // i becomes 5
-           * 
-           * System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
-           * lblCandidato1.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
-           * lblCandidato1.setFont(new Font("Verdana", Font.BOLD, 15)); ban++;
-           * textArea.setText(party.get(p) + " obtuvo " + i + " Voto(s) \n"); } else if (ban == 1) {
-           * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
-           * " Voto(s)"); lblCandidato2.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
-           * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); } else if (ban == 2) {
-           * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
-           * " Voto(s)"); lblCandidato3.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
-           * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); } else if (ban == 3) {
-           * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
-           * " Voto(s)"); lblCandidato4.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
-           * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)");
-           * 
-           * } else if (ban == 4) { Integer i = votes.get(p); System.out.println(party.get(p) +
-           * " obtuvo " + i + " Voto(s)"); lblCandidato4.setText(party.get(p) + " obtuvo " + i +
-           * " Voto(s)"); ban++; textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); }
-           */
-        }
-        btnComenzar.setText("Procesar de Nuevo?.");
-        btnComenzar.setSize(145, 23);
-
-
-        // lblListaCandidatosA.setText("Resultado del Escrutinio de Presidentes.");
       }
     });
     btnComenzar.setBounds(416, 422, 89, 23);
@@ -237,6 +151,11 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
     textPane.setFont(new Font("Tahoma", Font.BOLD, 22));
     textPane.setEditable(false);
     scrollPane.setViewportView(textPane);
+    
+    
+    busyLabel.setBounds(302, 120, 89, 67);
+    getContentPane().add(busyLabel);
+    busyLabel.setVisible(false);
 
 
 
@@ -335,5 +254,119 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
     arr = Arrays.copyOf(arr, N + 1);
     arr[N] = element;
     return arr;
+  }
+  
+  void procesoEscrutinio(){
+   // StyledDocument doc = textPane.getStyledDocument();
+    //doc.insertString(offset, str, a);
+    btnComenzar.setEnabled(false);
+    busyLabel.setVisible(true);
+    busyLabel.setBusy(true);
+
+    // ****** NEW
+    VotoDAO votoDAO = new VotoDAO();
+    TipoListaDAO tipoListaDAO = new TipoListaDAO();
+    List<UcsawsTipoLista> listas =
+        tipoListaDAO.obtenerTipoListaByIdEvento(VentanaBuscarEvento.eventoClase.getIdEvento());
+    UcsawsTipoLista listaPresidente = new UcsawsTipoLista();
+
+    Iterator<UcsawsTipoLista> ite = listas.iterator();
+
+    UcsawsTipoLista aux;
+    while (ite.hasNext()) {
+      aux = ite.next();
+      if (aux.getCodigo().compareToIgnoreCase("PRE") == 0) {
+        listaPresidente = aux;
+        break;
+      }
+    }
+
+
+
+    List<Object> votosParaDiputados = votoDAO.obteneConteoVotoByEvento(listaPresidente);
+    System.out.println(votosParaDiputados);
+
+
+    Iterator<Object> ite2 = votosParaDiputados.iterator();
+    List<String> aux2;
+    List<String> CandidatoVotos = new ArrayList<String>();
+
+    while (ite2.hasNext()) {
+      aux2 = (List<String>) ite2.next();
+      CandidatoVotos.add(aux2.get(0) + "-" + String.valueOf(aux2.get(1)));
+    }
+
+
+    int cont = 0;
+    List<String> party = new ArrayList<String>();
+    List<Integer> votos = new ArrayList<Integer>();
+    while (CandidatoVotos.size() > cont) {
+
+      String a = CandidatoVotos.get(cont);
+      String[] parts = a.split("-");
+      String part1 = parts[0]; // 004
+      Integer part2 = Integer.parseInt(parts[1]); // 034556
+
+
+      party.add(part1);
+      votos.add(part2);
+      cont++;
+    }
+
+
+    // ******
+    List<Integer> votes = votos;
+    int ban = 0;
+    // Output Results
+    for (int p = 0; p < votes.size(); p++) {
+      textPane.setDisabledTextColor(Color.BLACK); 
+      StyledDocument doc = textPane.getStyledDocument();
+
+      // Define a keyword attribute
+
+      SimpleAttributeSet keyWord = new SimpleAttributeSet();
+
+      try {
+        Integer i = votes.get(p);
+        //textPane.setText();
+       // doc.insertString(0, "Start of text\n", null);
+        doc.insertString(doc.getLength(), "• " +party.get(p) + " obtuvo " + i + " Voto(s) \n", keyWord);
+      } catch (Exception ex) {
+        System.out.println(ex);
+      }
+
+      
+      /*
+       * if (ban == 0) {
+       * 
+       * Integer i = votes.get(p); // i becomes 5
+       * 
+       * System.out.println(party.get(p) + " obtuvo " + i + " Voto(s)");
+       * lblCandidato1.setText(party.get(p) + " obtuvo " + i + " Voto(s)");
+       * lblCandidato1.setFont(new Font("Verdana", Font.BOLD, 15)); ban++;
+       * textArea.setText(party.get(p) + " obtuvo " + i + " Voto(s) \n"); } else if (ban == 1) {
+       * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
+       * " Voto(s)"); lblCandidato2.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
+       * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); } else if (ban == 2) {
+       * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
+       * " Voto(s)"); lblCandidato3.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
+       * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); } else if (ban == 3) {
+       * Integer i = votes.get(p); System.out.println(party.get(p) + " obtuvo " + i +
+       * " Voto(s)"); lblCandidato4.setText(party.get(p) + " obtuvo " + i + " Voto(s)"); ban++;
+       * textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)");
+       * 
+       * } else if (ban == 4) { Integer i = votes.get(p); System.out.println(party.get(p) +
+       * " obtuvo " + i + " Voto(s)"); lblCandidato4.setText(party.get(p) + " obtuvo " + i +
+       * " Voto(s)"); ban++; textArea.append(party.get(p) + " obtuvo " + i + " Voto(s)"); }
+       */
+    }
+    btnComenzar.setText("Procesar de Nuevo?.");
+    btnComenzar.setSize(145, 23);
+
+    busyLabel.setVisible(false);
+    busyLabel.setBusy(false);
+    btnComenzar.setEnabled(true);
+    //btnComenzar.setVisible(false);
+    // lblListaCandidatosA.setText("Resultado del Escrutinio de Presidentes.");
   }
 }

@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -21,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -31,10 +32,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
+ 
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
@@ -45,30 +45,22 @@ import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import entity.Persona;
-import entity.UcsawsEvento;
-import entity.UcsawsPersona;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
-import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-import src.main.java.admin.evento.VentanaModificarEvento;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
-import src.main.java.proceso.voto.VentanaPresidente;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.WindowFocusListener;
-
-import javax.swing.JPanel;
+import entity.Persona;
+import entity.UcsawsPersona;
+import org.jdesktop.swingx.JXFindBar;
+import org.jdesktop.swingx.search.Searchable;
 
 public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
@@ -79,8 +71,6 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 				       // relacion entre esta clase y la clase
     // private JTable table_1; // coordinador
     private JLabel labelTitulo;
-    private JTextField txtBuscar;
-    private JLabel lblBuscar;
     private JButton botonCancelar, btnEliminar, btnNuevo;
 
     JSONArray miPersona = null;
@@ -98,9 +88,10 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
     private JButton btnImportar;
     private VentanaBuscarPersona ventanaBuscarPersona;
 
-    private JTable table_1;
+    private JXTable table_1;
 
     private JScrollPane scrollPane;
+    private JXFindBar txtBuscar;
 
     /**
      * constructor de la clase donde se inicializan todos los componentes de la
@@ -152,7 +143,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	btnEliminar.setToolTipText("Eliminar");
 	btnEliminar.setIcon(new ImageIcon(VentanaBuscarPersona.class
 		.getResource("/imgs/borrar.png")));
-	btnEliminar.setBounds(468, 52, 32, 32);
+	btnEliminar.setBounds(546, 52, 32, 32);
 	btnEliminar.setOpaque(false);
 	btnEliminar.setContentAreaFilled(false);
 	btnEliminar.setBorderPainted(false);
@@ -165,23 +156,6 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	labelTitulo.setText("VER PERSONA");
 	labelTitulo.setBounds(248, 11, 270, 30);
 	labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
-
-	lblBuscar = new JLabel();
-	lblBuscar.setText("Buscar:");
-	lblBuscar.setBounds(20, 52, 64, 25);
-	getContentPane().add(lblBuscar);
-
-	txtBuscar = new JTextField();
-	txtBuscar.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyReleased(KeyEvent arg0) {
-
-		String query = txtBuscar.getText().toUpperCase();
-		filter(query);
-	    }
-	});
-	txtBuscar.setBounds(86, 52, 319, 26);
-	getContentPane().add(txtBuscar);
 	btnEliminar.addActionListener(this);
 	botonCancelar.addActionListener(this);
 
@@ -236,7 +210,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	btnNuevo.setBorderPainted(false);
 	btnNuevo.setIcon(new ImageIcon(VentanaBuscarPersona.class
 		.getResource("/imgs/add.png")));
-	btnNuevo.setBounds(426, 52, 32, 32);
+	btnNuevo.setBounds(504, 52, 32, 32);
 	Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 	Image newimg2 = img2.getScaledInstance(32, 32,
 		java.awt.Image.SCALE_SMOOTH);
@@ -273,7 +247,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 		    }
 		});
 
-	table_1 = new JTable() {
+	table_1 = new JXTable() {
 	    public boolean isCellEditable(int row, int column) {
 		return false;
 	    }
@@ -301,7 +275,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	table_1.setToolTipText("");
 	table_1.getTableHeader().setReorderingAllowed(false);
 
-	table_1.setAutoCreateRowSorter(false);
+	//table_1.setAutoCreateRowSorter(false);
 
 	// getContentPane().add(table_1);
 
@@ -348,7 +322,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	btnModificar.setEnabled(true);
 	btnModificar.setContentAreaFilled(false);
 	btnModificar.setBorderPainted(false);
-	btnModificar.setBounds(510, 53, 32, 32);
+	btnModificar.setBounds(588, 53, 32, 32);
 
 	Image img6 = ((ImageIcon) btnModificar.getIcon()).getImage();
 	Image newimg6 = img6.getScaledInstance(32, 32,
@@ -373,7 +347,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	btnImportar.setEnabled(true);
 	btnImportar.setContentAreaFilled(false);
 	btnImportar.setBorderPainted(false);
-	btnImportar.setBounds(548, 52, 32, 32);
+	btnImportar.setBounds(626, 52, 32, 32);
 	Image img7 = ((ImageIcon) btnImportar.getIcon()).getImage();
 	Image newimg7 = img7.getScaledInstance(32, 32,
 		java.awt.Image.SCALE_SMOOTH);
@@ -388,6 +362,11 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
 	recuperarDatos();
 	table_1.setModel(model);
+	
+	txtBuscar = new JXFindBar(table_1.getSearchable());
+	txtBuscar.setToolTipText("Ingrese texto para filtrar...");
+	txtBuscar.setBounds(20, 52, 474, 33);
+	getContentPane().add(txtBuscar);
 
 	table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 	// cellSelectionModel
@@ -523,7 +502,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
     private void muestraPersona(JSONArray genero) {
 	JSONArray a = (JSONArray) genero.get(0);
 	// txtId.setText(Long.toString( (Long) a.get(0)) );
-	txtBuscar.setText((String) a.get(1));
+	//txtBuscar.setText((String) a.get(1));
 	// textFecha.setText((String) a.get(2));
 	// textUsu.setText((String) a.get(4));
 	codTemporal = a.get(0).toString();
@@ -535,7 +514,6 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
      * Permite limpiar los componentes
      */
     public void limpiar() {
-	txtBuscar.setText("");
 
 	// codTemporal.setText("");
 	habilita(true, false, false, false, false, true, false, true, true);
@@ -558,7 +536,6 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
     public void habilita(boolean codigo, boolean nombre, boolean edad,
 	    boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 	    boolean bModificar, boolean bEliminar) {
-	txtBuscar.setEditable(codigo);
 	// botonModificar.setEnabled(true);
 	btnEliminar.setEnabled(bEliminar);
     }
@@ -614,7 +591,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
     }
 
     void LimpiarCampos() {
-	txtBuscar.setText("");
+	//txtBuscar.setText("");
 	// textFecha.setText("");
 	// textUsu.setText("");
 	codTemporal = "";
@@ -636,7 +613,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 
     }
 
-    public void resizeColumnWidth(JTable table) {
+    public void resizeColumnWidth(JXTable table) {
 	final TableColumnModel columnModel = table.getColumnModel();
 	for (int column = 0; column < table.getColumnCount(); column++) {
 	    int width = 15; // Min width
@@ -651,7 +628,7 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	}
     }
 
-    public AbstractTableModel obtenerModeloA(JTable tabla,
+    public AbstractTableModel obtenerModeloA(JXTable tabla,
 	    List<UcsawsPersona> evento) {
 
 	Iterator<UcsawsPersona> ite = evento.iterator();
