@@ -73,8 +73,8 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				VentanaDiputados diputados = new VentanaDiputados();
-				diputados.setVisible(true);
+				VentanaParlasur parlasur = new VentanaParlasur();
+				parlasur.setVisible(true);
 				dispose(); 
 				
 				
