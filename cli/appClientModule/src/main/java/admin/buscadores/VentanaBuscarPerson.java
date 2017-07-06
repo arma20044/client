@@ -35,7 +35,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.jdesktop.swingx.JXFindBar;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
@@ -54,13 +57,12 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
   // relacion entre esta clase y la clase
   // coordinador
   private JLabel labelTitulo;
-  private JTextField txtBuscar;
-  private JLabel lblBuscar;
+  private JXFindBar txtBuscar;
   private JButton botonCancelar;
 
   JSONArray miPersona = null;
   DefaultTableModel modelo;
-  private JTable table_1;
+  private JXTable table_1;
   private PersonaJTableModel model = new PersonaJTableModel();
   private JScrollPane scrollPane;
 
@@ -108,23 +110,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
     labelTitulo.setBounds(86, 11, 432, 30);
     labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
-    lblBuscar = new JLabel();
-    lblBuscar.setText("Buscar:");
-    lblBuscar.setBounds(20, 52, 64, 25);
-    getContentPane().add(lblBuscar);
-
-    txtBuscar = new JTextField();
-
-    txtBuscar.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyReleased(KeyEvent arg0) {
-
-        String query = txtBuscar.getText().toUpperCase();
-        filter(query);
-      }
-    });
-    txtBuscar.setBounds(86, 52, 319, 26);
-    getContentPane().add(txtBuscar);
+ 
 
 
     botonCancelar.addActionListener(this);
@@ -154,7 +140,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
     scrollPane.setBounds(0, 158, 1146, 265);
     getContentPane().add(scrollPane);
 
-    table_1 = new JTable() {
+    table_1 = new JXTable() {
       public boolean isCellEditable(int row, int column) {
         return false;
       }
@@ -164,6 +150,16 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
     table_1 .getTableHeader().setReorderingAllowed(false);
     table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     scrollPane.setViewportView(table_1);
+    
+    txtBuscar = new JXFindBar(table_1.getSearchable());
+
+    
+    txtBuscar.setBounds(86, 52, 474, 33);
+    getContentPane().add(txtBuscar);
+    
+    table_1.setColumnControlVisible(true);
+    
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
     // String[] columnNames = {"Picture", "Description"};
     table_1.addMouseListener(new MouseAdapter() {
       @Override
@@ -337,7 +333,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
   private void muestraPersona(JSONArray genero) {
     JSONArray a = (JSONArray) genero.get(0);
     // txtId.setText(Long.toString( (Long) a.get(0)) );
-    txtBuscar.setText((String) a.get(1));
+  //  txtBuscar.setText((String) a.get(1));
     // textFecha.setText((String) a.get(2));
     // textUsu.setText((String) a.get(4));
     codTemporal = a.get(0).toString();
@@ -349,7 +345,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
    * Permite limpiar los componentes
    */
   public void limpiar() {
-    txtBuscar.setText("");
+   // txtBuscar.setText("");
 
     // codTemporal.setText("");
     habilita(true, false, false, false, false, true, false, true, true);
@@ -371,7 +367,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
    */
   public void habilita(boolean codigo, boolean nombre, boolean edad, boolean tel,
       boolean profesion, boolean bBuscar, boolean bGuardar, boolean bModificar, boolean bEliminar) {
-    txtBuscar.setEditable(codigo);
+   // txtBuscar.setEditable(codigo);
   }
 
   private void recuperarDatos() {
@@ -432,7 +428,7 @@ public class VentanaBuscarPerson extends JDialog implements ActionListener {
 
 
   void LimpiarCampos() {
-    txtBuscar.setText("");
+ //   txtBuscar.setText("");
     // textFecha.setText("");
     // textUsu.setText("");
     codTemporal = "";
