@@ -38,7 +38,10 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import org.jdesktop.swingx.JXFindBar;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
@@ -54,13 +57,12 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
   // relacion entre esta clase y la clase
   // coordinador
   private JLabel labelTitulo;
-  private JTextField txtBuscar;
-  private JLabel lblBuscar;
+  private JXFindBar txtBuscar;
   private JButton botonCancelar, btnEliminar, btnNuevo;
 
   JSONArray miPersona = null;
   DefaultTableModel modelo;
-  private JTable table_1;
+  private JXTable table_1;
   private CandidatoJTableModel model = new CandidatoJTableModel();
   private JScrollPane scrollPane;
 
@@ -102,7 +104,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     btnEliminar.setToolTipText("Eliminar");
     btnEliminar
         .setIcon(new ImageIcon(VentanaBuscarCandidato.class.getResource("/imgs/borrar.png")));
-    btnEliminar.setBounds(457, 45, 32, 32);
+    btnEliminar.setBounds(528, 55, 32, 32);
     btnEliminar.setOpaque(false);
     btnEliminar.setContentAreaFilled(false);
     btnEliminar.setBorderPainted(false);
@@ -115,25 +117,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     labelTitulo.setBounds(248, 11, 270, 30);
     labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
-    lblBuscar = new JLabel();
-    lblBuscar.setText("Buscar:");
-    lblBuscar.setBounds(20, 52, 64, 25);
-    getContentPane().add(lblBuscar);
 
-    txtBuscar = new JTextField();
-    txtBuscar.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyReleased(KeyEvent e) {
-        String query = txtBuscar.getText().toUpperCase();
-        filter(query);
 
-        if (txtBuscar.getText().length() == 0) {
-          codTemporal = "";
-        }
-      }
-    });
-    txtBuscar.setBounds(86, 52, 319, 25);
-    getContentPane().add(txtBuscar);
     btnEliminar.addActionListener(this);
     botonCancelar.addActionListener(this);
 
@@ -153,21 +138,23 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     scrollPane.setBounds(0, 158, 634, 265);
     getContentPane().add(scrollPane);
 
-    table_1 = new JTable() {
-      @Override
-      public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-        Component component = super.prepareRenderer(renderer, row, column);
-        int rendererWidth = component.getPreferredSize().width;
-        TableColumn tableColumn = getColumnModel().getColumn(column);
-        tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width,
-            tableColumn.getPreferredWidth()));
-        return component;
+    table_1 = new JXTable() {
+      public boolean isCellEditable(int row, int column) {
+        return false;
       }
     };
     table_1.setToolTipText("Listado de Generos.");
-    table_1.setAutoCreateRowSorter(true);
+    //table_1.setAutoCreateRowSorter(true);
     table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     scrollPane.setViewportView(table_1);
+
+    txtBuscar = new JXFindBar(table_1.getSearchable());
+
+    txtBuscar.setBounds(10, 54, 474, 33);
+    getContentPane().add(txtBuscar);
+    table_1.setColumnControlVisible(true);
+
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
     // String[] columnNames = {"Picture", "Description"};
     table_1.addMouseListener(new MouseAdapter() {
       @Override
@@ -198,8 +185,8 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
         // selectedData.ad table_1.getValueAt(selectedRow[i],
         // selectedColumns[0]);
         // txtId.setText(selectedData.get(0));
-       // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
-        //    + selectedData.get(4));
+        // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
+        // + selectedData.get(4));
 
         // textFecha.setText(selectedData.get(2));
         // textUsu.setText(selectedData.get(4));
@@ -258,7 +245,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     btnNuevo.setContentAreaFilled(false);
     btnNuevo.setBorderPainted(false);
     btnNuevo.setIcon(new ImageIcon(VentanaBuscarCandidato.class.getResource("/imgs/add.png")));
-    btnNuevo.setBounds(415, 45, 32, 32);
+    btnNuevo.setBounds(486, 55, 32, 32);
     Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
     Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
     btnNuevo.setIcon(new ImageIcon(newimg2));
@@ -294,28 +281,28 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
     // }
     //
     // });
-    
-    
-    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),"clickButtonescape");
 
-    getRootPane().getActionMap().put("clickButtonescape",new AbstractAction(){
-                public void actionPerformed(ActionEvent ae)
-                {
-            botonCancelar.doClick();
-            System.out.println("button esc clicked");
-                }
-            });
-            
-            
-                getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"clickButtondelete");
 
-    getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
-                public void actionPerformed(ActionEvent ae)
-                {
-             btnEliminar.doClick();
-            System.out.println("button delete clicked");
-                }
-            });
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonCancelar.doClick();
+        System.out.println("button esc clicked");
+      }
+    });
+
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "clickButtondelete");
+
+    getRootPane().getActionMap().put("clickButtondelete", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        btnEliminar.doClick();
+        System.out.println("button delete clicked");
+      }
+    });
 
     DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
 
@@ -425,7 +412,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
   private void muestraPersona(JSONArray genero) {
     JSONArray a = (JSONArray) genero.get(0);
     // txtId.setText(Long.toString( (Long) a.get(0)) );
-    txtBuscar.setText((String) a.get(1));
+//    txtBuscar.setText((String) a.get(1));
     // textFecha.setText((String) a.get(2));
     // textUsu.setText((String) a.get(4));
     codTemporal = a.get(0).toString();
@@ -437,7 +424,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
    * Permite limpiar los componentes
    */
   public void limpiar() {
-    txtBuscar.setText("");
+   //xtBuscar.setText("");
 
     // codTemporal.setText("");
     habilita(true, false, false, false, false, true, false, true, true);
@@ -459,7 +446,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
    */
   public void habilita(boolean codigo, boolean nombre, boolean edad, boolean tel,
       boolean profesion, boolean bBuscar, boolean bGuardar, boolean bModificar, boolean bEliminar) {
-    txtBuscar.setEditable(codigo);
+   // txtBuscar.setEditable(codigo);
     // botonModificar.setEnabled(true);
     btnEliminar.setEnabled(bEliminar);
   }
@@ -519,7 +506,7 @@ public class VentanaBuscarCandidato extends JFrame implements ActionListener {
   }
 
   void LimpiarCampos() {
-    txtBuscar.setText("");
+   // txtBuscar.setText("");
     // textFecha.setText("");
     // textUsu.setText("");
     codTemporal = "";

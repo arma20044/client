@@ -47,6 +47,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -59,6 +60,7 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import entity.Persona;
 import entity.UcsawsPersona;
+
 import org.jdesktop.swingx.JXFindBar;
 import org.jdesktop.swingx.search.Searchable;
 
@@ -369,6 +371,12 @@ public class VentanaBuscarPersona extends JFrame implements ActionListener {
 	getContentPane().add(txtBuscar);
 
 	table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+	
+	
+    
+    table_1.setColumnControlVisible(true);
+    
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
 	// cellSelectionModel
 	// .setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 

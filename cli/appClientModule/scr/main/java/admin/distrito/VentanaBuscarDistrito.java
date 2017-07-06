@@ -39,8 +39,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.jdesktop.swingx.JXFindBar;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -63,13 +66,12 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 				       // relacion entre esta clase y la clase
 				       // coordinador
     private JLabel labelTitulo;
-    private JTextField txtBuscar;
-    private JLabel lblBuscar;
+    private JXFindBar txtBuscar;
     private JButton botonCancelar, btnEliminar, btnNuevo;
 
     JSONArray miPersona = null;
     DefaultTableModel modelo;
-    private JTable table_1;
+    private JXTable table_1;
     private DistritoJTableModel model = new DistritoJTableModel();
     private JScrollPane scrollPane;
 
@@ -113,7 +115,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	btnEliminar.setToolTipText("Eliminar");
 	btnEliminar.setIcon(new ImageIcon(VentanaBuscarDistrito.class
 		.getResource("/imgs/borrar.png")));
-	btnEliminar.setBounds(457, 52, 32, 32);
+	btnEliminar.setBounds(538, 53, 32, 32);
 	btnEliminar.setOpaque(false);
 	btnEliminar.setContentAreaFilled(false);
 	btnEliminar.setBorderPainted(false);
@@ -127,21 +129,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	labelTitulo.setBounds(248, 11, 270, 30);
 	labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
-	lblBuscar = new JLabel();
-	lblBuscar.setText("Buscar:");
-	lblBuscar.setBounds(20, 52, 64, 25);
-	getContentPane().add(lblBuscar);
-
-	txtBuscar = new JTextField();
-	txtBuscar.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyReleased(KeyEvent e) {
-		String query = txtBuscar.getText().toUpperCase();
-		filter(query);
-	    }
-	});
-	txtBuscar.setBounds(86, 52, 319, 26);
-	getContentPane().add(txtBuscar);
+	
 	btnEliminar.addActionListener(this);
 	botonCancelar.addActionListener(this);
 
@@ -161,7 +149,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	scrollPane.setBounds(0, 158, 634, 265);
 	getContentPane().add(scrollPane);
 
-	table_1 = new JTable() {
+	table_1 = new JXTable() {
 	    public boolean isCellEditable(int row, int column) {
 		return false;
 	    }
@@ -171,6 +159,15 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	table_1.getTableHeader().setReorderingAllowed(false);
 	table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	scrollPane.setViewportView(table_1);
+	
+	txtBuscar = new JXFindBar(table_1.getSearchable());
+	 
+    txtBuscar.setBounds(10, 52, 474, 33);
+    getContentPane().add(txtBuscar);
+    
+    table_1.setColumnControlVisible(true);
+    
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
 	// String[] columnNames = {"Picture", "Description"};
 	table_1.addMouseListener(new MouseAdapter() {
 	    @Override
@@ -264,7 +261,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
 	btnNuevo.setBorderPainted(false);
 	btnNuevo.setIcon(new ImageIcon(VentanaBuscarDistrito.class
 		.getResource("/imgs/add.png")));
-	btnNuevo.setBounds(415, 46, 32, 32);
+	btnNuevo.setBounds(494, 53, 32, 32);
 	Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 	Image newimg2 = img2.getScaledInstance(32, 32,
 		java.awt.Image.SCALE_SMOOTH);
@@ -432,7 +429,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
     private void muestraPersona(JSONArray genero) {
 	JSONArray a = (JSONArray) genero.get(0);
 	// txtId.setText(Long.toString( (Long) a.get(0)) );
-	txtBuscar.setText((String) a.get(1));
+	//txtBuscar.setText((String) a.get(1));
 	// textFecha.setText((String) a.get(2));
 	// textUsu.setText((String) a.get(4));
 	codTemporal = a.get(0).toString();
@@ -444,7 +441,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
      * Permite limpiar los componentes
      */
     public void limpiar() {
-	txtBuscar.setText("");
+//	txtBuscar.setText("");
 
 	// codTemporal.setText("");
 	habilita(true, false, false, false, false, true, false, true, true);
@@ -467,7 +464,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
     public void habilita(boolean codigo, boolean nombre, boolean edad,
 	    boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 	    boolean bModificar, boolean bEliminar) {
-	txtBuscar.setEditable(codigo);
+	//txtBuscar.setEditable(codigo);
 	// botonModificar.setEnabled(true);
 	btnEliminar.setEnabled(bEliminar);
     }
@@ -533,7 +530,7 @@ public class VentanaBuscarDistrito extends JFrame implements ActionListener {
     }
 
     void LimpiarCampos() {
-	txtBuscar.setText("");
+	//txtBuscar.setText("");
 	// textFecha.setText("");
 	// textUsu.setText("");
 	codTemporal = "";

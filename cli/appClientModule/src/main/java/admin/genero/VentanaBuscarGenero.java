@@ -48,8 +48,11 @@ import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.JXFindBar;
+import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -70,13 +73,12 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 				       // relacion entre esta clase y la clase
 				       // coordinador
     private JLabel labelTitulo;
-    private JTextField txtFiltro;
-    private JLabel lblBuscar;
+    private JXFindBar txtFiltro;
     private JButton botonCancelar, btnEliminar, btnNuevo;
 
     JSONArray miPersona = null;
     DefaultTableModel modelo;
-    private JTable table_1;
+    private JXTable table_1;
     private GeneroJTableModel model = new GeneroJTableModel();
     private JScrollPane scrollPane;
 
@@ -144,7 +146,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	btnEliminar.setToolTipText("Eliminar");
 	btnEliminar.setIcon(new ImageIcon(VentanaBuscarGenero.class
 		.getResource("/imgs/borrar.png")));
-	btnEliminar.setBounds(457, 131, 32, 32);
+	btnEliminar.setBounds(540, 88, 32, 32);
 	btnEliminar.setOpaque(false);
 	btnEliminar.setContentAreaFilled(false);
 	btnEliminar.setBorderPainted(false);
@@ -162,23 +164,10 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	labelTitulo.setBounds(161, 49, 270, 30);
 	labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
-	lblBuscar = new JLabel();
-	lblBuscar.setText("Buscar:");
-	lblBuscar.setBounds(20, 131, 64, 25);
-	getContentPane().add(lblBuscar);
+	
+	
 
-	txtFiltro = new JTextField();
-	txtFiltro.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyReleased(KeyEvent arg0) {
-
-		String query = txtFiltro.getText().toUpperCase();
-		filter(query);
-	    }
-	});
-
-	txtFiltro.setBounds(86, 131, 319, 26);
-	getContentPane().add(txtFiltro);
+	
 	btnEliminar.addActionListener(this);
 	botonCancelar.addActionListener(this);
 
@@ -198,20 +187,11 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	scrollPane.setBounds(0, 237, 634, 265);
 	getContentPane().add(scrollPane);
 
-	table_1 = new JTable() {
-	    @Override
-	    public Component prepareRenderer(TableCellRenderer renderer,
-		    int row, int column) {
-		Component component = super.prepareRenderer(renderer, row,
-			column);
-		int rendererWidth = component.getPreferredSize().width;
-		TableColumn tableColumn = getColumnModel().getColumn(column);
-		tableColumn.setPreferredWidth(Math.max(rendererWidth
-			+ getIntercellSpacing().width,
-			tableColumn.getPreferredWidth()));
-		return component;
-	    }
-	};
+    table_1 = new JXTable() {  
+      public boolean isCellEditable(int row, int column){  
+            return false;  
+          }  
+    };
 	table_1.getTableHeader().setReorderingAllowed(false);
 	table_1.setToolTipText("Listado de Generos.");
 	// table_1.setAutoCreateRowSorter(true);
@@ -312,7 +292,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	btnNuevo.setBorderPainted(false);
 	btnNuevo.setIcon(new ImageIcon(VentanaBuscarGenero.class
 		.getResource("/imgs/add.png")));
-	btnNuevo.setBounds(415, 131, 32, 32);
+	btnNuevo.setBounds(498, 88, 32, 32);
 	Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
 	Image newimg2 = img2.getScaledInstance(32, 32,
 		java.awt.Image.SCALE_SMOOTH);
@@ -321,8 +301,13 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 
 	lblMensaje = new JLabel("");
 	lblMensaje.setForeground(Color.RED);
-	lblMensaje.setBounds(86, 167, 432, 14);
+	lblMensaje.setBounds(44, 127, 432, 14);
 	getContentPane().add(lblMensaje);
+	
+	
+	txtFiltro = new JXFindBar(table_1.getSearchable());
+	txtFiltro.setBounds(10, 90, 474, 33);
+    getContentPane().add(txtFiltro);
 
 	String[] petStrings = { "Codigo", "Descripcion" };
 
@@ -351,6 +336,10 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
 	// }
 	//
 	// });
+	
+    table_1.setColumnControlVisible(true);
+    
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
 
 	DateFormat format = new SimpleDateFormat("dd-MM-yy hh:mm:ss");
 
@@ -458,7 +447,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
     private void muestraPersona(JSONArray genero) {
 	JSONArray a = (JSONArray) genero.get(0);
 	// txtId.setText(Long.toString( (Long) a.get(0)) );
-	txtFiltro.setText((String) a.get(1));
+	//txtFiltro.setText((String) a.get(1));
 	// textFecha.setText((String) a.get(2));
 	// textUsu.setText((String) a.get(4));
 	codTemporal = a.get(0).toString();
@@ -470,7 +459,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
      * Permite limpiar los componentes
      */
     public void limpiar() {
-	txtFiltro.setText("");
+	//txtFiltro.setText("");
 
 	// codTemporal.setText("");
 	habilita(true, false, false, false, false, true, false, true, true);
@@ -493,7 +482,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
     public void habilita(boolean codigo, boolean nombre, boolean edad,
 	    boolean tel, boolean profesion, boolean bBuscar, boolean bGuardar,
 	    boolean bModificar, boolean bEliminar) {
-	txtFiltro.setEditable(codigo);
+	//txtFiltro.setEditable(codigo);
 	// botonModificar.setEnabled(true);
 	btnEliminar.setEnabled(bEliminar);
     }
@@ -550,7 +539,7 @@ public class VentanaBuscarGenero extends JFrame implements ActionListener {
     }
 
     void LimpiarCampos() {
-	txtFiltro.setText("");
+	//txtFiltro.setText("");
 	// textFecha.setText("");
 	// textUsu.setText("");
 	codTemporal = "";
