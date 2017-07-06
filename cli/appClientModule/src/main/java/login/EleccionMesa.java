@@ -26,6 +26,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import entity.UcsawsEvento;
+import entity.UcsawsPersona;
 import entity.UcsawsUsers;
 import entity.UcsawsVotante;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -56,6 +57,8 @@ import java.awt.event.FocusEvent;
 import java.io.IOException;
 
 public class EleccionMesa extends JFrame {
+  
+  public static UcsawsPersona personaEntity = new UcsawsPersona();
   
   public static UcsawsVotante votante;
 
@@ -106,7 +109,7 @@ public class EleccionMesa extends JFrame {
         if (!(txtUser.getText().isEmpty()) && !(pfPass.getText().isEmpty())) {
 
           if (verificarUsuPass(txtUser.getText(), pfPass.getText()) == true) { // verificar usuario
-                                                                               // y contraseña
+              if(idEvento == personaEntity.getIdEvento().getIdEvento()){                                                                 // y contraseña
             if (verificarDatos(idPersona) == false) { // verificar si ya voto
 
               if (verificarDatos2() == true) {
@@ -131,6 +134,10 @@ public class EleccionMesa extends JFrame {
               JOptionPane.showMessageDialog(null, "revisar", "error",
                   JOptionPane.INFORMATION_MESSAGE);
             }
+          } else {
+            JOptionPane.showMessageDialog(null, "revisar", "Esta persona no está registrada en el evento.",
+                JOptionPane.INFORMATION_MESSAGE);
+          }
           }
 
           else {
@@ -605,6 +612,7 @@ public class EleccionMesa extends JFrame {
       try {
         UcsawsUsers u = mapper.readValue(jsonInString, UcsawsUsers.class);
         // result = u.getIdEvento().toString();
+        personaEntity = u.getUcsawsPersona();
         idPersona = u.getUcsawsPersona().getIdPersona();
         idEvento = u.getIdEvento().getIdEvento();
         result = true;
