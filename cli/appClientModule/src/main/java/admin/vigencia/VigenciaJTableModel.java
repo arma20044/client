@@ -10,26 +10,26 @@ import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
 public class VigenciaJTableModel extends AbstractTableModel {
 
-	List<Object[]> ciudades = new ArrayList<Object[]>();
+	List<Object[]> vigencia = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 5;
+		return 6;
 	}
 
 	public int getRowCount() {
 		// TODO Auto-generated method stub
-		return ciudades.size();
+		return vigencia.size();
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 
-		Object resultado = ciudades.get(rowIndex) [columnIndex];
+		Object resultado = vigencia.get(rowIndex) [columnIndex];
 		
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Cod. Pais", "Nombre Pais","Vigencia Desde", "Vigencia Hasta"};
+	private String[] colNames = new String[] {"ID","Item", "Cod. Pais", "Nombre Pais","Vigencia Desde", "Vigencia Hasta"};
 
 	@Override
 	public String getColumnName(int col) {
