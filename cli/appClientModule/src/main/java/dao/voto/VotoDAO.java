@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.jdesktop.swingx.JXErrorPane;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
@@ -18,9 +19,70 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import entity.UcsawsNacionalidad;
 import entity.UcsawsTipoLista;
+import entity.UcsawsVotante;
 import entity.UcsawsVotos;
 
 public class VotoDAO {
+  
+  public static String errorVoto;
+  
+  public Boolean guardarVotoNuevaImplementacon(UcsawsVotos votoPresidente, UcsawsVotos votoSenador, UcsawsVotos votoParlasur, UcsawsVotante votante) {
+    
+    
+
+    boolean guardado = false;
+    
+    //votoSenador.setIdMesa(null); para pruebas
+    
+    Object[] o = new Object[] {votoPresidente, votoSenador, votoParlasur ,votante };
+    
+
+    ObjectMapper mapperObj = new ObjectMapper();
+    String jsonStr = "";
+    try {
+      // get Employee object as a json string
+      jsonStr = mapperObj.writeValueAsString(o);
+      System.out.println(jsonStr);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(131);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+    errorVoto = jsonInString;
+    
+    String u = "";
+    try{
+    u = mapper.readValue(jsonInString, String.class);
+    }
+    catch(Exception e){
+      System.out.println(e);
+    }
+
+    if (u.toUpperCase().contains("exception".toUpperCase())) {
+      guardado = false;
+      
+    } else 
+      
+    {
+      guardado = true;
+    }
+ 
+    return guardado;
+
+  }
 
 
   /*

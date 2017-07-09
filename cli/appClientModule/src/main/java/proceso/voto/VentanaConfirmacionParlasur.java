@@ -15,8 +15,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +26,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
@@ -38,15 +37,17 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jdesktop.swingx.JXBusyLabel;
-import org.jdesktop.swingx.painter.BusyPainter;
+import org.jdesktop.swingx.painter.BusyPainter.Direction;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import scr.main.java.admin.mail.SendEmailGenerico;
+import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.dao.voto.VotoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -57,10 +58,19 @@ import entity.UcsawsListas;
 import entity.UcsawsTipoLista;
 import entity.UcsawsVotante;
 import entity.UcsawsVotos;
-import org.jdesktop.swingx.painter.BusyPainter.Direction;
 
 @Transactional(readOnly = true)
 public class VentanaConfirmacionParlasur extends JDialog {
+  
+  
+  @Autowired
+  VotantesHabilitadosDAO votanteDAO = new VotantesHabilitadosDAO();
+  
+  @Autowired
+  VotoDAO votoDAO = new VotoDAO();
+  
+  
+  
   private Container contenedor;
   JLabel labelTitulo;
   private JLabel lblListaPresidente, lblListaSenador, lblListaParlasur, lblMensaje;
@@ -72,6 +82,13 @@ public class VentanaConfirmacionParlasur extends JDialog {
 
   public static Integer idMesa;
   
+  
+  public static UcsawsVotos votoPresidente, votoPresidenteBlanco, 
+  votoSenador, votoSenadorBlanco,
+  votoParlasur, votoParlasurBlanco;
+  
+  public static UcsawsVotante votanteActualizar;
+  
   private JButton btnSi = new JButton() ;
   private JButton btnNo = new JButton() ;
   private JPanel panel, panel2;
@@ -79,6 +96,7 @@ public class VentanaConfirmacionParlasur extends JDialog {
   JLabel label = new JLabel("Está seguro?");
 
   public VentanaConfirmacionParlasur(final VentanaParlasur miVentanaPrincipal, boolean modal) {
+    
     setModal(true);
     getContentPane().setLayout(null);
     bslblProcesando.setText("Procesando...");
@@ -86,7 +104,7 @@ public class VentanaConfirmacionParlasur extends JDialog {
     bslblProcesando.setHorizontalAlignment(SwingConstants.CENTER);
     
     
-    bslblProcesando.setBounds(63, 160, 228, 105);
+    bslblProcesando.setBounds(117, 160, 174, 105);
     getContentPane().add(bslblProcesando);
     bslblProcesando.setVisible(false);
     
@@ -394,8 +412,21 @@ public class VentanaConfirmacionParlasur extends JDialog {
     
     
      VotoDAO votoDAO = new VotoDAO();
-     votoDAO.guardarVoto(votoAGuardar);
-
+     //votoDAO.guardarVoto(votoAGuardar);
+     
+     
+     if(lista.getUcsawsTipoLista().getCodigo().compareTo("PRE")==0){
+       votoPresidente = votoAGuardar;
+     }
+     
+     else  if(lista.getUcsawsTipoLista().getCodigo().compareTo("SEN")==0){
+       votoSenador = votoAGuardar;
+     }
+     
+     
+     else  if(lista.getUcsawsTipoLista().getCodigo().compareTo("PAR")==0){
+       votoParlasur = votoAGuardar;
+     }
   }
 
   private void votarBlanco(Integer idTipoLista, Integer idMesa) {
@@ -455,50 +486,12 @@ public class VentanaConfirmacionParlasur extends JDialog {
 
   private void actualizarVotante(Integer idVotante) {
 
-    // parseo json
-    ObjectMapper mapperObj = new ObjectMapper();
-    String jsonStr = "";
-    try {
-      // get Employee object as a json string
-      jsonStr = mapperObj.writeValueAsString(idVotante);
-      System.out.println(jsonStr);
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    // actualizar situacion votante inicio
-    Calendar calendar = new GregorianCalendar();
-    int year = calendar.get(Calendar.YEAR);
-
-    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-
-    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-    QueryGenericoRequest query = new QueryGenericoRequest();
-
-    // para registrar se inserta el codigo es 1
-    // by default sufrago es 0 cuando no votó, al votar cambia a 1
-    query.setTipoQueryGenerico(29);
-    System.out.println(Login.userLogeado);
-
-    query.setQueryGenerico(jsonStr);
-
-    /*
-     * query.setQueryGenerico("UPDATE ucsaws_votante" +
-     * " SET sufrago = 1,  fch_upd = now() ,  usuario_upd= 'ucsavoto' " + " WHERE  id_votante = " +
-     * VentanaPrincipalVotante.idVotante + " and id_mesa = " + idMesa);
-     */
-
-    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-    weatherClient.printQueryGenericoResponse(response);
-
-    if (response.getQueryGenericoResponse().compareToIgnoreCase("SI") == 0) {
-
-    } else if (response.getQueryGenericoResponse().compareToIgnoreCase("SI") == 0) {
-
-    }
-
-    // actualizar situacion votante fin
+    UcsawsVotante votanteAActualizar = votanteDAO.obtenerVotanteById(idVotante.toString());
+    votanteAActualizar.setSufrago(1);
+    votanteAActualizar.setFchUpd(new Date());
+    votanteAActualizar.setUsuarioUpd("SISTEMA");
+    
+    votanteActualizar = votanteAActualizar;
 
   }
 
@@ -562,6 +555,8 @@ public class VentanaConfirmacionParlasur extends JDialog {
 
   @Transactional
   private Boolean procesoVotacion() {
+    
+    boolean result = false;
     int ite = 0;
     // JFrame frame = new JFrame("Test");
     // new JLabel("Aguarde... ", new
@@ -695,18 +690,43 @@ public class VentanaConfirmacionParlasur extends JDialog {
         // SendEmailGenerico enviarNotificacion = new
         // SendEmailGenerico();
         // enviarNotificacion.enviarNotificacion(Login.email);
-        SendEmailGenerico.NewEnviar(Login.email);
+        
       } catch (Exception e) {
         System.out.println(e);
       }
-      VentanaVotoFinal end = new VentanaVotoFinal();
-      end.setVisible(true);
-      dispose();
-      // frame.setVisible(false);
-      bslblProcesando.setVisible(false);
-      btnSi.setEnabled(true);
-      btnNo.setEnabled(true);
-      return true;
+      
+      try{
+        
+       boolean seGuardo = votoDAO.guardarVotoNuevaImplementacon(votoPresidente, votoSenador, votoParlasur, votanteActualizar);
+        if(seGuardo){
+        SendEmailGenerico.NewEnviar(Login.email);
+        VentanaVotoFinal end = new VentanaVotoFinal();
+        end.setVisible(true);
+        dispose();
+        // frame.setVisible(false);
+        bslblProcesando.setVisible(false);
+        btnSi.setEnabled(true);
+        btnNo.setEnabled(true);
+        return result =true;
+        }
+        else
+        {
+          
+          //JOptionPane.showMessageDialog(null, VotoDAO.errorVoto);
+         
+          JOptionPane.showMessageDialog(this.getContentPane(), "Ocurrio un error, favor proceda a cargar datos de nuevo.");
+          VentanaPresidente p = new VentanaPresidente();
+          p.setVisible(true);
+          dispose();
+          return result=false;
+        }
+        
+      }
+      catch(Exception e){
+        System.out.println(e);
+      }
+      
     }
+    return result;
   }
 }
