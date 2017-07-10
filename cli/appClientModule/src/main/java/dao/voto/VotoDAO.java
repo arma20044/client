@@ -21,12 +21,14 @@ import entity.UcsawsNacionalidad;
 import entity.UcsawsTipoLista;
 import entity.UcsawsVotante;
 import entity.UcsawsVotos;
+import entity.UcsawsVotosBlanco;
 
 public class VotoDAO {
   
   public static String errorVoto;
   
-  public Boolean guardarVotoNuevaImplementacon(UcsawsVotos votoPresidente, UcsawsVotos votoSenador, UcsawsVotos votoParlasur, UcsawsVotante votante) {
+  public Boolean guardarVotoNuevaImplementacon(UcsawsVotos votoPresidente, UcsawsVotos votoSenador, UcsawsVotos votoParlasur, UcsawsVotante votante,
+      UcsawsVotosBlanco votoPresidenteBlanco , UcsawsVotosBlanco votoSenadorBlanco, UcsawsVotosBlanco votoParlasurBlanco) {
     
     
 
@@ -34,7 +36,7 @@ public class VotoDAO {
     
     //votoSenador.setIdMesa(null); para pruebas
     
-    Object[] o = new Object[] {votoPresidente, votoSenador, votoParlasur ,votante };
+    Object[] o = new Object[] {votoPresidente, votoSenador, votoParlasur,votoPresidenteBlanco,votoSenadorBlanco, votoParlasurBlanco ,votante };
     
 
     ObjectMapper mapperObj = new ObjectMapper();

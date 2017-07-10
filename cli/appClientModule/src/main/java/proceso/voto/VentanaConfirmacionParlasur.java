@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -46,18 +47,22 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.annotation.Transactional;
 
+import scr.main.java.admin.mail.EnviarFinal;
 import scr.main.java.admin.mail.SendEmailGenerico;
+import src.main.java.dao.tipoLista.TipoListaDAO;
 import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.dao.voto.VotoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.EleccionMesa;
 import src.main.java.login.Login;
+import src.main.java.login.PreLogin;
 import src.main.java.votante.VentanaPrincipalVotante;
 import entity.UcsawsListas;
 import entity.UcsawsTipoLista;
 import entity.UcsawsVotante;
 import entity.UcsawsVotos;
+import entity.UcsawsVotosBlanco;
 
 @Transactional(readOnly = true)
 public class VentanaConfirmacionParlasur extends JDialog {
@@ -69,6 +74,11 @@ public class VentanaConfirmacionParlasur extends JDialog {
   @Autowired
   VotoDAO votoDAO = new VotoDAO();
   
+  @Autowired
+  TipoListaDAO tipoListaDAO = new TipoListaDAO();
+  
+  @Autowired
+  EnviarFinal correo = new EnviarFinal();
   
   
   private Container contenedor;
@@ -83,9 +93,9 @@ public class VentanaConfirmacionParlasur extends JDialog {
   public static Integer idMesa;
   
   
-  public static UcsawsVotos votoPresidente, votoPresidenteBlanco, 
-  votoSenador, votoSenadorBlanco,
-  votoParlasur, votoParlasurBlanco;
+  public static UcsawsVotos votoPresidente, votoSenador,votoParlasur;
+  
+  public static UcsawsVotosBlanco votoPresidenteBlanco, votoSenadorBlanco,votoParlasurBlanco;
   
   public static UcsawsVotante votanteActualizar;
   
@@ -104,7 +114,7 @@ public class VentanaConfirmacionParlasur extends JDialog {
     bslblProcesando.setHorizontalAlignment(SwingConstants.CENTER);
     
     
-    bslblProcesando.setBounds(117, 160, 174, 105);
+    bslblProcesando.setBounds(0, 160, 319, 105);
     getContentPane().add(bslblProcesando);
     bslblProcesando.setVisible(false);
     
@@ -143,19 +153,39 @@ public class VentanaConfirmacionParlasur extends JDialog {
     lblListaPresidente.setBounds(0, 0, 329, 14);
     panel.add(lblListaPresidente);
     lblListaPresidente.setHorizontalAlignment(SwingConstants.CENTER);
+    
+    if(VentanaPresidente.votoBlanco==false){
     lblListaPresidente.setText("Presidente Lista: " + VentanaPresidente.listaPresidente.getNroLista() + " - "+ VentanaPresidente.listaPresidente.getNombreLista());
+    }
+    else{
+      lblListaPresidente.setText("Presidente Lista: Voto Blanco");
+    }
 
     lblListaSenador = new JLabel();
     lblListaSenador.setBounds(0, 25, 329, 14);
     panel.add(lblListaSenador);
     lblListaSenador.setHorizontalAlignment(SwingConstants.CENTER);
+    
+    if(VentanaSenadores.votoBlanco==false){
     lblListaSenador.setText("Senador Lista: " + VentanaSenadores.listaSenador.getNroLista() + " - " + VentanaSenadores.listaSenador.getNombreLista());
-
+    }
+    else
+    {
+      lblListaSenador.setText("Senador Lista: VotoBlanco");
+    }
+    
     lblListaParlasur = new JLabel();
     lblListaParlasur.setBounds(0, 52, 329, 14);
     panel.add(lblListaParlasur);
     lblListaParlasur.setHorizontalAlignment(SwingConstants.CENTER);
+    
+    if(VentanaParlasur.votoBlanco==false){
     lblListaParlasur.setText("Parlasur  Lista: " +VentanaParlasur.listaParlasur.getNroLista() + " - " + VentanaParlasur.listaParlasur.getNombreLista());
+    }
+    else
+    {
+      lblListaParlasur.setText("Parlasur  Lista: Voto Blanco");
+    }
     /*
      * Al llamar al constructor super(), le enviamos el JFrame Padre y la propiedad booleana que
      * determina que es hija
@@ -429,7 +459,7 @@ public class VentanaConfirmacionParlasur extends JDialog {
      }
   }
 
-  private void votarBlanco(Integer idTipoLista, Integer idMesa) {
+  private void votarBlanco(Integer idTipoLista, UcsawsVotante votante, String votoBlancoPara) {
 
     List<Integer> l = new ArrayList<Integer>();
 
@@ -437,50 +467,44 @@ public class VentanaConfirmacionParlasur extends JDialog {
     l.add(idMesa);
     l.add(EleccionMesa.evento);
 
-    // parseo json
-    ObjectMapper mapperObj = new ObjectMapper();
-    String jsonStr = "";
+ 
+    
+    Date today = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     try {
-      // get Employee object as a json string
-      jsonStr = mapperObj.writeValueAsString(l);
-      System.out.println(jsonStr);
-    } catch (IOException e) {
+      today = sdf.parse(sdf.format(today));
+    } catch (java.text.ParseException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    
+  
 
-    // insertar voto inicioS
-    Calendar calendar = new GregorianCalendar();
-    int year = calendar.get(Calendar.YEAR);
+    UcsawsVotosBlanco votoBlancoAGuardar = new UcsawsVotosBlanco();
+    votoBlancoAGuardar.setFchIns(today);
+    votoBlancoAGuardar.setUsuarioIns("SISTEMA");
+    votoBlancoAGuardar.setIdTipoLista(tipoListaDAO.obtenerTipoListaById(idTipoLista));
+    votoBlancoAGuardar.setIdMesa(votante.getUcsawsMesa());
+    votoBlancoAGuardar.setIdEvento(votante.getIdEvento());
+    
+    
+     //VotoDAO votoDAO = new VotoDAO();
+     //votoDAO.guardarVoto(votoAGuardar);
+     
+     
+     if(votoBlancoPara.compareTo("PRE")==0){
+       votoPresidenteBlanco = votoBlancoAGuardar;
+     }
+     
+     else  if(votoBlancoPara.compareTo("SEN")==0){
+       votoSenadorBlanco = votoBlancoAGuardar;
+     }
+     
+     
+     else  if(votoBlancoPara.compareTo("PAR")==0){
+       votoParlasurBlanco = votoBlancoAGuardar;
+     }
 
-    ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
-
-    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
-    QueryGenericoRequest query = new QueryGenericoRequest();
-
-    // para registrar se inserta el codigo es 1
-    query.setTipoQueryGenerico(1);
-    System.out.println(Login.userLogeado);
-
-    query.setQueryGenerico(jsonStr);
-
-    /*
-     * query.setQueryGenerico(
-     * "INSERT INTO ucsaws_votos_blanco ( id_voto_blanco, id_tipo_lista, id_mesa,usuario_ins,fch_ins, usuario_upd, fch_upd, id_evento) "
-     * + "VALUES (nextval('ucsaws_voto_blanco') , " + idTipoLista + "," + idMesa + " , '" +
-     * Login.userLogeado + "' , now(), '" + Login.userLogeado + "' , now()," + EleccionMesa.idEvento
-     * + ")");
-     */
-
-    QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
-    weatherClient.printQueryGenericoResponse(response);
-
-    // insertar votoS fin
-    if (response.getQueryGenericoResponse().compareToIgnoreCase("NO") == 0) {
-
-    } else if (response.getQueryGenericoResponse().compareToIgnoreCase("SI") == 0) {
-
-    }
 
   }
 
@@ -594,28 +618,32 @@ public class VentanaConfirmacionParlasur extends JDialog {
 
     idMesa = EleccionMesa.Mesa;
 
-    System.out.println("Presidente Seleccionado Lista N° : " + VentanaPresidente.listaPresidente.getNombreLista());
+  
+   /* System.out.println("Presidente Seleccionado Lista N° : " + VentanaPresidente.listaPresidente.getNombreLista());
     System.out.println("Senador Seleccionado Lista N° : " + VentanaSenadores.listaSenador.getNombreLista());
-    System.out.println("Parlasur Seleccionado Lista N° : " + VentanaParlasur.listaParlasur.getNombreLista());
-
-    Integer idTipoListaPresidente = VentanaPresidente.listaPresidente.getUcsawsTipoLista().getIdTipoLista(); 
+    System.out.println("Parlasur Seleccionado Lista N° : " + VentanaParlasur.listaParlasur.getNombreLista());*/
+    Integer idTipoListaPresidente=null;
+    Integer idTipoListaSenador=null;
+    Integer idTipoListaParlasur=null;
+    if(VentanaPresidente.votoBlanco==false)
+    {
+    idTipoListaPresidente = VentanaPresidente.listaPresidente.getUcsawsTipoLista().getIdTipoLista(); 
+    }
   //Integer idTipoListaPresidente = obtenerTipoListaPorCodigo("PRE", VentanaPresidente.presidente).getIdTipoLista();
     
-    Integer idTipoListaSenador = VentanaSenadores.listaSenador.getUcsawsTipoLista().getIdTipoLista();
+    if(VentanaSenadores.votoBlanco==false)
+    {
+    idTipoListaSenador = VentanaSenadores.listaSenador.getUcsawsTipoLista().getIdTipoLista();
+    }
   //Integer idTipoListaSenador =  obtenerTipoListaPorCodigo("SEN", VentanaSenadores.senadores).getIdTipoLista();
-    
-    Integer idTipoListaParlasur = VentanaParlasur.listaParlasur.getUcsawsTipoLista().getIdTipoLista();
+    if(VentanaParlasur.votoBlanco==false)
+    {
+    idTipoListaParlasur = VentanaParlasur.listaParlasur.getUcsawsTipoLista().getIdTipoLista();
+    }
   //Integer idTipoListaDiputado =  obtenerTipoListaPorCodigo("DIP", VentanaDiputados.diputados).getIdTipoLista();
 
-    if ((idTipoListaPresidente == null || idTipoListaPresidente == 0)
-        || (idTipoListaSenador == null || idTipoListaSenador == 0)
-        || (idTipoListaParlasur == null || idTipoListaParlasur == 0)) {
-
-      lblMensaje.setText("ERROR");
-     // JOptionPane.showMessageDialog(null, "ERROR", "InfoBox: " + " Ocurrio un error, revisar log.",
-       //   JOptionPane.ERROR_MESSAGE);
-      return false;
-    } else {
+     
+     
 
       if (VentanaPresidente.votoBlanco == false  )  {
         // Integer idListaPresidete = obtenerLista(1,
@@ -628,12 +656,23 @@ public class VentanaConfirmacionParlasur extends JDialog {
           System.out.println(e);
         }
       } else {
+        String votoBlancoPara= "PRE";
+        List<UcsawsTipoLista> tl = tipoListaDAO.obtenerTipoListaByIdEvento(EleccionMesa.votante.getIdEvento().getIdEvento());
+        
+        Iterator<UcsawsTipoLista> ite2 = tl.iterator();
 
+        UcsawsTipoLista aux;
+        while (ite2.hasNext()) {
+            aux = ite2.next();
+            if (aux.getCodigo().compareTo(votoBlancoPara)==0){
+              idTipoListaPresidente = aux.getIdTipoLista();
+            }
+        }
         // Integer idTipoLista =
         // obtenerTipoListaPorCodigo("PRE").getIdTipoLista();
         // // para presidente
         try {
-          votarBlanco(idTipoListaPresidente, idMesa);
+          votarBlanco(idTipoListaPresidente, EleccionMesa.votante,votoBlancoPara);
           System.out.println("Se voto presidente en blanco");
         } catch (Exception e) {
           System.out.println(e);
@@ -650,11 +689,24 @@ public class VentanaConfirmacionParlasur extends JDialog {
           System.out.println(e);
         }
       } else {
+        String votoBlancoPara= "SEN";
+        
+        List<UcsawsTipoLista> tl = tipoListaDAO.obtenerTipoListaByIdEvento(EleccionMesa.votante.getIdEvento().getIdEvento());
+        
+        Iterator<UcsawsTipoLista> ite2 = tl.iterator();
+
+        UcsawsTipoLista aux;
+        while (ite2.hasNext()) {
+            aux = ite2.next();
+            if (aux.getCodigo().compareTo(votoBlancoPara)==0){
+              idTipoListaSenador = aux.getIdTipoLista();
+            }
+        }
         // Integer idTipoLista =
         // obtenerTipoListaPorCodigo("SEN").getIdTipoLista();
         // // para senador
         try {
-          votarBlanco(idTipoListaSenador, idMesa);
+          votarBlanco(idTipoListaSenador, EleccionMesa.votante,votoBlancoPara);
           System.out.println("Se voto senador en blanco");
         } catch (Exception e) {
           System.out.println(e);
@@ -675,7 +727,21 @@ public class VentanaConfirmacionParlasur extends JDialog {
         // obtenerTipoListaPorCodigo("DIP").getIdTipoLista();
         // // para diputado
         try {
-          votarBlanco(idTipoListaParlasur, idMesa);
+          String votoBlancoPara= "PAR";
+          
+          List<UcsawsTipoLista> tl = tipoListaDAO.obtenerTipoListaByIdEvento(EleccionMesa.votante.getIdEvento().getIdEvento());
+          
+          Iterator<UcsawsTipoLista> ite2 = tl.iterator();
+
+          UcsawsTipoLista aux;
+          while (ite2.hasNext()) {
+              aux = ite2.next();
+              if (aux.getCodigo().compareTo(votoBlancoPara)==0){
+                idTipoListaParlasur = aux.getIdTipoLista();
+              }
+          }
+          
+          votarBlanco(idTipoListaParlasur, EleccionMesa.votante,votoBlancoPara);
           System.out.println("Se voto Parlasur en blanco");
         } catch (Exception e) {
           System.out.println(e);
@@ -697,9 +763,11 @@ public class VentanaConfirmacionParlasur extends JDialog {
       
       try{
         
-       boolean seGuardo = votoDAO.guardarVotoNuevaImplementacon(votoPresidente, votoSenador, votoParlasur, votanteActualizar);
+       boolean seGuardo = votoDAO.guardarVotoNuevaImplementacon(votoPresidente, votoSenador, votoParlasur, votanteActualizar,
+           votoPresidenteBlanco, votoSenadorBlanco, votoParlasurBlanco);
         if(seGuardo){
-        SendEmailGenerico.NewEnviar(Login.email);
+        //SendEmailGenerico.NewEnviar(Login.email);
+        correo.main(Login.email, EleccionMesa.votante);
         VentanaVotoFinal end = new VentanaVotoFinal();
         end.setVisible(true);
         dispose();
@@ -726,7 +794,7 @@ public class VentanaConfirmacionParlasur extends JDialog {
         System.out.println(e);
       }
       
-    }
+    
     return result;
   }
 }
