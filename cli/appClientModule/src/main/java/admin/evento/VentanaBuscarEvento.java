@@ -116,7 +116,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarEvento() {
-	  setVisible(true);
+	 
 		
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
@@ -407,7 +407,7 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		table_1.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		recuperarDatos();
 		table_1.setModel(model);
-		 
+		setVisible(true); 
 		table_1.removeColumn(table_1.getColumnModel().getColumn(0));
 		JLabel lblListaDeGeneros = new JLabel();
 		lblListaDeGeneros.setText("LISTA DE EVENTOS");

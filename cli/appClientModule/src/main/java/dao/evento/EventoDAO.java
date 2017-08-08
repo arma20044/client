@@ -16,6 +16,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 
 import entity.Generic;
@@ -26,7 +29,7 @@ import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 
-@Repository
+@Component
 public class EventoDAO {
 
     // public void registrarPersona(PersonaVo miPersona)
@@ -320,5 +323,39 @@ public class EventoDAO {
 	    System.out.println(e);
 	}
 	return evento;
+    }
+    
+    public UcsawsEvento obtenerEventoVigente() {
+      UcsawsEvento evento = new UcsawsEvento();
+      try {
+        
+        
+        ObjectMapper mapperObj = new ObjectMapper();
+        String jsonStr = "";
+        jsonStr = mapperObj.writeValueAsString(new Date());
+        
+    ApplicationContext ctx = SpringApplication
+        .run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(1);
+    query.setQueryGenerico(jsonStr);
+
+    QueryGenericoResponse response = weatherClient
+        .getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+   
+   
+        evento = mapper.readValue(jsonInString, UcsawsEvento.class);
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+    return evento;
     }
 }

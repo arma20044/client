@@ -16,12 +16,13 @@ public class WeatherConfiguration {
 	//public final static String URL = "https://localhost/";
 	//tcpmon test
 	
-	//comentado 22 de abril del 2017
+  //*O ESTE*******************************************************************
+	//descomentado 22 de julio del 2017
 	//public final static String URL = "https://ubuntu/"; //con maquina virtual https
-	
-	//descomentado 22 de abril del 2017
+	//O ESTE
+	//comentado 22 de julio del 2017
 	public final static String URL = "http://localhost:8080/"; //sin maquina virtual http
-	
+	  //****************************************************************************	
 	
 //	apunta a ubuntu maquina virtual
 //	public final static String URL = "http://192.168.1.103:8080/";

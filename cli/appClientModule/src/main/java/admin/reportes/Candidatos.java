@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -27,11 +26,16 @@ import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reporte.log.ReporteLog;
+import src.main.java.admin.utils.DataSource;
 import src.main.java.login.Login;
+
+
  
 public class Candidatos {
  
     private Logger logger = Logger.getLogger(Candidatos.class);
+    
+    private DataSource ds = new DataSource();
  
     public Candidatos() {
     }
@@ -60,7 +64,7 @@ public class Candidatos {
             parameters.put("P_FECHA", VentanaBuscarEvento.date );
             parameters.put("P_GENERADO_POR",Login.nombreApellidoUserLogeado);
             
-            Connection jdbcConnection = connectDB();
+            Connection jdbcConnection = ds.getConnection();
              
             // compile report
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(bufferedInputStream);

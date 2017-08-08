@@ -1,6 +1,8 @@
 package src.main.java.admin.utils;
 
 import java.awt.Color;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -64,7 +66,10 @@ public class Header extends JPanel {
 		label_6.setBounds(317, 25, 83, 14);
 		panel.add(label_6);
 		
-		label_7 = new JLabel(VentanaBuscarEvento.fechaDesde);
+		Date d = VentanaBuscarEvento.fechaDesde;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // Set your date format
+		String currentData = sdf.format(d); // Get Date String according to date format
+		label_7 = new JLabel(currentData);
 		label_7.setForeground(Color.BLACK);
 		label_7.setBounds(410, 25, 191, 14);
 		panel.add(label_7);
@@ -73,7 +78,10 @@ public class Header extends JPanel {
 		label_8.setBounds(317, 37, 83, 14);
 		panel.add(label_8);
 		
-		label_9 = new JLabel(VentanaBuscarEvento.fechaHasta);
+		Date d2 = VentanaBuscarEvento.fechaHasta;
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm"); // Set your date format
+        String currentData2 = sdf2.format(d2); // Get Date String according to date format
+		label_9 = new JLabel(currentData2);
 		label_9.setForeground(Color.BLACK);
 		label_9.setBounds(410, 37, 191, 14);
 		panel.add(label_9);
