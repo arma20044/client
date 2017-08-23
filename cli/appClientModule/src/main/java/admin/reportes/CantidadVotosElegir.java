@@ -28,6 +28,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import entity.TipoLista;
 import entity.UcsawsTipoLista;
 import src.main.java.admin.Reportes;
 import src.main.java.admin.candidato.Item;
@@ -87,13 +88,13 @@ public class CantidadVotosElegir extends JFrame {
 		contentPane.setLayout(null);
 		
 		cmbTipoCanditado = new JComboBox(recuperarDatosComboBoxTipoCandidato());
-		cmbTipoCanditado.setBounds(121, 109, 312, 20);
+		cmbTipoCanditado.setBounds(77, 116, 312, 20);
 		contentPane.add(cmbTipoCanditado);
 		
 		JLabel lblTipoCandidato = new JLabel();
-		lblTipoCandidato.setText("Tipo Candidato");
-		lblTipoCandidato.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblTipoCandidato.setBounds(39, 112, 72, 14);
+		lblTipoCandidato.setText("Seleccione el Tipo Candidato");
+		lblTipoCandidato.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTipoCandidato.setBounds(77, 75, 313, 20);
 		contentPane.add(lblTipoCandidato);
 		
 		JButton btnGenerar = new JButton("Generar");
@@ -114,7 +115,10 @@ public class CantidadVotosElegir extends JFrame {
 				
 				else 
 					if (tipoSelected == 2 || tipoSelected == 3){
-						CantidadVotosSenadorDiputado votos = new CantidadVotosSenadorDiputado(tipoSelected);
+					  TipoListaDAO tipoListaDAO = new TipoListaDAO();
+					 UcsawsTipoLista tl = tipoListaDAO.obtenerTipoListaById(tipoSelected);
+					  
+						CantidadVotosSenadorDiputado votos = new CantidadVotosSenadorDiputado(tl);
 						System.out.println(idTipo);
 						votos.start();
 					}
@@ -140,7 +144,7 @@ public class CantidadVotosElegir extends JFrame {
 		botonCancelar.setContentAreaFilled(false);
 		botonCancelar.setBorderPainted(false);
 		botonCancelar.setBackground(Color.WHITE);
-		botonCancelar.setBounds(401, 229, 32, 32);
+		botonCancelar.setBounds(366, 225, 32, 32);
 		contentPane.add(botonCancelar);
 		
 		botonCancelar.setBorderPainted(false);

@@ -113,10 +113,10 @@ public class VotoBlancoElegir extends JFrame {
 				m.start();
 			}
 		});
-		btnMesa.setBounds(164, 79, 89, 23);
+		btnMesa.setBounds(164, 79, 140, 23);
 		contentPane.add(btnMesa);
 		
-		btnTipoLista = new JButton("Tipo Lista");
+		btnTipoLista = new JButton("Por Tipo Lista");
 		btnTipoLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VotoBlancoPorTipoLista l = new VotoBlancoPorTipoLista();
@@ -124,17 +124,17 @@ public class VotoBlancoElegir extends JFrame {
 				
 			}
 		});
-		btnTipoLista.setBounds(164, 111, 89, 23);
+		btnTipoLista.setBounds(164, 111, 140, 23);
 		contentPane.add(btnTipoLista);
 		
-		btnLocal = new JButton("Local");
+		btnLocal = new JButton("Por Local");
 		btnLocal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				VotoBlancoPorLocal l = new VotoBlancoPorLocal();
 				l.start();
 			}
 		});
-		btnLocal.setBounds(164, 145, 89, 23);
+		btnLocal.setBounds(164, 145, 140, 23);
 		contentPane.add(btnLocal);
 	}
 	

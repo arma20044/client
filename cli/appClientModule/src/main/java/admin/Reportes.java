@@ -4,31 +4,33 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reportes.Candidatos;
 import src.main.java.admin.reportes.CantidadVotosElegir;
 import src.main.java.admin.reportes.Participacion;
-import src.main.java.admin.reportes.ReporteDymmy;
 import src.main.java.admin.reportes.Votantes;
 import src.main.java.admin.reportes.VotoBlancoElegir;
-import src.main.java.admin.reportes.VotosPorDepartamento;
-import src.main.java.admin.reportes.VotosPorDistrito;
-import src.main.java.admin.reportes.VotosPorLocal;
-import src.main.java.admin.reportes.VotosPorZona;
+import src.main.java.admin.reportes.VotosElegir;
 import src.main.java.login.Login;
+import src.main.java.login.PreLogin;
 
 public class Reportes extends JFrame implements ActionListener{
 	
 	private Coordinador miCoordinador; //objeto miCoordinador que permite la relacion entre esta clase y la clase coordinador
 	private JLabel labelTitulo, labelSeleccion;
 	private JButton btnAtras;
+	
+	
 	
 	
 
@@ -44,11 +46,11 @@ public class Reportes extends JFrame implements ActionListener{
 		btnAtras = new JButton();
 		btnAtras.setIcon(new ImageIcon(Reportes.class.getResource("/imgs/volver.png")));
 		btnAtras.setToolTipText("Volver al Menu Principal");
-		btnAtras.setBounds(114, 421, 83, 51);
+		btnAtras.setBounds(694, 359, 83, 51);
 
 		labelSeleccion = new JLabel();
 		labelSeleccion.setText("Escoja que operacion desea realizar");
-		labelSeleccion.setBounds(73, 385, 250, 25);
+		labelSeleccion.setBounds(0, 385, 250, 25);
 
 		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
 				+ "de dise�o MVC.\n\n"
@@ -59,7 +61,7 @@ public class Reportes extends JFrame implements ActionListener{
 		getContentPane().add(btnAtras);
 		getContentPane().add(labelSeleccion);
 	
-		setSize(772, 501);
+		setSize(772, 439);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -81,72 +83,60 @@ public class Reportes extends JFrame implements ActionListener{
 				labelTitulo.setIcon(new ImageIcon(Reportes.class.getResource("/imgs/pfd64.png")));
 				labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 				labelTitulo.setText("Reportes");
-				labelTitulo.setBounds(24, 36, 647, 86);
+				labelTitulo.setBounds(23, 87, 647, 86);
 				labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 				getContentPane().add(labelTitulo);
 				
+				final JPanel panel = new JPanel();
+				panel.setBounds(115, 184, 485, 91);
+				getContentPane().add(panel);
+				panel.setLayout(null);
+				
 				JButton btnPersonas = new JButton("Votantes");
-				btnPersonas.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Votantes votantes = new Votantes();
-						votantes.start();
-					}
-				});
-			
-				btnPersonas.setBounds(133, 133, 227, 23);
-				getContentPane().add(btnPersonas);
+				btnPersonas.setBounds(0, 0, 227, 23);
+				panel.add(btnPersonas);
 				
-				JButton btnVotantesXDep = new JButton("Cantidad Votantes por Departamento");
-				btnVotantesXDep.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						VotosPorDepartamento votoDepartamento = new VotosPorDepartamento();
-						votoDepartamento.start();
-					}
-				});
-				btnVotantesXDep.setBounds(391, 133, 227, 23);
-				getContentPane().add(btnVotantesXDep);
-				
-				JButton btnCantVotantesXDistrito = new JButton("Cantidad Votantes por Distrito");
-				btnCantVotantesXDistrito.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						VotosPorDistrito votoDistrito = new VotosPorDistrito();
-						votoDistrito.start();
-					}
-				});
-				btnCantVotantesXDistrito.setBounds(391, 167, 227, 23);
-				getContentPane().add(btnCantVotantesXDistrito);
-				
-				JButton btnCantidadVotantesPorZona = new JButton("Cantidad Votantes por Zona");
-				btnCantidadVotantesPorZona.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						VotosPorZona votoZona = new VotosPorZona();
-						votoZona.start();
-					}
-				});
-				btnCantidadVotantesPorZona.setBounds(391, 201, 227, 23);
-				getContentPane().add(btnCantidadVotantesPorZona);
-				
-				JButton btnCantidadVotantesPorLocal = new JButton("Cantidad Votantes por Local");
-				btnCantidadVotantesPorLocal.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						VotosPorLocal votoLocal = new VotosPorLocal();
-						votoLocal.start();
-					}
-				});
-				btnCantidadVotantesPorLocal.setBounds(391, 239, 227, 23);
-				getContentPane().add(btnCantidadVotantesPorLocal);
+				JButton btnVotantesXDep = new JButton("Cantidad de Votos");
+				btnVotantesXDep.setBounds(258, 0, 227, 23);
+				panel.add(btnVotantesXDep);
 				
 				JButton btnTotalParticipacion = new JButton("Participacion");
-				btnTotalParticipacion.addActionListener(new ActionListener() {
+				btnTotalParticipacion.setBounds(0, 68, 227, 23);
+				panel.add(btnTotalParticipacion);
+				
+				JButton btnCantidadVotosBlancos = new JButton("Cantidad de Votos Blancos");
+				btnCantidadVotosBlancos.setBounds(258, 34, 227, 23);
+				panel.add(btnCantidadVotosBlancos);
+				
+				JButton btnListaCandidatos = new JButton("Lista de Candidatos");
+				btnListaCandidatos.setBounds(0, 34, 227, 23);
+				panel.add(btnListaCandidatos);
+				
+				JButton btnVotosXCandidatura = new JButton("Cantidad de Votos por Candidatura");
+				btnVotosXCandidatura.setBounds(258, 68, 227, 23);
+				panel.add(btnVotosXCandidatura);
+				btnVotosXCandidatura.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Participacion p = new Participacion();
-						p.start();
+						Date hoy = new Date();
+					  if (between(hoy, VentanaBuscarEvento.eventoClase.getFchDesde(), VentanaBuscarEvento.eventoClase.getFchHasta()) ){
+					    //evento seleccionado esta vigente no mostrar los nombres de los candidatos
+					    JOptionPane.showMessageDialog(panel, "Proximamente...");
+					  }
+					  else {
+					    //evento seleccionado ya ha terminado mostrar
+					    CantidadVotosElegir elegir = new CantidadVotosElegir();
+                        elegir.setVisible(true);
+                        dispose();
+					  }
+						
 					}
 				});
-				btnTotalParticipacion.setBounds(133, 201, 227, 23);
-				getContentPane().add(btnTotalParticipacion);
-				
-				JButton btnCantidadVotosBlancos = new JButton("Cantidad Votos Blancos");
+				btnListaCandidatos.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Candidatos can = new Candidatos();
+						can.start();
+					}
+				});
 				btnCantidadVotosBlancos.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						VotoBlancoElegir v = new VotoBlancoElegir();
@@ -154,30 +144,25 @@ public class Reportes extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnCantidadVotosBlancos.setBounds(133, 239, 227, 23);
-				getContentPane().add(btnCantidadVotosBlancos);
-				
-				JButton btnListaCandidatos = new JButton("Lista de Candidatos");
-				btnListaCandidatos.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						Candidatos can = new Candidatos();
-						can.start();
+				btnTotalParticipacion.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Participacion p = new Participacion();
+						p.start();
 					}
 				});
-				btnListaCandidatos.setBounds(133, 167, 227, 23);
-				getContentPane().add(btnListaCandidatos);
-				
-				JButton btnVotosXCandidatura = new JButton("Votos por Candidatura");
-				btnVotosXCandidatura.addActionListener(new ActionListener() {
+				btnVotantesXDep.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						CantidadVotosElegir elegir = new CantidadVotosElegir();
-						elegir.setVisible(true);
+						VotosElegir votosElegir = new VotosElegir();
+						votosElegir.setVisible(true);
 						dispose();
 					}
 				});
-				btnVotosXCandidatura.setBounds(133, 276, 227, 23);
-				getContentPane().add(btnVotosXCandidatura);
+				btnPersonas.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						Votantes votantes = new Votantes();
+						votantes.start();
+					}
+				});
 				
 				JButton btnHome = new JButton("");
 				btnHome.addActionListener(new ActionListener() {
@@ -220,5 +205,17 @@ public class Reportes extends JFrame implements ActionListener{
 		dispose();
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static boolean between(Date date, Date dateStart, Date dateEnd) {
+	    if (date != null && dateStart != null && dateEnd != null) {
+	        if (date.after(dateStart) && date.before(dateEnd)) {
+	            return true;
+	        }
+	        else {
+	            return false;
+	        }
+	    }
+	    return false;
 	}
 }

@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -27,11 +25,15 @@ import org.apache.log4j.PatternLayout;
 
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.reporte.log.ReporteLog;
+import src.main.java.admin.utils.JDBCExample;
 import src.main.java.login.Login;
  
 public class VotoBlancoPorMesa {
+  
  
     private Logger logger = Logger.getLogger(VotoBlancoPorMesa.class);
+    
+    private JDBCExample ds = new JDBCExample();
  
     /**
      * @wbp.parser.entryPoint
@@ -68,7 +70,7 @@ public class VotoBlancoPorMesa {
             
 
             
-            Connection jdbcConnection = connectDB();
+            Connection jdbcConnection = ds.getConnection();
              
             // compile report
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(bufferedInputStream);
@@ -96,19 +98,7 @@ public class VotoBlancoPorMesa {
         }
     }
     
-    public static Connection connectDB() {
-        Connection jdbcConnection = null;
-        try {
-      	  Class.forName("org.postgresql.Driver");
-            String url = "jdbc:postgresql://voto.db:5432/VOTOPY";
-            jdbcConnection = DriverManager.getConnection(url,"ucsa2014", "ucsa2014");
-        } catch (Exception ex) {
-             String connectMsg = "Could not connect to the database: "
-                       + ex.getMessage() + " " + ex.getLocalizedMessage();
-             System.out.println(connectMsg);
-        }
-        return jdbcConnection;
-   }
+
     
      
     private String getRandomString(){

@@ -25,6 +25,8 @@ import org.springframework.context.ApplicationContext;
 
 import entity.UcsawsUsers;
 import src.main.java.admin.MenuPrincipal;
+import src.main.java.admin.Reportes;
+ 
 import src.main.java.admin.utils.StringEncrypter;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
@@ -41,6 +43,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +59,8 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 	public static String userLogeado;
 	public static String nombreApellidoUserLogeado;
 	public static String email;
+	
+ 
 
 	public static final Integer timer = 3000;
 
@@ -166,7 +171,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 	// <editor-fold defaultstate="collapsed"
 	// desc="Generated Code">//GEN-BEGIN:initComponents
 	private void initComponents() {
-
+ 
 		jLabel3 = new javax.swing.JLabel();
 		labelUsuario = new javax.swing.JLabel();
 		campoUsuario = new javax.swing.JTextField();
