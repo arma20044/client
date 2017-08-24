@@ -27,6 +27,7 @@ import entity.UcsawsUsers;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.Reportes;
  
+import src.main.java.admin.utils.Close;
 import src.main.java.admin.utils.StringEncrypter;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
@@ -42,6 +43,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -216,7 +218,17 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 
 		jLabel3.setText("jLabel3");
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+	      this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+	      addWindowListener(new WindowAdapter() {
+	          @Override
+	          public void windowClosing(WindowEvent we)
+	          { 
+	              Close close = new Close();
+	              close.cerrarAplicacion(we);
+	          }
+	      });
+
+		
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 
 		labelUsuario.setText("Usuario");

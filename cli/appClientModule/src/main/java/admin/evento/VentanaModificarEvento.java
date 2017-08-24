@@ -64,6 +64,7 @@ import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.evento.Calendario;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.utils.ArmarFecha;
+import src.main.java.admin.utils.Close;
 import src.main.java.admin.validator.EventoValidator;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.dao.tipoEvento.TipoEventoDAO;
@@ -73,6 +74,7 @@ import src.main.java.login.Login;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
 
 
 
@@ -139,6 +141,17 @@ public class VentanaModificarEvento extends JFrame implements ActionListener {
      */
     public VentanaModificarEvento(UcsawsEvento e) {
 
+      
+      this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+      addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent we)
+          { 
+              Close close = new Close();
+              close.cerrarAplicacion(we);
+          }
+      });
+      
 	addWindowListener(new WindowAdapter() {
 	    public void windowOpened(WindowEvent e) {
 		txtNro.requestFocus();

@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -41,7 +40,7 @@ import javax.swing.table.TableRowSorter;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.jdesktop.swingx.JXSearchField;
+import org.jdesktop.swingx.JXFindBar;
 import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
 import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
@@ -53,14 +52,13 @@ import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.Reportes;
 import src.main.java.admin.utils.ArmarFecha;
+import src.main.java.admin.utils.Close;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import src.main.java.login.PreLogin;
 import entity.UcsawsEvento;
-
-import org.jdesktop.swingx.JXFindBar;
 
 public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	
@@ -116,6 +114,16 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 	 * ventana de busqueda
 	 */
 	public VentanaBuscarEvento() {
+	  
+	  this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+      addWindowListener(new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent we)
+          { 
+              Close close = new Close();
+              close.cerrarAplicacion(we);
+          }
+      });
 	 
 		
 		addWindowListener(new WindowAdapter() {
@@ -135,7 +143,7 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		e = new UcsawsEvento();
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		botonCancelar = new JButton();
 		botonCancelar.setIcon(new ImageIcon(VentanaBuscarEvento.class

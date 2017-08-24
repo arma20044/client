@@ -61,6 +61,7 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.utils.ArmarFecha;
+import src.main.java.admin.utils.Close;
 import src.main.java.admin.utils.Time24hFormatValidator;
 import src.main.java.admin.validator.EventoValidator;
 import src.main.java.dao.evento.EventoDAO;
@@ -138,6 +139,15 @@ public class VentanaRegistroEvento extends JFrame implements ActionListener {
 	    }
 	});
 
+    this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent we)
+        { 
+            Close close = new Close();
+            close.cerrarAplicacion(we);
+        }
+    });
 	 
 	JTextFieldDateEditor editord = (JTextFieldDateEditor) dateChooserDesde.getDateEditor();
 	    editord.setEditable(false);

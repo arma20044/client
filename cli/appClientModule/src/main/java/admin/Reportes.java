@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -21,6 +23,7 @@ import src.main.java.admin.reportes.Participacion;
 import src.main.java.admin.reportes.Votantes;
 import src.main.java.admin.reportes.VotoBlancoElegir;
 import src.main.java.admin.reportes.VotosElegir;
+import src.main.java.admin.utils.Close;
 import src.main.java.login.Login;
 import src.main.java.login.PreLogin;
 
@@ -41,7 +44,18 @@ public class Reportes extends JFrame implements ActionListener{
 	
 	public Reportes() {
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we)
+            { 
+                Close close = new Close();
+                close.cerrarAplicacion(we);
+            }
+        });
 
 		btnAtras = new JButton();
 		btnAtras.setIcon(new ImageIcon(Reportes.class.getResource("/imgs/volver.png")));

@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,6 +37,7 @@ import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.tipoLista.VentanaBuscarTipoLista;
 import src.main.java.admin.users.VentanaBuscarUsers;
+import src.main.java.admin.utils.Close;
 import src.main.java.admin.vigencia.VentanaBuscarVigencia;
 import src.main.java.admin.votantesHabilitados.VentanaBuscarVotantesHabilitados;
 import src.main.java.admin.zona.VentanaBuscarZona;
@@ -48,6 +51,7 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -71,8 +75,19 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 
 	public DefinicionesGenerales() {
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+		
+	     
+	      addWindowListener(new WindowAdapter() {
+	          @Override
+	          public void windowClosing(WindowEvent we)
+	          { 
+	              Close close = new Close();
+	              close.cerrarAplicacion(we);
+	          }
+	      });
+	      
 		btnAtras = new JButton();
 		btnAtras.setIcon(new ImageIcon(DefinicionesGenerales.class
 				.getResource("/imgs/volver.png")));
