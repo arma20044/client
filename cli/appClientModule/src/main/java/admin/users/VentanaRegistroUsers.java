@@ -50,6 +50,7 @@ import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.buscadores.VentanaBuscarPersonaDesdeUsers;
 import src.main.java.admin.departamento.Item;
 import src.main.java.admin.evento.VentanaBuscarEvento;
+import src.main.java.admin.utils.Utilidades;
 import src.main.java.admin.validator.UsuariosValidator;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.dao.persona.PersonaDAO;
@@ -600,7 +601,7 @@ public class VentanaRegistroUsers extends JFrame implements ActionListener {
             userAGuardr.setFchIns(new Date());
             userAGuardr.setIdEvento(eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento));
             userAGuardr.setIdRol(r);
-            userAGuardr.setPass(txtPass.getText());
+            userAGuardr.setPass(Utilidades.Encriptar(txtPass.getText()));
             userAGuardr.setUcsawsPersona(p);
             userAGuardr.setUsuario(txtUser.getText());
             userAGuardr.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());

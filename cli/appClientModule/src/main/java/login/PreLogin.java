@@ -477,7 +477,11 @@ public class PreLogin extends javax.swing.JFrame {
 		    }
 		}
 		}
-		return null;
+		result = eventoVigente.getIdEvento().toString();
+        
+        VentanaBuscarEvento.evento = result;
+        
+        return Integer.parseInt(result);
 		
 		}
 		

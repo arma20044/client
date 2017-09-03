@@ -29,6 +29,7 @@ import src.main.java.admin.Reportes;
  
 import src.main.java.admin.utils.Close;
 import src.main.java.admin.utils.StringEncrypter;
+import src.main.java.admin.utils.Utilidades;
 import src.main.java.hello.VentanaPrincipal;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -464,7 +465,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 		// miVentanaPrincipal.setVisible(true);
 		// this.dispose();
 			JOptionPane.showMessageDialog(null,
-					"Solo pueden acceder a ésta área los Administradores.",
+					"Usuario o Contraseña erróneos.",
 					"ERROR.", JOptionPane.INFORMATION_MESSAGE);
 
 		}
@@ -523,7 +524,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 			// miVentanaPrincipal.setVisible(true);
 			// this.dispose();
 				JOptionPane.showMessageDialog(null,
-						"Solo pueden acceder a ésta área los Administradores.",
+						"Usuario o Contraseña erróneos.",
 						"ERROR.", JOptionPane.INFORMATION_MESSAGE);
 
 			}
@@ -564,7 +565,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
 		try {
 			List<String> usuarioPass = new ArrayList<String>();
 			usuarioPass.add(usuario);
-			usuarioPass.add(pass);
+			usuarioPass.add(Utilidades.Encriptar(pass));
 
 			// conver a Json inicio
 
