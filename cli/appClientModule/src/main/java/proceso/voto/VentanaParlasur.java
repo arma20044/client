@@ -6,6 +6,8 @@ import java.awt.FontMetrics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -79,6 +81,24 @@ public class VentanaParlasur extends JFrame implements ActionListener {
   // datos a enviar
 
   public VentanaParlasur() {
+    
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    this.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent we)
+      { 
+          String ObjButtons[] = {"Sí","No"};
+           
+         
+          int PromptResult = JOptionPane.showOptionDialog(null,"Desea Salir?","Sistema E-vote: Paraguay Elecciones 2015.",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,ObjButtons,ObjButtons[1]);
+          if(PromptResult==JOptionPane.YES_OPTION)
+          {
+              System.exit(0);
+          }
+      }
+  });
+    
+    votoBlanco = false;
 
     SimpleAttributeSet center = new SimpleAttributeSet();
     StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
@@ -86,7 +106,7 @@ public class VentanaParlasur extends JFrame implements ActionListener {
 
     listaParlasurs = candidatosParlasur();
 
-    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    
     setResizable(false);
 
     /* permite iniciar las propiedades de los componentes */

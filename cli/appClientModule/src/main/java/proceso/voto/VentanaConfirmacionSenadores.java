@@ -10,8 +10,11 @@ import hello.wsdl.VotarResponse;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -20,6 +23,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -33,6 +37,9 @@ import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import src.main.java.votante.VentanaPrincipalVotante;
 
+import javax.swing.ImageIcon;
+import java.awt.Window.Type;
+
 public class VentanaConfirmacionSenadores extends JDialog{
 	private Container contenedor;
 	JLabel labelTitulo;
@@ -42,10 +49,25 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		 * JFrame Padre y la propiedad booleana que determina
 		 * que es hija*/
 		super(miVentanaPrincipal, modal);
+		setType(Type.POPUP);
+		setUndecorated(true);
 		setAlwaysOnTop(true);
-		setResizable(false);
 		setModal(true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	    this.addWindowListener(new WindowAdapter() {
+	      @Override
+	      public void windowClosing(WindowEvent we)
+	      { 
+	          String ObjButtons[] = {"Sí","No"};
+	           
+	         
+	          int PromptResult = JOptionPane.showOptionDialog(null,"Desea Salir?","Sistema E-vote: Paraguay Elecciones 2015.",JOptionPane.DEFAULT_OPTION,JOptionPane.QUESTION_MESSAGE,null,ObjButtons,ObjButtons[1]);
+	          if(PromptResult==JOptionPane.YES_OPTION)
+	          {
+	              System.exit(0);
+	          }
+	      }
+	  });
 		getContentPane().setLayout(null);
 		//contenedor=getContentPane();
 		//contenedor.setLayout(null);
@@ -59,7 +81,7 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		
 		//contenedor.add(labelTitulo);
 		//tama�o de la ventana
-		setSize(350,150);
+		setSize(365,305);
 		//pone la ventana en el Centro de la pantalla
 		//setLocationRelativeTo(null);
 		//setLocationRelativeTo(null);
@@ -67,9 +89,22 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		setBounds(100, 100, 335, 305);
 		
 		JLabel lblEstSeguro = new JLabel("Est\u00E1 seguro?");
+		lblEstSeguro.setIcon(new ImageIcon(VentanaConfirmacionSenadores.class.getResource("/img/info.png")));
+		lblEstSeguro.setBounds(10, 48, 325, 75);
 		lblEstSeguro.setFont(new Font("Tahoma", Font.PLAIN, 40));
+		Image img5 = ((ImageIcon) lblEstSeguro.getIcon()).getImage();
+        Image newimg5 = img5.getScaledInstance(70, 70,
+            java.awt.Image.SCALE_SMOOTH);
+        lblEstSeguro.setIcon(new ImageIcon(newimg5));
 		
 		JButton btnNewButton = new JButton("SI");
+		btnNewButton.setIcon(new ImageIcon(VentanaConfirmacionSenadores.class.getResource("/img/success.png")));
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 35));
+		btnNewButton.setBounds(0, 188, 167, 65);
+		Image img4 = ((ImageIcon) btnNewButton.getIcon()).getImage();
+        Image newimg4 = img4.getScaledInstance(80, 60,
+            java.awt.Image.SCALE_SMOOTH);
+        btnNewButton.setIcon(new ImageIcon(newimg4));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -82,6 +117,14 @@ public class VentanaConfirmacionSenadores extends JDialog{
 		});
 		
 		JButton btnNewButton_1 = new JButton("NO");
+		btnNewButton_1.setIcon(new ImageIcon(VentanaConfirmacionSenadores.class.getResource("/img/NO.png")));
+		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 35));
+		btnNewButton_1.setLocation(168, 188);
+		btnNewButton_1.setSize(167, 65);
+		Image img3 = ((ImageIcon) btnNewButton_1.getIcon()).getImage();
+	    Image newimg3 = img3.getScaledInstance(80, 60,
+	        java.awt.Image.SCALE_SMOOTH);
+	    btnNewButton_1.setIcon(new ImageIcon(newimg3));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
@@ -89,33 +132,10 @@ public class VentanaConfirmacionSenadores extends JDialog{
 				senadores.setVisible(true);
 			}
 		});
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(69)
-							.addComponent(btnNewButton)
-							.addGap(63)
-							.addComponent(btnNewButton_1))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(51)
-							.addComponent(lblEstSeguro, GroupLayout.PREFERRED_SIZE, 284, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(30)
-					.addComponent(lblEstSeguro, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 137, Short.MAX_VALUE)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnNewButton)
-						.addComponent(btnNewButton_1))
-					.addContainerGap())
-		);
-		getContentPane().setLayout(groupLayout);
+		getContentPane().setLayout(null);
+		getContentPane().add(lblEstSeguro);
+		getContentPane().add(btnNewButton);
+		getContentPane().add(btnNewButton_1);
 		
 		
 		setLocationRelativeTo(null);

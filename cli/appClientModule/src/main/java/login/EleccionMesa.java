@@ -650,7 +650,11 @@ public class EleccionMesa extends JFrame {
 
 
     if (votante.getIdVotante() != null) {
-
+      if(votante.getUcsawsMesa().getUcsawsLocal().getUcsawsZona().getUcsawsDistrito().getDescDistrito().toUpperCase().compareTo(PreLogin.MiPais.toUpperCase())!=0){
+        JOptionPane.showMessageDialog(null, "El Votante no esta habilitado para Votar en éste País. " +  PreLogin.MiPais, "ERROR.",
+            JOptionPane.INFORMATION_MESSAGE);
+      }
+      else{
       if (votante.getSufrago() == 1) {
         JOptionPane.showMessageDialog(null, "El Votante ya ha Votado.", "ERROR.",
             JOptionPane.INFORMATION_MESSAGE);
@@ -672,9 +676,10 @@ public class EleccionMesa extends JFrame {
 
 
       }
-    } else {
+    } }else {
 
     }
+  
     return result;
 
 

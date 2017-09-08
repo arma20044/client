@@ -9,8 +9,8 @@ public class StringHashGeneratorExample {
   public static void main(String[] args) {
     try {
 
-      System.out.println(digest("SHA1", ""));
-      System.out.println(digest("SHA-256", ""));
+      System.out.println(digest("SHA1", "entity.UcsawsPersona@5ecaeee0entity.UcsawsEvento@5d08e4be"));
+      System.out.println(digest("SHA-256", "entity.UcsawsPersona@5ecaeee0entity.UcsawsEvento@5d08e4be"));
 
     } catch (Exception e) {
       System.out.println(e);

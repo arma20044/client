@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -79,6 +80,8 @@ public class PreLogin extends javax.swing.JFrame {
 	
 	 public static String userLogeado;
 	 public static String nombreApellidoUserLogeado;
+	 
+	 public static String MiPais = "";
 	 
 	 public static final Integer timer = 3000;
 	 
@@ -371,7 +374,7 @@ public class PreLogin extends javax.swing.JFrame {
 	//se adapta para que verifique el pais desde donde se esta accediendo
 	public  Integer eventoVigente() {
 		String result ="";
-		String MiPais = "";
+		
 		String paisDescripcion= "";
 		
 		DeQuePais ip = new DeQuePais();
@@ -403,6 +406,22 @@ public class PreLogin extends javax.swing.JFrame {
 		  //JOptionPane.showMessageDialog(null, "No está habilitado para votar desde este pais: " + paisSigla);
 		  return 0;
 		}
+		VigenciaDAO vigenciaDAO = new VigenciaDAO();
+		List<UcsawsVigenciaHorarioXPais> vigenciaHorario = null;
+		    try{
+		      vigenciaHorario = vigenciaDAO.obtenerVigenciaByEvento(eventoVigente);
+		    }
+		catch(Exception e){
+		  System.out.println(e);
+		}
+		 String[] vigencia = new String[vigenciaHorario.size()];
+		 for(int i = 0; i<vigenciaHorario.size(); i++){
+		   UcsawsVigenciaHorarioXPais aux = vigenciaHorario.get(i);
+		   vigencia[i]=aux.getIdPais().getNombre();
+		 }
+		
+		
+		
 		List<UcsawsDistrito>  listas =distritoDAO.obtenerDistritoByIdEvento(eventoVigente.getIdEvento());
 		
 		Iterator<UcsawsDistrito> ite = listas.iterator();
@@ -417,8 +436,11 @@ public class PreLogin extends javax.swing.JFrame {
 	       
 	        
 	    }
-		if (MiPais.compareTo("")==0){
-           JOptionPane.showMessageDialog(null, "No está habilitado para votar desde este pais: " + paisDescripcion);
+	    //test
+	    MiPais = "ESPAÑA";
+	    //test
+		if (MiPais.compareTo("")==0 || !(Arrays.asList(vigencia).contains(MiPais))){
+           JOptionPane.showMessageDialog(null, MiPais + " No está habilitado como País para Votar.");
            return 2;
          }
 		else{
@@ -426,7 +448,7 @@ public class PreLogin extends javax.swing.JFrame {
 		  if (MiPais.compareTo("PARAGUAY")!=0){
 		    UcsawsVigenciaHorarioXPais v = new UcsawsVigenciaHorarioXPais() ;
 		    //verificar la lo hora de acuerdo al pais
-		    VigenciaDAO vigenciaDAO = new VigenciaDAO();
+		    //VigenciaDAO vigenciaDAO = new VigenciaDAO();
 		    
 		    try{
 		    List<UcsawsVigenciaHorarioXPais> vigencias = vigenciaDAO.obtenerVigenciaByEvento(eventoVigente);

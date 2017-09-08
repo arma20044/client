@@ -104,18 +104,22 @@ public class CantidadVotosElegir extends JFrame {
 				Item idTipo = (Item) cmbTipoCanditado.getSelectedItem();
 				tipoSelected = idTipo.getId();
 				
+				TipoListaDAO tipoListaDAO = new TipoListaDAO();
+				
+				String seleccionado = tipoListaDAO.obtenerTipoListaById(tipoSelected).getCodigo();
+				
 				;
 				
 				
-				if (tipoSelected == 1 ){
+				if (seleccionado.contains("PRE" )){
 				CantidadVotosPresidente votos = new CantidadVotosPresidente(tipoSelected);
 				System.out.println(idTipo);
 				votos.start();
 				}
 				
 				else 
-					if (tipoSelected == 2 || tipoSelected == 3){
-					  TipoListaDAO tipoListaDAO = new TipoListaDAO();
+					if (seleccionado.contains("SEN") || seleccionado.contains("PAR")){
+					  
 					 UcsawsTipoLista tl = tipoListaDAO.obtenerTipoListaById(tipoSelected);
 					  
 						CantidadVotosSenadorDiputado votos = new CantidadVotosSenadorDiputado(tl);

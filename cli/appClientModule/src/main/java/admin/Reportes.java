@@ -134,7 +134,7 @@ public class Reportes extends JFrame implements ActionListener{
 						Date hoy = new Date();
 					  if (between(hoy, VentanaBuscarEvento.eventoClase.getFchDesde(), VentanaBuscarEvento.eventoClase.getFchHasta()) ){
 					    //evento seleccionado esta vigente no mostrar los nombres de los candidatos
-					    JOptionPane.showMessageDialog(panel, "Proximamente...");
+					    JOptionPane.showMessageDialog(panel, "Se podrá acceder al culminar la votación.");
 					  }
 					  else {
 					    //evento seleccionado ya ha terminado mostrar

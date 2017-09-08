@@ -67,7 +67,8 @@ public void main(String email,  UcsawsVotante votante ) {
   String password = "votoucsa2016";
 
   // outgoing message information
-  String mailTo = "arma20044@gmail.com";
+  //String mailTo = "arma20044@gmail.com";
+  String mailTo = votante.getIdPersona().getEmail();
   String subject = "CERTIFICADO DE VOTACIÓN" + " - "+ votante.getIdEvento().getDescripcion().toUpperCase();
 
   // message contains HTML markups
