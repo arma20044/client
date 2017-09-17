@@ -37,8 +37,6 @@ import src.main.java.admin.tipoActa.VentanaBuscarTipoActa;
 import src.main.java.admin.tipoCandidato.VentanaBuscarTipoCandidato;
 import src.main.java.admin.tipoEvento.VentanaBuscarTipoEvento;
 import src.main.java.admin.tipoLista.VentanaBuscarTipoLista;
-import src.main.java.admin.tipoMiembroMesa.VentanaBuscarTipoMiembroMesa;
-import src.main.java.admin.tipoMiembroMesa.VentanaRegistroTipoMiembroMesa;
 import src.main.java.admin.users.VentanaBuscarUsers;
 import src.main.java.admin.utils.Close;
 import src.main.java.admin.vigencia.VentanaBuscarVigencia;
@@ -58,9 +56,7 @@ import javax.swing.UIManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import org.jdesktop.swingx.JXButton;
-
-public class DefinicionesGenerales extends JFrame implements ActionListener {
+public class MenuDuranteVotacion extends JFrame implements ActionListener {
 
 	private Coordinador miCoordinador; // objeto miCoordinador que permite la
 										// relacion entre esta clase y la clase
@@ -78,7 +74,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 	public String textoIntroduccion = "";
 	private JButton btnRoles;
 
-	public DefinicionesGenerales() {
+	public MenuDuranteVotacion() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
@@ -94,7 +90,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 	      });
 	      
 		btnAtras = new JButton();
-		btnAtras.setIcon(new ImageIcon(DefinicionesGenerales.class
+		btnAtras.setIcon(new ImageIcon(MenuDuranteVotacion.class
 				.getResource("/imgs/volver.png")));
 		btnAtras.setToolTipText("Atras...");
 		btnAtras.setBounds(683, 474, 83, 51);
@@ -118,7 +114,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
-		btnGenero = new JButton("Generos");
+		btnGenero = new JButton("Tipo Acta");
 		btnGenero.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -133,8 +129,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		});
 		btnGenero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarGenero genero = new VentanaBuscarGenero();
-				genero.setVisible(true);
+				VentanaBuscarTipoActa tipoActa = new VentanaBuscarTipoActa();
+				tipoActa.setVisible(true);
 				dispose();
 			}
 		});
@@ -227,7 +223,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().add(btnDepartamentos);
 
 		labelTitulo = new JLabel();
-		labelTitulo.setIcon(new ImageIcon(DefinicionesGenerales.class
+		labelTitulo.setIcon(new ImageIcon(MenuDuranteVotacion.class
 				.getResource("/imgs/def.png")));
 		labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTitulo.setText("Definiciones Generales");
@@ -528,41 +524,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		});
 		btnRoles.setBounds(497, 363, 176, 23);
 		getContentPane().add(btnRoles);
-		
-		JXButton btnTipoActa = new JXButton();
-		btnTipoActa.setText("Tipo Acta");
-		btnTipoActa.addMouseListener(new MouseAdapter() {
-		  @Override
-		  public void mouseClicked(MouseEvent arg0) {
-		    VentanaBuscarTipoActa tipoActa = new VentanaBuscarTipoActa();
-		    tipoActa.setVisible(true);
-		    dispose();
-		    
-		  }
-		  @Override
-		  public void mouseEntered(MouseEvent arg0) {
-		    labelSeleccion.setText("Aquí puede Gestionar los Tipos de Acta del Sistema.");
-		  }
-		  @Override
-		  public void mouseExited(MouseEvent e) {
-		    cambiarEtiqueta();
-		  }
-		});
-		btnTipoActa.setBounds(497, 284, 176, 23);
-		getContentPane().add(btnTipoActa);
-		
-		JXButton btnTipoMiembroMesa = new JXButton();
-		btnTipoMiembroMesa.addMouseListener(new MouseAdapter() {
-		  @Override
-		  public void mouseClicked(MouseEvent arg0) {
-            VentanaBuscarTipoMiembroMesa consulta = new VentanaBuscarTipoMiembroMesa();
-            consulta.setVisible(true);
-            dispose();
-		  }
-		});
-		btnTipoMiembroMesa.setText("Tipo Miembro Mesa");
-		btnTipoMiembroMesa.setBounds(497, 318, 176, 23);
-		getContentPane().add(btnTipoMiembroMesa);
 
 	}
 
@@ -670,4 +631,5 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		labelSeleccion.setText("Escoja que operacion desea realizar.");
 		
 	}
+	
 }
