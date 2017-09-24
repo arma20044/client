@@ -43,21 +43,26 @@ import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.CandidatoValidator;
+import src.main.java.admin.validator.MiembroMesaValidator;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.dao.listas.ListasDAO;
+import src.main.java.dao.miembroMesa.MiembroMesaDAO;
 import src.main.java.dao.persona.PersonaDAO;
 import src.main.java.dao.tipoLista.TipoListaDAO;
+import src.main.java.dao.tipoMiembroMesa.TipoMiembroMesaDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import src.main.java.login.Login;
 import entity.UcsawsCandidatos;
 import entity.UcsawsEvento;
 import entity.UcsawsListas;
+import entity.UcsawsMiembroMesa;
 import entity.UcsawsPersona;
 import entity.UcsawsTipoLista;
+import entity.UcsawsTipoMiembroMesa;
 
-public class VentanaRegistroCandidato extends JFrame implements ActionListener {
+public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener {
 
   private Coordinador miCoordinador; // objeto miCoordinador que permite la
   // relacion entre esta clase y la clase
@@ -80,35 +85,30 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
   List<Object[]> tcandidato = new ArrayList<Object[]>();
   private JComboBox cmbPersona;
-  private JLabel lblLista;
-  private JComboBox cmbLista;
-  private JLabel lblCod;
-  private JTextField txtCod;
+  private JLabel lblTipo;
+  private JComboBox cmbTipo;
   private DefaultTableModel dm;
 
-  private JComboBox combo;
-
-  private CandidatoDAO candidatoDAO = new CandidatoDAO();
-  private JLabel lblObservacin;
+  //private CandidatoDAO candidatoDAO = new CandidatoDAO();
 
   private String obs = "";
 
   /**
    * constructor de la clase donde se inicializan todos los componentes de la ventana de registro
    */
-  public VentanaRegistroCandidato() {
+  public VentanaRegistroMiembroMesa() {
 
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
-        txtCod.requestFocus();
+       // txtCod.requestFocus();
       }
     });
 
     botonGuardar = new JButton();
     botonGuardar.setToolTipText("Guardar");
     botonGuardar
-        .setIcon(new ImageIcon(VentanaRegistroCandidato.class.getResource("/imgs/save.png")));
-    botonGuardar.setBounds(339, 52, 32, 32);
+        .setIcon(new ImageIcon(VentanaRegistroMiembroMesa.class.getResource("/imgs/save.png")));
+    botonGuardar.setBounds(586, 88, 32, 32);
     botonGuardar.setOpaque(false);
     botonGuardar.setContentAreaFilled(false);
     botonGuardar.setBorderPainted(false);
@@ -119,7 +119,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     botonCancelar = new JButton();
     botonCancelar.setBackground(Color.WHITE);
     botonCancelar.setToolTipText("Atrás");
-    botonCancelar.setIcon(new ImageIcon(VentanaRegistroCandidato.class
+    botonCancelar.setIcon(new ImageIcon(VentanaRegistroMiembroMesa.class
         .getResource("/imgs/back2.png")));
     botonCancelar.setBounds(710, 206, 32, 32);
     botonCancelar.setOpaque(false);
@@ -130,7 +130,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     botonCancelar.setIcon(new ImageIcon(newimg2));
 
     labelTitulo = new JLabel();
-    labelTitulo.setText("NUEVO CANDIDATO");
+    labelTitulo.setText("NUEVO MIEMBRO DE MESA");
     labelTitulo.setBounds(269, 11, 380, 30);
     labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -156,7 +156,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
         dispose();
       }
     });
-    btnHome.setIcon(new ImageIcon(VentanaRegistroCandidato.class.getResource("/imgs/home.png")));
+    btnHome.setIcon(new ImageIcon(VentanaRegistroMiembroMesa.class.getResource("/imgs/home.png")));
     btnHome.setBounds(0, 0, 32, 32);
     Image img = ((ImageIcon) btnHome.getIcon()).getImage();
     Image newimg = img.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
@@ -178,12 +178,12 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
           String part1 = parts[0]; // 004
           String part2 = parts[1]; // 034556
 
-          txtCod.setText(part1.substring(0, 1) + part2.substring(0, 2));
-          System.out.println(txtCod.getText());
+         // txtCod.setText(part1.substring(0, 1) + part2.substring(0, 2));
+          //System.out.println(txtCod.getText());
         }
       }
     });
-    cmbPersona.setBounds(213, 90, 501, 20);
+    cmbPersona.setBounds(180, 88, 396, 20);
     cmbPersona.setSelectedIndex(-1);
     getContentPane().add(cmbPersona);
     AutoCompleteDecorator.decorate(cmbPersona);
@@ -191,36 +191,20 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     JLabel lblPersona = new JLabel();
     lblPersona.setHorizontalAlignment(SwingConstants.RIGHT);
     lblPersona.setText("Persona:");
-    lblPersona.setBounds(130, 88, 61, 25);
+    lblPersona.setBounds(97, 86, 61, 25);
     getContentPane().add(lblPersona);
 
-    lblLista = new JLabel();
-    lblLista.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblLista.setText("Lista:");
-    lblLista.setBounds(130, 121, 61, 25);
-    getContentPane().add(lblLista);
+    lblTipo = new JLabel();
+    lblTipo.setHorizontalAlignment(SwingConstants.RIGHT);
+    lblTipo.setText("Tipo:");
+    lblTipo.setBounds(97, 119, 61, 25);
+    getContentPane().add(lblTipo);
 
-    lblObservacin = new JLabel();
-    lblObservacin.setText("Observación:");
-    lblObservacin.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblObservacin.setBounds(103, 148, 88, 25);
-    getContentPane().add(lblObservacin);
-
-    combo = new JComboBox();
-    combo.setBounds(213, 150, 501, 20);
-    combo.addItem("PRE");
-    combo.addItem("VICE");
-    combo.setSelectedIndex(0);
-    getContentPane().add(combo);
-
-    lblObservacin.setVisible(false);
-    combo.setVisible(false);
-
-    cmbLista = new JComboBox(recuperarDatosComboBoxLista());
-    cmbLista.addActionListener(new ActionListener() {
+    cmbTipo = new JComboBox(recuperarDatosComboBoxTipo());
+    cmbTipo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        if (cmbLista.getSelectedIndex() != -1) {
-          Item item = (Item) cmbLista.getSelectedItem();
+        if (cmbTipo.getSelectedIndex() != -1) {
+          Item item = (Item) cmbTipo.getSelectedItem();
           Integer idTipoListaSelected = item.getId();
           // "Hello".toLowerCase().contains("He".toLowercase());
           ListasDAO listasDAO = new ListasDAO();
@@ -243,19 +227,7 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
           }
 
 
-          if (result == true) {
-
-            lblObservacin.setVisible(true);
-            combo.setSelectedIndex(0);
-            combo.setVisible(true);
-
-          } else {
-            esPresidenteOVice = "-";
-            lblObservacin.setVisible(false);
-            combo.setSelectedIndex(-1);
-            combo.setVisible(false);
-
-          }
+  
 
 
 
@@ -263,26 +235,14 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
       }
     });
 
-    cmbLista.setBounds(213, 123, 501, 20);
-    cmbLista.setSelectedIndex(-1);
-    getContentPane().add(cmbLista);
-    AutoCompleteDecorator.decorate(cmbLista);
-
-    lblCod = new JLabel();
-    lblCod.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblCod.setText("Codigo:");
-    lblCod.setBounds(130, 52, 61, 25);
-    getContentPane().add(lblCod);
-
-    txtCod = new JTextField();
-    txtCod.setBounds(213, 54, 108, 25);
-    getContentPane().add(txtCod);
-    txtCod.setColumns(10);
-    txtCod.setEnabled(false);
+    cmbTipo.setBounds(180, 121, 396, 20);
+    cmbTipo.setSelectedIndex(-1);
+    getContentPane().add(cmbTipo);
+    AutoCompleteDecorator.decorate(cmbTipo);
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
-    lblMensaje.setBounds(212, 181, 363, 14);
+    lblMensaje.setBounds(180, 160, 396, 14);
     getContentPane().add(lblMensaje);
     // recuperarDatos();
 
@@ -333,122 +293,98 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
          * t.setRepeats(false); t.start(); } } else{
          */
 
-        if (cmbLista.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 //&& combo.getSelectedIndex() != -1
+        if (cmbTipo.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 //&& combo.getSelectedIndex() != -1
             ) {
-          Item item = (Item) cmbLista.getSelectedItem();
+          Item item = (Item) cmbTipo.getSelectedItem();
           listaSelected = item.getId();
 
           Item item3 = (Item) cmbPersona.getSelectedItem();
           personaSelected = item3.getId();
-              if(  combo.getSelectedIndex() == -1 ){
-                item4 = esPresidenteOVice;
-              }
-              else{
-                item4 = (String) combo.getSelectedItem();
-              }
           
+          MiembroMesaValidator validador = new MiembroMesaValidator();
+   
+          if(validador.ValidarRepedido(personaSelected, listaSelected, Integer.parseInt(VentanaBuscarEvento.evento))==false){
+            
+            if(validador.ValidarNoCandidato(personaSelected, Integer.parseInt(VentanaBuscarEvento.evento))==false){
+              
+              if (codTemporal == "") {
+                // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+                EventoDAO eventoDAO = new EventoDAO();
+                PersonaDAO personaDAO = new PersonaDAO();
+                TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
+                MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
 
+                UcsawsMiembroMesa paraGuardar = new UcsawsMiembroMesa();
+
+
+                UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
+
+
+                paraGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
+                    .toString()));
+                paraGuardar.setMiembroMesa(tipoMiembroMesaDAO.obtenerTipoMiembroMesaById(listaSelected));
+                paraGuardar.setIdEvento(evento);
+                paraGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
+                paraGuardar.setFchIns(new Date());
+               // candidatoAGuardar.setCodigo(txtCod.getText());
+               // paraGuardar.setDescripcion(item4);
+
+                // candidatoAGuardar.setUcsawsPais(pais);
+
+
+
+                miembroMesaDAO.guardarTipoActa(paraGuardar);
+
+
+                VentanaBuscarMiembroMesa buscar = new VentanaBuscarMiembroMesa();
+                buscar.setVisible(true);
+                dispose();
+                /*
+                 * }
+                 * 
+                 * else // JOptionPane.showMessageDialog(null, // "Ya existe el genero " +
+                 * txtDesc.getText(), // "Información",JOptionPane.WARNING_MESSAGE);
+                 * lblMensaje.setText("La Persona no puede tener mas de una candidatura"); Timer t =
+                 * new Timer(Login.timer, new ActionListener() {
+                 * 
+                 * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
+                 * t.setRepeats(false); t.start();
+                 */
+                // this.dispose();
+              } else {
+
+              }
+              
+            }
+            else{
+              JOptionPane.showMessageDialog(null, "Un candidato no puede formar parte de los miembros de Mesa.", "Error",
+                  JOptionPane.ERROR_MESSAGE);
+            }
+            
+            
+          }
+          else{
+            JOptionPane.showMessageDialog(null, "Ya existe un registro para los datos ingresados.", "Error",
+                JOptionPane.ERROR_MESSAGE);
+          }
           
           // obervacionSelected = Integer.parseInt(item4);
         }
+        else{
+          JOptionPane.showMessageDialog(null, "Por favor, no deje campos vacíos.", "Error",
+              JOptionPane.ERROR_MESSAGE);
+        }
+
+       // if (!(txtCod.getText().length() == 0)) {
+
+ 
+
+
+      
+      
+
         
-
-        if (!(txtCod.getText().length() == 0)) {
-          if (!(txtCod.getText().length() == 3)) {
-            lblMensaje.setText("El codigo debe ser de 3 caracteres.");
-            Timer t = new Timer(Login.timer, new ActionListener() {
-
-              public void actionPerformed(ActionEvent e) {
-                lblMensaje.setText(null);
-              }
-            });
-            t.setRepeats(false);
-            t.start();
-          } else if
-
-
-          (candidatoValidator.ValidarCodigo(txtCod.getText(), personaSelected.toString(),
-              listaSelected.toString(), item4, VentanaBuscarEvento.evento) == false) {
-
-
-            if (codTemporal == "") {
-              // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-              EventoDAO eventoDAO = new EventoDAO();
-              PersonaDAO personaDAO = new PersonaDAO();
-              ListasDAO listaDAO = new ListasDAO();
-              CandidatoDAO candidatoDAO = new CandidatoDAO();
-
-              UcsawsCandidatos candidatoAGuardar = new UcsawsCandidatos();
-
-
-              UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
-
-
-              candidatoAGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
-                  .toString()));
-              candidatoAGuardar.setIdLista(listaDAO.obtenerListaByIdIdLista(listaSelected));
-              candidatoAGuardar.setIdEvento(evento);
-              candidatoAGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
-              candidatoAGuardar.setFchIns(new Date());
-              candidatoAGuardar.setCodigo(txtCod.getText());
-              candidatoAGuardar.setDescripcion(item4);
-
-              // candidatoAGuardar.setUcsawsPais(pais);
-
-
-
-              candidatoDAO.guardarCandidato(candidatoAGuardar);
-
-
-              VentanaBuscarMiembroMesa buscar = new VentanaBuscarMiembroMesa();
-              buscar.setVisible(true);
-              dispose();
-              /*
-               * }
-               * 
-               * else // JOptionPane.showMessageDialog(null, // "Ya existe el genero " +
-               * txtDesc.getText(), // "Información",JOptionPane.WARNING_MESSAGE);
-               * lblMensaje.setText("La Persona no puede tener mas de una candidatura"); Timer t =
-               * new Timer(Login.timer, new ActionListener() {
-               * 
-               * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
-               * t.setRepeats(false); t.start();
-               */
-              // this.dispose();
-            } else {
-
-            }
-          } else {
-            // JOptionPane.showMessageDialog(null,
-            // "Ya existe el genero " + txtDesc.getText(),
-            // "Información",JOptionPane.WARNING_MESSAGE);
-            lblMensaje
-                .setText("Ya existe el candidato con alguno de los datos cargados. Favor verificar.");
-            Timer t = new Timer(Login.timer, new ActionListener() {
-
-              public void actionPerformed(ActionEvent e) {
-                lblMensaje.setText(null);
-              }
-            });
-            t.setRepeats(false);
-            t.start();
-          }
-
-        }
-
-        else {
-          // JOptionPane.showMessageDialog(null, ,
-          // "Información",JOptionPane.WARNING_MESSAGE);
-          lblMensaje.setText("Debe ingresar todos los campos.");
-          Timer t = new Timer(Login.timer, new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-              lblMensaje.setText(null);
-            }
-          });
-          t.setRepeats(false);
-          t.start();
-        }
+ 
         // }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Error al intentar insertar : " + ex, "Error",
@@ -676,15 +612,14 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
 
   }
 
-  private Vector recuperarDatosComboBoxLista() {
+  private Vector recuperarDatosComboBoxTipo() {
 
     Vector model = new Vector();
 
-    ListasDAO listaDAO = new ListasDAO();
+    TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
     // TipoListaDAO tipoListaDAO = new TipoListaDAO();
 
-    List<UcsawsListas> lista =
-        listaDAO.obtenerListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsTipoMiembroMesa> lista = tipoMiembroMesaDAO.obtenerTipoMiembroMesaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
     // List<UcsawsListas> lista =
     // listaDAO.obtenerListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
@@ -697,14 +632,14 @@ public class VentanaRegistroCandidato extends JFrame implements ActionListener {
     else {
 
       // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-      Iterator<UcsawsListas> ite = lista.iterator();
+      Iterator<UcsawsTipoMiembroMesa> ite = lista.iterator();
 
-      UcsawsListas aux;
+      UcsawsTipoMiembroMesa aux;
 
       while (ite.hasNext()) {
         aux = ite.next();
 
-        model.addElement(new Item(aux.getIdLista(), aux.getNombreLista()));
+        model.addElement(new Item(aux.getIdTipoMiembroMesa(), aux.getDescripcion()));
 
       }
       // return model;

@@ -1,4 +1,4 @@
-package src.main.java.admin.miembromesa;
+package src.main.java.admin.acta;
 
 import java.awt.geom.Area;
 import java.util.ArrayList;
@@ -8,13 +8,13 @@ import javax.swing.table.AbstractTableModel;
 
 import org.postgresql.jdbc2.ArrayAssistantRegistry;
 
-public class MiembroMesaJTableModel extends AbstractTableModel {
+public class ActaJTableModel extends AbstractTableModel {
 
 	List<Object[]> candidato = new ArrayList<Object[]>();
 	
 	public int getColumnCount() {
 		// TODO Auto-generated method stub
-		return 4;
+		return 8;
 	}
 
 	public int getRowCount() {
@@ -29,7 +29,7 @@ public class MiembroMesaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Item",  "Persona", "Tipo"};
+	private String[] colNames = new String[] {"ID", "Item",  "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
 
 	@Override
 	public String getColumnName(int col) {

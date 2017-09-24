@@ -29,7 +29,7 @@ public class TipoMiembroMesaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID","Item", "Codigo", "Descripcion"};
+	private String[] colNames = new String[] {"ID","Item", "Codigo", "Descripción"};
 
 	@Override
 	public String getColumnName(int col) {

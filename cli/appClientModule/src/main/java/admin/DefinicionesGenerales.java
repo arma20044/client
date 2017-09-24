@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
 import scr.main.java.admin.distrito.VentanaBuscarDistrito;
+import src.main.java.admin.acta.VentanaBuscarActa;
 import src.main.java.admin.candidato.VentanaBuscarCandidato;
 import src.main.java.admin.departamento.VentanaBuscarDepartamento;
 import src.main.java.admin.evento.VentanaBuscarEvento;
@@ -29,6 +30,7 @@ import src.main.java.admin.genero.VentanaBuscarGenero;
 import src.main.java.admin.listas.VentanaBuscarLista;
 import src.main.java.admin.local.VentanaBuscarLocal;
 import src.main.java.admin.mesa.VentanaBuscarMesa;
+import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
 import src.main.java.admin.nacionalidad.VentanaBuscarNacionalidad;
 import src.main.java.admin.pais.VentanaBuscarPais;
 import src.main.java.admin.persona.VentanaBuscarPersona;
@@ -563,6 +565,31 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		btnTipoMiembroMesa.setText("Tipo Miembro Mesa");
 		btnTipoMiembroMesa.setBounds(497, 318, 176, 23);
 		getContentPane().add(btnTipoMiembroMesa);
+		
+		JXButton btnMiembroMesa = new JXButton();
+		btnMiembroMesa.addMouseListener(new MouseAdapter() {
+		  @Override
+		  public void mouseClicked(MouseEvent arg0) {
+		    VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa();
+		    miembroMesa.setVisible(true);
+		    dispose();
+		  }
+		});
+		btnMiembroMesa.setText("Miembro Mesa");
+		btnMiembroMesa.setBounds(320, 318, 147, 23);
+		getContentPane().add(btnMiembroMesa);
+		
+		JButton btnActa = new JButton("Actas");
+		btnActa.addMouseListener(new MouseAdapter() {
+		  @Override
+		  public void mouseClicked(MouseEvent e) {
+	          VentanaBuscarActa acta = new VentanaBuscarActa();
+	            acta.setVisible(true);
+	            dispose();
+		  }
+		});
+		btnActa.setBounds(105, 318, 176, 23);
+		getContentPane().add(btnActa);
 
 	}
 

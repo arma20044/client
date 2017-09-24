@@ -1,4 +1,4 @@
-package src.main.java.admin.miembromesa;
+package src.main.java.admin.acta;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -38,16 +38,16 @@ import org.jdesktop.swingx.JXTable;
 import org.json.simple.JSONArray;
 import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
-import entity.UcsawsMiembroMesa;
+import entity.UcsawsActas;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
  
-import src.main.java.dao.miembroMesa.MiembroMesaDAO;
+import src.main.java.dao.acta.ActaDAO;
 import src.main.java.login.Login;
  
 
-public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
+public class VentanaBuscarActa extends JFrame implements ActionListener {
 
   private Coordinador miCoordinador; // objeto miCoordinador que permite la
   // relacion entre esta clase y la clase
@@ -59,7 +59,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
   JSONArray miPersona = null;
   DefaultTableModel modelo;
   private JXTable table_1;
-  private MiembroMesaJTableModel model = new MiembroMesaJTableModel();
+  private ActaJTableModel model = new ActaJTableModel();
   private JScrollPane scrollPane;
 
   private String codTemporal = "";
@@ -68,12 +68,12 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
   private DefaultTableModel dm;
 
- // private Candidato candidato;
+
 
   /**
    * constructor de la clase donde se inicializan todos los componentes de la ventana de busqueda
    */
-  public VentanaBuscarMiembroMesa() {
+  public VentanaBuscarActa() {
 
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
@@ -86,7 +86,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
     botonCancelar = new JButton();
     botonCancelar
-        .setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/back2.png")));
+        .setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/back2.png")));
     botonCancelar.setToolTipText("Atrás");
     botonCancelar.setBounds(589, 422, 45, 25);
     botonCancelar.setOpaque(false);
@@ -99,7 +99,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     btnEliminar = new JButton();
     btnEliminar.setToolTipText("Eliminar");
     btnEliminar
-        .setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/borrar.png")));
+        .setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/borrar.png")));
     btnEliminar.setBounds(528, 55, 32, 32);
     btnEliminar.setOpaque(false);
     btnEliminar.setContentAreaFilled(false);
@@ -109,7 +109,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     btnEliminar.setIcon(new ImageIcon(newimg4));
 
     labelTitulo = new JLabel();
-    labelTitulo.setText("NUEVO MIEMBRO MESA");
+    labelTitulo.setText("NUEVA ACTA");
     labelTitulo.setBounds(248, 11, 270, 30);
     labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
@@ -130,7 +130,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
     scrollPane = new JScrollPane();
     scrollPane.setAutoscrolls(true);
-    scrollPane.setToolTipText("Lista de Miembros de Mesa");
+    scrollPane.setToolTipText("Lista de Candidatos");
     scrollPane.setBounds(0, 158, 634, 265);
     getContentPane().add(scrollPane);
 
@@ -190,15 +190,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
         codTemporal = selectedData.get(0);
 
         System.out.println("Selected: " + selectedData);
-
-       /* candidato = new Candidato();
-        candidato.setId_candidato(codTemporal);
-        candidato.setId_persona(selectedData.get(3) + " " + selectedData.get(4));
-        candidato.setId_lista(selectedData.get(5) + " - " + selectedData.get(6));
-        candidato.setDescripcion(selectedData.get(6));
-        candidato.setCodigo(selectedData.get(2));
-        // candidato.setId_evento(selectedData.get(8));
-        candidato.setDescripcion(selectedData.get(7));*/
+ 
 
       }
     });
@@ -207,7 +199,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     table_1.setModel(model);
     table_1.removeColumn(table_1.getColumnModel().getColumn(0));
     JLabel lblListaDeGeneros = new JLabel();
-    lblListaDeGeneros.setText("LISTA DE MIEMBROS DE MESA");
+    lblListaDeGeneros.setText("LISTA DE ACTAS");
     lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
     lblListaDeGeneros.setBounds(147, 117, 325, 30);
     getContentPane().add(lblListaDeGeneros);
@@ -221,7 +213,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
         dispose();
       }
     });
-    btnHome.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/home.png")));
+    btnHome.setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/home.png")));
     btnHome.setBounds(0, 0, 32, 32);
     Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
     Image newimg5 = img5.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
@@ -231,7 +223,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     btnNuevo = new JButton("");
     btnNuevo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        VentanaRegistroMiembroMesa registro = new VentanaRegistroMiembroMesa();
+        VentanaRegistroActa registro = new VentanaRegistroActa();
         registro.setVisible(true);
         dispose();
       }
@@ -240,7 +232,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     btnNuevo.setOpaque(false);
     btnNuevo.setContentAreaFilled(false);
     btnNuevo.setBorderPainted(false);
-    btnNuevo.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/add.png")));
+    btnNuevo.setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/add.png")));
     btnNuevo.setBounds(486, 55, 32, 32);
     Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
     Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
@@ -322,21 +314,21 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     if (e.getSource() == btnEliminar) {
       if (!codTemporal.equals("")) {
         int respuesta =
-            JOptionPane.showConfirmDialog(this, "¿Esta seguro de eliminar el Miembro de Mesa.?",
+            JOptionPane.showConfirmDialog(this, "¿Esta seguro de eliminar el Acta?",
                 "Confirmación", JOptionPane.YES_NO_OPTION);
         if (respuesta == JOptionPane.YES_NO_OPTION) {
-          MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+          ActaDAO actaDAO = new ActaDAO();
 
           try {
-            //UcsawsMiembroMesa miembroMesaEliminar = miembroMesaDAO.obtenerMiembroMesaById(Integer.parseInt(codTemporal));
+            UcsawsActas actaEliminar = actaDAO.obtenerActaById(Integer.parseInt(codTemporal));
 
-            if (miembroMesaDAO.eliminarMiembroMesa(codTemporal) == false) {
-              JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Miembro de Mesa.", "Error",
+            if (actaDAO.eliminarActa(codTemporal) == false) {
+              JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Candidato", "Error",
                   JOptionPane.ERROR_MESSAGE);
             } else {
               codTemporal = "";
 
-              lblMensaje.setText("Excelente, se ha eliminado el Miembro de Mesa.");
+              lblMensaje.setText("Excelente, se ha eliminado el Acta ");
 
               Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -349,7 +341,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
               codTemporal = "";
               limpiar();
 
-              model = new MiembroMesaJTableModel();
+              model = new ActaJTableModel();
 
               recuperarDatos();
               table_1.setModel(model);
@@ -375,7 +367,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
           // table_1.repaint();
         }
       } else {
-        lblMensaje.setText("Por favor seleccione que Miembro de Mesa desea Eliminar");
+        lblMensaje.setText("Por favor seleccione que Acta desea Eliminar");
 
         Timer t = new Timer(Login.timer, new ActionListener() {
 
@@ -449,9 +441,9 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
   private void recuperarDatos() {
 
-    MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+    ActaDAO actaDAO = new ActaDAO();
 
-    List<UcsawsMiembroMesa> lista = miembroMesaDAO.obtenerMiembroMesaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsActas> lista = actaDAO.obtenerActaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
     if (lista.isEmpty()) {
       // JOptionPane.showMessageDialog(null, "algo salio mal",
@@ -467,16 +459,16 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
   }
 
-  public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsMiembroMesa> candidatos) {
+  public AbstractTableModel obtenerModeloA(JTable tabla, List<UcsawsActas> candidatos) {
 
     // AbstractTableModel model = (DefaultTableModel) tabla.getModel();
-    Iterator<UcsawsMiembroMesa> ite = candidatos.iterator();
+    Iterator<UcsawsActas> ite = candidatos.iterator();
 
     // String header[] = new String[] { "ID","Item","Nro.",
     // "Desc. Evento","Inicio","Fin","Desc. Tipo Evento" };
     // model.setColumnIdentifiers(header);
 
-    UcsawsMiembroMesa aux;
+    UcsawsActas aux;
     Integer cont = 1;
     while (ite.hasNext()) {
       aux = ite.next();
@@ -484,7 +476,10 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
       // "Observacion"};
 
       Object[] row =
-          {aux.getIdMiembroMesa(), cont, aux.getIdPersona().getDatosPersonales(),  aux.getMiembroMesa().getDescripcion()};
+          {aux.getIdActa(), cont, aux.getIdMesa().getDescMesa(), aux.getObservacion(),aux.getDescripcion(),
+              aux.getFecha(),
+              aux.getNumeroVotantes(),
+              aux.getTipoActa().getDescripcion()};
 
       // new
       // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};

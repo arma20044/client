@@ -4,6 +4,8 @@ import java.util.Date;
 
  
 
+ 
+
 
 public class UcsawsMiembroMesa implements java.io.Serializable {
 
@@ -29,6 +31,10 @@ public class UcsawsMiembroMesa implements java.io.Serializable {
   private String usuarioUpd;
   
   private UcsawsTipoMiembroMesa miembroMesa;
+  
+ 
+
+ 
 
 
   public UcsawsTipoMiembroMesa getMiembroMesa() {
