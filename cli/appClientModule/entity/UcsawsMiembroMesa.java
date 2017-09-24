@@ -2,6 +2,8 @@ package entity;
 
 import java.util.Date;
 
+
+
  
 
  
@@ -32,9 +34,21 @@ public class UcsawsMiembroMesa implements java.io.Serializable {
   
   private UcsawsTipoMiembroMesa miembroMesa;
   
+  private UcsawsActas acta;
+  
  
 
  
+
+
+  public UcsawsActas getActa() {
+    return acta;
+  }
+
+
+  public void setActa(UcsawsActas acta) {
+    this.acta = acta;
+  }
 
 
   public UcsawsTipoMiembroMesa getMiembroMesa() {

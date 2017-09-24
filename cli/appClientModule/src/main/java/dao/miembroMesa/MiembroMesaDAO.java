@@ -20,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 
  
 
+
 import entity.UcsawsMiembroMesa;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
@@ -161,5 +162,47 @@ public class MiembroMesaDAO {
 	// guardado = true;
 
 	return guardado;
+    }
+    
+    public List<UcsawsMiembroMesa> obtenerMiembroMesaByIdEventoByActa(Integer idEvento, Integer idActa) {
+      
+    List<Integer> lista = new ArrayList<Integer>();
+    lista.add(idEvento);
+    lista.add(idActa);
+
+    String jsonStrEnviar = "";
+    ObjectMapper mapperObj = new ObjectMapper();
+    try{
+    jsonStrEnviar = mapperObj.writeValueAsString(lista);
+    }
+    catch(Exception e){
+      System.out.println(e);
+    }
+    ApplicationContext ctx = SpringApplication
+        .run(WeatherConfiguration.class);
+
+    WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+    QueryGenericoRequest query = new QueryGenericoRequest();
+
+    query.setTipoQueryGenerico(149);
+    query.setQueryGenerico(jsonStrEnviar);
+
+    QueryGenericoResponse response = weatherClient
+        .getQueryGenericoResponse(query);
+    weatherClient.printQueryGenericoResponse(response);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInString = response.getQueryGenericoResponse();
+
+    List<UcsawsMiembroMesa> miembroMesa = new ArrayList<UcsawsMiembroMesa>();
+    try {
+      miembroMesa = mapper.readValue(jsonInString,
+            new TypeReference<List<UcsawsMiembroMesa>>() {
+            });
+
+    } catch (Exception e) {
+        System.out.println(e);
+    }
+    return miembroMesa;
     }
 }

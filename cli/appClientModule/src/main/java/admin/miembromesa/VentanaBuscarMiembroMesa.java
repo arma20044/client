@@ -41,11 +41,12 @@ import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import entity.UcsawsMiembroMesa;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
+import src.main.java.admin.acta.VentanaBuscarActa;
 import src.main.java.admin.evento.VentanaBuscarEvento;
- 
+
 import src.main.java.dao.miembroMesa.MiembroMesaDAO;
 import src.main.java.login.Login;
- 
+
 
 public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
@@ -68,12 +69,17 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
   private DefaultTableModel dm;
 
- // private Candidato candidato;
+  static String acta = "";
+
+  // private Candidato candidato;
 
   /**
    * constructor de la clase donde se inicializan todos los componentes de la ventana de busqueda
    */
+
   public VentanaBuscarMiembroMesa() {
+
+
 
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
@@ -85,8 +91,8 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
     botonCancelar = new JButton();
-    botonCancelar
-        .setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/back2.png")));
+    botonCancelar.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class
+        .getResource("/imgs/back2.png")));
     botonCancelar.setToolTipText("Atrás");
     botonCancelar.setBounds(589, 422, 45, 25);
     botonCancelar.setOpaque(false);
@@ -98,8 +104,8 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
     btnEliminar = new JButton();
     btnEliminar.setToolTipText("Eliminar");
-    btnEliminar
-        .setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/borrar.png")));
+    btnEliminar.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class
+        .getResource("/imgs/borrar.png")));
     btnEliminar.setBounds(528, 55, 32, 32);
     btnEliminar.setOpaque(false);
     btnEliminar.setContentAreaFilled(false);
@@ -140,7 +146,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
       }
     };
     table_1.setToolTipText("Listado de Generos.");
-    //table_1.setAutoCreateRowSorter(true);
+    // table_1.setAutoCreateRowSorter(true);
     table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     scrollPane.setViewportView(table_1);
 
@@ -191,14 +197,256 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
         System.out.println("Selected: " + selectedData);
 
-       /* candidato = new Candidato();
-        candidato.setId_candidato(codTemporal);
-        candidato.setId_persona(selectedData.get(3) + " " + selectedData.get(4));
-        candidato.setId_lista(selectedData.get(5) + " - " + selectedData.get(6));
-        candidato.setDescripcion(selectedData.get(6));
-        candidato.setCodigo(selectedData.get(2));
-        // candidato.setId_evento(selectedData.get(8));
-        candidato.setDescripcion(selectedData.get(7));*/
+        /*
+         * candidato = new Candidato(); candidato.setId_candidato(codTemporal);
+         * candidato.setId_persona(selectedData.get(3) + " " + selectedData.get(4));
+         * candidato.setId_lista(selectedData.get(5) + " - " + selectedData.get(6));
+         * candidato.setDescripcion(selectedData.get(6)); candidato.setCodigo(selectedData.get(2));
+         * // candidato.setId_evento(selectedData.get(8));
+         * candidato.setDescripcion(selectedData.get(7));
+         */
+
+      }
+    });
+    table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    recuperarDatos();
+    table_1.setModel(model);
+    table_1.removeColumn(table_1.getColumnModel().getColumn(0));
+    JLabel lblListaDeGeneros = new JLabel();
+    lblListaDeGeneros.setText("LISTA DE MIEMBROS DE MESA");
+    lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
+    lblListaDeGeneros.setBounds(147, 117, 325, 30);
+    getContentPane().add(lblListaDeGeneros);
+
+    JButton btnHome = new JButton("");
+    btnHome.setToolTipText("Inicio");
+    btnHome.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        DefinicionesGenerales menuprincipal = new DefinicionesGenerales();
+        menuprincipal.setVisible(true);
+        dispose();
+      }
+    });
+    btnHome.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/home.png")));
+    btnHome.setBounds(0, 0, 32, 32);
+    Image img5 = ((ImageIcon) btnHome.getIcon()).getImage();
+    Image newimg5 = img5.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    btnHome.setIcon(new ImageIcon(newimg5));
+    getContentPane().add(btnHome);
+
+    btnNuevo = new JButton("");
+    btnNuevo.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        VentanaRegistroMiembroMesa registro = new VentanaRegistroMiembroMesa();
+        registro.setVisible(true);
+        dispose();
+      }
+    });
+    btnNuevo.setToolTipText("Nuevo");
+    btnNuevo.setOpaque(false);
+    btnNuevo.setContentAreaFilled(false);
+    btnNuevo.setBorderPainted(false);
+    btnNuevo.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class.getResource("/imgs/add.png")));
+    btnNuevo.setBounds(486, 55, 32, 32);
+    Image img2 = ((ImageIcon) btnNuevo.getIcon()).getImage();
+    Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    btnNuevo.setIcon(new ImageIcon(newimg2));
+    getContentPane().add(btnNuevo);
+
+    lblMensaje = new JLabel("");
+    lblMensaje.setForeground(Color.RED);
+    lblMensaje.setBounds(57, 88, 432, 14);
+    getContentPane().add(lblMensaje);
+    // Image newimg6 = img6.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+
+    // table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
+
+    ListSelectionModel cellSelectionModel = table_1.getSelectionModel();
+    // recuperarDatos();
+    cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+    // cellSelectionModel.addListSelectionListener(new
+    // ListSelectionListener() {
+    // public void valueChanged(ListSelectionEvent e) {
+    // String selectedData = null;
+    //
+    // int[] selectedRow = table_1.getSelectedRows();
+    // int[] selectedColumns = table_1.getSelectedColumns();
+    //
+    // for (int i = 0; i < selectedRow.length; i++) {
+    // for (int j = 0; j < selectedColumns.length; j++) {
+    // selectedData = (String) table_1.getValueAt(selectedRow[i],
+    // selectedColumns[j]);
+    // }
+    // }
+    // System.out.println("Selected: " + selectedData);
+    // }
+    //
+    // });
+
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "clickButtonescape");
+
+    getRootPane().getActionMap().put("clickButtonescape", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        botonCancelar.doClick();
+        System.out.println("button esc clicked");
+      }
+    });
+
+
+    getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+        KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "clickButtondelete");
+
+    getRootPane().getActionMap().put("clickButtondelete", new AbstractAction() {
+      public void actionPerformed(ActionEvent ae) {
+        btnEliminar.doClick();
+        System.out.println("button delete clicked");
+      }
+    });
+
+    DateFormat format = new SimpleDateFormat("dd/MM/yy hh:mm:ss");
+
+    if (VentanaBuscarEvento.readOnly == true) {
+      btnNuevo.setEnabled(false);
+      btnNuevo.setToolTipText("Ya No se puede cargar datos durante ni despues la votacion");
+      btnEliminar.setEnabled(false);
+      btnEliminar.setToolTipText("Ya No se puede eliminar datos durante ni despues la votacion");
+      // btnModificar.setEnabled(false);
+      // btnModificar.setToolTipText("Ya No se puede Modificar datos durante ni despues la votacion");
+    }
+
+  }
+
+  public VentanaBuscarMiembroMesa(String acta) {
+
+    this.acta = acta;
+
+    addWindowListener(new WindowAdapter() {
+      public void windowOpened(WindowEvent e) {
+        txtBuscar.requestFocus();
+      }
+    });
+
+    setResizable(false);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    botonCancelar = new JButton();
+    botonCancelar.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class
+        .getResource("/imgs/back2.png")));
+    botonCancelar.setToolTipText("Atrás");
+    botonCancelar.setBounds(589, 422, 45, 25);
+    botonCancelar.setOpaque(false);
+    botonCancelar.setContentAreaFilled(false);
+    botonCancelar.setBorderPainted(false);
+    Image img = ((ImageIcon) botonCancelar.getIcon()).getImage();
+    Image newimg = img.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    botonCancelar.setIcon(new ImageIcon(newimg));
+
+    btnEliminar = new JButton();
+    btnEliminar.setToolTipText("Eliminar");
+    btnEliminar.setIcon(new ImageIcon(VentanaBuscarMiembroMesa.class
+        .getResource("/imgs/borrar.png")));
+    btnEliminar.setBounds(528, 55, 32, 32);
+    btnEliminar.setOpaque(false);
+    btnEliminar.setContentAreaFilled(false);
+    btnEliminar.setBorderPainted(false);
+    Image img4 = ((ImageIcon) btnEliminar.getIcon()).getImage();
+    Image newimg4 = img4.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
+    btnEliminar.setIcon(new ImageIcon(newimg4));
+
+    labelTitulo = new JLabel();
+    labelTitulo.setText("NUEVO MIEMBRO MESA");
+    labelTitulo.setBounds(248, 11, 270, 30);
+    labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
+
+
+
+    btnEliminar.addActionListener(this);
+    botonCancelar.addActionListener(this);
+
+    getContentPane().add(botonCancelar);
+    getContentPane().add(btnEliminar);
+    getContentPane().add(labelTitulo);
+    limpiar();
+
+    setSize(640, 476);
+    setTitle("Sistema E-vote: Paraguay Elecciones 2015");
+    setLocationRelativeTo(null);
+    getContentPane().setLayout(null);
+
+    scrollPane = new JScrollPane();
+    scrollPane.setAutoscrolls(true);
+    scrollPane.setToolTipText("Lista de Miembros de Mesa");
+    scrollPane.setBounds(0, 158, 634, 265);
+    getContentPane().add(scrollPane);
+
+    table_1 = new JXTable() {
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+    table_1.setToolTipText("Listado de Generos.");
+    // table_1.setAutoCreateRowSorter(true);
+    table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    scrollPane.setViewportView(table_1);
+
+    txtBuscar = new JXFindBar(table_1.getSearchable());
+
+    txtBuscar.setBounds(10, 54, 474, 33);
+    getContentPane().add(txtBuscar);
+    table_1.setColumnControlVisible(true);
+
+    TableRowFilterSupport.forTable(table_1).searchable(true).apply();
+    // String[] columnNames = {"Picture", "Description"};
+    table_1.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent arg0) {
+        List<String> selectedData = new ArrayList<String>();
+
+        int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+        // System.out.println(selectedRow);
+        int col = 0;
+        while (col < table_1.getColumnCount() + 1) {
+          // System.out.println(table_1.getValueAt(selectedRow,
+          // col));
+          try {
+            int row = table_1.rowAtPoint(arg0.getPoint());
+            String table_click0 =
+                table_1.getModel().getValueAt(table_1.convertRowIndexToModel(row), col).toString();
+            // System.out.println(table_click0);
+
+            selectedData.add(table_click0);
+            // System.out.println(selectedData);
+
+          } catch (Exception e) {
+            System.out.println(e.getMessage());
+          }
+
+          col++;
+        }
+        // selectedData.ad table_1.getValueAt(selectedRow[i],
+        // selectedColumns[0]);
+        // txtId.setText(selectedData.get(0));
+        // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
+        // + selectedData.get(4));
+
+        // textFecha.setText(selectedData.get(2));
+        // textUsu.setText(selectedData.get(4));
+        // codTemporal.setText(selectedData.get(1));
+        codTemporal = selectedData.get(0);
+
+        System.out.println("Selected: " + selectedData);
+
+        /*
+         * candidato = new Candidato(); candidato.setId_candidato(codTemporal);
+         * candidato.setId_persona(selectedData.get(3) + " " + selectedData.get(4));
+         * candidato.setId_lista(selectedData.get(5) + " - " + selectedData.get(6));
+         * candidato.setDescripcion(selectedData.get(6)); candidato.setCodigo(selectedData.get(2));
+         * // candidato.setId_evento(selectedData.get(8));
+         * candidato.setDescripcion(selectedData.get(7));
+         */
 
       }
     });
@@ -328,11 +576,12 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
           MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
 
           try {
-            //UcsawsMiembroMesa miembroMesaEliminar = miembroMesaDAO.obtenerMiembroMesaById(Integer.parseInt(codTemporal));
+            // UcsawsMiembroMesa miembroMesaEliminar =
+            // miembroMesaDAO.obtenerMiembroMesaById(Integer.parseInt(codTemporal));
 
             if (miembroMesaDAO.eliminarMiembroMesa(codTemporal) == false) {
-              JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Miembro de Mesa.", "Error",
-                  JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, "Error al intentar Borrar el Miembro de Mesa.",
+                  "Error", JOptionPane.ERROR_MESSAGE);
             } else {
               codTemporal = "";
 
@@ -393,8 +642,12 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
     }
     if (e.getSource() == botonCancelar) {
-      DefinicionesGenerales definiciones = new DefinicionesGenerales();
-      definiciones.setVisible(true);
+      /*
+       * DefinicionesGenerales definiciones = new DefinicionesGenerales();
+       * definiciones.setVisible(true);
+       */
+      VentanaBuscarActa acta = new VentanaBuscarActa();
+      acta.setVisible(true);
       this.dispose();
     }
 
@@ -408,7 +661,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
   private void muestraPersona(JSONArray genero) {
     JSONArray a = (JSONArray) genero.get(0);
     // txtId.setText(Long.toString( (Long) a.get(0)) );
-//    txtBuscar.setText((String) a.get(1));
+    // txtBuscar.setText((String) a.get(1));
     // textFecha.setText((String) a.get(2));
     // textUsu.setText((String) a.get(4));
     codTemporal = a.get(0).toString();
@@ -420,7 +673,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
    * Permite limpiar los componentes
    */
   public void limpiar() {
-   //xtBuscar.setText("");
+    // xtBuscar.setText("");
 
     // codTemporal.setText("");
     habilita(true, false, false, false, false, true, false, true, true);
@@ -442,7 +695,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
    */
   public void habilita(boolean codigo, boolean nombre, boolean edad, boolean tel,
       boolean profesion, boolean bBuscar, boolean bGuardar, boolean bModificar, boolean bEliminar) {
-   // txtBuscar.setEditable(codigo);
+    // txtBuscar.setEditable(codigo);
     // botonModificar.setEnabled(true);
     btnEliminar.setEnabled(bEliminar);
   }
@@ -451,7 +704,9 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
     MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
 
-    List<UcsawsMiembroMesa> lista = miembroMesaDAO.obtenerMiembroMesaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsMiembroMesa> lista =
+        miembroMesaDAO.obtenerMiembroMesaByIdEventoByActa(
+            Integer.parseInt(VentanaBuscarEvento.evento), Integer.parseInt(acta));
 
     if (lista.isEmpty()) {
       // JOptionPane.showMessageDialog(null, "algo salio mal",
@@ -484,7 +739,8 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
       // "Observacion"};
 
       Object[] row =
-          {aux.getIdMiembroMesa(), cont, aux.getIdPersona().getDatosPersonales(),  aux.getMiembroMesa().getDescripcion()};
+          {aux.getIdMiembroMesa(), cont, aux.getIdPersona().getDatosPersonales(),
+              aux.getMiembroMesa().getDescripcion()};
 
       // new
       // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
@@ -498,7 +754,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
   }
 
   void LimpiarCampos() {
-   // txtBuscar.setText("");
+    // txtBuscar.setText("");
     // textFecha.setText("");
     // textUsu.setText("");
     codTemporal = "";

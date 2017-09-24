@@ -43,6 +43,7 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
  
+import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
 import src.main.java.dao.acta.ActaDAO;
 import src.main.java.login.Login;
  
@@ -67,6 +68,8 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
   private JLabel lblMensaje;
 
   private DefaultTableModel dm;
+  
+  
 
 
 
@@ -88,7 +91,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     botonCancelar
         .setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/back2.png")));
     botonCancelar.setToolTipText("Atrás");
-    botonCancelar.setBounds(589, 422, 45, 25);
+    botonCancelar.setBounds(813, 422, 45, 25);
     botonCancelar.setOpaque(false);
     botonCancelar.setContentAreaFilled(false);
     botonCancelar.setBorderPainted(false);
@@ -123,7 +126,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     getContentPane().add(labelTitulo);
     limpiar();
 
-    setSize(640, 476);
+    setSize(864, 476);
     setTitle("Sistema E-vote: Paraguay Elecciones 2015");
     setLocationRelativeTo(null);
     getContentPane().setLayout(null);
@@ -131,7 +134,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     scrollPane = new JScrollPane();
     scrollPane.setAutoscrolls(true);
     scrollPane.setToolTipText("Lista de Candidatos");
-    scrollPane.setBounds(0, 158, 634, 265);
+    scrollPane.setBounds(0, 158, 858, 265);
     getContentPane().add(scrollPane);
 
     table_1 = new JXTable() {
@@ -190,6 +193,10 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
         codTemporal = selectedData.get(0);
 
         System.out.println("Selected: " + selectedData);
+        
+        VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
+        miembroMesa.setVisible(true);
+        dispose();
  
 
       }
@@ -477,7 +484,8 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
 
       Object[] row =
           {aux.getIdActa(), cont, aux.getIdMesa().getDescMesa(), aux.getObservacion(),aux.getDescripcion(),
-              aux.getFecha(),
+          new SimpleDateFormat("dd-MM-yyyy").format((aux.getFecha()))
+              ,
               aux.getNumeroVotantes(),
               aux.getTipoActa().getDescripcion()};
 

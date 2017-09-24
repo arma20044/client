@@ -29,7 +29,7 @@ public class ActaJTableModel extends AbstractTableModel {
 		return resultado;
 	}
 
-	private String[] colNames = new String[] {"ID", "Item",  "codigo", "nombre","apellido", "Lista", "Tipo", "Observacion"};
+	private String[] colNames = new String[] {"ID", "Item",  "Mesa", "Observación","Descripción", "Fecha", "Cantidad Votantes", "Tipo Acta"};
 
 	@Override
 	public String getColumnName(int col) {

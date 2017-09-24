@@ -566,19 +566,6 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		btnTipoMiembroMesa.setBounds(497, 318, 176, 23);
 		getContentPane().add(btnTipoMiembroMesa);
 		
-		JXButton btnMiembroMesa = new JXButton();
-		btnMiembroMesa.addMouseListener(new MouseAdapter() {
-		  @Override
-		  public void mouseClicked(MouseEvent arg0) {
-		    VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa();
-		    miembroMesa.setVisible(true);
-		    dispose();
-		  }
-		});
-		btnMiembroMesa.setText("Miembro Mesa");
-		btnMiembroMesa.setBounds(320, 318, 147, 23);
-		getContentPane().add(btnMiembroMesa);
-		
 		JButton btnActa = new JButton("Actas");
 		btnActa.addMouseListener(new MouseAdapter() {
 		  @Override

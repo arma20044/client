@@ -44,6 +44,7 @@ import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
 import src.main.java.admin.validator.CandidatoValidator;
 import src.main.java.admin.validator.MiembroMesaValidator;
+import src.main.java.dao.acta.ActaDAO;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.dao.evento.EventoDAO;
 import src.main.java.dao.listas.ListasDAO;
@@ -309,6 +310,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
               
               if (codTemporal == "") {
                 // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+                ActaDAO actaDAO = new ActaDAO();
                 EventoDAO eventoDAO = new EventoDAO();
                 PersonaDAO personaDAO = new PersonaDAO();
                 TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
@@ -319,7 +321,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
 
                 UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
 
-
+                paraGuardar.setActa(actaDAO.obtenerActaById(Integer.parseInt(VentanaBuscarMiembroMesa.acta)));
                 paraGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
                     .toString()));
                 paraGuardar.setMiembroMesa(tipoMiembroMesaDAO.obtenerTipoMiembroMesaById(listaSelected));

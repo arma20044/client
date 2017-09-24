@@ -72,6 +72,7 @@ import entity.UcsawsMesa;
 import entity.UcsawsPersona;
 import entity.UcsawsTipoActa;
 import entity.UcsawsZona;
+import javax.swing.JScrollPane;
 
 public class VentanaRegistroActa extends JFrame implements ActionListener {
 
@@ -118,6 +119,8 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
   JTextArea areaDesc = new JTextArea();
   JTextArea areaObs = new JTextArea();
   JDateChooser dateChooser = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
+  private JScrollPane scrollPane;
+  private JScrollPane scrollPane_1;
 
   /**
    * constructor de la clase donde se inicializan todos los componentes de la ventana de registro
@@ -145,7 +148,7 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     botonCancelar.setBackground(Color.WHITE);
     botonCancelar.setToolTipText("Atrás");
     botonCancelar.setIcon(new ImageIcon(VentanaRegistroActa.class.getResource("/imgs/back2.png")));
-    botonCancelar.setBounds(710, 206, 32, 32);
+    botonCancelar.setBounds(707, 547, 32, 32);
     botonCancelar.setOpaque(false);
     botonCancelar.setContentAreaFilled(false);
     botonCancelar.setBorderPainted(false);
@@ -166,11 +169,11 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     lblMesa = new JLabel();
     lblMesa.setText("Mesa:");
     lblMesa.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblMesa.setBounds(163, 614, 61, 25);
+    lblMesa.setBounds(147, 526, 61, 25);
     getContentPane().add(lblMesa);
     getContentPane().add(labelTitulo);
     limpiar();
-    setSize(745, 727);
+    setSize(745, 608);
     setTitle("Sistema E-vote: Paraguay Elecciones 2015");
     setLocationRelativeTo(null);
     setResizable(false);
@@ -208,7 +211,7 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
-    lblMensaje.setBounds(219, 466, 363, 14);
+    lblMensaje.setBounds(213, 562, 363, 14);
     getContentPane().add(lblMensaje);
     cmbMesa.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent arg0) {
@@ -241,13 +244,13 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     });
 
 
-    cmbMesa.setBounds(234, 616, 136, 20);
+    cmbMesa.setBounds(213, 528, 136, 20);
     getContentPane().add(cmbMesa);
 
     label = new JLabel();
     label.setText("Departamento:");
     label.setHorizontalAlignment(SwingConstants.RIGHT);
-    label.setBounds(149, 491, 73, 14);
+    label.setBounds(133, 403, 73, 14);
     getContentPane().add(label);
 
     cmbDepartamento = new JComboBox(recuperarDatosComboBoxDepartamento());
@@ -313,13 +316,13 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
       }
     });
     cmbDepartamento.setSelectedIndex(-1);
-    cmbDepartamento.setBounds(229, 488, 289, 20);
+    cmbDepartamento.setBounds(213, 400, 289, 20);
     getContentPane().add(cmbDepartamento);
 
     label_1 = new JLabel();
     label_1.setText("Distrito");
     label_1.setHorizontalAlignment(SwingConstants.RIGHT);
-    label_1.setBounds(149, 519, 73, 14);
+    label_1.setBounds(133, 431, 73, 14);
     getContentPane().add(label_1);
 
     cmbDistrito = new JComboBox();
@@ -339,12 +342,12 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
           barrer2();
       }
     });
-    cmbDistrito.setBounds(229, 516, 289, 20);
+    cmbDistrito.setBounds(213, 428, 289, 20);
     getContentPane().add(cmbDistrito);
 
     label_2 = new JLabel("Zona:");
     label_2.setHorizontalAlignment(SwingConstants.RIGHT);
-    label_2.setBounds(183, 547, 41, 20);
+    label_2.setBounds(167, 459, 41, 20);
     getContentPane().add(label_2);
 
     cmbZona = new JComboBox();
@@ -363,11 +366,11 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
           barrer3();
       }
     });
-    cmbZona.setBounds(229, 547, 289, 20);
+    cmbZona.setBounds(213, 459, 289, 20);
     getContentPane().add(cmbZona);
 
     label_3 = new JLabel("Local:");
-    label_3.setBounds(193, 578, 28, 14);
+    label_3.setBounds(177, 490, 28, 14);
     getContentPane().add(label_3);
 
     cmbLocal = new JComboBox();
@@ -389,7 +392,7 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
         }
       }
     });
-    cmbLocal.setBounds(228, 578, 289, 20);
+    cmbLocal.setBounds(212, 490, 289, 20);
     getContentPane().add(cmbLocal);
 
     lblDescripcion = new JLabel();
@@ -397,20 +400,24 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
     lblDescripcion.setBounds(130, 95, 73, 14);
     getContentPane().add(lblDescripcion);
-
-   
-    areaDesc.setBounds(213, 90, 289, 73);
-    getContentPane().add(areaDesc);
+    
+    scrollPane = new JScrollPane();
+    scrollPane.setBounds(213, 90, 482, 73);
+    getContentPane().add(scrollPane);
+    scrollPane.setViewportView(areaDesc);
+    areaDesc.setLineWrap(true);
 
     JLabel lblObservación = new JLabel();
     lblObservación.setText("Observación:");
     lblObservación.setHorizontalAlignment(SwingConstants.RIGHT);
     lblObservación.setBounds(130, 178, 73, 14);
     getContentPane().add(lblObservación);
-
     
-    areaObs.setBounds(213, 178, 289, 73);
-    getContentPane().add(areaObs);
+    scrollPane_1 = new JScrollPane();
+    scrollPane_1.setBounds(213, 178, 480, 73);
+    getContentPane().add(scrollPane_1);
+    areaObs.setLineWrap(true);
+    scrollPane_1.setViewportView(areaObs);
 
    
     dateChooser.setBounds(213, 275, 97, 20);
@@ -427,11 +434,8 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     lblNroVotantes.setHorizontalAlignment(SwingConstants.RIGHT);
     lblNroVotantes.setBounds(87, 312, 116, 25);
     getContentPane().add(lblNroVotantes);
-
-
-    lblCantidad.setText("cantidad");
     lblCantidad.setHorizontalAlignment(SwingConstants.RIGHT);
-    lblCantidad.setBounds(213, 312, 116, 25);
+    lblCantidad.setBounds(213, 312, 66, 25);
     getContentPane().add(lblCantidad);
 
     JLabel lblTipoActa = new JLabel();
@@ -442,7 +446,7 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
 
     cmbTipoActa = new JComboBox(recuperarDatosComboBoxTipoActa());
     cmbTipoActa.setSelectedIndex(-1);
-    cmbTipoActa.setBounds(234, 359, 289, 20);
+    cmbTipoActa.setBounds(213, 359, 289, 20);
     getContentPane().add(cmbTipoActa);
     // recuperarDatos();
 
