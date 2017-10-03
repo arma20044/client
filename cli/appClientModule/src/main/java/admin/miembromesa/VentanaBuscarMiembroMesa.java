@@ -69,7 +69,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
   private DefaultTableModel dm;
 
-  static String acta = "";
+  public static String acta = "";
 
   // private Candidato candidato;
 

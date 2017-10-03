@@ -7,6 +7,8 @@ import java.util.List;
 import entity.UcsawsCandidatos;
 import entity.UcsawsMiembroMesa;
 import entity.UcsawsTipoMiembroMesa;
+import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
+import src.main.java.dao.acta.ActaDAO;
 import src.main.java.dao.candidato.CandidatoDAO;
 import src.main.java.dao.miembroMesa.MiembroMesaDAO;
 import src.main.java.dao.tipoMiembroMesa.TipoMiembroMesaDAO;
@@ -36,7 +38,8 @@ public class MiembroMesaValidator {
     while (ite.hasNext()) {
       aux = ite.next();
       if (aux.getIdPersona().getIdPersona().equals(idPersona)
-          && aux.getMiembroMesa().getIdTipoMiembroMesa() .equals(idTipoMiembroMesa)) {
+         // && aux.getMiembroMesa().getIdTipoMiembroMesa().equals(idTipoMiembroMesa)
+          ) {
         existe = true;
         break;
       }
@@ -46,7 +49,7 @@ public class MiembroMesaValidator {
   }
 
   public Boolean ValidarNoCandidato(Integer idPersona, Integer idEvento) {
-    
+
     boolean existe = false;
 
     CandidatoDAO candidatoDAO = new CandidatoDAO();
@@ -59,7 +62,7 @@ public class MiembroMesaValidator {
     UcsawsCandidatos aux;
     while (ite.hasNext()) {
       aux = ite.next();
-      if (aux.getIdPersona().getIdPersona().equals(idPersona)){
+      if (aux.getIdPersona().getIdPersona().equals(idPersona)) {
         existe = true;
         break;
       }
@@ -92,6 +95,86 @@ public class MiembroMesaValidator {
     }
 
     return existe;
+
+  }
+
+  public Boolean ValidarSoloUnPresidenteDeMesa(UcsawsTipoMiembroMesa tipoMiembroMesa) {
+
+    boolean unSoloPresidenteMesa = false;
+    Integer contador = 0;
+
+    MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+
+    List<UcsawsMiembroMesa> lista =
+        miembroMesaDAO.obtenerMiembroMesaByIdEventoByActa(tipoMiembroMesa.getIdEvento().getIdEvento(),
+            Integer.parseInt(VentanaBuscarMiembroMesa.acta));
+
+    Iterator<UcsawsMiembroMesa> ite = lista.iterator();
+
+    UcsawsMiembroMesa aux;
+    while (ite.hasNext()) {
+      aux = ite.next();
+
+      if (aux.getMiembroMesa().getCodigo().compareTo("PRE") == 0) {
+        if (aux.getMiembroMesa().getIdTipoMiembroMesa() == tipoMiembroMesa.getIdTipoMiembroMesa()) {
+          contador++;
+        }
+      }
+    }
+
+    if (contador >= 1) {
+      unSoloPresidenteMesa = true;
+    }
+
+    return unSoloPresidenteMesa;
+  }
+
+
+  public Boolean ValidarSoloDosVocalesDeMesa(UcsawsTipoMiembroMesa tipoMiembroMesa) {
+
+    boolean dosVocalesDeMesa = false;
+    Integer contador = 0;
+
+    MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+
+    List<UcsawsMiembroMesa> lista =
+        miembroMesaDAO.obtenerMiembroMesaByIdEventoByActa(tipoMiembroMesa.getIdEvento().getIdEvento(),
+            Integer.parseInt(VentanaBuscarMiembroMesa.acta));
+
+    Iterator<UcsawsMiembroMesa> ite = lista.iterator();
+
+    UcsawsMiembroMesa aux;
+    while (ite.hasNext()) {
+      aux = ite.next();
+
+      if (aux.getMiembroMesa().getCodigo().compareTo("VOC") == 0) {
+        if (aux.getMiembroMesa().getIdTipoMiembroMesa() == tipoMiembroMesa.getIdTipoMiembroMesa()) {
+          contador++;
+        }
+      }
+    }
+
+    if (contador >1) {
+      dosVocalesDeMesa = true;
+    }
+
+    return dosVocalesDeMesa;
+  }
+
+  public boolean verificarPresidenteVocal(String idEvento, Integer tipo) {
+    
+    TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
+    UcsawsTipoMiembroMesa tipoMiembroMesa = tipoMiembroMesaDAO.obtenerTipoMiembroMesaById(tipo);
+    
+    
+    if (tipoMiembroMesa.getCodigo().compareTo("PRE")==0){
+      return ValidarSoloUnPresidenteDeMesa(tipoMiembroMesa);
+    }
+    else{
+     return ValidarSoloDosVocalesDeMesa(tipoMiembroMesa);
+    }
+
+
 
   }
 }

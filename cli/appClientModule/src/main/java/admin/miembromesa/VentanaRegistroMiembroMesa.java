@@ -90,7 +90,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
   private JComboBox cmbTipo;
   private DefaultTableModel dm;
 
-  //private CandidatoDAO candidatoDAO = new CandidatoDAO();
+  // private CandidatoDAO candidatoDAO = new CandidatoDAO();
 
   private String obs = "";
 
@@ -101,14 +101,14 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
 
     addWindowListener(new WindowAdapter() {
       public void windowOpened(WindowEvent e) {
-       // txtCod.requestFocus();
+        // txtCod.requestFocus();
       }
     });
 
     botonGuardar = new JButton();
     botonGuardar.setToolTipText("Guardar");
-    botonGuardar
-        .setIcon(new ImageIcon(VentanaRegistroMiembroMesa.class.getResource("/imgs/save.png")));
+    botonGuardar.setIcon(new ImageIcon(VentanaRegistroMiembroMesa.class
+        .getResource("/imgs/save.png")));
     botonGuardar.setBounds(586, 88, 32, 32);
     botonGuardar.setOpaque(false);
     botonGuardar.setContentAreaFilled(false);
@@ -179,8 +179,8 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
           String part1 = parts[0]; // 004
           String part2 = parts[1]; // 034556
 
-         // txtCod.setText(part1.substring(0, 1) + part2.substring(0, 2));
-          //System.out.println(txtCod.getText());
+          // txtCod.setText(part1.substring(0, 1) + part2.substring(0, 2));
+          // System.out.println(txtCod.getText());
         }
       }
     });
@@ -226,9 +226,6 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
               }
             }
           }
-
-
-  
 
 
 
@@ -294,99 +291,105 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
          * t.setRepeats(false); t.start(); } } else{
          */
 
-        if (cmbTipo.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 //&& combo.getSelectedIndex() != -1
-            ) {
+        if (cmbTipo.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 // &&
+                                                                                    // combo.getSelectedIndex()
+                                                                                    // != -1
+        ) {
           Item item = (Item) cmbTipo.getSelectedItem();
           listaSelected = item.getId();
 
           Item item3 = (Item) cmbPersona.getSelectedItem();
           personaSelected = item3.getId();
-          
+
           MiembroMesaValidator validador = new MiembroMesaValidator();
-   
-          if(validador.ValidarRepedido(personaSelected, listaSelected, Integer.parseInt(VentanaBuscarEvento.evento))==false){
-            
-            if(validador.ValidarNoCandidato(personaSelected, Integer.parseInt(VentanaBuscarEvento.evento))==false){
-              
-              if (codTemporal == "") {
-                // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
-                ActaDAO actaDAO = new ActaDAO();
-                EventoDAO eventoDAO = new EventoDAO();
-                PersonaDAO personaDAO = new PersonaDAO();
-                TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
-                MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+          if (validador.verificarPresidenteVocal(VentanaBuscarEvento.evento, listaSelected) == false) {
+            if (validador.ValidarRepedido(personaSelected, listaSelected,
+                Integer.parseInt(VentanaBuscarEvento.evento)) == false) {
 
-                UcsawsMiembroMesa paraGuardar = new UcsawsMiembroMesa();
+              if (validador.ValidarNoCandidato(personaSelected,
+                  Integer.parseInt(VentanaBuscarEvento.evento)) == false) {
 
+                if (codTemporal == "") {
+                  // if (candidatoValidator.ValidarPersona(personaSelected) == false) {
+                  ActaDAO actaDAO = new ActaDAO();
+                  EventoDAO eventoDAO = new EventoDAO();
+                  PersonaDAO personaDAO = new PersonaDAO();
+                  TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
+                  MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
 
-                UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
-
-                paraGuardar.setActa(actaDAO.obtenerActaById(Integer.parseInt(VentanaBuscarMiembroMesa.acta)));
-                paraGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
-                    .toString()));
-                paraGuardar.setMiembroMesa(tipoMiembroMesaDAO.obtenerTipoMiembroMesaById(listaSelected));
-                paraGuardar.setIdEvento(evento);
-                paraGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
-                paraGuardar.setFchIns(new Date());
-               // candidatoAGuardar.setCodigo(txtCod.getText());
-               // paraGuardar.setDescripcion(item4);
-
-                // candidatoAGuardar.setUcsawsPais(pais);
+                  UcsawsMiembroMesa paraGuardar = new UcsawsMiembroMesa();
 
 
+                  UcsawsEvento evento = eventoDAO.obtenerEventoById(VentanaBuscarEvento.evento);
 
-                miembroMesaDAO.guardarTipoActa(paraGuardar);
+                  paraGuardar.setActa(actaDAO.obtenerActaById(Integer
+                      .parseInt(VentanaBuscarMiembroMesa.acta)));
+                  paraGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
+                      .toString()));
+                  paraGuardar.setMiembroMesa(tipoMiembroMesaDAO
+                      .obtenerTipoMiembroMesaById(listaSelected));
+                  paraGuardar.setIdEvento(evento);
+                  paraGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
+                  paraGuardar.setFchIns(new Date());
+                  // candidatoAGuardar.setCodigo(txtCod.getText());
+                  // paraGuardar.setDescripcion(item4);
+
+                  // candidatoAGuardar.setUcsawsPais(pais);
 
 
-                VentanaBuscarMiembroMesa buscar = new VentanaBuscarMiembroMesa();
-                buscar.setVisible(true);
-                dispose();
-                /*
-                 * }
-                 * 
-                 * else // JOptionPane.showMessageDialog(null, // "Ya existe el genero " +
-                 * txtDesc.getText(), // "Información",JOptionPane.WARNING_MESSAGE);
-                 * lblMensaje.setText("La Persona no puede tener mas de una candidatura"); Timer t =
-                 * new Timer(Login.timer, new ActionListener() {
-                 * 
-                 * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
-                 * t.setRepeats(false); t.start();
-                 */
-                // this.dispose();
+
+                  miembroMesaDAO.guardarTipoActa(paraGuardar);
+
+
+                  VentanaBuscarMiembroMesa buscar = new VentanaBuscarMiembroMesa();
+                  buscar.setVisible(true);
+                  dispose();
+                  /*
+                   * }
+                   * 
+                   * else // JOptionPane.showMessageDialog(null, // "Ya existe el genero " +
+                   * txtDesc.getText(), // "Información",JOptionPane.WARNING_MESSAGE);
+                   * lblMensaje.setText("La Persona no puede tener mas de una candidatura"); Timer t
+                   * = new Timer(Login.timer, new ActionListener() {
+                   * 
+                   * public void actionPerformed(ActionEvent e) { lblMensaje.setText(null); } });
+                   * t.setRepeats(false); t.start();
+                   */
+                  // this.dispose();
+                } else {
+
+                }
+
               } else {
-
+                JOptionPane.showMessageDialog(null,
+                    "Un candidato no puede formar parte de los miembros de Mesa.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
               }
-              
-            }
-            else{
-              JOptionPane.showMessageDialog(null, "Un candidato no puede formar parte de los miembros de Mesa.", "Error",
+
+
+            } else {
+              JOptionPane.showMessageDialog(null,
+                  "Ya existe un registro para los datos ingresados.", "Error",
                   JOptionPane.ERROR_MESSAGE);
             }
-            
-            
+
+            // obervacionSelected = Integer.parseInt(item4);
           }
-          else{
-            JOptionPane.showMessageDialog(null, "Ya existe un registro para los datos ingresados.", "Error",
+
+          else {
+            JOptionPane.showMessageDialog(null, "Sólo debe haber 1 Presidente y 2 Vocales por Mesa.", "Error",
                 JOptionPane.ERROR_MESSAGE);
           }
-          
-          // obervacionSelected = Integer.parseInt(item4);
-        }
-        else{
+
+        } else {
           JOptionPane.showMessageDialog(null, "Por favor, no deje campos vacíos.", "Error",
               JOptionPane.ERROR_MESSAGE);
         }
 
-       // if (!(txtCod.getText().length() == 0)) {
-
- 
+        // if (!(txtCod.getText().length() == 0)) {
 
 
-      
-      
 
-        
- 
         // }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(null, "Error al intentar insertar : " + ex, "Error",
@@ -621,7 +624,9 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
     TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
     // TipoListaDAO tipoListaDAO = new TipoListaDAO();
 
-    List<UcsawsTipoMiembroMesa> lista = tipoMiembroMesaDAO.obtenerTipoMiembroMesaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsTipoMiembroMesa> lista =
+        tipoMiembroMesaDAO.obtenerTipoMiembroMesaByIdEvento(Integer
+            .parseInt(VentanaBuscarEvento.evento));
     // List<UcsawsListas> lista =
     // listaDAO.obtenerListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
