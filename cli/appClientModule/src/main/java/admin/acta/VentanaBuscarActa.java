@@ -42,11 +42,11 @@ import entity.UcsawsActas;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
- 
+
 import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
 import src.main.java.dao.acta.ActaDAO;
 import src.main.java.login.Login;
- 
+
 
 public class VentanaBuscarActa extends JFrame implements ActionListener {
 
@@ -65,11 +65,11 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
 
   private String codTemporal = "";
 
+  private String tipoActa = "";
+
   private JLabel lblMensaje;
 
   private DefaultTableModel dm;
-  
-  
 
 
 
@@ -88,8 +88,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
     botonCancelar = new JButton();
-    botonCancelar
-        .setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/back2.png")));
+    botonCancelar.setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/back2.png")));
     botonCancelar.setToolTipText("Atrás");
     botonCancelar.setBounds(813, 422, 45, 25);
     botonCancelar.setOpaque(false);
@@ -101,8 +100,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
 
     btnEliminar = new JButton();
     btnEliminar.setToolTipText("Eliminar");
-    btnEliminar
-        .setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/borrar.png")));
+    btnEliminar.setIcon(new ImageIcon(VentanaBuscarActa.class.getResource("/imgs/borrar.png")));
     btnEliminar.setBounds(528, 55, 32, 32);
     btnEliminar.setOpaque(false);
     btnEliminar.setContentAreaFilled(false);
@@ -143,7 +141,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
       }
     };
     table_1.setToolTipText("Listado de Generos.");
-    //table_1.setAutoCreateRowSorter(true);
+    // table_1.setAutoCreateRowSorter(true);
     table_1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     scrollPane.setViewportView(table_1);
 
@@ -158,48 +156,182 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     table_1.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent arg0) {
-        List<String> selectedData = new ArrayList<String>();
 
-        int selectedRow = table_1.rowAtPoint(arg0.getPoint());
-        // System.out.println(selectedRow);
-        int col = 0;
-        while (col < table_1.getColumnCount() + 1) {
-          // System.out.println(table_1.getValueAt(selectedRow,
-          // col));
-          try {
-            int row = table_1.rowAtPoint(arg0.getPoint());
-            String table_click0 =
-                table_1.getModel().getValueAt(table_1.convertRowIndexToModel(row), col).toString();
-            // System.out.println(table_click0);
+        if (arg0.getClickCount() == 2) {
 
-            selectedData.add(table_click0);
-            // System.out.println(selectedData);
+          System.out.println("Entrar en Miembro Mesa.");
+          List<String> selectedData = new ArrayList<String>();
 
-          } catch (Exception e) {
-            System.out.println(e.getMessage());
+          int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+          // System.out.println(selectedRow);
+          int col = 0;
+          while (col < table_1.getColumnCount() + 1) {
+            // System.out.println(table_1.getValueAt(selectedRow,
+            // col));
+            try {
+              int row = table_1.rowAtPoint(arg0.getPoint());
+              String table_click0 =
+                  table_1.getModel().getValueAt(table_1.convertRowIndexToModel(row), col)
+                      .toString();
+              // System.out.println(table_click0);
+
+              selectedData.add(table_click0);
+              // System.out.println(selectedData);
+
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+
+            col++;
+          }
+          // selectedData.ad table_1.getValueAt(selectedRow[i],
+          // selectedColumns[0]);
+          // txtId.setText(selectedData.get(0));
+          // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
+          // + selectedData.get(4));
+
+          // textFecha.setText(selectedData.get(2));
+          // textUsu.setText(selectedData.get(4));
+          // codTemporal.setText(selectedData.get(1));
+          codTemporal = selectedData.get(0);
+          tipoActa = selectedData.get(7);
+
+          System.out.println("Selected: " + selectedData);
+          String a = tipoActaString();
+          if (soloActaInicio() == false && a.compareToIgnoreCase("CIERRE") != 0) {
+
+
+            VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
+            miembroMesa.setVisible(true);
+            dispose();
+
+          } else {
+            JOptionPane.showMessageDialog(null,
+                "El Acta ya ha sido Cerrado. Por ende ya no se pueden agregar Miembros.");
           }
 
-          col++;
+
+
         }
-        // selectedData.ad table_1.getValueAt(selectedRow[i],
-        // selectedColumns[0]);
-        // txtId.setText(selectedData.get(0));
-        // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
-        // + selectedData.get(4));
+        if (arg0.getClickCount() == 1) {
+          System.out.println("double clicked");
+          List<String> selectedData = new ArrayList<String>();
 
-        // textFecha.setText(selectedData.get(2));
-        // textUsu.setText(selectedData.get(4));
-        // codTemporal.setText(selectedData.get(1));
-        codTemporal = selectedData.get(0);
+          int col = 0;
+          while (col < table_1.getColumnCount() + 1) {
+            // System.out.println(table_1.getValueAt(selectedRow,
+            // col));
+            try {
+              int row = table_1.rowAtPoint(arg0.getPoint());
+              String table_click0 =
+                  table_1.getModel().getValueAt(table_1.convertRowIndexToModel(row), col)
+                      .toString();
+              // System.out.println(table_click0);
 
-        System.out.println("Selected: " + selectedData);
-        
-        VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
-        miembroMesa.setVisible(true);
-        dispose();
- 
+              selectedData.add(table_click0);
+              // System.out.println(selectedData);
+
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+
+            col++;
+          }
+          codTemporal = selectedData.get(0);
+          tipoActa = selectedData.get(7);
+
+
+          String a = tipoActaString();
+
+          if (a.compareToIgnoreCase("INICIO") == 0) {
+            if (soloActaInicio() == false) {
+
+              VentanaRegistroActaFin ventanaRegistroFin = new VentanaRegistroActaFin(codTemporal);
+              ventanaRegistroFin.setVisible(true);
+              dispose();
+            }
+
+          } else
+
+          if (a.compareToIgnoreCase("CIERRE") == 0) {
+            // JOptionPane.showMessageDialog(null, "El Acta ya ha sido Cerrado.");
+
+          }
+
+
+
+        }
+
+
 
       }
+
+      private boolean soloActaInicio() {
+        boolean existe = false;
+
+        ActaDAO actaDAO = new ActaDAO();
+
+        List<UcsawsActas> lista = new ArrayList<UcsawsActas>();
+
+        lista = actaDAO.obtenerActaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+
+        Iterator<UcsawsActas> ite = lista.iterator();
+
+        UcsawsActas aux;
+        while (ite.hasNext()) {
+          aux = ite.next();
+          if (aux.getActaFinalizada() != null) {
+            if (aux.getActaFinalizada().getIdActa() == Integer.parseInt(codTemporal)) {
+              existe = true;
+            }
+          }
+        }
+
+        // TODO Auto-generated method stub
+        return existe;
+      }
+
+      private boolean actaInicioYaFinalizada() {
+        boolean finalizo = false;
+
+        ActaDAO actaDAO = new ActaDAO();
+
+        List<UcsawsActas> lista = new ArrayList<UcsawsActas>();
+
+        lista = actaDAO.obtenerActaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+
+        Iterator<UcsawsActas> ite = lista.iterator();
+
+        UcsawsActas aux;
+        while (ite.hasNext()) {
+          aux = ite.next();
+
+          if (aux.getActaFinalizada().getIdActa() == Integer.parseInt(codTemporal)) {
+            if (aux.getActaFinalizada() != null) {
+              finalizo = true;
+            }
+          }
+
+        }
+
+        // TODO Auto-generated method stub
+        return finalizo;
+      }
+
+
+      private String tipoActaString() {
+        String result = "";
+        if (tipoActa.contains("CIERRE")) {
+          result = "CIERRE";
+        } else if (tipoActa.contains("INICIO")) {
+          result = "INICIO";
+        }
+
+        return result;
+
+      }
+
+
     });
     table_1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     recuperarDatos();
@@ -407,7 +539,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
   private void muestraPersona(JSONArray genero) {
     JSONArray a = (JSONArray) genero.get(0);
     // txtId.setText(Long.toString( (Long) a.get(0)) );
-//    txtBuscar.setText((String) a.get(1));
+    // txtBuscar.setText((String) a.get(1));
     // textFecha.setText((String) a.get(2));
     // textUsu.setText((String) a.get(4));
     codTemporal = a.get(0).toString();
@@ -419,9 +551,11 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
    * Permite limpiar los componentes
    */
   public void limpiar() {
-   //xtBuscar.setText("");
+    // xtBuscar.setText("");
 
-    // codTemporal.setText("");
+    codTemporal = "";
+    tipoActa = "";
+
     habilita(true, false, false, false, false, true, false, true, true);
   }
 
@@ -441,7 +575,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
    */
   public void habilita(boolean codigo, boolean nombre, boolean edad, boolean tel,
       boolean profesion, boolean bBuscar, boolean bGuardar, boolean bModificar, boolean bEliminar) {
-   // txtBuscar.setEditable(codigo);
+    // txtBuscar.setEditable(codigo);
     // botonModificar.setEnabled(true);
     btnEliminar.setEnabled(bEliminar);
   }
@@ -450,7 +584,8 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
 
     ActaDAO actaDAO = new ActaDAO();
 
-    List<UcsawsActas> lista = actaDAO.obtenerActaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    List<UcsawsActas> lista =
+        actaDAO.obtenerActaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
 
     if (lista.isEmpty()) {
       // JOptionPane.showMessageDialog(null, "algo salio mal",
@@ -483,11 +618,9 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
       // "Observacion"};
 
       Object[] row =
-          {aux.getIdActa(), cont, aux.getIdMesa().getDescMesa(), aux.getObservacion(),aux.getDescripcion(),
-          new SimpleDateFormat("dd-MM-yyyy").format((aux.getFecha()))
-              ,
-              aux.getNumeroVotantes(),
-              aux.getTipoActa().getDescripcion()};
+          {aux.getIdActa(), cont, aux.getIdMesa().getDescMesa(), aux.getObservacion(),
+              aux.getDescripcion(), new SimpleDateFormat("dd-MM-yyyy").format((aux.getFecha())),
+              aux.getNumeroVotantes(), aux.getTipoActa().getDescripcion()};
 
       // new
       // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};
@@ -501,7 +634,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
   }
 
   void LimpiarCampos() {
-   // txtBuscar.setText("");
+    // txtBuscar.setText("");
     // textFecha.setText("");
     // textUsu.setText("");
     codTemporal = "";

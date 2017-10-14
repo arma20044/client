@@ -45,6 +45,8 @@ public class UcsawsActas implements java.io.Serializable {
   private String usuarioIns;
 
   private String usuarioUpd;
+  
+  private UcsawsActas actaFinalizada;
 
   public Integer getIdActa() {
     return idActa;
@@ -141,6 +143,15 @@ public class UcsawsActas implements java.io.Serializable {
   public void setUsuarioUpd(String usuarioUpd) {
     this.usuarioUpd = usuarioUpd;
   }
+
+  public UcsawsActas getActaFinalizada() {
+    return actaFinalizada;
+  }
+
+  public void setActaFinalizada(UcsawsActas actaFinalizada) {
+    this.actaFinalizada = actaFinalizada;
+  }
+ 
 
   
   

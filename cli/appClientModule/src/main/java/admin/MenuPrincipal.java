@@ -120,18 +120,6 @@ public class MenuPrincipal extends JFrame implements ActionListener{
 		btnReportes.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		btnReportes.setBounds(122, 282, 338, 73);
 		getContentPane().add(btnReportes);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addMouseListener(new MouseAdapter() {
-		  @Override
-		  public void mouseClicked(MouseEvent arg0) {
-		    VentanaBuscarActa acta = new VentanaBuscarActa();
-		    acta.setVisible(true);
-		    dispose();
-		  }
-		});
-		btnNewButton.setBounds(167, 375, 89, 23);
-		getContentPane().add(btnNewButton);
 		//lblNombreDescripcion.repaint();
 		
 		
