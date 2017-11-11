@@ -72,6 +72,8 @@ import src.main.java.hello.WeatherConfiguration;
 //@Component
 public class PreLogin extends javax.swing.JFrame {
   
+  private static String OS = System.getProperty("os.name").toLowerCase();
+  
   //@Autowired
   private DistritoDAO distritoDAO = new DistritoDAO();
   
@@ -289,7 +291,9 @@ public class PreLogin extends javax.swing.JFrame {
         
         
           BasicConfigurator.configure();
-            javax.swing.UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");               
+          if(OS.indexOf("win") >= 0){
+            javax.swing.UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
+          }
           } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PreLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
           }
@@ -437,7 +441,7 @@ public class PreLogin extends javax.swing.JFrame {
 	        
 	    }
 	    //test
-	    MiPais = "ESPAÑA";
+	    MiPais = "ESTADOS UNIDOS";
 	    //test
 		if (MiPais.compareTo("")==0 || !(Arrays.asList(vigencia).contains(MiPais))){
            JOptionPane.showMessageDialog(null, MiPais + " No está habilitado como País para Votar.");
@@ -601,5 +605,48 @@ public class PreLogin extends javax.swing.JFrame {
 
 	}
 	
+	public String OSValidator(){
+	  
+	  System.out.println(OS);
+
+      if (isWindows()) {
+          System.out.println("This is Windows");
+      } else if (isMac()) {
+          System.out.println("This is Mac");
+      } else if (isUnix()) {
+          System.out.println("This is Unix or Linux");
+      } else if (isSolaris()) {
+          System.out.println("This is Solaris");
+      } else {
+          System.out.println("Your OS is not support!!");
+      }
+      
+      return null;
+  }
+
+  public static boolean isWindows() {
+
+      return (OS.indexOf("win") >= 0);
+
+  }
+
+  public static boolean isMac() {
+
+      return (OS.indexOf("mac") >= 0);
+
+  }
+
+  public static boolean isUnix() {
+
+      return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+
+  }
+
+  public static boolean isSolaris() {
+
+      return (OS.indexOf("sunos") >= 0);
+
+  }
+
 	
 }
