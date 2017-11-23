@@ -39,10 +39,10 @@ import org.json.simple.JSONArray;
 import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
 import entity.UcsawsActas;
+import entity.UcsawsMiembroMesa;
 import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
-
 import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
 import src.main.java.dao.acta.ActaDAO;
 import src.main.java.login.Login;
@@ -158,6 +158,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
       public void mouseClicked(MouseEvent arg0) {
 
         if (arg0.getClickCount() == 2) {
+          System.out.println("Doble Click");
 
           System.out.println("Entrar en Miembro Mesa.");
           List<String> selectedData = new ArrayList<String>();
@@ -214,7 +215,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
 
         }
         if (arg0.getClickCount() == 1) {
-          System.out.println("double clicked");
+          System.out.println("1 click");
           List<String> selectedData = new ArrayList<String>();
 
           int col = 0;
@@ -239,25 +240,79 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
           }
           codTemporal = selectedData.get(0);
           tipoActa = selectedData.get(7);
+          
+          
+          //obtenemos acta
+          ActaDAO actaDAO = new ActaDAO();
+          UcsawsActas acta = actaDAO.obtenerActaById(Integer.parseInt(codTemporal));
+          //obtenemos acta
 
 
-          String a = tipoActaString();
-
-          if (a.compareToIgnoreCase("INICIO") == 0) {
-            if (soloActaInicio() == false) {
-
-              VentanaRegistroActaFin ventanaRegistroFin = new VentanaRegistroActaFin(codTemporal);
-              ventanaRegistroFin.setVisible(true);
-              dispose();
+          //preguntamos que tipo de acta es
+          if (acta.getTipoActa().getDescripcion().contains("inicio".toUpperCase())){
+            
+            List<UcsawsActas> lista = actaDAO.obtenerActaByIdEvento(acta.getIdEvento().getIdEvento());
+            
+            Iterator<UcsawsActas> ite = lista.iterator();
+            boolean finalizado = false;
+            UcsawsActas aux;
+            while (ite.hasNext()) {
+              aux = ite.next();
+              if(aux.getActaFinalizada() != null){
+              if (aux.getActaFinalizada().getIdActa() == Integer.parseInt(codTemporal)) {
+                finalizado = true;
+                break;
+              }
             }
+            }
+            
+            if (!finalizado){
+              
+              //preguntar si queremos agregar miembros o finalizar el acta
+              int seleccion = JOptionPane.showOptionDialog(
+                  getContentPane(),
+                  "Seleccione opcion", 
+                  "Selector de opciones",
+                  JOptionPane.YES_NO_CANCEL_OPTION,
+                  JOptionPane.QUESTION_MESSAGE,
+                  null,    // null para icono por defecto.
+                  new Object[] { "Agregar Miembros de Mesa", "Finalizar Acta" }, null   // null para YES, NO y CANCEL
+                 );
 
-          } else
-
-          if (a.compareToIgnoreCase("CIERRE") == 0) {
-            // JOptionPane.showMessageDialog(null, "El Acta ya ha sido Cerrado.");
-
+               if (seleccion == 0){
+                 VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
+                 miembroMesa.setVisible(true);
+                 dispose();
+               }
+               else if (seleccion == 1){
+                 VentanaRegistroActaFin ventanaRegistroFin = new VentanaRegistroActaFin(codTemporal);
+                 ventanaRegistroFin.setVisible(true);
+                 dispose();
+               }
+                  System.out.println("seleccionada opcion " + (seleccion + 1));
+              
+            }
+            else if (finalizado){
+              JOptionPane.showMessageDialog(null,
+                  "El Acta ya ha sido Cerrado. Por ende ya no se pueden agregar Miembros.");
+            }
+          }
+          
+          else if(acta.getTipoActa().getDescripcion().contains("cierre".toUpperCase())){
+            VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
+            miembroMesa.setVisible(true);
+            dispose();
+          }
+          
+          else{
+            VentanaBuscarMiembroMesa miembroMesa = new VentanaBuscarMiembroMesa(codTemporal);
+            miembroMesa.setVisible(true);
+            dispose();
           }
 
+          
+          //preguntamos que tipo de acta es
+       
 
 
         }
