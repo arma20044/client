@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
@@ -44,6 +45,9 @@ import src.main.java.admin.Coordinador;
 import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
+import src.main.java.admin.reportes.Acta;
+import src.main.java.admin.reportes.CantidadVotosElegir;
+import src.main.java.admin.reportes.CantidadVotosSenadorDiputado;
 import src.main.java.dao.acta.ActaDAO;
 import src.main.java.login.Login;
 
@@ -63,7 +67,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
   private ActaJTableModel model = new ActaJTableModel();
   private JScrollPane scrollPane;
 
-  private String codTemporal = "";
+  public static String codTemporal = "";
 
   private String tipoActa = "";
 
@@ -156,7 +160,52 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     table_1.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent arg0) {
+        
+   if(SwingUtilities.isRightMouseButton(arg0)){
+          System.out.println("derecho");
+          List<String> selectedData = new ArrayList<String>();
 
+          int selectedRow = table_1.rowAtPoint(arg0.getPoint());
+          // System.out.println(selectedRow);
+          int col = 0;
+          while (col < table_1.getColumnCount() + 1) {
+            // System.out.println(table_1.getValueAt(selectedRow,
+            // col));
+            try {
+              int row = table_1.rowAtPoint(arg0.getPoint());
+              String table_click0 =
+                  table_1.getModel().getValueAt(table_1.convertRowIndexToModel(row), col)
+                      .toString();
+              // System.out.println(table_click0);
+
+              selectedData.add(table_click0);
+              // System.out.println(selectedData);
+
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+            }
+
+            col++;
+          }
+          // selectedData.ad table_1.getValueAt(selectedRow[i],
+          // selectedColumns[0]);
+          // txtId.setText(selectedData.get(0));
+          // txtBuscar.setText(selectedData.get(2) + " " + selectedData.get(3) + " Lista "
+          // + selectedData.get(4));
+
+          // textFecha.setText(selectedData.get(2));
+          // textUsu.setText(selectedData.get(4));
+          // codTemporal.setText(selectedData.get(1));
+          codTemporal = selectedData.get(0);
+          tipoActa = selectedData.get(7);
+          
+          
+          Acta acta = new Acta();
+         // System.out.println(idTipo);
+          acta.start();
+        }
+   else
+        {
         if (arg0.getClickCount() == 2) {
           System.out.println("Doble Click");
 
@@ -318,7 +367,7 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
         }
 
 
-
+      }
       }
 
       private boolean soloActaInicio() {

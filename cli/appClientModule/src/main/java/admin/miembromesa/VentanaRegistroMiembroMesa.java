@@ -68,7 +68,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
   private Coordinador miCoordinador; // objeto miCoordinador que permite la
   // relacion entre esta clase y la clase
   // coordinador
-  private JLabel labelTitulo, lblMensaje, lblq;
+  private JLabel labelTitulo, lblMensaje, lblq,lblLista;
   private JButton botonGuardar, botonCancelar;
 
   private MiembroMesaJTableModel model = new MiembroMesaJTableModel();
@@ -87,7 +87,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
   List<Object[]> tcandidato = new ArrayList<Object[]>();
   private JComboBox cmbPersona;
   private JLabel lblTipo;
-  private JComboBox cmbTipo;
+  private JComboBox cmbTipo,cmbLista;
   private DefaultTableModel dm;
 
   // private CandidatoDAO candidatoDAO = new CandidatoDAO();
@@ -206,25 +206,18 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
       public void actionPerformed(ActionEvent e) {
         if (cmbTipo.getSelectedIndex() != -1) {
           Item item = (Item) cmbTipo.getSelectedItem();
-          Integer idTipoListaSelected = item.getId();
-          // "Hello".toLowerCase().contains("He".toLowercase());
-          ListasDAO listasDAO = new ListasDAO();
-          TipoListaDAO tipoListaDAO = new TipoListaDAO();
-          UcsawsListas l = new UcsawsListas();
-          List<UcsawsTipoLista> tl = new ArrayList<UcsawsTipoLista>();
-          l = listasDAO.obtenerListaByIdIdLista(idTipoListaSelected);
-          tl =
-              tipoListaDAO.obtenerTipoListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+          Integer idTipoSelected = item.getId();
 
-          Iterator i = tl.iterator();
-          boolean result = false;
-          while (i.hasNext()) {
-            UcsawsTipoLista element = (UcsawsTipoLista) i.next();
-            if (l.getUcsawsTipoLista().getCodigo().compareTo(element.getCodigo()) == 0) {
-              if (element.getCodigo().compareTo("PRE") == 0) {
-                result = true;
-              }
-            }
+          TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
+          UcsawsTipoMiembroMesa tipoMiembroMesa = tipoMiembroMesaDAO.obtenerTipoMiembroMesaById(idTipoSelected);
+          
+          if(tipoMiembroMesa.getDescripcion().contains("VEEDOR")){
+            cmbLista.setVisible(true);
+            lblLista.setVisible(true);
+          }
+          else{
+            cmbLista.setVisible(false);
+            lblLista.setVisible(false);
           }
 
 
@@ -240,8 +233,21 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
-    lblMensaje.setBounds(180, 160, 396, 14);
+    lblMensaje.setBounds(180, 183, 396, 14);
     getContentPane().add(lblMensaje);
+    
+    lblLista = new JLabel();
+    lblLista.setText("Lista:");
+    lblLista.setHorizontalAlignment(SwingConstants.RIGHT);
+    lblLista.setBounds(97, 147, 61, 25);
+    getContentPane().add(lblLista);
+    lblLista.setVisible(false);
+    
+    cmbLista = new JComboBox(recuperarDatosComboBoxLista());
+    cmbLista.setSelectedIndex(-1);
+    cmbLista.setBounds(180, 152, 396, 20);
+    getContentPane().add(cmbLista);
+    cmbLista.setVisible(false);
     // recuperarDatos();
 
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -279,7 +285,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
     if (e.getSource() == botonGuardar) {
       try {
 
-        Integer listaSelected = 0, personaSelected = 0, obervacionSelected = 0;
+        Integer tipoSelected = 0, personaSelected = 0, obervacionSelected = 0 , listaSelected = 0;
         String item4 = "";
 
         /*
@@ -292,18 +298,21 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
          */
 
         if (cmbTipo.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 // &&
-                                                                                    // combo.getSelectedIndex()
+            &&  cmbLista.getSelectedIndex() != -1                                                                       // combo.getSelectedIndex()
                                                                                     // != -1
         ) {
           Item item = (Item) cmbTipo.getSelectedItem();
-          listaSelected = item.getId();
+          tipoSelected = item.getId();
 
           Item item3 = (Item) cmbPersona.getSelectedItem();
           personaSelected = item3.getId();
+          
+          Item item5 = (Item) cmbLista.getSelectedItem();
+          listaSelected = item5.getId();
 
           MiembroMesaValidator validador = new MiembroMesaValidator();
-          if (validador.verificarPresidenteVocal(VentanaBuscarEvento.evento, listaSelected) == false) {
-            if (validador.ValidarRepedido(personaSelected, listaSelected,
+          if (validador.verificarPresidenteVocal(VentanaBuscarEvento.evento, tipoSelected) == false) {
+            if (validador.ValidarRepedido(personaSelected, tipoSelected,
                 Integer.parseInt(VentanaBuscarEvento.evento)) == false) {
 
               if (validador.ValidarNoCandidato(personaSelected,
@@ -316,6 +325,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
                   PersonaDAO personaDAO = new PersonaDAO();
                   TipoMiembroMesaDAO tipoMiembroMesaDAO = new TipoMiembroMesaDAO();
                   MiembroMesaDAO miembroMesaDAO = new MiembroMesaDAO();
+                  ListasDAO listaDAO = new ListasDAO();
 
                   UcsawsMiembroMesa paraGuardar = new UcsawsMiembroMesa();
 
@@ -327,13 +337,13 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
                   paraGuardar.setIdPersona(personaDAO.obtenerPersonaByIdPersona(personaSelected
                       .toString()));
                   paraGuardar.setMiembroMesa(tipoMiembroMesaDAO
-                      .obtenerTipoMiembroMesaById(listaSelected));
+                      .obtenerTipoMiembroMesaById(tipoSelected));
                   paraGuardar.setIdEvento(evento);
                   paraGuardar.setUsuarioIns(Login.nombreApellidoUserLogeado);
                   paraGuardar.setFchIns(new Date());
                   // candidatoAGuardar.setCodigo(txtCod.getText());
                   // paraGuardar.setDescripcion(item4);
-
+                  paraGuardar.setLista(listaDAO.obtenerListaByIdIdLista(listaSelected));
                   // candidatoAGuardar.setUcsawsPais(pais);
 
 
@@ -694,5 +704,43 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
       System.out.println("Found good SSN: " + s);
     }
     return "El formato es ####/abc - 4 Digitos / 3 Letras.";
+  }
+  
+  private Vector recuperarDatosComboBoxLista() {
+
+    Vector model = new Vector();
+
+    ListasDAO listaDAO = new ListasDAO();
+    // TipoListaDAO tipoListaDAO = new TipoListaDAO();
+
+    List<UcsawsListas> lista =
+        listaDAO.obtenerListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+    // List<UcsawsListas> lista =
+    // listaDAO.obtenerListaByIdEvento(Integer.parseInt(VentanaBuscarEvento.evento));
+
+    if (lista.isEmpty()) {
+      // JOptionPane.showMessageDialog(null, "algo salio mal",
+      // "Advertencia", JOptionPane.WARNING_MESSAGE);
+      // return lista;
+    }
+
+    else {
+
+      // DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+      Iterator<UcsawsListas> ite = lista.iterator();
+
+      UcsawsListas aux;
+
+      while (ite.hasNext()) {
+        aux = ite.next();
+
+        model.addElement(new Item(aux.getIdLista(), aux.getNombreLista()));
+
+      }
+      // return model;
+    }
+
+    return model;
+
   }
 }

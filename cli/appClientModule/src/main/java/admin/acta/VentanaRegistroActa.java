@@ -12,7 +12,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +74,10 @@ import entity.UcsawsMesa;
 import entity.UcsawsPersona;
 import entity.UcsawsTipoActa;
 import entity.UcsawsZona;
+
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class VentanaRegistroActa extends JFrame implements ActionListener {
 
@@ -99,7 +104,9 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
   private JLabel lblCod;
   private JTextField txtCod;
   private DefaultTableModel dm;
-
+  
+  JSpinner spinnerHora = new JSpinner();
+  JSpinner spinnerMinuto = new JSpinner();
 
 
   private String obs = "";
@@ -118,7 +125,6 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
   JLabel lblCantidad = new JLabel();
   JTextArea areaDesc = new JTextArea();
   JTextArea areaObs = new JTextArea();
-  JDateChooser dateChooser = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
   private JScrollPane scrollPane;
   private JScrollPane scrollPane_1;
 
@@ -419,10 +425,6 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     areaObs.setLineWrap(true);
     scrollPane_1.setViewportView(areaObs);
 
-   
-    dateChooser.setBounds(213, 275, 97, 20);
-    getContentPane().add(dateChooser);
-
     JLabel lblFecha = new JLabel();
     lblFecha.setText("Fecha:");
     lblFecha.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -448,6 +450,34 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
     cmbTipoActa.setSelectedIndex(-1);
     cmbTipoActa.setBounds(213, 359, 289, 20);
     getContentPane().add(cmbTipoActa);
+    
+    JLabel label_4 = new JLabel();
+    label_4.setText(convertStringToDate(VentanaBuscarEvento.eventoClase.getFchDesde()));
+    label_4.setHorizontalAlignment(SwingConstants.RIGHT);
+    label_4.setBounds(213, 280, 116, 25);
+    getContentPane().add(label_4);
+    
+    JLabel lblHora = new JLabel();
+    lblHora.setText("Hora:");
+    lblHora.setHorizontalAlignment(SwingConstants.RIGHT);
+    lblHora.setBounds(437, 275, 116, 25);
+    getContentPane().add(lblHora);
+    
+    
+    spinnerHora.setModel(new SpinnerNumberModel(0, 0, 23, 1));
+    spinnerHora.setBounds(569, 277, 41, 20);
+    getContentPane().add(spinnerHora);
+    
+    
+    spinnerMinuto.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+    spinnerMinuto.setBounds(629, 277, 41, 20);
+    getContentPane().add(spinnerMinuto);
+    
+    JLabel label_5 = new JLabel();
+    label_5.setText(":");
+    label_5.setHorizontalAlignment(SwingConstants.RIGHT);
+    label_5.setBounds(597, 275, 19, 25);
+    getContentPane().add(label_5);
     // recuperarDatos();
 
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
@@ -562,7 +592,18 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
               actaGuardar.setTipoActa(tipoActaDAO.obtenerTipoActaById(tipoActaSelected));
               actaGuardar.setDescripcion(areaDesc.getText());
               actaGuardar.setObservacion(areaObs.getText());
-              actaGuardar.setFecha(dateChooser.getDate());
+              
+              
+              
+            //  ***
+              Calendar now = Calendar.getInstance();
+              now.setTime(evento.getFchDesde());
+              now.set(Calendar.HOUR, (Integer)  spinnerHora.getValue() );
+              now.set(Calendar.MINUTE, (Integer)  spinnerMinuto.getValue());
+              now.set(Calendar.SECOND, 0);
+            //  ***
+              
+              actaGuardar.setFecha(now.getTime());
               actaGuardar.setNumeroVotantes(Integer.parseInt(lblCantidad.getText()));
 
               // candidatoAGuardar.setUcsawsPais(pais);
@@ -1161,5 +1202,20 @@ public class VentanaRegistroActa extends JFrame implements ActionListener {
 
     cmbMesa.removeAllItems();
     // }
+  }
+  
+  public String convertStringToDate(Date indate)
+  {
+     String dateString = null;
+     SimpleDateFormat sdfr = new SimpleDateFormat("dd/MM/yyyy");
+     /*you can also use DateFormat reference instead of SimpleDateFormat 
+      * like this: DateFormat df = new SimpleDateFormat("dd/MMM/yyyy");
+      */
+     try{
+      dateString = sdfr.format( indate );
+     }catch (Exception ex ){
+      System.out.println(ex);
+     }
+     return dateString;
   }
 }

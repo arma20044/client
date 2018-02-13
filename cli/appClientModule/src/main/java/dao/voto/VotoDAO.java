@@ -15,6 +15,7 @@ import org.jdesktop.swingx.JXErrorPane;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
 import entity.UcsawsNacionalidad;
@@ -333,4 +334,45 @@ public class VotoDAO {
    * mapper.readValue(jsonInString, UcsawsNacionalidad.class); } catch (Exception e) {
    * System.out.println(e); } return nacionalidad; }
    */
+    
+    public List<Object> verificar(){
+      
+      String idEvento = VentanaBuscarEvento.evento; 
+      //**
+      
+      ObjectMapper mapperObj = new ObjectMapper();
+      String jsonStr = "";
+      try {
+        // get Employee object as a json string
+        jsonStr = mapperObj.writeValueAsString(idEvento);
+        System.out.println(jsonStr);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      ApplicationContext ctx = SpringApplication.run(WeatherConfiguration.class);
+
+      WeatherClient weatherClient = ctx.getBean(WeatherClient.class);
+      QueryGenericoRequest query = new QueryGenericoRequest();
+
+      query.setTipoQueryGenerico(150);
+      query.setQueryGenerico(jsonStr);
+
+      QueryGenericoResponse response = weatherClient.getQueryGenericoResponse(query);
+      weatherClient.printQueryGenericoResponse(response);
+
+      ObjectMapper mapper = new ObjectMapper();
+      String jsonInString = response.getQueryGenericoResponse();
+      
+      List<Object> conteoResult = new ArrayList<Object>();
+      try {
+        conteoResult = mapper.readValue(jsonInString, new TypeReference<List<Object>>() {});
+
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+      return conteoResult;
+      
+    }
 }

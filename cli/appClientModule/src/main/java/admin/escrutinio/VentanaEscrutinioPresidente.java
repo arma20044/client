@@ -262,7 +262,14 @@ public class VentanaEscrutinioPresidente extends JFrame implements ActionListene
     btnComenzar.setEnabled(false);
     busyLabel.setVisible(true);
     busyLabel.setBusy(true);
-
+    
+    try{
+      VotoDAO votoDAO = new VotoDAO();
+    votoDAO.verificar();
+    }
+    catch(Exception e){
+      System.err.println(e);
+    }
     // ****** NEW
     VotoDAO votoDAO = new VotoDAO();
     TipoListaDAO tipoListaDAO = new TipoListaDAO();

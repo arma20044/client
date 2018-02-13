@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7ef0be9b-a5e8-4700-893b-f32bd0bdb4ca">
+	<property name="ireport.zoom" value="1.1000000000000016"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="240"/>
+	<parameter name="P_ID_EVENTO" class="java.lang.Integer"/>
+	<parameter name="P_FECHA" class="java.util.Date"/>
+	<parameter name="P_GENERADO_POR" class="java.lang.String"/>
+	<parameter name="P_ID_ACTA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false">
+		<defaultValueExpression><![CDATA["E:\\TESIS\\jasper\\jasperTemplates\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_FECHA_LETRA" class="java.lang.String"/>
+	<parameter name="P_HORA_LETRA" class="java.lang.String"/>
+	<parameter name="P_ID_TIPO_MIEMBRO" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR2" class="net.sf.jasperreports.engine.JasperReport"/>
+	<queryString>
+		<![CDATA[select a.id_acta, desc_mesa, desc_local, desc_zona, desc_distrito, desc_departamento
+from ucsaws_actas a join ucsaws_mesa m on (a.id_mesa = m.id_mesa)
+join ucsaws_local l on (m.id_local = l.id_local)
+join ucsaws_zona z on (l.id_zona = z.id_zona)
+join ucsaws_distrito d on (z.id_distrito = d.id_distrito)
+join ucsaws_departamento de on (d.id_departamento = de.id_departamento)
+where a.id_acta  = $P{P_ID_ACTA}]]>
+	</queryString>
+	<field name="id_acta" class="java.lang.Integer"/>
+	<field name="desc_mesa" class="java.lang.String"/>
+	<field name="desc_local" class="java.lang.String"/>
+	<field name="desc_zona" class="java.lang.String"/>
+	<field name="desc_distrito" class="java.lang.String"/>
+	<field name="desc_departamento" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="313" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="197" width="482" height="19" uuid="a3279cc9-8605-4504-a652-7b23fd2bd6d4"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ACTA DE INSTALACIÓN DE MESA Y APERTURA DE VOTACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="57" width="170" height="18" uuid="9a090c0b-5b9d-4ce6-9f1a-8c0103608754"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JUSTICIA ELECTORAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="92" width="180" height="20" uuid="38dab8ee-e3e3-4ccd-b224-213fb170fd75"/>
+				<textElement textAlignment="Justified">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ELECCIONES GENERALES]]></text>
+			</staticText>
+			<textField pattern="dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement x="411" y="92" width="142" height="20" uuid="4448cbcb-0156-42b9-ad6f-75fad24173fb"/>
+				<textElement textAlignment="Justified">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_FECHA}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="220" height="178" uuid="30be6150-dfa0-4c0d-bccc-a4fb99fd63a2"/>
+				<imageExpression><![CDATA["E:\\TESIS\\jasper\\jasperTemplates\\logo.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="102" y="293" width="168" height="20" uuid="c6a1a417-1b20-4059-9bba-be217f36bc0f"/>
+				<textFieldExpression><![CDATA[$F{desc_local}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="233" width="168" height="20" uuid="9aaae5c7-6d56-47f5-911d-0db2db441961"/>
+				<textFieldExpression><![CDATA[$F{desc_departamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="253" width="168" height="20" uuid="fa0fb9a1-1a31-446b-bc55-12bf7a2e71ea"/>
+				<textFieldExpression><![CDATA[$F{desc_distrito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="273" width="168" height="20" uuid="9f49fbea-7971-4b09-99c1-6614f393d113"/>
+				<textFieldExpression><![CDATA[$F{desc_zona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="233" width="79" height="20" uuid="1be4894c-3adf-4263-b48e-76cb43063cc2"/>
+				<textFieldExpression><![CDATA[$F{desc_mesa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="233" width="100" height="20" uuid="d981e7c6-67a6-43d7-baf2-9aaccf5f0bcf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPARTAMENTO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="273" width="100" height="20" uuid="bf9e4b4d-57fc-438f-b983-ab1a671dc415"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ZONA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="253" width="100" height="20" uuid="856d8409-b92c-4893-a25a-424093e667b7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DISTRITO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="293" width="100" height="20" uuid="991b380a-5f73-4344-b0a4-aaa2aca10281"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LOCAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="233" width="47" height="20" uuid="ef6c09ee-e849-465c-bb9a-e840cd73837a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MESA:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="170" splitType="Prevent">
+			<subreport>
+				<reportElement x="-2" y="77" width="557" height="93" uuid="283ad5cc-41ce-402b-b925-154d8e1b6e00"/>
+				<subreportParameter name="P_ID_ACTA">
+					<subreportParameterExpression><![CDATA[$F{id_acta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_T_sub">
+					<subreportParameterExpression><![CDATA[$P{P_ID_TIPO_MIEMBRO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="2" y="14" width="553" height="63" uuid="0e8dde98-6ed0-4267-885e-bc8d489845b6"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["A los" + $P{P_FECHA_LETRA}  + ", siendo las " + $P{P_HORA_LETRA} +
+" , los Miembros de ésta Mesa Receptora de Votos, cuyos datos se consignan más abajo, "+
+"dejan constancia de que la Junta Cívica ha procedido a la verificacíon de sus respectivas designaciones y ellos mismos, a su vez, "+
+"han verificado las Credenciales de los Veedores, quedando constituida la Mesa como sigue:"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="300" splitType="Prevent">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="170" uuid="38ae180c-2e60-454d-a715-00963f4effdc"/>
+				<subreportParameter name="P_ID_ACTA">
+					<subreportParameterExpression><![CDATA[$F{id_acta}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_T_SUB2">
+					<subreportParameterExpression><![CDATA[$P{P_ID_TIPO_MIEMBRO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="P_"/>
+				<subreportParameter name="P_T_SUB1">
+					<subreportParameterExpression><![CDATA[$P{P_ID_TIPO_MIEMBRO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR2}]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="0" y="170" width="555" height="130" uuid="c3a2c71d-b989-402f-97f9-843709a8197c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["La apertura del maletín conteniendo los documentos electorales, es hecha públicamente y en el mismo se verifica que se encuentran "
++"los Formularios de Actas, el Padrón de Mesa, la tinta endeleble y demas útiles, así como suficiente cantidad de boletines de voto. "
++"Así mismo, se comprueba que la urna está vacia y la existencia del cuarto oscuro, hallándose todo en debida forma. Seguidamente, "
++"el Presidente declara habilitada la mesa y da por iniciado el proceso de Votación. En fe de ello, suscriben al pie los Miembros de Mesa "
++"y lo Veedores, entre éstos los que desean hacerlo. "]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Prevent">
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="74" y="20" width="260" height="20" uuid="ca9e5d45-968c-40cb-9c29-e92e4ebce6e3"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_GENERADO_POR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="74" height="20" uuid="a91dce0c-2850-4b54-8690-babb6d758c51"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Impreso por:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement positionType="FixRelativeToBottom" x="455" y="20" width="100" height="20" uuid="3d02fb5d-4e1a-4305-a3fa-26fbab0c6c46"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="0" width="40" height="20" uuid="869b190f-c799-439b-9533-ff694a4ec027"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="422" y="0" width="91" height="20" uuid="11030aee-9f77-4e52-869b-2a364ef13b80"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="270" splitType="Prevent">
+			<staticText>
+				<reportElement x="119" y="20" width="322" height="20" uuid="950fdc52-f675-4860-9f52-465d4eb35746"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Miembros de Mesa y Veedores]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="67" width="113" height="36" uuid="232463d0-5032-44a8-b8f4-e8125ed67c35"/>
+				<text><![CDATA[Firma del Vocal de Mesa
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="48" y="67" width="113" height="1" uuid="5a0fa39d-6ed5-45b3-bee6-cfb26092e842"/>
+			</line>
+			<staticText>
+				<reportElement x="212" y="67" width="136" height="36" uuid="f04ea37e-8867-4c2c-ac98-14dfd43c41ce"/>
+				<text><![CDATA[Firma del Presidente de Mesa
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="212" y="67" width="136" height="1" uuid="6c104ba3-9b60-4bb4-bd77-90ee1834830a"/>
+			</line>
+			<line>
+				<reportElement x="376" y="68" width="113" height="1" uuid="4fdb5cf5-dc74-44b3-a2f7-ec03cb38ec66"/>
+			</line>
+			<staticText>
+				<reportElement x="376" y="68" width="113" height="36" uuid="570cc3d2-f64f-4e5e-8cd7-d152decf8046"/>
+				<text><![CDATA[Firma del Vocal de Mesa
+C.I.N°:..............................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="123" width="113" height="36" uuid="70e3e6b5-39a6-476f-8499-b4821e3f2051"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="48" y="123" width="113" height="1" uuid="ea7fa3ec-7fc0-4721-bc32-df71a17dfafb"/>
+			</line>
+			<line>
+				<reportElement x="48" y="173" width="113" height="1" uuid="043197b2-d646-466e-8510-98336649e3d3"/>
+			</line>
+			<staticText>
+				<reportElement x="48" y="173" width="113" height="36" uuid="257fd5db-83fd-483d-8eb0-d49637d299fe"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="224" y="123" width="113" height="1" uuid="406dee78-9f51-40f4-aafb-b5d81d1672ec"/>
+			</line>
+			<staticText>
+				<reportElement x="224" y="123" width="113" height="36" uuid="6ef3841e-6acf-48aa-b79e-15a9772044d6"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="224" y="174" width="113" height="1" uuid="01771b23-52f9-4e16-9957-2add06fc827b"/>
+			</line>
+			<staticText>
+				<reportElement x="224" y="174" width="113" height="36" uuid="091e207f-a064-4d86-8f2f-a1e2f00ee015"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="376" y="124" width="113" height="1" uuid="554ddc1e-b3c6-4626-b0b8-07a35acdcdd2"/>
+			</line>
+			<staticText>
+				<reportElement x="376" y="124" width="113" height="36" uuid="3b8416ec-c194-429e-905a-a4396bd78a4c"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="376" y="175" width="113" height="1" uuid="a90ceacb-31fd-4306-9544-2c03d52b03a3"/>
+			</line>
+			<staticText>
+				<reportElement x="376" y="175" width="113" height="36" uuid="322808ed-410b-4b37-89cb-25b51529ae0f"/>
+				<text><![CDATA[Veedor de Lista N°
+C.I.N°:..............................]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="76" y="250" width="260" height="20" uuid="05b4b302-d22b-4651-bfca-c522a4466bd6"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_GENERADO_POR}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="230" width="40" height="20" uuid="bdc4496a-8a87-4454-8f25-cbcb7661e0c8"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="230" width="91" height="20" uuid="7fbcf3c7-0cbe-490b-a734-25d7f73a0693"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="250" width="74" height="20" uuid="8f0d9c17-a33d-4885-b636-743afbaa09f3"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Impreso por:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm:ss">
+				<reportElement positionType="FixRelativeToBottom" x="453" y="250" width="100" height="20" uuid="598b6819-d640-4b18-bef3-6d9623b10b37"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

@@ -740,7 +740,7 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
 
       Object[] row =
           {aux.getIdMiembroMesa(), cont, aux.getIdPersona().getDatosPersonales(),
-              aux.getMiembroMesa().getDescripcion()};
+              aux.getMiembroMesa().getDescripcion(), "Lista N° " + aux.getLista().getNroLista()+ " - " + aux.getLista().getNombreLista()};
 
       // new
       // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};

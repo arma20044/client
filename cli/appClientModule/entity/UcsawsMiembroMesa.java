@@ -4,6 +4,8 @@ import java.util.Date;
 
 
 
+
+
  
 
  
@@ -36,9 +38,21 @@ public class UcsawsMiembroMesa implements java.io.Serializable {
   
   private UcsawsActas acta;
   
+  private UcsawsListas lista;
+  
  
 
  
+
+
+  public UcsawsListas getLista() {
+    return lista;
+  }
+
+
+  public void setLista(UcsawsListas lista) {
+    this.lista = lista;
+  }
 
 
   public UcsawsActas getActa() {

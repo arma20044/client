@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="subReport" pageWidth="480" pageHeight="595" orientation="Landscape" columnWidth="480" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="766af485-50a6-435a-8846-b57359efa313">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_ID_ACTA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_T_SUB2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select nombre ||' ' || apellido nombreApellido, l.nombre_lista , p.ci
+from ucsaws_miembros_mesa mm join ucsaws_tipo_miembros_mesa tmm on (mm.id_tipo_miembro_mesa = tmm.id_tipo_miembro_mesa)
+join ucsaws_persona p on (p.id_persona = mm.id_persona)
+join ucsaws_listas l on (mm.id_lista = l.id_lista)
+where mm.id_acta = $P{P_ID_ACTA} and  mm.id_tipo_miembro_mesa in ($P{P_T_SUB2})]]>
+	</queryString>
+	<field name="nombreapellido" class="java.lang.String"/>
+	<field name="nombre_lista" class="java.lang.String"/>
+	<field name="ci" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="20">
+			<staticText>
+				<reportElement x="28" y="0" width="410" height="20" uuid="b35d2bfe-7e7e-48c8-b3c0-46f5240429d7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[y se acreditan como VEEDORES a los siguientes ciudadanos:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="218" height="22" uuid="e3afdc78-5619-449d-b0c7-06a47f049963"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nombres y Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="218" y="0" width="163" height="22" uuid="cbf8119f-466f-4a97-bb66-f7e784c2ebd8"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Por la Lista]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="0" width="100" height="22" uuid="83d89b02-ed58-4029-bc03-ec4b93440eaf"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[C.I.N°]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="218" height="23" uuid="ccc26308-52a1-46f4-a9d5-cb0c94094cdf"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombreapellido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="0" width="100" height="23" uuid="39555e76-95b0-484a-b327-1248ec64f021"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ci}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="0" width="163" height="23" uuid="974827d7-2aa6-45ea-b4c8-eb4a5f280acc"/>
+				<box>
+					<pen lineWidth="0.75"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombre_lista}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
