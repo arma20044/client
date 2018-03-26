@@ -298,18 +298,25 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
          */
 
         if (cmbTipo.getSelectedIndex() != -1 && cmbPersona.getSelectedIndex() != -1 // &&
-            &&  cmbLista.getSelectedIndex() != -1                                                                       // combo.getSelectedIndex()
+            //&&  cmbLista.getSelectedIndex() != -1                                                                       // combo.getSelectedIndex()
                                                                                     // != -1
-        ) {
+        ){
+        if(cmbTipo.getSelectedItem() != "VEE" && cmbLista.getSelectedIndex() == -1  ){
+          
+       
+        
           Item item = (Item) cmbTipo.getSelectedItem();
           tipoSelected = item.getId();
 
           Item item3 = (Item) cmbPersona.getSelectedItem();
           personaSelected = item3.getId();
           
+          if(cmbLista.isVisible())
+          {
           Item item5 = (Item) cmbLista.getSelectedItem();
           listaSelected = item5.getId();
-
+          }
+          
           MiembroMesaValidator validador = new MiembroMesaValidator();
           if (validador.verificarPresidenteVocal(VentanaBuscarEvento.evento, tipoSelected) == false) {
             if (validador.ValidarRepedido(personaSelected, tipoSelected,
@@ -343,7 +350,10 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
                   paraGuardar.setFchIns(new Date());
                   // candidatoAGuardar.setCodigo(txtCod.getText());
                   // paraGuardar.setDescripcion(item4);
+                  if(cmbLista.isVisible())
+                  {
                   paraGuardar.setLista(listaDAO.obtenerListaByIdIdLista(listaSelected));
+                  }
                   // candidatoAGuardar.setUcsawsPais(pais);
 
 
@@ -398,7 +408,10 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
 
         // if (!(txtCod.getText().length() == 0)) {
 
-
+        }else{
+          JOptionPane.showMessageDialog(null, "Por favor, no deje campos vacíos.", "Error",
+              JOptionPane.ERROR_MESSAGE);
+        }
 
         // }
       } catch (Exception ex) {

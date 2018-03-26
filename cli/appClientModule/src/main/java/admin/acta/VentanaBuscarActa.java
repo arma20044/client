@@ -46,6 +46,7 @@ import src.main.java.admin.DefinicionesGenerales;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.miembromesa.VentanaBuscarMiembroMesa;
 import src.main.java.admin.reportes.Acta;
+import src.main.java.admin.reportes.ActaCierre;
 import src.main.java.admin.reportes.CantidadVotosElegir;
 import src.main.java.admin.reportes.CantidadVotosSenadorDiputado;
 import src.main.java.dao.acta.ActaDAO;
@@ -199,10 +200,17 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
           codTemporal = selectedData.get(0);
           tipoActa = selectedData.get(7);
           
+          if(tipoActa.compareToIgnoreCase("ACTA DE INICIO")==0){
+            Acta acta = new Acta();
+            // System.out.println(idTipo);
+             acta.start();
+          }
+          else
+          if(tipoActa.compareToIgnoreCase("ACTA DE CIERRE")==0){
+            ActaCierre acta = new ActaCierre();
+            acta.start();            
+          }
           
-          Acta acta = new Acta();
-         // System.out.println(idTipo);
-          acta.start();
         }
    else
         {

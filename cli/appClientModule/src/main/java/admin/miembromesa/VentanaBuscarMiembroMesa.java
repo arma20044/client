@@ -737,10 +737,18 @@ public class VentanaBuscarMiembroMesa extends JFrame implements ActionListener {
       aux = ite.next();
       // {"ID", "Item", "codigo", "nombre","apellido", "Lista", "Tipo",
       // "Observacion"};
+      String texto = "";
+      
+      if(aux.getLista() == null){
+        texto = "-";
+      }
+      else{
+        texto = "Lista N° " + aux.getLista().getNroLista()+ " - " + aux.getLista().getNombreLista();
+      }
 
       Object[] row =
           {aux.getIdMiembroMesa(), cont, aux.getIdPersona().getDatosPersonales(),
-              aux.getMiembroMesa().getDescripcion(), "Lista N° " + aux.getLista().getNroLista()+ " - " + aux.getLista().getNombreLista()};
+              aux.getMiembroMesa().getDescripcion(), texto};
 
       // new
       // SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format((aux.getFechaNacimiento())),formatter.format(aux.getSalario())};

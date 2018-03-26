@@ -59,6 +59,8 @@ import javax.swing.UIManager;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.jdesktop.swingx.JXButton;
 
@@ -372,16 +374,18 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(0, 0, 63, 14);
+		JLabel lblNombre = new JLabel("Usuario logueado:");
+		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNombre.setBounds(0, 0, 111, 26);
 		panel.add(lblNombre);
 
 		JLabel lblNombreDescripcion = new JLabel(
 				Login.nombreApellidoUserLogeado);
-		lblNombreDescripcion.setBounds(73, 0, 287, 14);
+		lblNombreDescripcion.setBounds(143, 0, 405, 26);
 		panel.add(lblNombreDescripcion);
 
 		JLabel label = new JLabel("Nro. Evento:");
+		label.setFont(new Font("Tahoma", Font.BOLD, 11));
 		label.setBounds(0, 25, 79, 14);
 		panel.add(label);
 
@@ -391,6 +395,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		label_1.setForeground(Color.BLACK);
 
 		JLabel label_2 = new JLabel("Descripcion Evento:");
+		label_2.setFont(new Font("Tahoma", Font.BOLD, 11));
 		label_2.setBounds(0, 37, 111, 14);
 		panel.add(label_2);
 
@@ -400,24 +405,47 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
 		label_3.setForeground(Color.BLACK);
 
 		JLabel label_4 = new JLabel("Fecha Desde:");
+		label_4.setFont(new Font("Tahoma", Font.BOLD, 11));
 		label_4.setBounds(317, 25, 83, 14);
 		panel.add(label_4);
 
-		JLabel label_5 = new JLabel(VentanaBuscarEvento.fechaDesde.toString());
+		/*
+		 * date a string formateado
+		 * 
+		 */
+		//**
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String reportDate = df.format(VentanaBuscarEvento.fechaDesde);
+		//**
+		
+		JLabel label_5 = new JLabel(reportDate);
 		label_5.setBounds(410, 25, 191, 14);
 		panel.add(label_5);
 		label_5.setForeground(Color.BLACK);
+		
+		
+		
+	      /*
+         * date a string formateado
+         * 
+         */
+        //**
+        DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String reportDate2 = df.format(VentanaBuscarEvento.fechaHasta);
+        //**
 
 		JLabel lblFechaHasta = new JLabel("Fecha Hasta:");
+		lblFechaHasta.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblFechaHasta.setBounds(317, 37, 83, 14);
 		panel.add(lblFechaHasta);
 
-		JLabel label_7 = new JLabel(VentanaBuscarEvento.fechaHasta.toString());
+		JLabel label_7 = new JLabel(reportDate2);
 		label_7.setBounds(410, 37, 191, 14);
 		panel.add(label_7);
 		label_7.setForeground(Color.BLACK);
 
 		JLabel label_8 = new JLabel("Tipo Evento:");
+		label_8.setFont(new Font("Tahoma", Font.BOLD, 11));
 		label_8.setBounds(0, 50, 79, 14);
 		panel.add(label_8);
 
