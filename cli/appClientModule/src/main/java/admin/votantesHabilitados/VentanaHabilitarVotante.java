@@ -27,6 +27,7 @@ import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
 import src.main.java.hello.WeatherClient;
 import src.main.java.hello.WeatherConfiguration;
+import src.main.java.login.Login;
 
 import java.awt.Font;
 
@@ -138,6 +139,13 @@ public class VentanaHabilitarVotante extends JDialog {
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
+				
+			    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+			      okButton.setEnabled(true);
+			    } else {
+			      okButton.setEnabled(false);
+			      okButton.setToolTipText("Solo los Miembros de Mesa pueden acceder a ésta Área");
+			    }
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");

@@ -315,6 +315,13 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
     Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
     btnNuevo.setIcon(new ImageIcon(newimg2));
     getContentPane().add(btnNuevo);
+    
+    if (Login.rol.compareToIgnoreCase("MIE") == 0 || Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnNuevo.setEnabled(true);
+    } else {
+      btnNuevo.setEnabled(false);
+      btnNuevo.setToolTipText("Solo los Miembros de Mesa o Administradores pueden acceder a ésta Área");
+    }
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
@@ -333,6 +340,14 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
     getContentPane().add(btnEliminar);
 
     btnEliminar.addActionListener(this);
+    
+    
+    if (Login.rol.compareToIgnoreCase("MIE") == 0 || Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnEliminar.setEnabled(true);
+    } else {
+      btnEliminar.setEnabled(false);
+      btnEliminar.setToolTipText("Solo los Miembros de Mesa o Administradores pueden acceder a ésta Área");
+    }
     
     
     

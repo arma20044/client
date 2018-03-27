@@ -129,6 +129,15 @@ public class VentanaRegistroGenero extends JFrame implements ActionListener {
 	getContentPane().add(botonGuardar);
 	getContentPane().add(labelTitulo);
 	limpiar();
+	
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      botonGuardar.setEnabled(true);
+    } else {
+      botonGuardar.setEnabled(false);
+      botonGuardar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
+	
+	
 	setSize(546, 195);
 	setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 	setLocationRelativeTo(null);

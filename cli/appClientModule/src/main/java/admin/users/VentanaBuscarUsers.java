@@ -306,6 +306,13 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
     Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
     btnNuevo.setIcon(new ImageIcon(newimg2));
     getContentPane().add(btnNuevo);
+    
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnNuevo.setEnabled(true);
+    } else {
+      btnNuevo.setEnabled(false);
+      btnNuevo.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
@@ -314,6 +321,14 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
 
     btnEliminar = new JButton();
     btnEliminar.setIcon(new ImageIcon(VentanaBuscarUsers.class.getResource("/imgs/borrar.png")));
+    
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnEliminar.setEnabled(true);
+    } else {
+      btnEliminar.setEnabled(false);
+      btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
+    
     btnEliminar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnEliminar) {
@@ -346,6 +361,13 @@ public class VentanaBuscarUsers extends JFrame implements ActionListener {
                   // codTemporal.getText());
                   codTemporal = "";
                   limpiar();
+                  
+                  if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+                    btnEliminar.setEnabled(true);
+                  } else {
+                    btnEliminar.setEnabled(false);
+                    btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+                  }
 
                    model = new UsersJTableModel();
 

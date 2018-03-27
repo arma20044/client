@@ -139,6 +139,13 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
     getContentPane().add(btnEliminar);
     getContentPane().add(labelTitulo);
     limpiar();
+    
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnEliminar.setEnabled(true);
+    } else {
+      btnEliminar.setEnabled(false);
+      btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
 
     setSize(640, 476);
     setTitle("Sistema E-vote: Paraguay Elecciones 2015");
@@ -261,6 +268,14 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
     Image newimg2 = img2.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
     btnNuevo.setIcon(new ImageIcon(newimg2));
     getContentPane().add(btnNuevo);
+    
+    
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnNuevo.setEnabled(true);
+    } else {
+      btnNuevo.setEnabled(false);
+      btnNuevo.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
 
     lblMensaje = new JLabel("");
     lblMensaje.setForeground(Color.RED);
@@ -305,6 +320,14 @@ public class VentanaBuscarNacionalidad extends JFrame implements ActionListener 
     Image newimg6 = img6.getScaledInstance(32, 32, java.awt.Image.SCALE_SMOOTH);
     btnModificar.setIcon(new ImageIcon(newimg6));
     getContentPane().add(btnModificar);
+    
+    
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      btnModificar.setEnabled(true);
+    } else {
+      btnModificar.setEnabled(false);
+      btnModificar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+    }
 
     // table_1.getColumnModel().getColumn(0).setHeaderValue("Descripcion");
 

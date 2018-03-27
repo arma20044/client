@@ -189,7 +189,17 @@ public class VentanaBuscarEvento extends JFrame implements ActionListener {
 		getContentPane().add(botonCancelar);
 		getContentPane().add(btnEliminar);
 		getContentPane().add(labelTitulo);
+		
+
+		
 		limpiar();
+		
+	      if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+	          btnEliminar.setEnabled(true);
+	        } else {
+	          btnEliminar.setEnabled(false);
+	          btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+	        }
 
 		setSize(1152, 476);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
@@ -469,6 +479,15 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 		}
 		getContentPane().add(btnNuevo);
 		
+	    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+	      btnNuevo.setEnabled(true);
+	    } else {
+	      btnNuevo.setEnabled(false);
+	      btnNuevo.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+	    }
+		
+		
+		
 		//btnModificarEvento = new JButton("");
 				btnModificar = new JButton("");
 				btnModificar.setVisible(false);
@@ -519,6 +538,13 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 				else{		
 					btnModificar.setVisible(true);
 				}
+				
+		        if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+		          btnModificar.setEnabled(true);
+		        } else {
+		          btnModificar.setEnabled(false);
+		          btnModificar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+		        }
 		
 		if(readOnly==true){
 			btnNuevo.setEnabled(false);

@@ -128,6 +128,13 @@ public class VentanaBuscarTipoMiembroMesa extends JFrame implements ActionListen
 		getContentPane().add(labelTitulo);
 		limpiar();
 
+	    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+	      btnEliminar.setEnabled(true);
+	    } else {
+	      btnEliminar.setEnabled(false);
+	      btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+	    }
+		
 		setSize(640, 476);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
@@ -253,6 +260,13 @@ public class VentanaBuscarTipoMiembroMesa extends JFrame implements ActionListen
 				java.awt.Image.SCALE_SMOOTH);
 		btnNuevo.setIcon(new ImageIcon(newimg2));
 		getContentPane().add(btnNuevo);
+		
+	    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+	      btnNuevo.setEnabled(true);
+	    } else {
+	      btnNuevo.setEnabled(false);
+	      btnNuevo.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+	    }
 
 		lblMensaje = new JLabel("");
 		lblMensaje.setForeground(Color.RED);

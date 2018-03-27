@@ -178,7 +178,7 @@ public class PreLogin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema E-vote: Paraguay Elecciones 2015");
-        btnAdmin.setText("ADMINISTRADOR");
+        btnAdmin.setText("ACCEDER AL SISTEMA");
         btnAdmin.setIcon(new ImageIcon(PreLogin.class.getResource("/imgs/admin.png")));
 		
         Image img2 = ((ImageIcon) btnAdmin.getIcon()).getImage();
@@ -196,7 +196,7 @@ public class PreLogin extends javax.swing.JFrame {
 
         labelTitulo.setText("Ver. 1.0.0");
         
-        btnVotante = new JButton("VOTANTE");
+        btnVotante = new JButton("VOTAR");
        
         btnVotante.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
