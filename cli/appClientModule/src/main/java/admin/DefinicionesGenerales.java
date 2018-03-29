@@ -74,6 +74,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
   private JButton btnGenero, btnPersonas, btnVotantesHabilitados, btnVigenciaHorarioXPais,
       btnDepartamentos, btnNacionalidades, btnPais, btnTipoEvento, btnTipoLista, btnListas,
       btnCandidatos, btnEscrutinio, btnHome;
+  
+  JButton btnActa = new JButton("Actas");
 
   /**
    * Establece la informacion que se presentara como introduccion del sistema
@@ -538,6 +540,13 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
       btnEscrutinio.setEnabled(false);
      btnEscrutinio.setToolTipText("Solo los Coordinadores pueden acceder a ésta Área");
     }
+   
+   if (Login.rol.compareToIgnoreCase("MIE") == 0) {
+     btnActa.setEnabled(true);
+   } else {
+     btnActa.setEnabled(false);
+     btnActa.setToolTipText("Solo los Miembros de Mesa pueden acceder a ésta Área");
+   }
 
 
     btnTipoLista = new JButton("Tipo Lista");
@@ -672,7 +681,7 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
     btnTipoMiembroMesa.setBounds(497, 318, 176, 23);
     getContentPane().add(btnTipoMiembroMesa);
 
-    JButton btnActa = new JButton("Actas");
+    
     btnActa.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {

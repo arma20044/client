@@ -163,7 +163,7 @@ public class VentanaEscrutinioDiputados extends JFrame implements ActionListener
         UcsawsTipoLista aux;
         while (ite.hasNext()) {
             aux = ite.next();
-            if (aux.getCodigo().compareToIgnoreCase("DIP") == 0 ) {
+            if (aux.getCodigo().compareToIgnoreCase("PAR") == 0 ) {
               listaDiputado = aux;
               break;
             }
@@ -308,11 +308,11 @@ public class VentanaEscrutinioDiputados extends JFrame implements ActionListener
     getContentPane().add(lblCandidato4);
 
     JLabel lblEscrutinioDiputados = new JLabel();
-    lblEscrutinioDiputados.setText("ESCRUTINIO DIPUTADOS.");
+    lblEscrutinioDiputados.setText("ESCRUTINIO PARLAMENTO DEL MERCOSUR.");
     lblEscrutinioDiputados.setFont(new Font("Verdana", Font.BOLD, 18));
-    lblEscrutinioDiputados.setBounds(201, 99, 270, 30);
+    lblEscrutinioDiputados.setBounds(97, 99, 442, 30);
     getContentPane().add(lblEscrutinioDiputados);
-    recuperarDatos();
+   // recuperarDatos();
 
 
     // cellSelectionModel.addListSelectionListener(new

@@ -43,12 +43,12 @@ public class Escrutinio extends JFrame implements ActionListener{
 		btnAtras = new JButton();
 		btnAtras.setIcon(new ImageIcon(Escrutinio.class.getResource("/imgs/volver.png")));
 		btnAtras.setToolTipText("Atras...");
-		btnAtras.setBounds(683, 474, 83, 51);
+		btnAtras.setBounds(603, 338, 83, 51);
 
 		labelSeleccion = new JLabel();
 		labelSeleccion.setFont(new Font("Tahoma", Font.ITALIC, 11));
 		labelSeleccion.setText("Escoja que operacion desea realizar");
-		labelSeleccion.setBounds(272, 318, 172, 14);
+		labelSeleccion.setBounds(285, 312, 172, 14);
 
 		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
 				+ "de dise�o MVC.\n\n"
@@ -59,12 +59,12 @@ public class Escrutinio extends JFrame implements ActionListener{
 		getContentPane().add(btnAtras);
 		getContentPane().add(labelSeleccion);
 	
-		setSize(772, 554);
+		setSize(690, 418);
 		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
-		JButton btnContarVotosDip = new JButton("Contar Votos Diputados");
+		JButton btnContarVotosDip = new JButton("Contar Votos Parlamento del Mercosur");
 		btnContarVotosDip.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				VentanaEscrutinioDiputados escr = new VentanaEscrutinioDiputados();
@@ -72,14 +72,14 @@ public class Escrutinio extends JFrame implements ActionListener{
 				dispose();
 			}
 		});
-		btnContarVotosDip.setBounds(259, 267, 185, 23);
+		btnContarVotosDip.setBounds(234, 261, 250, 23);
 		getContentPane().add(btnContarVotosDip);
 		
 				labelTitulo = new JLabel();
 				labelTitulo.setIcon(new ImageIcon(Escrutinio.class.getResource("/imgs/def.png")));
 				labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 				labelTitulo.setText("Escrutinio");
-				labelTitulo.setBounds(10, 96, 712, 86);
+				labelTitulo.setBounds(0, 96, 686, 86);
 				labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
 				getContentPane().add(labelTitulo);
 				
@@ -174,7 +174,7 @@ public class Escrutinio extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnContarVotosSen.setBounds(259, 233, 185, 23);
+				btnContarVotosSen.setBounds(234, 227, 250, 23);
 				getContentPane().add(btnContarVotosSen);
 				
 				JButton btnContarVotosPre = new JButton("Contar Votos Presidente");
@@ -185,7 +185,7 @@ public class Escrutinio extends JFrame implements ActionListener{
 						dispose();
 					}
 				});
-				btnContarVotosPre.setBounds(259, 199, 185, 23);
+				btnContarVotosPre.setBounds(234, 193, 250, 23);
 				getContentPane().add(btnContarVotosPre);
 		//lblNombreDescripcion.repaint();
 		

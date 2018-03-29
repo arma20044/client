@@ -129,11 +129,11 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     getContentPane().add(labelTitulo);
     limpiar();
     
-    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+    if (Login.rol.compareToIgnoreCase("MIE") == 0) {
       btnEliminar.setEnabled(true);
     } else {
       btnEliminar.setEnabled(false);
-      btnEliminar.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+      btnEliminar.setToolTipText("Solo los Miembros de Mesa pueden acceder a ésta Área");
     }
 
     setSize(864, 476);
@@ -497,11 +497,11 @@ public class VentanaBuscarActa extends JFrame implements ActionListener {
     btnNuevo.setIcon(new ImageIcon(newimg2));
     getContentPane().add(btnNuevo);
     
-    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+    if (Login.rol.compareToIgnoreCase("MIE") == 0) {
       btnNuevo.setEnabled(true);
     } else {
       btnNuevo.setEnabled(false);
-      btnNuevo.setToolTipText("Solo los Administradores pueden acceder a ésta Área");
+      btnNuevo.setToolTipText("Solo los Miembros de Mesa pueden acceder a ésta Área");
     }
 
     lblMensaje = new JLabel("");
