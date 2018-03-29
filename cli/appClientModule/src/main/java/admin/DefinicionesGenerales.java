@@ -659,6 +659,14 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
         consulta.setVisible(true);
         dispose();
       }
+      @Override
+      public void mouseEntered(MouseEvent arg0) {
+        labelSeleccion.setText("Aquí puede Gestionar los Miembros de Mesa del Sistema.");
+      }
+      @Override
+      public void mouseExited(MouseEvent e) {
+        cambiarEtiqueta();
+      }
     });
     btnTipoMiembroMesa.setText("Tipo Miembro Mesa");
     btnTipoMiembroMesa.setBounds(497, 318, 176, 23);
@@ -671,6 +679,14 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
         VentanaBuscarActa acta = new VentanaBuscarActa();
         acta.setVisible(true);
         dispose();
+      }
+      @Override
+      public void mouseExited(MouseEvent e) {
+        cambiarEtiqueta();
+      }
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        labelSeleccion.setText("Aquí puede Gestionar las Actas del Sistema.");
       }
     });
     btnActa.setBounds(105, 318, 176, 23);
