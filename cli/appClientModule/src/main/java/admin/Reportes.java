@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -26,6 +28,10 @@ import src.main.java.admin.reportes.VotosElegir;
 import src.main.java.admin.utils.Close;
 import src.main.java.login.Login;
 import src.main.java.login.PreLogin;
+
+import javax.swing.UIManager;
+
+import java.awt.Color;
 
 public class Reportes extends JFrame implements ActionListener{
 	
@@ -80,18 +86,8 @@ public class Reportes extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		
-		JLabel lblAdmin = new JLabel("Administrador");
-		lblAdmin.setBounds(55, 11, 89, 14);
-		getContentPane().add(lblAdmin);
 		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(55, 35, 54, 14);
-		getContentPane().add(lblNombre);
-		
-		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
-		lblNombreDescripcion.setBounds(101, 36, 250, 14);
-		//lblNombreDescripcion.setText();
-		getContentPane().add(lblNombreDescripcion);
+	    
 		
 				labelTitulo = new JLabel();
 				labelTitulo.setIcon(new ImageIcon(Reportes.class.getResource("/imgs/pfd64.png")));
@@ -197,6 +193,119 @@ public class Reportes extends JFrame implements ActionListener{
 				Image newimg5 = img5.getScaledInstance(32, 32,
 						java.awt.Image.SCALE_SMOOTH);
 				btnHome.setIcon(new ImageIcon(newimg5));
+				
+				JPanel panel_1 = new JPanel();
+				panel_1.setLayout(null);
+				panel_1.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+				panel_1.setBounds(79, 0, 619, 85);
+				getContentPane().add(panel_1);
+				
+				JLabel label = new JLabel("Usuario logueado:");
+				label.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label.setBounds(0, 0, 111, 26);
+				panel_1.add(label);
+				
+				JLabel label_1 = new JLabel(Login.nombreApellidoUserLogeado);
+				label_1.setBounds(143, 0, 405, 26);
+				panel_1.add(label_1);
+				
+				JLabel label_2 = new JLabel("Nro. Evento:");
+				label_2.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_2.setBounds(0, 25, 79, 14);
+				panel_1.add(label_2);
+				
+				JLabel label_3 = new JLabel(VentanaBuscarEvento.nroEvento);
+				label_3.setForeground(Color.BLACK);
+				label_3.setBounds(77, 25, 60, 14);
+				panel_1.add(label_3);
+				
+				JLabel label_4 = new JLabel("Descripcion Evento:");
+				label_4.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_4.setBounds(0, 37, 111, 14);
+				panel_1.add(label_4);
+				
+				JLabel label_5 = new JLabel(VentanaBuscarEvento.descripcionEvento);
+				label_5.setForeground(Color.BLACK);
+				label_5.setBounds(114, 37, 200, 14);
+				panel_1.add(label_5);
+				
+				 /*
+			     * date a string formateado
+			     */
+			    // **
+			    DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			    String reportDate = df.format(VentanaBuscarEvento.fechaDesde);
+			    // **
+				
+				JLabel label_6 = new JLabel("Fecha Desde:");
+				label_6.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_6.setBounds(317, 25, 83, 14);
+				panel_1.add(label_6);
+				
+				JLabel label_7 = new JLabel(reportDate);
+				label_7.setForeground(Color.BLACK);
+				label_7.setBounds(410, 25, 191, 14);
+				panel_1.add(label_7);
+				
+				JLabel label_8 = new JLabel("Fecha Hasta:");
+				label_8.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_8.setBounds(317, 37, 83, 14);
+				panel_1.add(label_8);
+				
+				
+			    /*
+			     * date a string formateado
+			     */
+			    // **
+			    DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			    String reportDate2 = df.format(VentanaBuscarEvento.fechaHasta);
+			    // **
+
+				
+				JLabel label_9 = new JLabel(reportDate2);
+				label_9.setForeground(Color.BLACK);
+				label_9.setBounds(410, 37, 191, 14);
+				panel_1.add(label_9);
+				
+				JLabel label_10 = new JLabel("Tipo Evento:");
+				label_10.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_10.setBounds(0, 50, 79, 14);
+				panel_1.add(label_10);
+				
+				JLabel label_11 = new JLabel(VentanaBuscarEvento.tipoEventoDescripcon);
+				label_11.setForeground(Color.BLACK);
+				label_11.setBounds(87, 50, 196, 14);
+				panel_1.add(label_11);
+				
+				 String r = "";
+				    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+				      r = "ADMINISTRADOR";
+				      
+				    } else if (Login.rol.compareToIgnoreCase("COO") == 0) {
+				      r = "COORDINADOR";
+				    }
+
+				    else if (Login.rol.compareToIgnoreCase("VOT") == 0) {
+				      r = "VOTANTE";
+				    }
+
+				    else if (Login.rol.compareToIgnoreCase("CON") == 0) {
+				      r = "CONSULTA";
+				    }
+
+				    else if (Login.rol.compareToIgnoreCase("MIE") == 0) {
+				      r = "MIEMBRO DE MESA";
+				    }
+				
+				JLabel label_12 = new JLabel("Rol:");
+				label_12.setFont(new Font("Tahoma", Font.BOLD, 11));
+				label_12.setBounds(317, 50, 83, 14);
+				panel_1.add(label_12);
+				
+				JLabel label_13 = new JLabel(r);
+				label_13.setForeground(Color.BLACK);
+				label_13.setBounds(410, 50, 191, 14);
+				panel_1.add(label_13);
 		//lblNombreDescripcion.repaint();
 		
 		

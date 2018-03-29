@@ -484,8 +484,28 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
     lblRol.setFont(new Font("Tahoma", Font.BOLD, 11));
     lblRol.setBounds(317, 50, 83, 14);
     panel.add(lblRol);
+    
+    String r = "";
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      r = "ADMINISTRADOR";
+      
+    } else if (Login.rol.compareToIgnoreCase("COO") == 0) {
+      r = "COORDINADOR";
+    }
 
-    JLabel label_6 = new JLabel(Login.rol);
+    else if (Login.rol.compareToIgnoreCase("VOT") == 0) {
+      r = "VOTANTE";
+    }
+
+    else if (Login.rol.compareToIgnoreCase("CON") == 0) {
+      r = "CONSULTA";
+    }
+
+    else if (Login.rol.compareToIgnoreCase("MIE") == 0) {
+      r = "MIEMBRO DE MESA";
+    }
+
+    JLabel label_6 = new JLabel(r);
     label_6.setForeground(Color.BLACK);
     label_6.setBounds(410, 50, 191, 14);
     panel.add(label_6);
@@ -512,12 +532,12 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
     btnEscrutinio.setBounds(105, 363, 176, 23);
     getContentPane().add(btnEscrutinio);
 
-//    if (Login.rol.compareToIgnoreCase("COO") == 0) {
-//      btnEscrutinio.setEnabled(true);
-//    } else {
-//      btnEscrutinio.setEnabled(false);
-//      btnEscrutinio.setToolTipText("Solo los Coordinadores pueden acceder a ésta Área");
-//    }
+   if (Login.rol.compareToIgnoreCase("COO") == 0) {
+      btnEscrutinio.setEnabled(true);
+    } else {
+      btnEscrutinio.setEnabled(false);
+     btnEscrutinio.setToolTipText("Solo los Coordinadores pueden acceder a ésta Área");
+    }
 
 
     btnTipoLista = new JButton("Tipo Lista");

@@ -23,153 +23,211 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MenuPrincipal extends JFrame implements ActionListener{
-	
-	private Coordinador miCoordinador; //objeto miCoordinador que permite la relacion entre esta clase y la clase coordinador
-	
-	public static boolean reporte;
-	
-	private JButton btnAdministracion ,btnReportes ;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
-	/**
-	 * Establece la informacion que se presentara como introduccion del sistema
-	 */
-	public String textoIntroduccion = "";
-	
-	
-	
-	public MenuPrincipal() {
-		
-		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent we)
-		    { 
-		    	Close close = new Close();
-		    	close.cerrarAplicacion(we);
-		    }
-		});
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imgs/paraguay.png")));
-		
-		reporte = false;
-		
-		VentanaBuscarEvento.readOnly = false;
-		
-		setResizable(false);
-		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-		textoIntroduccion = "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
-				+ "de dise�o MVC.\n\n"
-				+ "La aplicaci�n permite registrar, actualizar, buscar y eliminar registros de una tabla Persona." +
-				"tambien son vinculados algunos conceptos de los Patrones Value Object y Data Access Objetc\n";
-	
-		setSize(575, 460);
-		setTitle("Sistema E-vote: Paraguay Elecciones 2015");
-		setLocationRelativeTo(null);
-		getContentPane().setLayout(null);
-		
-		JLabel lblAdmin = new JLabel("Administrador");
-		lblAdmin.setBounds(24, 11, 89, 14);
-		getContentPane().add(lblAdmin);
-		
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(24, 35, 54, 14);
-		getContentPane().add(lblNombre);
-		
-		JLabel lblNombreDescripcion = new JLabel(Login.nombreApellidoUserLogeado);
-		lblNombreDescripcion.setBounds(73, 36, 278, 14);
-		//lblNombreDescripcion.setText();
-		getContentPane().add(lblNombreDescripcion);
-		
-		btnAdministracion = new JButton("Administracion");
-		btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
-		btnAdministracion.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				VentanaBuscarEvento.evento="";
-				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
-				ventanaBuscarEvento.setVisible(true);
-				dispose();
-			}
-		});
-		btnAdministracion.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imgs/administracion.png")));
-		btnAdministracion.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		btnAdministracion.setBounds(122, 169, 338, 73);
-		getContentPane().add(btnAdministracion);
-		
-		JLabel lblTitulo = new JLabel();
-		lblTitulo.setText("Menú Principal");
-		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
-		lblTitulo.setBounds(24, 72, 503, 86);
-		getContentPane().add(lblTitulo);
-		
-		btnReportes = new JButton("Reportes");
-		btnReportes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				VentanaBuscarEvento.evento="";
-				
-				reporte = true;
-				VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
-				ventanaBuscarEvento.setVisible(true);
-				dispose();
-				
-			}
-		});
-		btnReportes.setHorizontalAlignment(SwingConstants.LEFT);
-		btnReportes.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imgs/pfd64.png")));
-		btnReportes.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		btnReportes.setBounds(122, 282, 338, 73);
-		getContentPane().add(btnReportes);
-		//lblNombreDescripcion.repaint();
-		
-		
-		btnAdministracion.addKeyListener(new MKeyListener());
-		btnReportes.addKeyListener(new MKeyListener());
-		
-		
-		
-		
-		
-		
-		
-		
-		
+public class MenuPrincipal extends JFrame implements ActionListener {
 
-	}
+  private Coordinador miCoordinador; // objeto miCoordinador que permite la relacion entre esta
+                                     // clase y la clase coordinador
+
+  public static boolean reporte;
+
+  private JButton btnAdministracion, btnReportes;
+
+  /**
+   * Establece la informacion que se presentara como introduccion del sistema
+   */
+  public String textoIntroduccion = "";
 
 
 
+  public MenuPrincipal() {
 
-	public void setCoordinador(Coordinador miCoordinador) {
-		this.miCoordinador=miCoordinador;
-	}
+    this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+    addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent we) {
+        Close close = new Close();
+        close.cerrarAplicacion(we);
+      }
+    });
+    setIconImage(Toolkit.getDefaultToolkit().getImage(
+        MenuPrincipal.class.getResource("/imgs/paraguay.png")));
+
+    reporte = false;
+
+    VentanaBuscarEvento.readOnly = false;
+
+    setResizable(false);
+    // setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    textoIntroduccion =
+        "Esta aplicaci�n presenta un ejemplo pr�ctico del patron "
+            + "de dise�o MVC.\n\n"
+            + "La aplicaci�n permite registrar, actualizar, buscar y eliminar registros de una tabla Persona."
+            + "tambien son vinculados algunos conceptos de los Patrones Value Object y Data Access Objetc\n";
+
+    setSize(670, 460);
+    setTitle("Sistema E-vote: Paraguay Elecciones 2015");
+    setLocationRelativeTo(null);
+    getContentPane().setLayout(null);
 
 
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	class MKeyListener extends KeyAdapter {
+    btnAdministracion = new JButton("Administracion");
+    btnAdministracion.setHorizontalAlignment(SwingConstants.LEFT);
+    btnAdministracion.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        VentanaBuscarEvento.evento = "";
+        VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
+        ventanaBuscarEvento.setVisible(true);
+        dispose();
+      }
+    });
+    btnAdministracion.setIcon(new ImageIcon(MenuPrincipal.class
+        .getResource("/imgs/administracion.png")));
+    btnAdministracion.setFont(new Font("Tahoma", Font.PLAIN, 21));
+    btnAdministracion.setBounds(122, 169, 338, 73);
+    getContentPane().add(btnAdministracion);
 
-		@Override
-	        public void keyPressed(KeyEvent event) {
+    JLabel lblTitulo = new JLabel();
+    lblTitulo.setText("Menú Principal");
+    lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+    lblTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
+    lblTitulo.setBounds(52, 87, 503, 86);
+    getContentPane().add(lblTitulo);
 
-	    
+    btnReportes = new JButton("Reportes");
+    btnReportes.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        VentanaBuscarEvento.evento = "";
 
-	            if (event.getKeyCode() == KeyEvent.VK_ENTER) {
-	            	
-	            	
-	            if(btnAdministracion.isFocusOwner()==true){
-	            	btnAdministracion.doClick();
-	                    System.out.println("the button is: " + btnAdministracion.getText()+ " btnAdministracion");
-	                }
-	            
-	            if(btnReportes.isFocusOwner()==true){
-	            	btnReportes.doClick();
-	                    System.out.println("the button is: " + btnReportes.getText()+ " btnReportes");
-	                }
-	            }
-		}
-	}
+        reporte = true;
+        VentanaBuscarEvento ventanaBuscarEvento = new VentanaBuscarEvento();
+        ventanaBuscarEvento.setVisible(true);
+        dispose();
+
+      }
+    });
+    btnReportes.setHorizontalAlignment(SwingConstants.LEFT);
+    btnReportes.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imgs/pfd64.png")));
+    btnReportes.setFont(new Font("Tahoma", Font.PLAIN, 21));
+    btnReportes.setBounds(122, 282, 338, 73);
+    getContentPane().add(btnReportes);
+    
+    JPanel panel = new JPanel();
+    panel.setLayout(null);
+    panel.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    panel.setBounds(10, 11, 619, 57);
+    getContentPane().add(panel);
+    
+    JLabel label = new JLabel("Usuario logueado:");
+    label.setFont(new Font("Tahoma", Font.BOLD, 11));
+    label.setBounds(0, 0, 111, 26);
+    panel.add(label);
+    
+    JLabel label_1 = new JLabel(Login.nombreApellidoUserLogeado);
+    label_1.setBounds(143, 0, 405, 26);
+    panel.add(label_1);
+    
+
+    /*
+     * date a string formateado
+     */
+    // **
+    String reportDate = "";
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    if (VentanaBuscarEvento.fechaDesde != null){
+   
+    reportDate = df.format(VentanaBuscarEvento.fechaDesde);
+    // **
+    }
+    
+    /*
+     * date a string formateado
+     */
+    // **
+    String reportDate2 = "";
+    if (VentanaBuscarEvento.fechaHasta != null){
+    DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    reportDate2 = df2.format(VentanaBuscarEvento.fechaHasta);
+    // **
+    }
+    
+    JLabel label_12 = new JLabel("Rol:");
+    label_12.setFont(new Font("Tahoma", Font.BOLD, 11));
+    label_12.setBounds(0, 33, 83, 14);
+    panel.add(label_12);
+    
+    String r = "";
+    if (Login.rol.compareToIgnoreCase("ADM") == 0) {
+      r = "ADMINISTRADOR";
+      
+    } else if (Login.rol.compareToIgnoreCase("COO") == 0) {
+      r = "COORDINADOR";
+    }
+
+    else if (Login.rol.compareToIgnoreCase("VOT") == 0) {
+      r = "VOTANTE";
+    }
+
+    else if (Login.rol.compareToIgnoreCase("CON") == 0) {
+      r = "CONSULTA";
+    }
+
+    else if (Login.rol.compareToIgnoreCase("MIE") == 0) {
+      r = "MIEMBRO DE MESA";
+    }
+    
+    JLabel label_13 = new JLabel(r);
+    label_13.setForeground(Color.BLACK);
+    label_13.setBounds(40, 33, 191, 14);
+    panel.add(label_13);
+    // lblNombreDescripcion.repaint();
+
+
+    btnAdministracion.addKeyListener(new MKeyListener());
+    btnReportes.addKeyListener(new MKeyListener());
+
+
+
+  }
+
+  public void setCoordinador(Coordinador miCoordinador) {
+    this.miCoordinador = miCoordinador;
+  }
+
+
+  public void actionPerformed(ActionEvent arg0) {
+    // TODO Auto-generated method stub
+
+  }
+
+  class MKeyListener extends KeyAdapter {
+
+    @Override
+    public void keyPressed(KeyEvent event) {
+
+
+
+      if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+
+
+        if (btnAdministracion.isFocusOwner() == true) {
+          btnAdministracion.doClick();
+          System.out
+              .println("the button is: " + btnAdministracion.getText() + " btnAdministracion");
+        }
+
+        if (btnReportes.isFocusOwner() == true) {
+          btnReportes.doClick();
+          System.out.println("the button is: " + btnReportes.getText() + " btnReportes");
+        }
+      }
+    }
+  }
 }
