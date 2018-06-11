@@ -42,6 +42,7 @@ import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.dao.vigencia.VigenciaDAO;
 import src.main.java.login.Login;
 import entity.UcsawsVigenciaHorarioXPais;
+import javax.swing.SwingConstants;
 
 public class VentanaBuscarVigencia extends JFrame implements ActionListener {
 
@@ -101,8 +102,9 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
     btnEliminar.setIcon(new ImageIcon(newimg4));
 
     labelTitulo = new JLabel();
-    labelTitulo.setText("VER VIGENCIAS");
-    labelTitulo.setBounds(194, 11, 270, 30);
+    labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+    labelTitulo.setText("VER VIGENCIA DE HORARIO POR PAIS");
+    labelTitulo.setBounds(83, 11, 457, 30);
     labelTitulo.setFont(new java.awt.Font("Verdana", 1, 18));
 
     btnEliminar.addActionListener(this);
@@ -191,7 +193,7 @@ public class VentanaBuscarVigencia extends JFrame implements ActionListener {
     table_1.setModel(model);
     table_1.removeColumn(table_1.getColumnModel().getColumn(0));
     JLabel lblListaDeGeneros = new JLabel();
-    lblListaDeGeneros.setText("LISTA DE VIGENCIA POR PAIS");
+    lblListaDeGeneros.setText("LISTA DE VIGENCIAS");
     lblListaDeGeneros.setFont(new Font("Verdana", Font.BOLD, 18));
     lblListaDeGeneros.setBounds(147, 117, 325, 30);
     getContentPane().add(lblListaDeGeneros);

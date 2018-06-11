@@ -254,7 +254,8 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
     labelTitulo = new JLabel();
     labelTitulo.setIcon(new ImageIcon(DefinicionesGenerales.class.getResource("/imgs/def.png")));
     labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-    labelTitulo.setText("Definiciones Generales");
+    //labelTitulo.setText("Definiciones Generales");
+    labelTitulo.setText("Administración");
     labelTitulo.setBounds(10, 96, 712, 86);
     labelTitulo.setFont(new Font("Verdana", Font.BOLD, 46));
     getContentPane().add(labelTitulo);
@@ -685,9 +686,11 @@ public class DefinicionesGenerales extends JFrame implements ActionListener {
     btnActa.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
+        if(btnActa.isEnabled()){
         VentanaBuscarActa acta = new VentanaBuscarActa();
         acta.setVisible(true);
         dispose();
+        }
       }
       @Override
       public void mouseExited(MouseEvent e) {

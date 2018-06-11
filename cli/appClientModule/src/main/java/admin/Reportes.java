@@ -102,19 +102,19 @@ public class Reportes extends JFrame implements ActionListener{
 				getContentPane().add(panel);
 				panel.setLayout(null);
 				
-				JButton btnPersonas = new JButton("Votantes");
+				JButton btnPersonas = new JButton("Listado de Votantes");
 				btnPersonas.setBounds(0, 0, 227, 23);
 				panel.add(btnPersonas);
 				
-				JButton btnVotantesXDep = new JButton("Cantidad de Votos");
+				JButton btnVotantesXDep = new JButton("Listado de Cantidad de Votos");
 				btnVotantesXDep.setBounds(258, 0, 227, 23);
 				panel.add(btnVotantesXDep);
 				
-				JButton btnTotalParticipacion = new JButton("Participacion");
+				JButton btnTotalParticipacion = new JButton("Listado de Participacion");
 				btnTotalParticipacion.setBounds(0, 68, 227, 23);
 				panel.add(btnTotalParticipacion);
 				
-				JButton btnCantidadVotosBlancos = new JButton("Cantidad de Votos Blancos");
+				JButton btnCantidadVotosBlancos = new JButton("Listado de Votos Blancos");
 				btnCantidadVotosBlancos.setBounds(258, 34, 227, 23);
 				panel.add(btnCantidadVotosBlancos);
 				
@@ -122,7 +122,7 @@ public class Reportes extends JFrame implements ActionListener{
 				btnListaCandidatos.setBounds(0, 34, 227, 23);
 				panel.add(btnListaCandidatos);
 				
-				JButton btnVotosXCandidatura = new JButton("Cantidad de Votos por Candidatura");
+				JButton btnVotosXCandidatura = new JButton("Listado de Votos por Candidatura");
 				btnVotosXCandidatura.setBounds(258, 68, 227, 23);
 				panel.add(btnVotosXCandidatura);
 				btnVotosXCandidatura.addActionListener(new ActionListener() {
