@@ -234,7 +234,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
     campoUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
       public void keyPressed(java.awt.event.KeyEvent evt) {
         //campoUsuarioKeyPressed(evt);
-        loginDefinitivo();
+       // loginDefinitivo();
       }
     });
 
@@ -277,7 +277,7 @@ public class Login extends javax.swing.JFrame implements KeyListener {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }*/
-        loginDefinitivo();
+       // loginDefinitivo();
       }
     });
 
@@ -439,7 +439,11 @@ public class Login extends javax.swing.JFrame implements KeyListener {
   }// GEN-LAST:event_campoUsuarioKeyPressed
 
   private void campoContrasenaKeyPressed(java.awt.event.KeyEvent evt) throws ParseException {// GEN-FIRST:event_campoContrasenaKeyPressed
-    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) { 
+      
+      if (campoUsuario.getText().length() > 0 && campoContrasena.getPassword().length > 0) {
+        
+      
       UcsawsUsers autenticado = autenticar();
 
       if (autenticado.getIdUser() != null) { // admin
@@ -477,6 +481,14 @@ public class Login extends javax.swing.JFrame implements KeyListener {
         JOptionPane.showMessageDialog(null, "Usuario o Contraseña erróneos.", "ERROR.",
             JOptionPane.INFORMATION_MESSAGE);
 
+      }
+      
+    }
+      else{
+        JOptionPane.showMessageDialog(null,
+            "Debe ingresar todos los campos.",
+            "Error de Logeo",
+            JOptionPane.ERROR_MESSAGE);
       }
     }
   }// GEN-LAST:event_campoContrasenaKeyPressed
@@ -643,6 +655,12 @@ public class Login extends javax.swing.JFrame implements KeyListener {
         menuPrincipal.setVisible(true);
         this.dispose();
       
+      }
+      else{
+        JOptionPane.showMessageDialog(null,
+            "Debe ingresar todos los campos.",
+            "Error de Logeo",
+            JOptionPane.ERROR_MESSAGE);
       }
 
   }
