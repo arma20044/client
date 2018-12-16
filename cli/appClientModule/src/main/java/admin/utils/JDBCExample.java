@@ -30,7 +30,7 @@ public class JDBCExample {
     try {
 
       connection =
-          DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/VOTOPY", "ucsa2014",
+          DriverManager.getConnection("jdbc:postgresql://ubuntu:5432/VOTOPY", "ucsa2014",
               "ucsa2014");
 
     } catch (SQLException e) {
@@ -71,7 +71,7 @@ public class JDBCExample {
     try {
 
       connection =
-          DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/VOTOPY", "ucsa2014",
+          DriverManager.getConnection("jdbc:postgresql://ubuntu:5432/VOTOPY", "ucsa2014",
               "ucsa2014");
 
     } catch (SQLException e) {

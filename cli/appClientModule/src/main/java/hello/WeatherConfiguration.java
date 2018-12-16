@@ -19,6 +19,7 @@ public class WeatherConfiguration {
   //*O ESTE*******************************************************************
 	//descomentado 22 de julio del 2017
 	//public final static String URL = "https://ubuntu/"; //con maquina virtual https
+	//public final static String URL = "http://ubuntu:8080/"; //con maquina virtual http 8080
 	//O ESTE
 	//comentado 22 de julio del 2017
 	public final static String URL = "http://localhost:8080/"; //sin maquina virtual http

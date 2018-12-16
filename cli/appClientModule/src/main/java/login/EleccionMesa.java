@@ -677,7 +677,8 @@ public class EleccionMesa extends JFrame {
 
       }
     } }else {
-
+      JOptionPane.showMessageDialog(null, "El Votante No Existe. ", "ERROR.",
+          JOptionPane.INFORMATION_MESSAGE);
     }
   
     return result;

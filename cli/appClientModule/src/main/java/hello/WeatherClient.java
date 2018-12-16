@@ -35,8 +35,9 @@ public class WeatherClient extends WebServiceGatewaySupport {
 	//public final static String URL = "https://localhost/";
 	///test tcpmon
 	
-	public final static String URL = "https://ubuntu/";  //con maquina virtual https
+	//public final static String URL = "https://ubuntu/";  //con maquina virtual https
 	//public final static String URL = "http://localhost:8080/";  //sin maquina virtual http
+    public final static String URL = "http://localhost:8080/";
 
 	public ConsultarResponse getConsultarResponse(ConsultarRequest consulta) {
 		ConsultarRequest request = new ConsultarRequest();

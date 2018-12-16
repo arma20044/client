@@ -16,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -448,14 +450,13 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
              vigenciaAguardar.setFchIns(new Date());
              vigenciaAguardar.setUsuarioIns(Login.nombreApellidoUserLogeado.toUpperCase());
              
-             java.util.Date date = new Date(fechaDesdeFinal);
-             DateTime desde = new DateTime(date);
+             Date desde = StringToDate(fechaDesdeFinal);
+             Date hasta = StringToDate(fechaHastaFinal);
 
-             java.util.Date date2 = new Date(fechaHastaFinal);
-             DateTime hasta = new DateTime(date2);
+              
              
-             vigenciaAguardar.setFchVigenciaDesde(date);
-             vigenciaAguardar.setFchVigenciaHasta(date2);
+             vigenciaAguardar.setFchVigenciaDesde(desde);
+             vigenciaAguardar.setFchVigenciaHasta(hasta);
              vigenciaAguardar.setIdPais(paisDAO.obtenerPaisById(distritoSelected));
              
              VigenciaDAO vigenciaDAO = new VigenciaDAO();
@@ -617,5 +618,23 @@ public class VentanaRegistroVigencia extends JFrame implements ActionListener {
 
     return result;
 
+  }
+  
+  public Date StringToDate(String fecha){
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    String dateInString = fecha;
+    Date date = null;
+
+    try {
+
+        date = formatter.parse(dateInString);
+        System.out.println(date);
+        System.out.println(formatter.format(date));
+
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+    
+    return date;
   }
 }

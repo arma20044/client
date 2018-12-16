@@ -418,6 +418,21 @@ getRootPane().getActionMap().put("clickButtondelete",new AbstractAction(){
 						e.setFchHasta(armarFecha.armarFecha(selectedData.get(5)));
 						e.setId_tipo_evento(    selectedData.get(6));*/
 						
+								UcsawsEvento eventoVigente = eventoDAO.obtenerEventoById(codTemporal);
+								
+								if(eventoVigente.getIdEvento() != null){
+								  btnModificar.setEnabled(false);
+								  btnModificar.setToolTipText("Ya No se puede modificar datos durante ni despues la votacion");
+								  btnEliminar.setEnabled(false);
+								  btnEliminar.setToolTipText("Ya No se puede modificar datos durante ni despues la votacion");
+								}
+								else{
+								  btnModificar.setEnabled(true);
+								  btnModificar.setToolTipText("");
+								  btnEliminar.setEnabled(true);
+								  btnEliminar.setToolTipText("");
+								}
+						
 				 }
 
 			}

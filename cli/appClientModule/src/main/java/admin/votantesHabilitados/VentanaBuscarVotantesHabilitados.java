@@ -621,7 +621,8 @@ public class VentanaBuscarVotantesHabilitados extends JFrame implements ActionLi
       Object[] row =
           {aux.getIdVotante(), cont, aux.getIdPersona().getCi(), aux.getIdPersona().getNombre(),
               aux.getIdPersona().getApellido(), hab, aux.getSufrago(),
-              aux.getIdPersona().getUcsawsPaisByIdPaisActual().getNombre(),
+              //aux.getIdPersona().getUcsawsPaisByIdPaisActual().getNombre(),
+              aux.getUcsawsMesa().getUcsawsLocal().getUcsawsZona().getUcsawsDistrito().getDescDistrito(),
               aux.getUcsawsMesa().getDescMesa()};
 
       // new
