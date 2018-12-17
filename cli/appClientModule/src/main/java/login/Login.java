@@ -617,6 +617,14 @@ public class Login extends javax.swing.JFrame implements KeyListener {
       if (campoUsuario.getText().length() > 0 && campoContrasena.getPassword().length > 0) {
         UcsawsUsers usuario =
             verificarCredenciales(campoUsuario.getText(), campoContrasena.getText());
+        
+        if(usuario.getIdUser() == null){
+          JOptionPane.showMessageDialog(null,
+              "Verifique el usuario y contraseña que ha ingresado.",
+              "Error de Logeo",
+              JOptionPane.ERROR_MESSAGE);
+        }
+        else{
 
         UcsawsRoles rol = verificarRoles(usuario);
 
@@ -656,13 +664,14 @@ public class Login extends javax.swing.JFrame implements KeyListener {
         this.dispose();
       
       }
+      }
       else{
         JOptionPane.showMessageDialog(null,
             "Debe ingresar todos los campos.",
             "Error de Logeo",
             JOptionPane.ERROR_MESSAGE);
       }
-
+  
   }
 
   UcsawsUsers verificarCredenciales(String u, String p) {

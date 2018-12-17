@@ -301,7 +301,7 @@ public class VentanaRegistroMiembroMesa extends JFrame implements ActionListener
             //&&  cmbLista.getSelectedIndex() != -1                                                                       // combo.getSelectedIndex()
                                                                                     // != -1
         ){
-        if(cmbTipo.getSelectedItem() != "VEE" && cmbLista.getSelectedIndex() == -1  ){
+        if(cmbTipo.getSelectedItem().toString().contains("VEE") && cmbLista.getSelectedIndex() != -1  ){
           
        
         
