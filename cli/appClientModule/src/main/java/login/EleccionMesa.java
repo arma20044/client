@@ -31,6 +31,7 @@ import entity.UcsawsUsers;
 import entity.UcsawsVotante;
 import src.main.java.admin.evento.VentanaBuscarEvento;
 import src.main.java.admin.persona.Item;
+import src.main.java.admin.utils.Sha2;
 import src.main.java.admin.utils.Utilidades;
 import src.main.java.admin.zona.VentanaBuscarZona;
 import src.main.java.dao.votantesHabilitados.VotantesHabilitadosDAO;
@@ -538,7 +539,8 @@ public class EleccionMesa extends JFrame {
 
     UcsawsUsers users = new UcsawsUsers();
     users.setUsuario(user);
-    users.setPass(Utilidades.Encriptar(pass));
+    //users.setPass(Utilidades.Encriptar(pass));
+    users.setPass(Sha2.sha2(pass));
     // parseo json
     ObjectMapper mapperObj = new ObjectMapper();
     String jsonStr = "";

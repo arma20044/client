@@ -27,8 +27,8 @@ import entity.UcsawsRoles;
 import entity.UcsawsUsers;
 import src.main.java.admin.MenuPrincipal;
 import src.main.java.admin.Reportes;
-
 import src.main.java.admin.utils.Close;
+import src.main.java.admin.utils.Sha2;
 import src.main.java.admin.utils.StringEncrypter;
 import src.main.java.admin.utils.Utilidades;
 import src.main.java.dao.rol.RolDAO;
@@ -527,8 +527,8 @@ public class Login extends javax.swing.JFrame implements KeyListener {
     try {
       List<String> usuarioPass = new ArrayList<String>();
       usuarioPass.add(usuario);
-      usuarioPass.add(Utilidades.Encriptar(pass));
-
+      //usuarioPass.add(Utilidades.Encriptar(pass));
+      usuarioPass.add(Sha2.sha2(pass));
       // conver a Json inicio
 
       ObjectMapper mapperObj = new ObjectMapper();
